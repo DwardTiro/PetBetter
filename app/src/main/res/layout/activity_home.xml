@@ -28,7 +28,9 @@
         android:layout_height="match_parent"
         app:menu="@menu/navigation_menu"
         android:layout_gravity="start"
-        android:id="@+id/nav_view">
+        android:id="@+id/nav_view"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_header">
 
     </android.support.design.widget.NavigationView>
 
