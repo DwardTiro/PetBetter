@@ -37,8 +37,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
-
-
         nDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         nToggle = new ActionBarDrawerToggle(this, nDrawerLayout, R.string.open, R.string.close);
 

@@ -20,8 +20,8 @@ public class Tab3Fragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
-        View view = inflater.inflate(R.layout.home_tab1, container, false);
-        btnTest3 = (Button) view.findViewById(R.id.btnTest1);
+        View view = inflater.inflate(R.layout.home_tab3, container, false);
+        btnTest3 = (Button) view.findViewById(R.id.btnTest3);
 
         btnTest3.setOnClickListener(
                 new View.OnClickListener() {
