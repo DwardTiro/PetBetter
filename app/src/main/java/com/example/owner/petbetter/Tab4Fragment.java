@@ -12,20 +12,20 @@ import android.widget.Toast;
  * Created by owner on 11/7/2017.
  */
 
-public class Tab2Fragment extends Fragment {
-    private static final String TAG = "Veterinary Facilities";
-    private Button btnTest2;
+public class Tab4Fragment extends Fragment {
+    private static final String TAG = "Community";
+    private Button btnTest4;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
-        View view = inflater.inflate(R.layout.home_tab2, container, false);
-        btnTest2 = (Button) view.findViewById(R.id.btnTest2);
+        View view = inflater.inflate(R.layout.home_tab4, container, false);
+        btnTest4 = (Button) view.findViewById(R.id.btnTest4);
 
-        btnTest2.setOnClickListener(
+        btnTest4.setOnClickListener(
                 new View.OnClickListener() {
                     public void onClick(View v) {
-                        Toast.makeText(getActivity(),"Testing button 2",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(),"Testing button 4",Toast.LENGTH_SHORT).show();
                     }
                 }
         );

@@ -14,7 +14,7 @@ import android.widget.Toast;
  */
 
 public class Tab3Fragment extends Fragment {
-    private static final String TAG = "Tab3Fragment";
+    private static final String TAG = "Pet Care Facilities";
     private Button btnTest3;
 
     @Nullable

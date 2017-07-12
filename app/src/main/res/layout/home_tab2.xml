@@ -8,7 +8,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:textSize="25sp"
-        android:text="Tab2"
+        android:text="Veterinarian Facilities"
         android:layout_marginTop="40dp"
         android:id="@+id/textTab2"/>
 

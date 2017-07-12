@@ -36,6 +36,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
 
         nDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         nToggle = new ActionBarDrawerToggle(this, nDrawerLayout, R.string.open, R.string.close);
@@ -50,9 +51,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     private void setupViewPager(ViewPager viewPager){
         SectionsPageAdapter adapter = new SectionsPageAdapter(getSupportFragmentManager());
-        adapter.addFragment(new Tab1Fragment(),"Tab1Fragment");
-        adapter.addFragment(new Tab2Fragment(),"Tab2Fragment");
-        adapter.addFragment(new Tab3Fragment(),"Tab3Fragment");
+        adapter.addFragment(new Tab1Fragment(),"Veterinarians");
+        adapter.addFragment(new Tab2Fragment(),"Veterinary Facilities");
+        adapter.addFragment(new Tab3Fragment(),"Pet Care Facilities");
+        adapter.addFragment(new Tab4Fragment(),"Community");
         viewPager.setAdapter(adapter);
     }
 
