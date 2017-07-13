@@ -76,15 +76,17 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         else if(id == R.id.settings){
             System.out.println("NYEEAAAMM");
         }
+        else if(id == R.id.bookmarks){
+            System.out.println("NYEEAAAMM");
+        }
+        else if(id==R.id.add_location){
+            Intent intent = new Intent(this, MapsActivity.class);
+            startActivity(intent);
+        }
         else if(id == R.id.log_out){
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         }
         return true;
-    }
-
-    public void toMaps(View v){
-        Intent intent = new Intent(this, MapsActivity.class);
-        startActivity(intent);
     }
 }
