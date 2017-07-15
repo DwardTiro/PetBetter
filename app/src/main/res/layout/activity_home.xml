@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/drawerLayout">
+    android:id="@+id/drawerLayout"
+    android:background="@color/main_White">
 
     <LinearLayout
         android:id="@+id/content"
@@ -18,13 +19,13 @@
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
         android:theme="@style/AppTheme.AppBarOverlay"
-        android:background="@color/colorPrimary">
+        android:background="@color/main_Color">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="4dp"
-            android:background="@color/colorPrimary"
+            android:background="@color/main_Color"
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
