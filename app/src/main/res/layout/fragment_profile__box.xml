@@ -1,0 +1,29 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Fragment_Profile_Box"
+    >
+
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_height="150dp"
+        android:layout_width="140dp"
+        android:orientation="vertical"
+        android:background="@drawable/box_border">
+
+        <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:src="@drawable/test_image"/>
+
+        <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="Petty Pet Clinic"
+        android:textStyle="bold"
+        android:textColor="@color/main_Color"
+        android:textSize="17dp"/>
+    </LinearLayout>
+
+</FrameLayout>
