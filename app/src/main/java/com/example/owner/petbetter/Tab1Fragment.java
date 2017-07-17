@@ -14,7 +14,7 @@ import android.widget.Toast;
  */
 
 public class Tab1Fragment extends Fragment {
-
+    private static final String TAG = "Veterinarians";
 
     @Nullable
     @Override
