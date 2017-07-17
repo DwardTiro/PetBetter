@@ -5,8 +5,4 @@
     android:background="@color/main_White">
 
 
-    <fragment android:name="com.example.owner.petbetter.Fragment_Profile_Box"
-        android:id="@+id/sample_Item"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content" />
 </RelativeLayout>
