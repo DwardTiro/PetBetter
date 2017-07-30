@@ -3,17 +3,13 @@ package com.example.owner.petbetter.database;
 /**
  * Created by owner on 27/7/2017.
  */
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 
 public class DataAdapter {
@@ -24,6 +20,14 @@ public class DataAdapter {
 
     private SQLiteDatabase petBetterDb;
     private DatabaseHelper petBetterDatabaseHelper;
+
+    private static final String USER_TABLE = "users";
+    private static final String USER_TABLE_UPLOAD = "tbl_users_upload";
+    private static final String CASE_RECORD_TABLE = "tbl_case_records";
+    private static final String CASE_RECORD_TABLE_UPLOAD = "tbl_case_records_upload";
+    private static final String CASE_RECORD_HISTORY_TABLE = "tbl_case_record_history";
+    private static final String CASE_RECORD_ATTACHMENTS_TABLE = "tbl_case_record_attachments";
+    private static final String HEALTH_CENTER_TABLE = "tbl_health_centers";
 
 
     public DataAdapter(Context context) {
@@ -39,6 +43,7 @@ public class DataAdapter {
             Log.e(TAG, ioe.toString() + "UnableToCreateDatabase");
             throw new Error("UnableToCreateDatabase");
         }
+
         return this;
     }
 
@@ -68,7 +73,7 @@ public class DataAdapter {
 
         if(gOpenCounter == 0) {
 
-            petterDb.close();
+            petBetterDb.close();
         }
 
         Log.d("database open", gOpenCounter + "");
@@ -76,7 +81,7 @@ public class DataAdapter {
 
     public boolean checkLogin (String username, String password) {
 
-        String sql = "SELECT * FROM tbl_users WHERE email = '" + username + "' AND pass = '" + password + "'";
+        String sql = "SELECT * FROM users WHERE email = '" + username + "' AND password = '" + password + "'";
 
         Cursor c = petBetterDb.rawQuery(sql, null);
 
@@ -111,7 +116,6 @@ public class DataAdapter {
         c.moveToFirst();
 
         result = c.getString(c.getColumnIndexOrThrow("first_name")) + " " + c.getString(c.getColumnIndexOrThrow("last_name"));
-
         c.close();
 
         return result;

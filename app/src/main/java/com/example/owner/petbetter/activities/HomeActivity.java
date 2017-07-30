@@ -10,6 +10,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+
+import com.example.owner.petbetter.SectionsPageAdapter;
+import com.example.owner.petbetter.Tab1Fragment;
+import com.example.owner.petbetter.Tab2Fragment;
+import com.example.owner.petbetter.Tab3Fragment;
+import com.example.owner.petbetter.Tab4Fragment;
+
+
+
+
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -81,11 +91,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             System.out.println("NYEEAAAMM");
         }
         else if(id==R.id.add_location){
-            Intent intent = new Intent(this, MapsActivity.class);
+            Intent intent = new Intent(this, com.example.owner.petbetter.MapsActivity.class);
             startActivity(intent);
         }
         else if(id == R.id.log_out){
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, com.example.owner.petbetter.MainActivity.class);
             startActivity(intent);
         }
         return true;

@@ -8,7 +8,7 @@ public class Services {
     String serviceName;
     int servicePrice;
 
-    public Sevices(String serviceName, int servicePrice) {
+    public Services(String serviceName, int servicePrice) {
         this.serviceName = serviceName;
         this.servicePrice = servicePrice;
     }

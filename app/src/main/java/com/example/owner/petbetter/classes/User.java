@@ -5,14 +5,15 @@ package com.example.owner.petbetter.classes;
  */
 
 public class User {
-    private String lastName, firstName, middleName, mobileNumber, phoneNumber, userName, email, password;
+    private String lastName, firstName, mobileNumber, phoneNumber, userName, email, password;
     private int age;
+    private long userId;
 
-    public User(String lastName, String firstName, String middleName, String mobileNumber, String phoneNumber, String userName,
+    public User(long userId, String lastName, String firstName, String mobileNumber, String phoneNumber, String userName,
                 String email, String password, int age){
+        this.userId = userId;
         this.lastName = lastName;
         this.firstName = firstName;
-        this.middleName = middleName;
         this.mobileNumber = mobileNumber;
         this.phoneNumber = phoneNumber;
         this.userName = userName;
@@ -35,14 +36,6 @@ public class User {
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
-    }
-
-    public String getMiddleName() {
-        return middleName;
-    }
-
-    public void setMiddleName(String middleName) {
-        this.middleName = middleName;
     }
 
     public String getMobileNumber() {

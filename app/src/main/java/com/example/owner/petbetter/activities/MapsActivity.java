@@ -51,7 +51,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MapsActivity.this, AddMarkerActivity.class);
+                Intent intent = new Intent(MapsActivity.this, com.example.owner.petbetter.AddMarkerActivity.class);
                 startActivity(intent);
             }
         });
