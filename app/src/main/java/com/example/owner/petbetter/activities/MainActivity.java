@@ -38,15 +38,6 @@ public class MainActivity extends AppCompatActivity {
         textInfo = (TextView) findViewById(R.id.textInfo);
         textInfo.setVisibility(View.INVISIBLE);
         initializeDatabase();
-
-        if(checkLogin("edward_tiro@dlsu.edu.ph","S4lasalle!")){
-            textInfo.setVisibility(View.VISIBLE);
-            textInfo.setText("YAY U ACCESSED DB");
-        }
-        else{
-            textInfo.setVisibility(View.VISIBLE);
-            textInfo.setText("wtf u noob");
-        }
     }
 
     public void userLogin(View v){
@@ -83,15 +74,7 @@ public class MainActivity extends AppCompatActivity {
             } else {
 
                 if (checkLogin(email, password)) {
-                    textInfo.setText("Success!!");
-                    textInfo.setVisibility(View.VISIBLE);
                     systemSessionManager.createUserSession(email);
-//                Intent intent = new Intent(this, HomeActivity.class);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                startActivity(intent);
-//
-//                finish();
 
                     Intent intent = new Intent(this, HomeActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -139,4 +122,6 @@ public class MainActivity extends AppCompatActivity {
 
         return result;
     }
+
+
 }

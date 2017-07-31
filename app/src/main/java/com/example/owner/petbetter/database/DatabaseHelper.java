@@ -24,7 +24,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
     private static String DB_PATH = "";
 
-    private static String DB_NAME = "petbetter";
+    private static String DB_NAME = "petbetter.db";
 
     private static int DB_VERSION = 2;
 
@@ -45,14 +45,8 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
     private DatabaseHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
-
-        if(Build.VERSION.SDK_INT >= 17) {
-            DB_PATH = context.getApplicationInfo().dataDir + "/databases/";
-        } else {
-            DB_PATH = "/data/data/" + context.getPackageName() + "/databases/";
-        }
-
         this.myContext = context;
+        DB_PATH="/data/data/"+context.getPackageName()+"/"+"databases/";
     }
 
     public void createDatabase() throws IOException {
