@@ -16,13 +16,18 @@ import com.example.owner.petbetter.Tab1Fragment;
 import com.example.owner.petbetter.Tab2Fragment;
 import com.example.owner.petbetter.Tab3Fragment;
 import com.example.owner.petbetter.Tab4Fragment;
-
-
+import com.example.owner.petbetter.classes.User;
+import com.example.owner.petbetter.database.DataAdapter;
+import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 
 
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.TextView;
+
+import java.sql.SQLException;
+import java.util.HashMap;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -32,6 +37,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     private DrawerLayout nDrawerLayout;
     private ActionBarDrawerToggle nToggle;
+    private TextView textNavEmail, textNavUser;
+
+    private String userName;
+    private DataAdapter petBetterDb;
+    private SystemSessionManager systemSessionManager;
+    private User user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +70,72 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        View headerView = navigationView.getHeaderView(0);
+
+        systemSessionManager = new SystemSessionManager(this);
+        if(systemSessionManager.checkLogin())
+            finish();
+
+
+
+        HashMap<String, String> userIn = systemSessionManager.getUserDetails();
+
+        initializeDatabase();
+
+        String email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
+        textNavEmail = (TextView) headerView.findViewById(R.id.textNavEmail);
+        textNavEmail.setText(email);
+
+        user = getUser(email);
+
+
+        //userName = user.getName();
+
+        System.out.println(user.getName());
+        System.out.println(email);
+        textNavUser = (TextView) headerView.findViewById(R.id.textNavUser);
+        textNavUser.setText(user.getName());
+
+    }
+
+    private void initializeDatabase() {
+
+        petBetterDb = new DataAdapter(this);
+
+        try {
+            petBetterDb.createDatabase();
+        } catch(SQLException e ){
+            e.printStackTrace();
+        }
+
+    }
+
+    private User getUser(String email){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        User result = petBetterDb.getUser(email);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private String getUserName(String email){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        String result = petBetterDb.getUserName(email);
+        petBetterDb.closeDatabase();
+
+        return result;
     }
 
     private void setupViewPager(ViewPager viewPager){
