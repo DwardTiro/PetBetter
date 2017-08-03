@@ -8,30 +8,28 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-
-import com.example.owner.petbetter.SectionsPageAdapter;
-import com.example.owner.petbetter.Tab1Fragment;
-import com.example.owner.petbetter.Tab2Fragment;
-import com.example.owner.petbetter.Tab3Fragment;
-import com.example.owner.petbetter.Tab4Fragment;
-
-
-
-
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
+import android.widget.TextView;
+
+import com.example.owner.petbetter.R;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private static final String TAG = "HomeActivity";
-    private SectionsPageAdapter mSectionsPageAdapter;
-    private ViewPager mViewPager;
+
 
     private DrawerLayout nDrawerLayout;
     private ActionBarDrawerToggle nToggle;
+    private HorizontalScrollView menuBar;
+    private Button vetButton;
+    private Button petCareButton;
+    private Button commButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,15 +37,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_home);
 
         Log.d(TAG, "onCreate: Starting.");
+        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+       // setSupportActionBar(toolbar);
 
-        mSectionsPageAdapter = new SectionsPageAdapter(getSupportFragmentManager());
-
-        mViewPager = (ViewPager) findViewById(R.id.container);
-        setupViewPager(mViewPager);
-
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(mViewPager);
-        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
 
         nDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         nToggle = new ActionBarDrawerToggle(this, nDrawerLayout, R.string.open, R.string.close);
@@ -58,16 +50,27 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        menuBar = (HorizontalScrollView) findViewById(R.id.menu_bar);
+        vetButton = (Button) findViewById(R.id.vetButton);
+        petCareButton = (Button) findViewById(R.id.petCareButton);
+        commButton = (Button) findViewById(R.id.commButton);
     }
 
-    private void setupViewPager(ViewPager viewPager){
-        SectionsPageAdapter adapter = new SectionsPageAdapter(getSupportFragmentManager());
-        adapter.addFragment(new Tab1Fragment(),"Veterinarians");
-        adapter.addFragment(new Tab2Fragment(),"Veterinary Facilities");
-        adapter.addFragment(new Tab3Fragment(),"Pet Care Facilities");
-        adapter.addFragment(new Tab4Fragment(),"Community");
-        viewPager.setAdapter(adapter);
+    public void vetButtonClicked(View view){
+
+
     }
+    public void petCareButtonClicked(View view){
+
+
+    }
+    public void commButtonClicked(View view){
+
+
+    }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
