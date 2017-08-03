@@ -11,33 +11,20 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-<<<<<<< HEAD
-=======
 
-import com.example.owner.petbetter.SectionsPageAdapter;
-import com.example.owner.petbetter.Tab1Fragment;
-import com.example.owner.petbetter.Tab2Fragment;
-import com.example.owner.petbetter.Tab3Fragment;
-import com.example.owner.petbetter.Tab4Fragment;
+
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 
 
->>>>>>> bf49bd227a5faea6fb792a418c98bac19ae36fb7
 import android.view.View;
 import android.widget.Button;
-<<<<<<< HEAD
 import android.widget.HorizontalScrollView;
-import android.widget.TextView;
-
-import com.example.owner.petbetter.R;
-=======
 import android.widget.TextView;
 
 import java.sql.SQLException;
 import java.util.HashMap;
->>>>>>> bf49bd227a5faea6fb792a418c98bac19ae36fb7
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -46,19 +33,16 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     private DrawerLayout nDrawerLayout;
     private ActionBarDrawerToggle nToggle;
-<<<<<<< HEAD
     private HorizontalScrollView menuBar;
     private Button vetButton;
     private Button petCareButton;
     private Button commButton;
-=======
     private TextView textNavEmail, textNavUser;
 
     private String userName;
     private DataAdapter petBetterDb;
     private SystemSessionManager systemSessionManager;
     private User user;
->>>>>>> bf49bd227a5faea6fb792a418c98bac19ae36fb7
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,13 +64,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-<<<<<<< HEAD
 
         menuBar = (HorizontalScrollView) findViewById(R.id.menu_bar);
         vetButton = (Button) findViewById(R.id.vetButton);
         petCareButton = (Button) findViewById(R.id.petCareButton);
         commButton = (Button) findViewById(R.id.commButton);
-=======
         View headerView = navigationView.getHeaderView(0);
 
         systemSessionManager = new SystemSessionManager(this);
@@ -153,7 +135,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         petBetterDb.closeDatabase();
 
         return result;
->>>>>>> bf49bd227a5faea6fb792a418c98bac19ae36fb7
     }
 
     public void vetButtonClicked(View view){
