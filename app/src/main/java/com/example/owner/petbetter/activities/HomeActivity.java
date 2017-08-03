@@ -44,7 +44,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private DataAdapter petBetterDb;
     private SystemSessionManager systemSessionManager;
     private User user;
+<<<<<<< HEAD
     private NavigationView navigationView;
+=======
+>>>>>>> origin/master
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

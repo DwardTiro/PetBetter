@@ -5,11 +5,20 @@ package com.example.owner.petbetter.classes;
  */
 
 public class Marker {
+<<<<<<< HEAD
     String location, country, name, postalCode;
     long id, userId;
     double longitude, latitude;
 
     public Marker(long id, String location, String country, double longitude, double latitude, String postalCode, long userId, String name) {
+=======
+    String location, country, name;
+    long id, userId;
+    int postalCode;
+    double longitude, latitude;
+
+    public Marker(long id, String location, String country, double longitude, double latitude, int postalCode, long userId, String name) {
+>>>>>>> origin/master
         this.id = id;
         this.location = location;
         this.country = country;
@@ -52,11 +61,19 @@ public class Marker {
         this.userId = userId;
     }
 
+<<<<<<< HEAD
     public String getPostalCode() {
         return postalCode;
     }
 
     public void setPostalCode(String postalCode) {
+=======
+    public int getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(int postalCode) {
+>>>>>>> origin/master
         this.postalCode = postalCode;
     }
 
