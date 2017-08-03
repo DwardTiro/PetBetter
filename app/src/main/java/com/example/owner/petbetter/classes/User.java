@@ -6,20 +6,20 @@ package com.example.owner.petbetter.classes;
 
 public class User {
     private String lastName, firstName, mobileNumber, phoneNumber, userName, email, password;
-    private int age;
+    private int age, userType;
     private long userId;
 
-    public User(long userId, String lastName, String firstName, String mobileNumber, String phoneNumber, String userName,
-                String email, String password, int age){
+    public User(long userId, String firstName, String lastName, String mobileNumber, String phoneNumber,
+                String email, String password, int age, int userType){
         this.userId = userId;
-        this.lastName = lastName;
         this.firstName = firstName;
+        this.lastName = lastName;
         this.mobileNumber = mobileNumber;
         this.phoneNumber = phoneNumber;
-        this.userName = userName;
         this.email = email;
         this.password = password;
         this.age = age;
+        this.userType = userType;
     }
 
     public String getLastName() {
@@ -54,14 +54,6 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -84,6 +76,19 @@ public class User {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+
+    public int getUserType() {
+        return userType;
+    }
+
+    public void setUserType(int userType) {
+        this.userType = userType;
+    }
+
+    public String getName(){
+        return this.firstName + " " + this.lastName;
     }
 
     public void sendMessage(String message){

@@ -13,7 +13,7 @@
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/navImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="16dp"
@@ -23,13 +23,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="16dp"
-        android:text="Android Studio"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        android:text="first_name last_name"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:id="@+id/textNavUser"/>
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/textNavEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="android.studio@android.com" />
+        android:text="email" />
 
 </LinearLayout>

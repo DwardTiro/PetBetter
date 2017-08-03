@@ -9,8 +9,8 @@ public class Veterinarian extends User {
     int rating;
 
     public Veterinarian(long userId, String lastName, String firstName, String mobileNumber, String phoneNumber,
-                    String userName, String email, String password, int age, String specialty) {
-        super(userId, lastName, firstName, mobileNumber, phoneNumber, userName, email, password, age);
+                        String email, String password, int age, int userType, String specialty) {
+        super(userId, lastName, firstName, mobileNumber, phoneNumber, email, password, age, userType);
         this.specialty = specialty;
     }
 

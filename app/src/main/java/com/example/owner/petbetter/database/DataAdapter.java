@@ -8,6 +8,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.example.owner.petbetter.classes.User;
+
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -113,6 +115,8 @@ public class DataAdapter {
         String sql = "SELECT first_name, last_name FROM " + USER_TABLE + " WHERE _id = " + userId;
         Cursor c = petBetterDb.rawQuery(sql, null);
 
+        Log.e("cursor", c.getCount() + "");
+
         c.moveToFirst();
 
         result = c.getString(c.getColumnIndexOrThrow("first_name")) + " " + c.getString(c.getColumnIndexOrThrow("last_name"));
@@ -134,4 +138,28 @@ public class DataAdapter {
 
         return result;
     }
+
+    public User getUser(String email){
+
+        String sql = "SELECT * FROM " + USER_TABLE + " WHERE email = '" + email + "'";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        Log.e("cursor", c.getCount() + "");
+
+        c.moveToFirst();
+
+        User result = new User(c.getLong(c.getColumnIndexOrThrow("_id")),
+                c.getString(c.getColumnIndexOrThrow("first_name")),
+                c.getString(c.getColumnIndexOrThrow("last_name")),
+                c.getString(c.getColumnIndexOrThrow("mobile_num")),
+                c.getString(c.getColumnIndexOrThrow("phone_num")),
+                c.getString(c.getColumnIndexOrThrow("email")),
+                c.getString(c.getColumnIndexOrThrow("password")),
+                c.getInt(c.getColumnIndexOrThrow("age")),
+                c.getInt(c.getColumnIndexOrThrow("user_type")));
+
+        c.close();
+        return result;
+    }
+
 }
