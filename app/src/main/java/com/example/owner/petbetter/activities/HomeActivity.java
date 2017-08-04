@@ -3,6 +3,7 @@ package com.example.owner.petbetter;
 import android.content.Intent;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -10,55 +11,43 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
-<<<<<<< HEAD
-=======
 
-import com.example.owner.petbetter.SectionsPageAdapter;
-import com.example.owner.petbetter.Tab1Fragment;
-import com.example.owner.petbetter.Tab2Fragment;
-import com.example.owner.petbetter.Tab3Fragment;
-import com.example.owner.petbetter.Tab4Fragment;
+import com.example.owner.petbetter.MapsActivity;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 
 
->>>>>>> bf49bd227a5faea6fb792a418c98bac19ae36fb7
 import android.view.View;
 import android.widget.Button;
-<<<<<<< HEAD
 import android.widget.HorizontalScrollView;
 import android.widget.TextView;
 
 import com.example.owner.petbetter.R;
-=======
+
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.sql.SQLException;
 import java.util.HashMap;
->>>>>>> bf49bd227a5faea6fb792a418c98bac19ae36fb7
+
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
-    private static final String TAG = "HomeActivity";
 
 
-    private DrawerLayout nDrawerLayout;
-    private ActionBarDrawerToggle nToggle;
-<<<<<<< HEAD
     private HorizontalScrollView menuBar;
     private Button vetButton;
     private Button petCareButton;
     private Button commButton;
-=======
     private TextView textNavEmail, textNavUser;
 
     private String userName;
     private DataAdapter petBetterDb;
     private SystemSessionManager systemSessionManager;
     private User user;
->>>>>>> bf49bd227a5faea6fb792a418c98bac19ae36fb7
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,28 +55,25 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         setContentView(R.layout.activity_home);
 
-        Log.d(TAG, "onCreate: Starting.");
-        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-       // setSupportActionBar(toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
 
-        nDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
-        nToggle = new ActionBarDrawerToggle(this, nDrawerLayout, R.string.open, R.string.close);
-
-        nDrawerLayout.addDrawerListener(nToggle);
+        DrawerLayout nDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle nToggle = new ActionBarDrawerToggle(this, nDrawerLayout,toolbar, R.string.open, R.string.close);
+        nDrawerLayout.setDrawerListener(nToggle);
         nToggle.syncState();
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-<<<<<<< HEAD
 
         menuBar = (HorizontalScrollView) findViewById(R.id.menu_bar);
         vetButton = (Button) findViewById(R.id.vetButton);
         petCareButton = (Button) findViewById(R.id.petCareButton);
         commButton = (Button) findViewById(R.id.commButton);
-=======
+
         View headerView = navigationView.getHeaderView(0);
+
 
         systemSessionManager = new SystemSessionManager(this);
         if(systemSessionManager.checkLogin())
@@ -153,31 +139,24 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         petBetterDb.closeDatabase();
 
         return result;
->>>>>>> bf49bd227a5faea6fb792a418c98bac19ae36fb7
     }
 
     public void vetButtonClicked(View view){
 
-
+        Toast.makeText(this,"Vet",Toast.LENGTH_SHORT).show();
     }
     public void petCareButtonClicked(View view){
-
+        Toast.makeText(this,"Pet",Toast.LENGTH_SHORT).show();
 
     }
     public void commButtonClicked(View view){
 
-
+        Toast.makeText(this,"Comm",Toast.LENGTH_SHORT).show();
     }
 
 
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if(nToggle.onOptionsItemSelected(item)){
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item){
@@ -193,6 +172,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             System.out.println("NYEEAAAMM");
         }
         else if(id==R.id.add_location){
+            Toast.makeText(this,"Location",Toast.LENGTH_SHORT).show();
+
             Intent intent = new Intent(this, com.example.owner.petbetter.MapsActivity.class);
             startActivity(intent);
         }
@@ -200,6 +181,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             Intent intent = new Intent(this, com.example.owner.petbetter.MainActivity.class);
             startActivity(intent);
         }
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 }
