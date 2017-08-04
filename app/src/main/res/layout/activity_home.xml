@@ -12,6 +12,7 @@
     <include
         layout="@layout/app_bar_nav_bar"
         android:layout_width="match_parent"
+<<<<<<< HEAD
         android:layout_height="match_parent"/>
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
@@ -21,6 +22,78 @@
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_nav_bar"
         app:menu="@menu/navigation_menu" />
+=======
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:background="@color/colorAccent"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+
+        </android.support.v7.widget.Toolbar>
+
+
+    </android.support.design.widget.AppBarLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="495dp"
+        >
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/menu_bar"
+            >
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/vetButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_veterinarian_enabled"
+                    android:onClick="vetButtonClicked"
+                    android:textColor="@color/main_White"/>
+                <Button
+                    android:id="@+id/petCareButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_petcare_notselected"
+                    android:textColor="@color/main_White"
+                    android:onClick="petCareButtonClicked"
+                   />
+                <Button
+                    android:id="@+id/commButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_communities_notselected"
+                    android:onClick="commButtonClicked"
+                    android:textColor="@color/main_White"/>
+
+            </LinearLayout>
+
+        </HorizontalScrollView>
+
+    </LinearLayout>
+
+    <android.support.design.widget.NavigationView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        app:menu="@menu/navigation_menu"
+        android:layout_gravity="start"
+        android:id="@+id/nav_view"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_header"/>
+>>>>>>> c044d6c499f75382ca73cb95f12eacf907f50d61
 
 
 </android.support.v4.widget.DrawerLayout>
