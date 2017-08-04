@@ -14,11 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-<<<<<<< HEAD
 import com.example.owner.petbetter.MapsActivity;
-=======
-
->>>>>>> c044d6c499f75382ca73cb95f12eacf907f50d61
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
@@ -29,7 +25,6 @@ import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.TextView;
 
-<<<<<<< HEAD
 import com.example.owner.petbetter.R;
 
 import android.widget.TextView;
@@ -38,20 +33,11 @@ import android.widget.Toast;
 import java.sql.SQLException;
 import java.util.HashMap;
 
-=======
-import java.sql.SQLException;
-import java.util.HashMap;
->>>>>>> c044d6c499f75382ca73cb95f12eacf907f50d61
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
 
 
-<<<<<<< HEAD
-=======
-    private DrawerLayout nDrawerLayout;
-    private ActionBarDrawerToggle nToggle;
->>>>>>> c044d6c499f75382ca73cb95f12eacf907f50d61
     private HorizontalScrollView menuBar;
     private Button vetButton;
     private Button petCareButton;
@@ -62,13 +48,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private DataAdapter petBetterDb;
     private SystemSessionManager systemSessionManager;
     private User user;
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-    private NavigationView navigationView;
-=======
->>>>>>> origin/master
->>>>>>> c044d6c499f75382ca73cb95f12eacf907f50d61
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,22 +64,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         nDrawerLayout.setDrawerListener(nToggle);
         nToggle.syncState();
 
-<<<<<<< HEAD
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-=======
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
->>>>>>> c044d6c499f75382ca73cb95f12eacf907f50d61
         navigationView.setNavigationItemSelectedListener(this);
 
         menuBar = (HorizontalScrollView) findViewById(R.id.menu_bar);
         vetButton = (Button) findViewById(R.id.vetButton);
         petCareButton = (Button) findViewById(R.id.petCareButton);
         commButton = (Button) findViewById(R.id.commButton);
-<<<<<<< HEAD
 
-=======
->>>>>>> c044d6c499f75382ca73cb95f12eacf907f50d61
         View headerView = navigationView.getHeaderView(0);
 
 
@@ -128,15 +99,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         textNavUser = (TextView) headerView.findViewById(R.id.textNavUser);
         textNavUser.setText(user.getName());
 
-        hideItems();
-
-    }
-
-    private void hideItems(){
-        Menu menu = navigationView.getMenu();
-        menu.findItem(R.id.settings).setVisible(false);
-        if(user.getUserType()==2)
-            menu.findItem(R.id.add_location).setVisible(false);
     }
 
     private void initializeDatabase() {

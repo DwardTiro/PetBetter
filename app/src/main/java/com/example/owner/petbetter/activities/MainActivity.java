@@ -10,6 +10,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
@@ -121,6 +122,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         return result;
+    }
+    public void signUp(View view){
+        Toast.makeText(this,"Sign Up", Toast.LENGTH_SHORT).show();
     }
 
 
