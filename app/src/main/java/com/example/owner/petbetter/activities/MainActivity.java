@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.owner.petbetter.activities.SignUpActivity;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.example.owner.petbetter.HomeActivity;
@@ -124,7 +125,12 @@ public class MainActivity extends AppCompatActivity {
         return result;
     }
     public void signUp(View view){
-        Toast.makeText(this,"Sign Up", Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(this, SignUpActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+
     }
 
 
