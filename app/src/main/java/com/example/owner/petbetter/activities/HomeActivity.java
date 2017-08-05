@@ -19,6 +19,7 @@ import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 
+import com.example.owner.petbetter.fragments.fragment_vet_listing;
 
 import android.view.View;
 import android.widget.Button;
@@ -99,6 +100,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         textNavUser = (TextView) headerView.findViewById(R.id.textNavUser);
         textNavUser.setText(user.getName());
 
+        fragment_vet_listing fragment = new fragment_vet_listing();
+        getSupportFragmentManager().beginTransaction().add(R.id.frame_container,fragment).commit();
     }
 
     private void initializeDatabase() {
@@ -145,6 +148,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         Toast.makeText(this,"Vet",Toast.LENGTH_SHORT).show();
     }
+
+    public void vet_listing_clicked(View view){
+        Toast.makeText(this,"Clicked",Toast.LENGTH_SHORT).show();
+    }
+
     public void petCareButtonClicked(View view){
         Toast.makeText(this,"Pet",Toast.LENGTH_SHORT).show();
 
