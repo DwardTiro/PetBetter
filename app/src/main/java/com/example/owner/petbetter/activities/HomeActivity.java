@@ -180,7 +180,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             System.out.println("NYEEAAAMM");
         }
         else if(id==R.id.add_location){
-            Toast.makeText(this,"Location",Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this,"Location",Toast.LENGTH_SHORT).show();
 
             Intent intent = new Intent(this, com.example.owner.petbetter.MapsActivity.class);
             startActivity(intent);

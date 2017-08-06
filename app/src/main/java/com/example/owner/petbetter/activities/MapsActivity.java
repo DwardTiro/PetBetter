@@ -76,7 +76,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         goToLocationZoom(philippines.latitude, philippines.longitude, 15);
 
         geocoder = new Geocoder(this, Locale.getDefault());
-        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
 
     }
 

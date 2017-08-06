@@ -6,36 +6,60 @@ package com.example.owner.petbetter.classes;
 
 public class Marker {
 
-    String location, country, name;
+    String bldgNum, street, bldgName, city, province;
     long id, userId;
-    int postalCode;
     double longitude, latitude;
 
-    public Marker(long id, String location, String country, double longitude, double latitude, int postalCode, long userId, String name) {
+    public Marker(long id, String bldgNum, String street, String bldgName, String city, String province, double longitude, double latitude, long userId) {
         this.id = id;
-        this.location = location;
-        this.country = country;
+        this.bldgNum = bldgNum;
+        this.street = street;
+        this.bldgName = bldgName;
+        this.city = city;
+        this.province = province;
         this.longitude = longitude;
         this.latitude = latitude;
-        this.postalCode = postalCode;
         this.userId = userId;
-        this.name = name;
     }
 
-    public String getLocation() {
-        return location;
+    public String getBldgNum() {
+        return bldgNum;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setBldgNum(String bldgNum) {
+        this.bldgNum = bldgNum;
     }
 
-    public String getCountry() {
-        return country;
+    public String getStreet() {
+        return street;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public String getBldgName() {
+        return bldgName;
+    }
+
+    public void setBldgName(String bldgName) {
+        this.bldgName = bldgName;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
     }
 
     public long getId() {
@@ -54,14 +78,6 @@ public class Marker {
         this.userId = userId;
     }
 
-    public int getPostalCode() {
-        return postalCode;
-    }
-
-    public void setPostalCode(int postalCode) {
-        this.postalCode = postalCode;
-    }
-
     public double getLongitude() {
         return longitude;
     }
@@ -76,13 +92,5 @@ public class Marker {
 
     public void setLatitude(double latitude) {
         this.latitude = latitude;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 }
