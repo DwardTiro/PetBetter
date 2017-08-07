@@ -14,6 +14,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import com.example.owner.petbetter.classes.Marker;
+import com.example.owner.petbetter.classes.User;
+import com.example.owner.petbetter.database.DataAdapter;
+import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
@@ -25,6 +29,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -35,6 +42,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Geocoder geocoder;
     List<Address> addresses;
     private String strAdd;
+
+    private DataAdapter petBetterDb;
+    private SystemSessionManager systemSessionManager;
+    private User user;
+    private String email;
 
 
     @Override
@@ -55,6 +67,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 startActivity(intent);
             }
         });
+
+        systemSessionManager = new SystemSessionManager(this);
+        if(systemSessionManager.checkLogin())
+            finish();
+        HashMap<String, String> userIn = systemSessionManager.getUserDetails();
+
+        initializeDatabase();
+        email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
+        user = getUser(email);
+
     }
 
 
@@ -69,15 +91,45 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
         mMap = googleMap;
 
-        LatLng philippines = new LatLng(14.599512, 120.984222);
-        mMap.addMarker(new MarkerOptions().position(philippines).title("Marker in Philippines"));
-        goToLocationZoom(philippines.latitude, philippines.longitude, 15);
+        loadMarkers(user.getUserId());
 
         geocoder = new Geocoder(this, Locale.getDefault());
-        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+    }
 
+    private void loadMarkers(long userId){
+        LatLng resultLatLng;
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Marker> result = petBetterDb.loadMarkers(userId);
+        petBetterDb.closeDatabase();
+
+        for(int i = 0;i<result.size();i++){
+            resultLatLng = new LatLng(result.get(i).getLatitude(), result.get(i).getLongitude());
+            mMap.addMarker(new MarkerOptions().position(resultLatLng).title(result.get(i).getBldgName()));
+            goToLocationZoom(result.get(i).getLatitude(), result.get(i).getLongitude(), 13);
+        }
+
+    }
+
+    private User getUser(String email){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        User result = petBetterDb.getUser(email);
+        petBetterDb.closeDatabase();
+
+        return result;
     }
 
     private void goToLocationZoom(double lat, double lng, float zoom) {
@@ -86,5 +138,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(update);
     }
 
+    private void initializeDatabase() {
+
+        petBetterDb = new DataAdapter(this);
+
+        try {
+            petBetterDb.createDatabase();
+        } catch(SQLException e ){
+            e.printStackTrace();
+        }
+
+    }
     //Find a way to add markers with location or longlat.
 }

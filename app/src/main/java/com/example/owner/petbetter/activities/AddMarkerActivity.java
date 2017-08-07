@@ -7,22 +7,40 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.owner.petbetter.classes.User;
+import com.example.owner.petbetter.database.DataAdapter;
+import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
+import com.example.owner.petbetter.classes.Marker;
 
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
 public class AddMarkerActivity extends AppCompatActivity {
 
-    EditText latitudeEdit, longitudeEdit, addressEdit;
-    ProgressBar progressBar;
-    TextView infoText;
-    CheckBox checkBox;
+    private EditText numEdit, streetEdit,bldgEdit, provinceEdit, cityEdit;;
+    private ProgressBar progressBar;
+    private TextView infoText;
+    private CheckBox checkBox;
+    private Button btnAdd;
+
+    private DataAdapter petBetterDb;
+    private SystemSessionManager systemSessionManager;
+    private User user;
+    private String email;
+    private Address tempAddress = null;
+    private int markerId;
 
     public static final int USE_ADDRESS_NAME = 1;
     public static final int USE_ADDRESS_LOCATION = 2;
@@ -36,36 +54,87 @@ public class AddMarkerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_marker);
 
-        longitudeEdit = (EditText) findViewById(R.id.longitudeEdit);
-        latitudeEdit = (EditText) findViewById(R.id.latitudeEdit);
-        addressEdit = (EditText) findViewById(R.id.addressEdit);
+        numEdit = (EditText) findViewById(R.id.numEdit);
+        streetEdit = (EditText) findViewById(R.id.streetEdit);
+        bldgEdit = (EditText) findViewById(R.id.bldgEdit);
+        cityEdit = (EditText) findViewById(R.id.cityEdit);
+        provinceEdit = (EditText) findViewById(R.id.provinceEdit);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         infoText = (TextView) findViewById(R.id.infoText);
         checkBox = (CheckBox) findViewById(R.id.checkbox);
+
+        systemSessionManager = new SystemSessionManager(this);
+        if(systemSessionManager.checkLogin())
+            finish();
+        HashMap<String, String> userIn = systemSessionManager.getUserDetails();
+
+        initializeDatabase();
+        email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
     }
 
-    public void onRadioButtonClicked(View view) {
-        boolean checked = ((RadioButton) view).isChecked();
+    private void initializeDatabase() {
 
-        switch(view.getId()) {
-            case R.id.radioAddress:
-                if (checked) {
-                    fetchType = USE_ADDRESS_NAME;
-                    longitudeEdit.setEnabled(false);
-                    latitudeEdit.setEnabled(false);
-                    addressEdit.setEnabled(true);
-                    addressEdit.requestFocus();
-                }
-                break;
-            case R.id.radioLocation:
-                if (checked) {
-                    fetchType = USE_ADDRESS_LOCATION;
-                    latitudeEdit.setEnabled(true);
-                    latitudeEdit.requestFocus();
-                    longitudeEdit.setEnabled(true);
-                    addressEdit.setEnabled(false);
-                }
-                break;
+        petBetterDb = new DataAdapter(this);
+
+        try {
+            petBetterDb.createDatabase();
+        } catch(SQLException e ){
+            e.printStackTrace();
+        }
+
+    }
+
+    private User getUser(String email){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        User result = petBetterDb.getUser(email);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private void addMarker(int rowId, String bldgNum, String street, String bldgName, String city, String province,
+                              double longitude, double latitude, long userId){
+
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println("ROWID IS "+rowId);
+        petBetterDb.addMarker(rowId, bldgNum, street, bldgName, city, province, longitude, latitude, userId);
+        petBetterDb.closeDatabase();
+
+    }
+
+    public int generateMarkerId(){
+        ArrayList<Integer> storedIds;
+        int markerId = 1;
+
+        try {
+            petBetterDb.openDatabase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        storedIds = petBetterDb.getMarkerIds();
+        petBetterDb.closeDatabase();
+
+
+        if(storedIds.isEmpty()) {
+            return markerId;
+        } else {
+            while (storedIds.contains(markerId)){
+                markerId += 1;
+            }
+
+            return markerId;
         }
     }
 
@@ -88,34 +157,17 @@ public class AddMarkerActivity extends AppCompatActivity {
             Geocoder geocoder = new Geocoder(AddMarkerActivity.this, Locale.getDefault());
             List<Address> addresses = null;
 
-            if(fetchType == USE_ADDRESS_NAME) {
-                String name = addressEdit.getText().toString();
-                try {
-                    addresses = geocoder.getFromLocationName(name, 1);
-                } catch (IOException e) {
-                    errorMessage = "Service not available";
-                    Log.e(TAG, errorMessage, e);
-                }
-            }
-            else if(fetchType == USE_ADDRESS_LOCATION) {
-                double latitude = Double.parseDouble(latitudeEdit.getText().toString());
-                double longitude = Double.parseDouble(longitudeEdit.getText().toString());
 
-                try {
-                    addresses = geocoder.getFromLocation(latitude, longitude, 1);
-                } catch (IOException ioException) {
-                    errorMessage = "Service Not Available";
-                    Log.e(TAG, errorMessage, ioException);
-                } catch (IllegalArgumentException illegalArgumentException) {
-                    errorMessage = "Invalid Latitude or Longitude Used";
-                    Log.e(TAG, errorMessage + ". " +
-                            "Latitude = " + latitude + ", Longitude = " +
-                            longitude, illegalArgumentException);
-                }
-            }
-            else {
-                errorMessage = "Unknown Type";
-                Log.e(TAG, errorMessage);
+            String name = numEdit.getText().toString()+" "+
+            streetEdit.getText().toString()+" "+
+            bldgEdit.getText().toString()+" "+
+            cityEdit.getText().toString()+" "+
+            provinceEdit.getText().toString();
+            try {
+                addresses = geocoder.getFromLocationName(name, 1);
+            } catch (IOException e) {
+                errorMessage = "Service not available";
+                Log.e(TAG, errorMessage, e);
             }
 
             if(addresses != null && addresses.size() > 0)
@@ -140,7 +192,26 @@ public class AddMarkerActivity extends AppCompatActivity {
                 infoText.setText("Latitude: " + address.getLatitude() + "\n" +
                         "Longitude: " + address.getLongitude() + "\n" +
                         "Address: " + addressName);
+                tempAddress = address;
             }
+            user = getUser(email);
+
+        }
+    }
+
+    public void addToDb(View v){
+        if(tempAddress==null)
+            Toast.makeText(this,"Please tap Fetch before adding to database",Toast.LENGTH_SHORT).show();
+        else{
+            markerId = generateMarkerId();
+            addMarker(markerId,numEdit.getText().toString(),
+                    streetEdit.getText().toString(),
+                    bldgEdit.getText().toString(),
+                    cityEdit.getText().toString(),
+                    provinceEdit.getText().toString(),
+                    tempAddress.getLongitude(),
+                    tempAddress.getLatitude(),
+                    user.getUserId());
         }
     }
 }

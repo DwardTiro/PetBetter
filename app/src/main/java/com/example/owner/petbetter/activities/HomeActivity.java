@@ -49,6 +49,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private DataAdapter petBetterDb;
     private SystemSessionManager systemSessionManager;
     private User user;
+    NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +66,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         nDrawerLayout.setDrawerListener(nToggle);
         nToggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         menuBar = (HorizontalScrollView) findViewById(R.id.menu_bar);
@@ -74,7 +75,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         commButton = (Button) findViewById(R.id.commButton);
 
         View headerView = navigationView.getHeaderView(0);
-
 
         systemSessionManager = new SystemSessionManager(this);
         if(systemSessionManager.checkLogin())
@@ -91,6 +91,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         textNavEmail.setText(email);
 
         user = getUser(email);
+        hideItems();
 
 
         //userName = user.getName();
@@ -102,6 +103,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         fragment_vet_listing fragment = new fragment_vet_listing();
         getSupportFragmentManager().beginTransaction().add(R.id.frame_container,fragment).commit();
+    }
+
+    private void hideItems(){
+        Menu menu = navigationView.getMenu();
+        menu.findItem(R.id.settings).setVisible(false);
     }
 
     private void initializeDatabase() {
@@ -179,8 +185,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         else if(id == R.id.community){
             System.out.println("NYEEAAAMM");
         }
+        else if(id == R.id.bookmarks){
+            System.out.println("BOOKMARKS BACK!");
+        }
         else if(id==R.id.add_location){
-            Toast.makeText(this,"Location",Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this,"Location",Toast.LENGTH_SHORT).show();
 
             Intent intent = new Intent(this, com.example.owner.petbetter.MapsActivity.class);
             startActivity(intent);

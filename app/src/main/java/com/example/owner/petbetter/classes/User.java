@@ -22,6 +22,10 @@ public class User {
         this.userType = userType;
     }
 
+    public long getUserId(){
+        return userId;
+    }
+
     public String getLastName() {
         return lastName;
     }

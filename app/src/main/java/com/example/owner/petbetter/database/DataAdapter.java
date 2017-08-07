@@ -3,15 +3,18 @@ package com.example.owner.petbetter.database;
 /**
  * Created by owner on 27/7/2017.
  */
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.example.owner.petbetter.classes.Marker;
 import com.example.owner.petbetter.classes.User;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 
 public class DataAdapter {
@@ -24,7 +27,7 @@ public class DataAdapter {
     private DatabaseHelper petBetterDatabaseHelper;
 
     private static final String USER_TABLE = "users";
-    private static final String USER_TABLE_UPLOAD = "tbl_users_upload";
+    private static final String MARKER_TABLE = "markers";
     private static final String CASE_RECORD_TABLE = "tbl_case_records";
     private static final String CASE_RECORD_TABLE_UPLOAD = "tbl_case_records_upload";
     private static final String CASE_RECORD_HISTORY_TABLE = "tbl_case_record_history";
@@ -99,7 +102,7 @@ public class DataAdapter {
     public int getUserId(String username) {
 
         int result;
-        String sql = "SELECT _id FROM tbl_users WHERE email = '" + username + "'";
+        String sql = "SELECT _id FROM users WHERE email = '" + username + "'";
         Cursor c = petBetterDb.rawQuery(sql, null);
 
         c.moveToFirst();
@@ -159,6 +162,68 @@ public class DataAdapter {
                 c.getInt(c.getColumnIndexOrThrow("user_type")));
 
         c.close();
+        return result;
+    }
+
+    public ArrayList<Integer> getMarkerIds () {
+
+        ArrayList<Integer> ids = new ArrayList<>();
+
+        String sql = "SELECT _id FROM "+MARKER_TABLE;
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            ids.add(c.getInt(c.getColumnIndexOrThrow("_id")));
+        }
+
+        c.close();
+        return ids;
+    }
+
+    public ArrayList<Marker> loadMarkers(long userId){
+        ArrayList<Marker> results = new ArrayList<>();
+
+        String sql = "SELECT * FROM "+MARKER_TABLE + " WHERE user_id = '" + userId + "'";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            Marker marker = new Marker(c.getInt(c.getColumnIndexOrThrow("_id")),
+                    c.getString(c.getColumnIndexOrThrow("bldg_num")),
+                    c.getString(c.getColumnIndexOrThrow("street")),
+                    c.getString(c.getColumnIndexOrThrow("bldg_name")),
+                    c.getString(c.getColumnIndexOrThrow("city")),
+                    c.getString(c.getColumnIndexOrThrow("province")),
+                    c.getDouble(c.getColumnIndexOrThrow("longitude")),
+                    c.getDouble(c.getColumnIndexOrThrow("latitude")),
+                    c.getLong(c.getColumnIndexOrThrow("user_id")));
+            results.add(marker);
+        }
+
+        c.close();
+        return results;
+    }
+
+    public long addMarker(int rowId, String bldgNum, String street, String bldgName, String city, String province,
+                             double longitude, double latitude, long userId){
+        long result;
+
+        ContentValues cv = new ContentValues();
+        cv.put("_id", rowId);
+        cv.put("bldg_num", bldgNum);
+        cv.put("street", street);
+        cv.put("bldg_name", bldgName);
+        cv.put("city", city);
+        cv.put("province", province);
+        cv.put("longitude", longitude);
+        cv.put("latitude", latitude);
+        cv.put("user_id", userId);
+
+
+        result = petBetterDb.insert(MARKER_TABLE, null, cv);
+
+        System.out.println("THE RESULT IS "+result);
+        System.out.println("MARKER ID IS " +rowId);
+
         return result;
     }
 
