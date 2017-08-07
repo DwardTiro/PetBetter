@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/menu_bar"
+        android:layout_below="@+id/frame_container"
         >
         <LinearLayout
             android:layout_width="wrap_content"
@@ -30,7 +31,7 @@
                 android:id="@+id/petCareButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/button_petcare_notselected"
+                android:background="@drawable/button_petcare_enabled"
                 android:textColor="@color/main_White"
                 android:onClick="petCareButtonClicked"
                 />
@@ -38,7 +39,7 @@
                 android:id="@+id/commButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/button_communities_notselected"
+                android:background="@drawable/button_communities_enabled"
                 android:onClick="commButtonClicked"
                 android:textColor="@color/main_White"/>
 
@@ -49,7 +50,8 @@
     <FrameLayout
         android:id="@+id/frame_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp">
 
 
     </FrameLayout>

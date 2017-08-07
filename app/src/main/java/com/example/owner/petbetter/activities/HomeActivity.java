@@ -2,33 +2,27 @@ package com.example.owner.petbetter;
 
 import android.content.Intent;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.example.owner.petbetter.MapsActivity;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
+import com.example.owner.petbetter.fragments.FragmentPetClinicListing;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 
-import com.example.owner.petbetter.fragments.fragment_vet_listing;
+import com.example.owner.petbetter.fragments.FragmentVetListing;
 
 import android.view.View;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.TextView;
 
-import com.example.owner.petbetter.R;
-
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.sql.SQLException;
@@ -101,8 +95,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         textNavUser = (TextView) headerView.findViewById(R.id.textNavUser);
         textNavUser.setText(user.getName());
 
-        fragment_vet_listing fragment = new fragment_vet_listing();
-        getSupportFragmentManager().beginTransaction().add(R.id.frame_container,fragment).commit();
+        vetButtonClicked(this.navigationView);
+
     }
 
     private void hideItems(){
@@ -151,17 +145,22 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void vetButtonClicked(View view){
+        FragmentVetListing fragment = new FragmentVetListing();
+        getSupportFragmentManager().beginTransaction().add(R.id.frame_container,fragment).commit();
 
-        Toast.makeText(this,"Vet",Toast.LENGTH_SHORT).show();
     }
 
-    public void vet_listing_clicked(View view){
-        Toast.makeText(this,"Clicked",Toast.LENGTH_SHORT).show();
+    public void vetListingClicked(View view){
+
+    }
+    public void petClinicListingClicked(View view){
+
     }
 
     public void petCareButtonClicked(View view){
-        Toast.makeText(this,"Pet",Toast.LENGTH_SHORT).show();
+        FragmentPetClinicListing fragment = new FragmentPetClinicListing();
 
+        getSupportFragmentManager().beginTransaction().add(R.id.frame_container,fragment).commit();
     }
     public void commButtonClicked(View view){
 

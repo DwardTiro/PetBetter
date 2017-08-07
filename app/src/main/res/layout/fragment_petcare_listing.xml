@@ -4,7 +4,7 @@
     android:layout_height="250dp"
     android:background="@drawable/listing_border"
     android:layout_gravity="center"
-    android:onClick="vetListingClicked"
+    android:onClick="petClinicListingClicked"
     >
 
     <ImageView
@@ -15,7 +15,7 @@
         android:layout_marginRight="3dp"
         android:background="@drawable/sample_vet_clinic"/>
     <TextView
-        android:id="@+id/vetListName"
+        android:id="@+id/vetListClinic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -24,15 +24,7 @@
         android:textColor="@color/darkAccent"
         android:textStyle="bold"
         android:layout_gravity="center_horizontal"/>
-    <TextView
-        android:id="@+id/vetListClinic"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_gravity="center"
-        android:text="@string/vet_listing_name"
-        android:textSize="15dp"
-        />
+
     <TextView
         android:id="@+id/vetListAddress"
         android:layout_width="wrap_content"
