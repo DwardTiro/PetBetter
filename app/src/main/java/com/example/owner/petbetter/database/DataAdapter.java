@@ -180,6 +180,7 @@ public class DataAdapter {
         return ids;
     }
 
+<<<<<<< HEAD
     public ArrayList<Marker> loadMarkers(long userId){
         ArrayList<Marker> results = new ArrayList<>();
 
@@ -203,6 +204,8 @@ public class DataAdapter {
         return results;
     }
 
+=======
+>>>>>>> origin/master
     public long addMarker(int rowId, String bldgNum, String street, String bldgName, String city, String province,
                              double longitude, double latitude, long userId){
         long result;

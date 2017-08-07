@@ -97,6 +97,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         loadMarkers(user.getUserId());
 
         geocoder = new Geocoder(this, Locale.getDefault());
+<<<<<<< HEAD
     }
 
     private void loadMarkers(long userId){
@@ -115,6 +116,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.addMarker(new MarkerOptions().position(resultLatLng).title(result.get(i).getBldgName()));
             goToLocationZoom(result.get(i).getLatitude(), result.get(i).getLongitude(), 13);
         }
+=======
+>>>>>>> origin/master
 
     }
 
