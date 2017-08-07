@@ -9,4 +9,8 @@
     <string name="no_account"><u>Don\'t have an account yet?</u></string>
     <string name="sample_address">Solenad 1 Nuvali, Sta. Rosa Laguna</string>
     <string name="sample_name">John Ivanhoe</string>
+    <string name="sample_operating">Operating hours:</string>
+    <string name="sample_time">8:00 am - 5:00 pm</string>
+    <string name="landline">Landline:</string>
+    <string name="sample_landline"> 8704421</string>
 </resources>

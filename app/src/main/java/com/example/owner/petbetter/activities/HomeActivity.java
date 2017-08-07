@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.owner.petbetter.activities.VetProfileActivity;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.fragments.FragmentPetClinicListing;
@@ -151,7 +152,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void vetListingClicked(View view){
-
+       /*
+        Intent intent = new Intent(this, VetProfileActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);*/
+       setContentView(R.layout.activity_vet_profile);
     }
     public void petClinicListingClicked(View view){
 

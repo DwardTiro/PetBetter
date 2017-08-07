@@ -3,4 +3,105 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/profileImage"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="@drawable/sample_vet_clinic"/>
+        <Button
+            android:id="@+id/backButton"
+            android:layout_width="27dp"
+            android:layout_height="37dp"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/back_button"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:onClick="backClicked"/>
+
+    </RelativeLayout>
+
+
+        <TextView
+        android:id="@+id/profileName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+             android:textSize="30dp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+        android:text="@string/sample_name"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"/>
+
+        <TextView
+        android:id="@+id/profileAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:textColor="@color/black"
+        android:text="@string/sample_address"
+        android:layout_gravity="center"
+            android:layout_marginTop="5dp"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp">
+
+        <TextView
+        android:id="@+id/profileOperatingTimeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15dp"
+        android:textColor="@color/black"
+        android:text="@string/sample_operating"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"/>
+
+        <TextView
+            android:id="@+id/profileOperatingTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:textColor="@color/black"
+            android:text="@string/sample_time"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center">
+
+        <TextView
+            android:id="@+id/profileLandlineText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:textColor="@color/black"
+            android:text="@string/landline"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"/>
+
+        <TextView
+            android:id="@+id/profileLandLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:textColor="@color/black"
+            android:text="@string/sample_landline"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"/>
+
+    </LinearLayout>
+
+
 </LinearLayout>
