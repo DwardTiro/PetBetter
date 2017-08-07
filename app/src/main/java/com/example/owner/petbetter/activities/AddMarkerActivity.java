@@ -69,13 +69,12 @@ public class AddMarkerActivity extends AppCompatActivity {
         HashMap<String, String> userIn = systemSessionManager.getUserDetails();
 
         initializeDatabase();
-<<<<<<< HEAD
-        email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
-=======
 
         email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
 
->>>>>>> origin/master
+
+        email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
+
     }
 
     private void initializeDatabase() {
