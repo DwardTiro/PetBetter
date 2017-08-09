@@ -7,50 +7,34 @@ package com.example.owner.petbetter.classes;
 import java.util.ArrayList;
 
 public class Facility {
-    private String vetId, openTime, closeTime, faciType, faciName;
-    private boolean isOpen;
-    private ArrayList<Services> services;
+    private long id;
+    private int vetId;
+    private String faciName, location, hoursOpen, hoursClose, contactInfo;
 
-    public Facility(String vetId, String openTime, String closeTime, String faciType, String faciName, boolean isOpen, ArrayList<Services> services) {
-        this.vetId = vetId;
-        this.openTime = openTime;
-        this.closeTime = closeTime;
-        this.faciType = faciType;
+    public Facility(int id, String faciName, String location, String hoursOpen, String hoursClose, String contactInfo, int vetId) {
+        this.id = id;
         this.faciName = faciName;
-        this.isOpen = isOpen;
-        this.services = services;
+        this.location = location;
+        this.hoursOpen = hoursOpen;
+        this.hoursClose = hoursClose;
+        this.contactInfo = contactInfo;
+        this.vetId = vetId;
     }
 
-    public String getVetId() {
+    public int getVet_id() {
         return vetId;
     }
 
-    public void setVetId(String vetId) {
+    public void setVet_id(int vetId) {
         this.vetId = vetId;
     }
 
-    public String getOpenTime() {
-        return openTime;
+    public long getId() {
+        return id;
     }
 
-    public void setOpenTime(String openTime) {
-        this.openTime = openTime;
-    }
-
-    public String getCloseTime() {
-        return closeTime;
-    }
-
-    public void setCloseTime(String closeTime) {
-        this.closeTime = closeTime;
-    }
-
-    public String getFaciType() {
-        return faciType;
-    }
-
-    public void setFaciType(String faciType) {
-        this.faciType = faciType;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getFaciName() {
@@ -61,23 +45,35 @@ public class Facility {
         this.faciName = faciName;
     }
 
-    public boolean isOpen() {
-        return isOpen;
+    public String getLocation() {
+        return location;
     }
 
-    public void setOpen(boolean open) {
-        isOpen = open;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
-    public void addServices(){
-
+    public String getHoursOpen() {
+        return hoursOpen;
     }
 
-    public void removeServices(){
-
+    public void setHoursOpen(String hoursOpen) {
+        this.hoursOpen = hoursOpen;
     }
 
-    public void displayServices(){
+    public String getHoursClose() {
+        return hoursClose;
+    }
 
+    public void setHoursClose(String hoursClose) {
+        this.hoursClose = hoursClose;
+    }
+
+    public String getContactInfo() {
+        return contactInfo;
+    }
+
+    public void setContactInfo(String contactInfo) {
+        this.contactInfo = contactInfo;
     }
 }

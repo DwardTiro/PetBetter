@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:layout_gravity="center"
-        android:text="@string/vet_listing_name"
+        android:text="works at Ivanhoe Veterinary Clinic"
         android:textSize="15dp"
         />
     <TextView
@@ -40,7 +40,6 @@
         android:layout_marginTop="5dp"
         android:layout_gravity="center"
         android:text="@string/sample_address"
-
         />
 
 </LinearLayout>
