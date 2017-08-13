@@ -1,5 +1,6 @@
 package com.example.owner.petbetter;
 
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
@@ -19,6 +20,7 @@ import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.example.owner.petbetter.classes.Marker;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -29,11 +31,7 @@ import java.util.Locale;
 
 public class AddMarkerActivity extends AppCompatActivity {
 
-    private EditText numEdit, streetEdit,bldgEdit, provinceEdit, cityEdit;;
-    private ProgressBar progressBar;
-    private TextView infoText;
-    private CheckBox checkBox;
-    private Button btnAdd;
+    private EditText editBldgName;
 
     private DataAdapter petBetterDb;
     private SystemSessionManager systemSessionManager;
@@ -46,6 +44,9 @@ public class AddMarkerActivity extends AppCompatActivity {
     public static final int USE_ADDRESS_LOCATION = 2;
 
     int fetchType = USE_ADDRESS_LOCATION;
+    //LatLng point;
+    double longitude, latitude;
+    String location;
 
     private static final String TAG = "ADD_MARKER_ACTIVITY_ASYNC";
 
@@ -54,14 +55,8 @@ public class AddMarkerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_marker);
 
-        numEdit = (EditText) findViewById(R.id.numEdit);
-        streetEdit = (EditText) findViewById(R.id.streetEdit);
-        bldgEdit = (EditText) findViewById(R.id.bldgEdit);
-        cityEdit = (EditText) findViewById(R.id.cityEdit);
-        provinceEdit = (EditText) findViewById(R.id.provinceEdit);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        infoText = (TextView) findViewById(R.id.infoText);
-        checkBox = (CheckBox) findViewById(R.id.checkbox);
+
+
 
         systemSessionManager = new SystemSessionManager(this);
         if(systemSessionManager.checkLogin())
@@ -71,9 +66,19 @@ public class AddMarkerActivity extends AppCompatActivity {
         initializeDatabase();
 
         email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
+        user = getUser(email);
+
+        Bundle extras = getIntent().getExtras();
+        markerId = extras.getInt("MARKERID");
+        location = extras.getString("LOCATION");
+        longitude = extras.getDouble("LONGITUDE");
+        latitude = extras.getDouble("LATITUDE");
+        //Intent mIntent = getIntent();
+        //markerId = mIntent.getIntExtra("intVariableName", 0);
+        //markerId = getLocation();//should return longlat
 
 
-        email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
+        editBldgName = (EditText) findViewById(R.id.editBldgName);
 
     }
 
@@ -87,6 +92,25 @@ public class AddMarkerActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+    }
+
+    public void okClicked(View view){
+
+        if(editBldgName.getText().toString().matches("")){
+            Toast.makeText(this,"Give a name to the location",Toast.LENGTH_SHORT).show();
+        }
+        else{
+            String bldgName = editBldgName.getText().toString();
+            touchMarker(bldgName, longitude, latitude, location);
+
+            Intent intent = new Intent(this, com.example.owner.petbetter.MapsActivity.class);
+            startActivity(intent);
+        }
+    }
+
+    public void cancelClicked(View view){
+        Intent intent = new Intent(this, com.example.owner.petbetter.MapsActivity.class);
+        startActivity(intent);
     }
 
     private User getUser(String email){
@@ -103,17 +127,13 @@ public class AddMarkerActivity extends AppCompatActivity {
         return result;
     }
 
-    private void addMarker(int rowId, String bldgNum, String street, String bldgName, String city, String province,
-                              double longitude, double latitude, long userId){
-
-
+    private void touchMarker(String bldgName, double longitude, double latitude, String location){
         try {
             petBetterDb.openDatabase();
         }catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println("ROWID IS "+rowId);
-        petBetterDb.addMarker(rowId, bldgNum, street, bldgName, city, province, longitude, latitude, userId);
+        petBetterDb.touchMarker(markerId, bldgName, longitude, latitude, location, user.getUserId());
         petBetterDb.closeDatabase();
 
     }
@@ -143,80 +163,5 @@ public class AddMarkerActivity extends AppCompatActivity {
         }
     }
 
-    public void onButtonClicked(View view) {
-        new GeocodeAsyncTask().execute();
-    }
 
-    class GeocodeAsyncTask extends AsyncTask<Void, Void, Address> {
-
-        String errorMessage = "";
-
-        @Override
-        protected void onPreExecute() {
-            infoText.setVisibility(View.INVISIBLE);
-            progressBar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected Address doInBackground(Void ... none) {
-            Geocoder geocoder = new Geocoder(AddMarkerActivity.this, Locale.getDefault());
-            List<Address> addresses = null;
-
-
-            String name = numEdit.getText().toString()+" "+
-            streetEdit.getText().toString()+" "+
-            bldgEdit.getText().toString()+" "+
-            cityEdit.getText().toString()+" "+
-            provinceEdit.getText().toString();
-            try {
-                addresses = geocoder.getFromLocationName(name, 1);
-            } catch (IOException e) {
-                errorMessage = "Service not available";
-                Log.e(TAG, errorMessage, e);
-            }
-
-            if(addresses != null && addresses.size() > 0)
-                return addresses.get(0);
-
-            return null;
-        }
-
-        protected void onPostExecute(Address address) {
-            if(address == null) {
-                progressBar.setVisibility(View.INVISIBLE);
-                infoText.setVisibility(View.VISIBLE);
-                infoText.setText(errorMessage);
-            }
-            else {
-                String addressName = "";
-                for(int i = 0; i < address.getMaxAddressLineIndex(); i++) {
-                    addressName += " --- " + address.getAddressLine(i);
-                }
-                progressBar.setVisibility(View.INVISIBLE);
-                infoText.setVisibility(View.VISIBLE);
-                infoText.setText("Latitude: " + address.getLatitude() + "\n" +
-                        "Longitude: " + address.getLongitude() + "\n" +
-                        "Address: " + addressName);
-                tempAddress = address;
-            }
-            user = getUser(email);
-
-        }
-    }
-
-    public void addToDb(View v){
-        if(tempAddress==null)
-            Toast.makeText(this,"Please tap Fetch before adding to database",Toast.LENGTH_SHORT).show();
-        else{
-            markerId = generateMarkerId();
-            addMarker(markerId,numEdit.getText().toString(),
-                    streetEdit.getText().toString(),
-                    bldgEdit.getText().toString(),
-                    cityEdit.getText().toString(),
-                    provinceEdit.getText().toString(),
-                    tempAddress.getLongitude(),
-                    tempAddress.getLatitude(),
-                    user.getUserId());
-        }
-    }
 }

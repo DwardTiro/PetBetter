@@ -12,7 +12,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.owner.petbetter.activities.VetProfileActivity;
+import com.example.owner.petbetter.classes.Facility;
 import com.example.owner.petbetter.classes.User;
+import com.example.owner.petbetter.classes.Veterinarian;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.fragments.FragmentPetClinicListing;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
@@ -27,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 
@@ -44,7 +47,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private DataAdapter petBetterDb;
     private SystemSessionManager systemSessionManager;
     private User user;
-    NavigationView navigationView;
+    private NavigationView navigationView;
+
+    private ArrayList<Veterinarian> vetList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +101,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         textNavUser = (TextView) headerView.findViewById(R.id.textNavUser);
         textNavUser.setText(user.getName());
 
-        vetButtonClicked(this.navigationView);
+        //vetButtonClicked(this.navigationView);
+        vetButtonClicked(this.findViewById(android.R.id.content));
 
     }
 
@@ -131,6 +137,34 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         return result;
     }
 
+    private ArrayList<Veterinarian> getVeterinarians(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Veterinarian> result = petBetterDb.getVeterinarians();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<Facility> getClinics(Veterinarian veterinarian){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Facility> result = petBetterDb.getClinics(veterinarian);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
     private String getUserName(String email){
 
         try {
@@ -149,15 +183,57 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         FragmentVetListing fragment = new FragmentVetListing();
         getSupportFragmentManager().beginTransaction().add(R.id.frame_container,fragment).commit();
 
+        //FragmentVetListing fragment = (FragmentVetListing) getSupportFragmentManager().findFragmentById(R.id.frame_container);
+
+        vetList = getVeterinarians();
+
+        TextView vetNameTextView = (TextView) view.findViewById(R.id.vetListName);
+        TextView vetClinicTextView = (TextView) findViewById(R.id.vetListClinic);
+        TextView vetAddressTextView = (TextView) findViewById(R.id.vetListAddress);
+        ArrayList<Facility> facilities;
+
+        System.out.println("VET LIST SIZE: " + vetList.size());
+/*
+        for(int i = 0; i < vetList.size(); i++){
+
+            //vetNameTextView.setText(vetList.get(i).getFirstName() + " " + vetList.get(i).getLastName());
+            fragment.setNameTextView(vetList.get(i).getFirstName() + " " + vetList.get(i).getLastName());
+            System.out.println("FARGMENT USE SUCCESSFUL");
+            facilities = getClinics(vetList.get(i));
+
+
+            /*
+            vetClinicTextView.setText("works at ");
+            for(int j = 0;j<facilities.size();j++){
+                if(j==0)
+                    vetClinicTextView.append(facilities.get(j).getFaciName());
+                else
+                    vetClinicTextView.append(", " + facilities.get(j).getFaciName());
+            }
+
+            vetAddressTextView.setText("");
+            for(int j = 0;j<facilities.size();j++){
+                if(j==0)
+                    vetAddressTextView.append(facilities.get(j).getLocation());
+                else
+                    vetAddressTextView.append(", " + facilities.get(j).getLocation());
+            }
+
+        }
+*/
     }
 
     public void vetListingClicked(View view){
+
+
+        Intent intent = new Intent(this, com.example.owner.petbetter.activities.VetProfileActivity.class);
+        startActivity(intent);
        /*
         Intent intent = new Intent(this, VetProfileActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);*/
-       setContentView(R.layout.activity_vet_profile);
+       //setContentView(R.layout.activity_vet_profile);
     }
     public void petClinicListingClicked(View view){
 

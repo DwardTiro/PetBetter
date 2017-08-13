@@ -19,18 +19,16 @@
         android:text="Ok"
         android:layout_alignParentBottom="true"
         android:layout_toStartOf="@+id/textView3"
-        android:layout_marginBottom="178dp"
-        android:onClick="okClicked"/>
+        android:layout_marginBottom="178dp" />
 
     <Button
         android:id="@+id/cancelButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Cancel"
-        android:layout_alignBaseline="@+id/okButton"
-        android:layout_alignBottom="@+id/okButton"
+        android:layout_alignTop="@+id/okButton"
+        android:layout_marginTop="19dp"
         android:layout_toEndOf="@+id/textView3"
-        android:onClick="cancelClicked"/>
+        android:text="Cancel" />
 
     <EditText
         android:id="@+id/editBldgName"
@@ -40,7 +38,6 @@
         android:layout_below="@+id/textView3"
         android:layout_marginTop="71dp"
         android:inputType="textPersonName"
-        android:hint="Name of the location"
-        android:layout_alignEnd="@+id/cancelButton"
-        android:onClick="cancelClicked"/>
+        android:text="Name of the location"
+        android:layout_alignEnd="@+id/cancelButton" />
 </RelativeLayout>

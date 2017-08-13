@@ -6,12 +6,22 @@ package com.example.owner.petbetter.classes;
 
 public class Veterinarian extends User {
     String specialty;
-    int rating;
+    int id, rating;
 
-    public Veterinarian(long userId, String lastName, String firstName, String mobileNumber, String phoneNumber,
-                        String email, String password, int age, int userType, String specialty) {
+    public Veterinarian(int id, long userId, String lastName, String firstName, String mobileNumber, String phoneNumber,
+                        String email, String password, int age, int userType, String specialty, int rating) {
         super(userId, lastName, firstName, mobileNumber, phoneNumber, email, password, age, userType);
+        this.id = id;
         this.specialty = specialty;
+        this.rating = rating;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getSpecialty() {
