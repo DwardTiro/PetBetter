@@ -299,7 +299,6 @@ public class DataAdapter {
         return results;
     }
 
-<<<<<<< HEAD
     public long addMarker(int rowId, String bldgName, String location){
         long result;
 
@@ -317,10 +316,6 @@ public class DataAdapter {
     }
 
     public long touchMarker(int rowId, String bldgName, double longitude, double latitude, String location, long userId){
-=======
-    public long addMarker(int rowId, String bldgNum, String street, String bldgName, String city, String province,
-                             double longitude, double latitude, long userId){
->>>>>>> origin/master
         long result;
 
         ContentValues cv = new ContentValues();
