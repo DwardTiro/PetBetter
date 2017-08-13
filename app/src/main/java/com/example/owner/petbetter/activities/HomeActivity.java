@@ -104,6 +104,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         //vetButtonClicked(this.navigationView);
         vetButtonClicked(this.findViewById(android.R.id.content));
 
+
     }
 
     private void hideItems(){
@@ -183,8 +184,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         FragmentVetListing fragment = new FragmentVetListing();
         getSupportFragmentManager().beginTransaction().add(R.id.frame_container,fragment).commit();
 
+<<<<<<< HEAD
         //FragmentVetListing fragment = (FragmentVetListing) getSupportFragmentManager().findFragmentById(R.id.frame_container);
 
+=======
+>>>>>>> origin/master
         vetList = getVeterinarians();
 
         TextView vetNameTextView = (TextView) view.findViewById(R.id.vetListName);
@@ -192,13 +196,22 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         TextView vetAddressTextView = (TextView) findViewById(R.id.vetListAddress);
         ArrayList<Facility> facilities;
 
+<<<<<<< HEAD
         System.out.println("VET LIST SIZE: " + vetList.size());
 /*
+=======
+
+
+>>>>>>> origin/master
         for(int i = 0; i < vetList.size(); i++){
 
             //vetNameTextView.setText(vetList.get(i).getFirstName() + " " + vetList.get(i).getLastName());
             fragment.setNameTextView(vetList.get(i).getFirstName() + " " + vetList.get(i).getLastName());
+<<<<<<< HEAD
             System.out.println("FARGMENT USE SUCCESSFUL");
+=======
+
+>>>>>>> origin/master
             facilities = getClinics(vetList.get(i));
 
 
@@ -218,9 +231,15 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 else
                     vetAddressTextView.append(", " + facilities.get(j).getLocation());
             }
+<<<<<<< HEAD
 
         }
 */
+=======
+            */
+        }
+
+>>>>>>> origin/master
     }
 
     public void vetListingClicked(View view){
