@@ -6,36 +6,17 @@ package com.example.owner.petbetter.classes;
 
 public class Marker {
 
-    String bldgNum, street, bldgName, city, province;
+    String bldgName, location;
     long id, userId;
     double longitude, latitude;
 
-    public Marker(long id, String bldgNum, String street, String bldgName, String city, String province, double longitude, double latitude, long userId) {
+    public Marker(long id, String bldgName, double longitude, double latitude, String location, long userId) {
         this.id = id;
-        this.bldgNum = bldgNum;
-        this.street = street;
         this.bldgName = bldgName;
-        this.city = city;
-        this.province = province;
         this.longitude = longitude;
         this.latitude = latitude;
+        this.location = location;
         this.userId = userId;
-    }
-
-    public String getBldgNum() {
-        return bldgNum;
-    }
-
-    public void setBldgNum(String bldgNum) {
-        this.bldgNum = bldgNum;
-    }
-
-    public String getStreet() {
-        return street;
-    }
-
-    public void setStreet(String street) {
-        this.street = street;
     }
 
     public String getBldgName() {
@@ -46,20 +27,12 @@ public class Marker {
         this.bldgName = bldgName;
     }
 
-    public String getCity() {
-        return city;
+    public String getLocation() {
+        return location;
     }
 
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getProvince() {
-        return province;
-    }
-
-    public void setProvince(String province) {
-        this.province = province;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public long getId() {

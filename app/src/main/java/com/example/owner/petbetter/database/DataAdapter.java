@@ -213,13 +213,10 @@ public class DataAdapter {
 
         while(c.moveToNext()) {
             Marker marker = new Marker(c.getInt(c.getColumnIndexOrThrow("_id")),
-                    c.getString(c.getColumnIndexOrThrow("bldg_num")),
-                    c.getString(c.getColumnIndexOrThrow("street")),
                     c.getString(c.getColumnIndexOrThrow("bldg_name")),
-                    c.getString(c.getColumnIndexOrThrow("city")),
-                    c.getString(c.getColumnIndexOrThrow("province")),
                     c.getDouble(c.getColumnIndexOrThrow("longitude")),
                     c.getDouble(c.getColumnIndexOrThrow("latitude")),
+                    c.getString(c.getColumnIndexOrThrow("location")),
                     c.getLong(c.getColumnIndexOrThrow("user_id")));
             results.add(marker);
         }
@@ -302,19 +299,31 @@ public class DataAdapter {
         return results;
     }
 
-    public long addMarker(int rowId, String bldgNum, String street, String bldgName, String city, String province,
-                             double longitude, double latitude, long userId){
+    public long addMarker(int rowId, String bldgName, String location){
         long result;
 
         ContentValues cv = new ContentValues();
         cv.put("_id", rowId);
-        cv.put("bldg_num", bldgNum);
-        cv.put("street", street);
         cv.put("bldg_name", bldgName);
-        cv.put("city", city);
-        cv.put("province", province);
+
+
+        result = petBetterDb.insert(MARKER_TABLE, null, cv);
+
+        System.out.println("THE RESULT IS "+result);
+        System.out.println("MARKER ID IS " +rowId);
+
+        return result;
+    }
+
+    public long touchMarker(int rowId, String bldgName, double longitude, double latitude, String location, long userId){
+        long result;
+
+        ContentValues cv = new ContentValues();
+        cv.put("_id", rowId);
+        cv.put("bldg_name", bldgName);
         cv.put("longitude", longitude);
         cv.put("latitude", latitude);
+        cv.put("location", location);
         cv.put("user_id", userId);
 
 

@@ -12,7 +12,10 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.owner.petbetter.classes.Marker;
 import com.example.owner.petbetter.classes.User;
@@ -40,14 +43,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationClient;
     private Geocoder geocoder;
-    List<Address> addresses;
     private String strAdd;
 
     private DataAdapter petBetterDb;
     private SystemSessionManager systemSessionManager;
     private User user;
     private String email;
-
+    double touchLat;
+    double touchLong;
+    LatLng pointTemp;
+    String bldgName="House";
+    int markerId;
+    String location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,15 +65,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         System.out.println("Eyy");
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MapsActivity.this, com.example.owner.petbetter.AddMarkerActivity.class);
-                startActivity(intent);
-            }
-        });
 
         systemSessionManager = new SystemSessionManager(this);
         if(systemSessionManager.checkLogin())
@@ -93,10 +91,79 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
 
         mMap = googleMap;
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
 
+            @Override
+            public void onMapClick(LatLng point) {
+
+                // Creating MarkerOptions
+                MarkerOptions options = new MarkerOptions();
+
+                // Setting the position of the marker
+                options.position(point);
+                pointTemp = point;
+                //Get LatLng from touched point;
+
+                ///here is reverse GeoCoding which helps in getting address from latlng
+
+                try {
+                    Geocoder geo = new Geocoder(MapsActivity.this.getApplicationContext(), Locale.getDefault());
+                    //List<Address> addresses = geo.getFromLocation(touchLat,touchLong, 1);
+                    List<Address> addresses = geo.getFromLocation(pointTemp.latitude,pointTemp.longitude, 1);
+
+
+                    for(int i = 0; i < addresses.get(0).getMaxAddressLineIndex(); i++) {
+                        location += " --- " + addresses.get(0).getAddressLine(i);
+                    }
+                    Toast.makeText(MapsActivity.this, pointTemp.longitude+" "+pointTemp.latitude, Toast.LENGTH_LONG).show();
+                    // draws the marker at the currently touched location
+                    //touchMarker(pointTemp.longitude, pointTemp.latitude);
+                    Intent myIntent = new Intent(MapsActivity.this, com.example.owner.petbetter.AddMarkerActivity.class);
+                    Bundle extras = new Bundle();
+                    markerId = generateMarkerId();
+                    extras.putInt("MARKERID", markerId);
+                    extras.putString("LOCATION", location);
+                    extras.putDouble("LONGITUDE", pointTemp.longitude);
+                    extras.putDouble("LATITUDE", pointTemp.latitude);
+                    myIntent.putExtras(extras);
+                    startActivity(myIntent);
+                    location = "";
+                    System.out.println("INTENT SUCCESSFULLY DONE");
+
+                }
+                catch (Exception e) {
+                    e.printStackTrace(); // getFromLocation() may sometimes fail
+                }
+            }
+        });
         loadMarkers(user.getUserId());
 
         geocoder = new Geocoder(this, Locale.getDefault());
+    }
+
+    public int generateMarkerId(){
+        ArrayList<Integer> storedIds;
+        int markerId = 1;
+
+        try {
+            petBetterDb.openDatabase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        storedIds = petBetterDb.getMarkerIds();
+        petBetterDb.closeDatabase();
+
+
+        if(storedIds.isEmpty()) {
+            return markerId;
+        } else {
+            while (storedIds.contains(markerId)){
+                markerId += 1;
+            }
+
+            return markerId;
+        }
     }
 
     private void loadMarkers(long userId){

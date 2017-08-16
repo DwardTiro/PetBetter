@@ -190,10 +190,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         FragmentTransaction ft = fm.beginTransaction();
         //vetList = getVeterinarians();
 
+        System.out.println("VET LIST SIZE: " + vetList.size());
+/*
+=======
 
         fragment1.getVetNameTextView().setText("Kristian Sisayan");
         //for(int i = 0; i<3;i++){
 
+<<<<<<< HEAD
           //  ft.add(R.id.frame_container,fragment1,names.get(i).toString());
         //}
         ft.add(R.id.frame_container,fragment1,"first");
@@ -205,6 +209,19 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
        //     fragment.setNameTextView(vetList.get(i).getFirstName() + " " + vetList.get(i).getLastName());
 
          //   facilities = getClinics(vetList.get(i));
+=======
+>>>>>>> origin/master
+        for(int i = 0; i < vetList.size(); i++){
+
+            //vetNameTextView.setText(vetList.get(i).getFirstName() + " " + vetList.get(i).getLastName());
+            fragment.setNameTextView(vetList.get(i).getFirstName() + " " + vetList.get(i).getLastName());
+<<<<<<< HEAD
+            System.out.println("FARGMENT USE SUCCESSFUL");
+=======
+
+>>>>>>> origin/master
+            facilities = getClinics(vetList.get(i));
+>>>>>>> 6e42acbbfc72f661ac9d22261eb9bd283301c60d
 
 
             /*
@@ -223,9 +240,15 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 else
                     vetAddressTextView.append(", " + facilities.get(j).getLocation());
             }
-            */
-        }
+<<<<<<< HEAD
 
+<<<<<<< HEAD
+
+=======
+        }
+*/
+    }
+>>>>>>> 6e42acbbfc72f661ac9d22261eb9bd283301c60d
 
 
     public void vetListingClicked(View view){
