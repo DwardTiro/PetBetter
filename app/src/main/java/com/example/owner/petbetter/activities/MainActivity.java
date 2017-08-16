@@ -1,4 +1,4 @@
-package com.example.owner.petbetter;
+package com.example.owner.petbetter.activities;
 
 import android.content.Intent;
 import android.provider.ContactsContract;
@@ -12,10 +12,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.activities.SignUpActivity;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
-import com.example.owner.petbetter.HomeActivity;
+import com.example.owner.petbetter.activities.HomeActivity;
 
 import java.sql.SQLException;
 
@@ -78,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
                 if (checkLogin(email, password)) {
                     systemSessionManager.createUserSession(email);
 
-                    Intent intent = new Intent(this, HomeActivity.class);
+                    Intent intent = new Intent(this, com.example.owner.petbetter.activities.HomeActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);

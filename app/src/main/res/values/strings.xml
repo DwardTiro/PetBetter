@@ -13,4 +13,5 @@
     <string name="sample_time">8:00 am - 5:00 pm</string>
     <string name="landline">Landline:</string>
     <string name="sample_landline"> 8704421</string>
+    <string name="action_search">Search</string>
 </resources>

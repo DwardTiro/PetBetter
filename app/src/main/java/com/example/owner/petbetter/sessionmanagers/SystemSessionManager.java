@@ -8,7 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
-import com.example.owner.petbetter.MainActivity;
+import com.example.owner.petbetter.activities.MainActivity;
 
 import java.util.HashMap;
 
@@ -69,7 +69,7 @@ public class SystemSessionManager {
 
         if(!this.isUserLoggedIn()) {
 
-            Intent i = new Intent(_context, MainActivity.class);
+            Intent i = new Intent(_context, com.example.owner.petbetter.activities.MainActivity.class);
 
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
@@ -88,7 +88,7 @@ public class SystemSessionManager {
         editor.clear();
         editor.commit();
 
-        Intent i = new Intent(_context, MainActivity.class);
+        Intent i = new Intent(_context, com.example.owner.petbetter.activities.MainActivity.class);
 
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 

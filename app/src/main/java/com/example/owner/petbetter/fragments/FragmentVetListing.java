@@ -19,16 +19,24 @@ public class FragmentVetListing extends Fragment {
 
     private TextView nameTextView;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance){
-        View view = inflater.inflate(R.layout.fragment_vet_listings,container, false);
-        nameTextView = (TextView) view.findViewById(R.id.vetListName);
+        View RootView = inflater.inflate(R.layout.fragment_vet_listings,container, false);
 
-        return view;
+        nameTextView = (TextView) RootView.findViewById(R.id.vetListName);
+        return RootView;
     }
 
-    public void setNameTextView(String text){
+    public void setNameTextView(String text)
+    {
+
+      //  TextView nameTextView = (TextView) getView().findViewById(R.id.vetListName);
+
         nameTextView.setText(text);
+    }
+    public TextView getVetNameTextView(){
+        return nameTextView;
     }
 }
 

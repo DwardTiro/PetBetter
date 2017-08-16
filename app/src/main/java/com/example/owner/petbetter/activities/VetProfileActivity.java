@@ -19,7 +19,7 @@ public class VetProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_vet_profile);
     }
     public void backClicked(View view){
-        Intent intent = new Intent(this, com.example.owner.petbetter.HomeActivity.class);
+        Intent intent = new Intent(this, com.example.owner.petbetter.activities.HomeActivity.class);
         startActivity(intent);
     }
 }

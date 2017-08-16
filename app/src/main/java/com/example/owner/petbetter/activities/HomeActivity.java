@@ -1,7 +1,9 @@
-package com.example.owner.petbetter;
+package com.example.owner.petbetter.activities;
 
 import android.content.Intent;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -11,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.activities.VetProfileActivity;
 import com.example.owner.petbetter.classes.Facility;
 import com.example.owner.petbetter.classes.User;
@@ -101,7 +104,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         textNavUser = (TextView) headerView.findViewById(R.id.textNavUser);
         textNavUser.setText(user.getName());
 
-        vetButtonClicked(this.navigationView);
 
 
     }
@@ -180,24 +182,29 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void vetButtonClicked(View view){
-        FragmentVetListing fragment = new FragmentVetListing();
-        getSupportFragmentManager().beginTransaction().add(R.id.frame_container,fragment).commit();
-
-        vetList = getVeterinarians();
-
-        TextView vetNameTextView = (TextView) view.findViewById(R.id.vetListName);
-        TextView vetClinicTextView = (TextView) findViewById(R.id.vetListClinic);
-        TextView vetAddressTextView = (TextView) findViewById(R.id.vetListAddress);
-        ArrayList<Facility> facilities;
 
 
+        FragmentVetListing fragment1 = new FragmentVetListing();
+       // getSupportFragmentManager().beginTransaction().add(R.id.frame_container,fragment1).commit();
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        //vetList = getVeterinarians();
 
-        for(int i = 0; i < vetList.size(); i++){
+
+        fragment1.getVetNameTextView().setText("Kristian Sisayan");
+        //for(int i = 0; i<3;i++){
+
+          //  ft.add(R.id.frame_container,fragment1,names.get(i).toString());
+        //}
+        ft.add(R.id.frame_container,fragment1,"first");
+     //  ft.add(R.id.frame_container,fragment1,"second");
+        ft.commit();
+     //   for(int i = 0; i < vetList.size(); i++){
 
             //vetNameTextView.setText(vetList.get(i).getFirstName() + " " + vetList.get(i).getLastName());
-            fragment.setNameTextView(vetList.get(i).getFirstName() + " " + vetList.get(i).getLastName());
+       //     fragment.setNameTextView(vetList.get(i).getFirstName() + " " + vetList.get(i).getLastName());
 
-            facilities = getClinics(vetList.get(i));
+         //   facilities = getClinics(vetList.get(i));
 
 
             /*
@@ -219,7 +226,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             */
         }
 
-    }
+
 
     public void vetListingClicked(View view){
 
@@ -247,8 +254,23 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         Toast.makeText(this,"Comm",Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.nav_bar,menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        int id = item.getItemId();
 
+        if(id == R.id.action_search){
+            Intent intent = new Intent(this, com.example.owner.petbetter.activities.SignUpActivity.class);
+            startActivity(intent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
 
     @Override
@@ -274,7 +296,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
         }
         else if(id == R.id.log_out){
-            Intent intent = new Intent(this, com.example.owner.petbetter.MainActivity.class);
+            Intent intent = new Intent(this, com.example.owner.petbetter.activities.MainActivity.class);
             startActivity(intent);
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

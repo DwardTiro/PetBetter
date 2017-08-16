@@ -29,13 +29,13 @@
         android:textStyle="bold"
         />
     <EditText
-        android:id="@+id/signUpEmail"
+        android:id="@+id/signUpFName"
         android:layout_width="260dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="60dp"
 
-        android:hint="Email Address"
+        android:hint="First Name"
 
         android:paddingLeft="10dp"
         android:textColorHint="@color/main_White"
@@ -43,15 +43,15 @@
 
         />
     <EditText
-        android:id="@+id/signUpPassword"
+        android:id="@+id/signUpLName"
         android:layout_width="260dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="5dp"
 
-        android:hint="Password"
+        android:hint="Last Name"
 
-        android:inputType="textPassword"
+        android:inputType="text"
         android:paddingLeft="10dp"
         android:textColorHint="@color/main_White"
         />
@@ -63,22 +63,20 @@
         android:layout_marginTop="5dp"
 
 
-        android:hint="Confirm Password"
+        android:hint="Username"
 
-        android:inputType="textPassword"
+        android:inputType="text"
         android:paddingLeft="10dp"
         android:textColorHint="@color/main_White"
         />
 
     <Button
-        android:id="@+id/signUpNextButton"
+        android:id="@+id/signUpButton"
         android:layout_width="140dp"
         android:layout_height="70dp"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
 
-        android:background="@drawable/petbetter_next_button"
-
-        android:onClick="nextClicked"
+        android:background="@drawable/petbetter_signup_button"
         />
 </LinearLayout>
