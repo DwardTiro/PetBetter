@@ -31,7 +31,7 @@ public class SignUpFinalActivity extends AppCompatActivity {
 
     }
     public void backButtonClicked(View view){
-        Intent intent = new Intent(this, com.example.owner.petbetter.activities.MainActivity.class);
+        Intent intent = new Intent(this, com.example.owner.petbetter.activities.SignUpActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);

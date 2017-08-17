@@ -1,4 +1,4 @@
-package com.example.owner.petbetter;
+package com.example.owner.petbetter.activities;
 
 import android.app.AlertDialog;
 import android.app.DialogFragment;
@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.classes.Marker;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
@@ -118,7 +119,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     Toast.makeText(MapsActivity.this, pointTemp.longitude+" "+pointTemp.latitude, Toast.LENGTH_LONG).show();
                     // draws the marker at the currently touched location
                     //touchMarker(pointTemp.longitude, pointTemp.latitude);
-                    Intent myIntent = new Intent(MapsActivity.this, com.example.owner.petbetter.AddMarkerActivity.class);
+                    Intent myIntent = new Intent(MapsActivity.this, com.example.owner.petbetter.activities.AddMarkerActivity.class);
                     Bundle extras = new Bundle();
                     markerId = generateMarkerId();
                     extras.putInt("MARKERID", markerId);

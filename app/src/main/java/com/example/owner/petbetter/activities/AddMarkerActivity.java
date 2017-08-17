@@ -1,4 +1,4 @@
-package com.example.owner.petbetter;
+package com.example.owner.petbetter.activities;
 
 import android.content.Intent;
 import android.location.Address;
@@ -16,6 +16,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
@@ -103,13 +104,13 @@ public class AddMarkerActivity extends AppCompatActivity {
             String bldgName = editBldgName.getText().toString();
             touchMarker(bldgName, longitude, latitude, location);
 
-            Intent intent = new Intent(this, com.example.owner.petbetter.MapsActivity.class);
+            Intent intent = new Intent(this, com.example.owner.petbetter.activities.MapsActivity.class);
             startActivity(intent);
         }
     }
 
     public void cancelClicked(View view){
-        Intent intent = new Intent(this, com.example.owner.petbetter.MapsActivity.class);
+        Intent intent = new Intent(this, com.example.owner.petbetter.activities.MapsActivity.class);
         startActivity(intent);
     }
 

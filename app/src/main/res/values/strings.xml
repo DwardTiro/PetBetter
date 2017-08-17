@@ -14,4 +14,7 @@
     <string name="landline">Landline:</string>
     <string name="sample_landline"> 8704421</string>
     <string name="action_search">Search</string>
+    <string name="login_button">Log in</string>
+    <string name="next_button">Next</string>
+    <string name="signup_button">Sign up</string>
 </resources>

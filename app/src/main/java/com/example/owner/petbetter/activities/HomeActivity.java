@@ -104,7 +104,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         textNavUser = (TextView) headerView.findViewById(R.id.textNavUser);
         textNavUser.setText(user.getName());
 
-
+        //vetButtonClicked(this.navigationView);
+        vetButtonClicked(this.findViewById(android.R.id.content));
 
     }
 
@@ -184,10 +185,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public void vetButtonClicked(View view){
 
 
+        //FragmentVetListing fragment = (FragmentVetListing) getSupportFragmentManager().findFragmentById(R.id.frame_container);
+        vetList = getVeterinarians();
+
         FragmentVetListing fragment1 = new FragmentVetListing();
-       // getSupportFragmentManager().beginTransaction().add(R.id.frame_container,fragment1).commit();
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
+        getSupportFragmentManager().beginTransaction().add(R.id.frame_container,fragment1).commit();
+       // FragmentManager fm = getSupportFragmentManager();
+       // FragmentTransaction ft = fm.beginTransaction();
         //vetList = getVeterinarians();
 
         System.out.println("VET LIST SIZE: " + vetList.size());
@@ -248,8 +252,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
 */
     }
->>>>>>> 6e42acbbfc72f661ac9d22261eb9bd283301c60d
-
 
     public void vetListingClicked(View view){
 
@@ -288,7 +290,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if(id == R.id.action_search){
-            Intent intent = new Intent(this, com.example.owner.petbetter.activities.SignUpActivity.class);
+            Intent intent = new Intent(this, com.example.owner.petbetter.activities.SearchActivity.class);
             startActivity(intent);
             return true;
         }
@@ -315,7 +317,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         else if(id==R.id.add_location){
             //Toast.makeText(this,"Location",Toast.LENGTH_SHORT).show();
 
-            Intent intent = new Intent(this, com.example.owner.petbetter.MapsActivity.class);
+            Intent intent = new Intent(this, com.example.owner.petbetter.activities.MapsActivity.class);
             startActivity(intent);
         }
         else if(id == R.id.log_out){

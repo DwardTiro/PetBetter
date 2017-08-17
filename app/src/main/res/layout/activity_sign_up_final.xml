@@ -12,7 +12,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginLeft="10dp"
 
-        android:onClick="backClicked"
+        android:onClick="backButtonClicked"
         />
 
     <TextView
@@ -71,12 +71,17 @@
         />
 
     <Button
-        android:id="@+id/signUpButton"
+        android:id="@+id/signUpFinalButton"
         android:layout_width="140dp"
-        android:layout_height="70dp"
+        android:layout_height="50dp"
         android:layout_gravity="center"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="18dp"
 
-        android:background="@drawable/petbetter_signup_button"
+        android:text="@string/signup_button"
+        android:textColor="@color/main_Color"
+        android:textSize="20dp"
+
+        android:background="@drawable/rounded_button"
+
         />
 </LinearLayout>

@@ -73,11 +73,15 @@
     <Button
         android:id="@+id/signUpNextButton"
         android:layout_width="140dp"
-        android:layout_height="70dp"
+        android:layout_height="50dp"
         android:layout_gravity="center"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="18dp"
 
-        android:background="@drawable/petbetter_next_button"
+        android:text="@string/next_button"
+        android:textColor="@color/main_Color"
+        android:textSize="20dp"
+
+        android:background="@drawable/rounded_button"
 
         android:onClick="nextClicked"
         />
