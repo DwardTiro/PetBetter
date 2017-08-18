@@ -25,9 +25,15 @@
             android:layout_marginLeft="15dp"
             android:layout_marginTop="15dp"
             android:onClick="backClicked"/>
-
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="100dp"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="150dp"
+            android:src="@drawable/vet_sample_pic"
+            />
     </RelativeLayout>
-
 
         <TextView
         android:id="@+id/profileName"
@@ -58,54 +64,109 @@
         android:layout_marginTop="10dp">
 
         <TextView
-        android:id="@+id/profileOperatingTimeText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+
         android:textSize="15dp"
         android:textColor="@color/black"
-        android:text="@string/sample_operating"
-        android:layout_gravity="center"
-        android:layout_marginTop="5dp"/>
+        android:text="Operating hours: "
+            android:textStyle="bold"
+        />
 
         <TextView
-            android:id="@+id/profileOperatingTime"
+            android:id="@+id/profileOpenTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="15dp"
             android:textColor="@color/black"
-            android:text="@string/sample_time"
+            android:text="@string/sample_open_time"
             android:layout_gravity="center"
             android:layout_marginTop="5dp"/>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text=" _ "
+            android:textStyle="bold"
+            android:textSize="15dp"/>
+
+        <TextView
+            android:id="@+id/profileCloseTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:textColor="@color/black"
+            android:text="@string/sample_close_time"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"/>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+
         android:orientation="horizontal"
-        android:layout_gravity="center">
+        >
 
         <TextView
-            android:id="@+id/profileLandlineText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="15dp"
-            android:textColor="@color/black"
-            android:text="@string/landline"
             android:layout_gravity="center"
-            android:layout_marginTop="5dp"/>
+            android:layout_marginTop="5dp"
+
+            android:text="Landline: "
+            android:textSize="15dp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+
+            />
 
         <TextView
             android:id="@+id/profileLandLine"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+
+            android:text="@string/sample_landline"
             android:textSize="15dp"
             android:textColor="@color/black"
-            android:text="@string/sample_landline"
-            android:layout_gravity="center"
-            android:layout_marginTop="5dp"/>
+            />
 
 
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center"
+
+        android:orientation="horizontal"
+        >
+        <TextView
+            android:id="@+id/profileRatingText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rating: "
+            android:textStyle="bold"
+            android:textColor="@color/black"/>
+        <TextView
+            android:id="@+id/profileRatingNumerator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sample_rating"
+            android:textColor="@color/black"/>
+        <TextView
+            android:id="@+id/profileRatingDenominator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="/5"
+            android:textColor="@color/black"/>
     </LinearLayout>
     <Button
         android:id="@+id/viewMapButton"
@@ -121,7 +182,35 @@
         android:textColor="@color/main_White"
         />
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center"
+        >
+        <Button
+            android:id="@+id/messageVetButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
 
+            android:text="Message"
+            />
+        <Button
+            android:id="@+id/bookmarkVetButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:text="Bookmark"
+            />
+        <Button
+            android:id="@+id/rateVetButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:text="Rate"/>
+
+
+    </LinearLayout>
 
 </LinearLayout>
 </ScrollView>

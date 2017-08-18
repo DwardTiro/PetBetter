@@ -8,11 +8,13 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="no_account"><u>Don\'t have an account yet?</u></string>
     <string name="sample_address">Solenad 1 Nuvali, Sta. Rosa Laguna</string>
-    <string name="sample_name">John Ivanhoe</string>
-    <string name="sample_operating">Operating hours:</string>
-    <string name="sample_time">8:00 am - 5:00 pm</string>
-    <string name="landline">Landline:</string>
+    <string name="sample_name">San Graham</string>
+    <string name="sample_operating">Operating hours: </string>
+    <string name="sample_open_time">8:00 am</string>
+    <string name="sample_close_time">5:00 pm</string>
+    <string name="landline">Landline: </string>
     <string name="sample_landline"> 8704421</string>
+    <string name="sample_rating">4.5</string>
     <string name="action_search">Search</string>
     <string name="login_button">Log in</string>
     <string name="next_button">Next</string>
