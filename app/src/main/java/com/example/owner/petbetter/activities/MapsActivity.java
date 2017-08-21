@@ -92,6 +92,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
 
         mMap = googleMap;
+        //geocoder = new Geocoder(this, Locale.getDefault());
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
 
             @Override
@@ -106,17 +107,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 //Get LatLng from touched point;
 
                 ///here is reverse GeoCoding which helps in getting address from latlng
-
+                //Toast.makeText(MapsActivity.this, pointTemp.longitude+" "+pointTemp.latitude, Toast.LENGTH_LONG).show();
                 try {
                     Geocoder geo = new Geocoder(MapsActivity.this.getApplicationContext(), Locale.getDefault());
                     //List<Address> addresses = geo.getFromLocation(touchLat,touchLong, 1);
-                    List<Address> addresses = geo.getFromLocation(pointTemp.latitude,pointTemp.longitude, 1);
 
+                    List<Address> addresses = geo.getFromLocation(pointTemp.latitude,pointTemp.longitude, 1);
 
                     for(int i = 0; i < addresses.get(0).getMaxAddressLineIndex(); i++) {
                         location += " --- " + addresses.get(0).getAddressLine(i);
                     }
-                    Toast.makeText(MapsActivity.this, pointTemp.longitude+" "+pointTemp.latitude, Toast.LENGTH_LONG).show();
+
                     // draws the marker at the currently touched location
                     //touchMarker(pointTemp.longitude, pointTemp.latitude);
                     Intent myIntent = new Intent(MapsActivity.this, com.example.owner.petbetter.activities.AddMarkerActivity.class);
@@ -134,12 +135,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
                 catch (Exception e) {
                     e.printStackTrace(); // getFromLocation() may sometimes fail
+                    Toast.makeText(MapsActivity.this, "Service is not available. Google Play Services not up to date", Toast.LENGTH_LONG).show();
                 }
             }
         });
         loadMarkers(user.getUserId());
-
-        geocoder = new Geocoder(this, Locale.getDefault());
     }
 
     public int generateMarkerId(){

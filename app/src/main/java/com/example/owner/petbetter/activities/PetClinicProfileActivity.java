@@ -79,7 +79,7 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         return petClinicServiceOne;
     }
     public ImageView getPetClinicServiceTwo(){
-        return petClinicServiceTwo
+        return petClinicServiceTwo;
     }
     public ImageView getPetClinicServiceThree(){
         return petClinicServiceThree;
@@ -107,7 +107,7 @@ public class PetClinicProfileActivity extends AppCompatActivity {
     public void setPetClinicRating(String str){
         petClinicRating.setText(str);
     }
-  
+
 
 
 

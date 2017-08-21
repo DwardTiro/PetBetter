@@ -205,6 +205,36 @@ public class DataAdapter {
         return ids;
     }
 
+    public ArrayList<Integer> getUserIds () {
+
+        ArrayList<Integer> ids = new ArrayList<>();
+
+        String sql = "SELECT _id FROM "+USER_TABLE;
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            ids.add(c.getInt(c.getColumnIndexOrThrow("_id")));
+        }
+
+        c.close();
+        return ids;
+    }
+
+    public ArrayList<Integer> getVetIds () {
+
+        ArrayList<Integer> ids = new ArrayList<>();
+
+        String sql = "SELECT _id FROM "+VET_TABLE;
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            ids.add(c.getInt(c.getColumnIndexOrThrow("_id")));
+        }
+
+        c.close();
+        return ids;
+    }
+
     public ArrayList<Marker> loadMarkers(long userId){
         ArrayList<Marker> results = new ArrayList<>();
 
@@ -255,33 +285,12 @@ public class DataAdapter {
         return results;
     }
 
-    public ArrayList<Facility> getClinics(Veterinarian veterinarian){
-        ArrayList<Facility> results = new ArrayList<>();
-        String temp;
-
-        String sql = "SELECT * FROM " + FACI_TABLE + " WHERE vet_id = '" + veterinarian.getId() + "'";
-        Cursor c = petBetterDb.rawQuery(sql, null);
-
-        while(c.moveToNext()) {
-            Facility facility = new Facility(c.getInt(c.getColumnIndexOrThrow("_id")),
-                    c.getString(c.getColumnIndexOrThrow("faci_name")),
-                    c.getString(c.getColumnIndexOrThrow("location")),
-                    c.getString(c.getColumnIndexOrThrow("hours_open")),
-                    c.getString(c.getColumnIndexOrThrow("hours_close")),
-                    c.getString(c.getColumnIndexOrThrow("contact_info")),
-                    c.getInt(c.getColumnIndexOrThrow("vet_id")));
-            results.add(facility);
-        }
-
-        c.close();
-        return results;
-    }
-
     public ArrayList<Facility> getClinics(){
         ArrayList<Facility> results = new ArrayList<>();
         String temp;
 
-        String sql = "SELECT * FROM "+FACI_TABLE;
+        //String sql = "SELECT * FROM " + FACI_TABLE + " WHERE vet_id = '" + veterinarian.getId() + "'";
+        String sql = "SELECT * FROM " + FACI_TABLE;
         Cursor c = petBetterDb.rawQuery(sql, null);
 
         while(c.moveToNext()) {
@@ -291,7 +300,8 @@ public class DataAdapter {
                     c.getString(c.getColumnIndexOrThrow("hours_open")),
                     c.getString(c.getColumnIndexOrThrow("hours_close")),
                     c.getString(c.getColumnIndexOrThrow("contact_info")),
-                    c.getInt(c.getColumnIndexOrThrow("vet_id")));
+                    c.getInt(c.getColumnIndexOrThrow("vet_id")),
+                    c.getInt(c.getColumnIndexOrThrow("rating")));
             results.add(facility);
         }
 
@@ -311,6 +321,26 @@ public class DataAdapter {
 
         System.out.println("THE RESULT IS "+result);
         System.out.println("MARKER ID IS " +rowId);
+
+        return result;
+    }
+
+    public long addUser(int userId, String firstName, String lastName, String email, String password, int userType){
+        long result;
+
+        ContentValues cv = new ContentValues();
+        cv.put("_id", userId);
+        cv.put("first_name", firstName);
+        cv.put("last_name", lastName);
+        cv.put("mobile_num", "");
+        cv.put("phone_num", "");
+        cv.put("email", email);
+        cv.put("password", password);
+        cv.put("age", 0);
+        cv.put("user_type", userType);
+
+
+        result = petBetterDb.insert(USER_TABLE, null, cv);
 
         return result;
     }
