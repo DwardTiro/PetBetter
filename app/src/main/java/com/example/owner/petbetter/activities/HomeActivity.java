@@ -267,6 +267,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
     public void petClinicListingClicked(View view){
 
+        Intent intent = new Intent(this, com.example.owner.petbetter.activities.PetClinicProfileActivity.class);
+        startActivity(intent);
     }
 
     public void petCareButtonClicked(View view){

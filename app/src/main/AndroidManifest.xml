@@ -88,6 +88,13 @@
 
             <category android:name="android.intent.category.LAUNCHER" />
         </activity>
+        <activity android:name=".activities.PetClinicProfileActivity"
+            android:label="Pet Clinic Listing">
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </activity>
+
     </application>
 
 </manifest>

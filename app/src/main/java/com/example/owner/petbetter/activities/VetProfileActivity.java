@@ -19,7 +19,8 @@ public class VetProfileActivity extends AppCompatActivity {
     private ImageView profileBG;
     private TextView vetName;
     private TextView vetClinicAddress;
-    private TextView vetTime;
+    private TextView vetOpenTime;
+    private TextView vetCloseTime;
     private TextView vetLandline;
     @Override
     protected void onCreate(Bundle savedInstance){
@@ -33,7 +34,8 @@ public class VetProfileActivity extends AppCompatActivity {
         profileBG = (ImageView) view.findViewById(R.id.profileImage);
         vetName = (TextView) view.findViewById(R.id.vetListName);
         vetClinicAddress = (TextView) view.findViewById(R.id.vetListAddress);
-        vetTime = (TextView) view.findViewById(R.id.profileOperatingTime);
+        vetOpenTime = (TextView) view.findViewById(R.id.profileOpenTime);
+        vetCloseTime = (TextView) view.findViewById(R.id.profileCloseTime);
         vetLandline = (TextView) view.findViewById(R.id.profileLandLine);
 
     }
@@ -47,8 +49,11 @@ public class VetProfileActivity extends AppCompatActivity {
     public TextView getVetClinicAddress(){
         return vetClinicAddress;
     }
-    public TextView getVetTime(){
-        return vetTime;
+    public TextView getVetOpenTime(){
+        return vetOpenTime;
+    }
+    public TextView getVetCloseTime(){
+        return vetCloseTime;
     }
     public TextView getVetLandline(){
         return vetLandline;
@@ -62,8 +67,11 @@ public class VetProfileActivity extends AppCompatActivity {
     public void setVetClinicAddress(String str){
         vetClinicAddress.setText(str);
     }
-    public void setVetTime(String str){
-        vetTime.setText(str);
+    public void setVetOpenTime(String str){
+        vetOpenTime.setText(str);
+    }
+    public void setVetCloseTime(String str){
+        vetCloseTime.setText(str);
     }
     public void setVetLandline(String str){
         vetLandline.setText(str);
