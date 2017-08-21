@@ -205,6 +205,21 @@ public class DataAdapter {
         return ids;
     }
 
+    public ArrayList<Integer> getUserIds () {
+
+        ArrayList<Integer> ids = new ArrayList<>();
+
+        String sql = "SELECT _id FROM "+USER_TABLE;
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            ids.add(c.getInt(c.getColumnIndexOrThrow("_id")));
+        }
+
+        c.close();
+        return ids;
+    }
+
     public ArrayList<Integer> getVetIds () {
 
         ArrayList<Integer> ids = new ArrayList<>();
@@ -306,6 +321,26 @@ public class DataAdapter {
 
         System.out.println("THE RESULT IS "+result);
         System.out.println("MARKER ID IS " +rowId);
+
+        return result;
+    }
+
+    public long addUser(int userId, String firstName, String lastName, String email, String password, int userType){
+        long result;
+
+        ContentValues cv = new ContentValues();
+        cv.put("_id", userId);
+        cv.put("first_name", firstName);
+        cv.put("last_name", lastName);
+        cv.put("mobile_num", "");
+        cv.put("phone_num", "");
+        cv.put("email", email);
+        cv.put("password", password);
+        cv.put("age", 0);
+        cv.put("user_type", userType);
+
+
+        result = petBetterDb.insert(USER_TABLE, null, cv);
 
         return result;
     }

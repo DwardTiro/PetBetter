@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/main_Color">
@@ -19,7 +19,6 @@
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="90dp"
 
         android:typeface="sans"
 
@@ -27,13 +26,14 @@
         android:textSize="28dp"
         android:textColor="@color/main_White"
         android:textStyle="bold"
-        />
+        android:id="@+id/textView2"
+        android:layout_below="@+id/signUpBack"
+        android:layout_alignEnd="@+id/signUpFName" />
     <EditText
         android:id="@+id/signUpFName"
         android:layout_width="260dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="60dp"
 
         android:hint="First Name"
 
@@ -41,26 +41,29 @@
         android:textColorHint="@color/main_White"
         android:inputType="text"
 
-        />
+        android:layout_below="@+id/textView2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="43dp" />
     <EditText
         android:id="@+id/signUpLName"
         android:layout_width="260dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="5dp"
 
         android:hint="Last Name"
 
         android:inputType="text"
         android:paddingLeft="10dp"
         android:textColorHint="@color/main_White"
-        />
+        android:layout_below="@+id/signUpFName"
+        android:layout_alignStart="@+id/signUpFName"
+        android:layout_marginTop="12dp" />
     <EditText
-        android:id="@+id/signUpConfirmPassword"
+        android:id="@+id/signUpUsername"
         android:layout_width="260dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="21dp"
 
 
         android:hint="Username"
@@ -68,20 +71,32 @@
         android:inputType="text"
         android:paddingLeft="10dp"
         android:textColorHint="@color/main_White"
-        />
+        android:layout_below="@+id/signUpLName"
+        android:layout_alignStart="@+id/signUpLName" />
 
     <Button
         android:id="@+id/signUpFinalButton"
         android:layout_width="140dp"
         android:layout_height="50dp"
         android:layout_gravity="center"
-        android:layout_marginTop="18dp"
-
-        android:text="@string/signup_button"
-        android:textColor="@color/main_Color"
-        android:textSize="20dp"
 
         android:background="@drawable/rounded_button"
+        android:onClick="nextButtonClicked"
+        android:text="@string/signup_button"
 
-        />
-</LinearLayout>
+        android:textColor="@color/main_Color"
+        android:textSize="20dp"
+        android:layout_below="@+id/signUpUsername"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="107dp" />
+
+    <Spinner
+        android:id="@+id/spinnerUserType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/signUpUsername"
+        android:layout_marginTop="37dp"
+        android:layout_alignEnd="@+id/signUpFinalButton"
+        android:layout_alignStart="@+id/signUpFinalButton" />
+
+</RelativeLayout>
