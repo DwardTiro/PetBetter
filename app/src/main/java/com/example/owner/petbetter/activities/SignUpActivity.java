@@ -28,6 +28,9 @@ public class SignUpActivity extends AppCompatActivity {
 
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_sign_up);
+        emailAdd = (EditText) findViewById(R.id.signUpEmail);
+        pWord = (EditText) findViewById(R.id.signUpPassword);
+        confirmPWord = (EditText) findViewById(R.id.signUpConfirmPassword);
 
     }
     public void backClicked(View view){
@@ -39,7 +42,12 @@ public class SignUpActivity extends AppCompatActivity {
 
     public void nextClicked(View view){
         Intent intent = new Intent(this, com.example.owner.petbetter.activities.SignUpFinalActivity.class);
-
+        Bundle extras = new Bundle();
+        //try emailAdd.getText().toString() if it doesn't work.
+        extras.putString("EMAILADD", emailAdd.getText().toString());
+        extras.putString("PASSWORD", pWord.getText().toString());
+        extras.putString("CONFIRMPASSWORD", confirmPWord.getText().toString());
+        intent.putExtras(extras);
         startActivity(intent);
     }
 }

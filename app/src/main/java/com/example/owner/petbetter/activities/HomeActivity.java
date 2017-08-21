@@ -43,7 +43,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private HorizontalScrollView menuBar;
     private Button vetButton;
     private Button petCareButton;
-    private Button commButton;
     private TextView textNavEmail, textNavUser;
 
     private String userName;
@@ -75,7 +74,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         menuBar = (HorizontalScrollView) findViewById(R.id.menu_bar);
         vetButton = (Button) findViewById(R.id.vetButton);
         petCareButton = (Button) findViewById(R.id.petCareButton);
-        commButton = (Button) findViewById(R.id.commButton);
 
         View headerView = navigationView.getHeaderView(0);
 
@@ -162,7 +160,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             e.printStackTrace();
         }
 
-        ArrayList<Facility> result = petBetterDb.getClinics(veterinarian);
+        ArrayList<Facility> result = petBetterDb.getClinics();
         petBetterDb.closeDatabase();
 
         return result;
@@ -195,62 +193,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         //vetList = getVeterinarians();
 
         System.out.println("VET LIST SIZE: " + vetList.size());
-/*
-=======
 
-        fragment1.getVetNameTextView().setText("Kristian Sisayan");
-        //for(int i = 0; i<3;i++){
-
-<<<<<<< HEAD
-          //  ft.add(R.id.frame_container,fragment1,names.get(i).toString());
-        //}
-        ft.add(R.id.frame_container,fragment1,"first");
-     //  ft.add(R.id.frame_container,fragment1,"second");
-        ft.commit();
-     //   for(int i = 0; i < vetList.size(); i++){
-
-            //vetNameTextView.setText(vetList.get(i).getFirstName() + " " + vetList.get(i).getLastName());
-       //     fragment.setNameTextView(vetList.get(i).getFirstName() + " " + vetList.get(i).getLastName());
-
-         //   facilities = getClinics(vetList.get(i));
-=======
->>>>>>> origin/master
-        for(int i = 0; i < vetList.size(); i++){
-
-            //vetNameTextView.setText(vetList.get(i).getFirstName() + " " + vetList.get(i).getLastName());
-            fragment.setNameTextView(vetList.get(i).getFirstName() + " " + vetList.get(i).getLastName());
-<<<<<<< HEAD
-            System.out.println("FARGMENT USE SUCCESSFUL");
-=======
-
->>>>>>> origin/master
-            facilities = getClinics(vetList.get(i));
->>>>>>> 6e42acbbfc72f661ac9d22261eb9bd283301c60d
-
-
-            /*
-            vetClinicTextView.setText("works at ");
-            for(int j = 0;j<facilities.size();j++){
-                if(j==0)
-                    vetClinicTextView.append(facilities.get(j).getFaciName());
-                else
-                    vetClinicTextView.append(", " + facilities.get(j).getFaciName());
-            }
-
-            vetAddressTextView.setText("");
-            for(int j = 0;j<facilities.size();j++){
-                if(j==0)
-                    vetAddressTextView.append(facilities.get(j).getLocation());
-                else
-                    vetAddressTextView.append(", " + facilities.get(j).getLocation());
-            }
-<<<<<<< HEAD
-
-<<<<<<< HEAD
-
-=======
-        }
-*/
     }
 
     public void vetListingClicked(View view){
@@ -265,7 +208,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         startActivity(intent);*/
        //setContentView(R.layout.activity_vet_profile);
     }
-    public void petClinicListingClicked(View view){
+    public void petCareListingClicked(View view){
 
         Intent intent = new Intent(this, com.example.owner.petbetter.activities.PetClinicProfileActivity.class);
         startActivity(intent);
@@ -275,10 +218,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         FragmentPetClinicListing fragment = new FragmentPetClinicListing();
 
         getSupportFragmentManager().beginTransaction().add(R.id.frame_container,fragment).commit();
-    }
-    public void commButtonClicked(View view){
-
-        Toast.makeText(this,"Comm",Toast.LENGTH_SHORT).show();
     }
 
     @Override
