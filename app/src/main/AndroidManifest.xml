@@ -16,9 +16,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/app_icon"
         android:label="PetBetter"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/app_icon"
         android:supportsRtl="true"
 
         android:theme="@style/AppTheme">
@@ -51,9 +51,8 @@
             android:label="@string/title_activity_maps"
             >
             <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
 
-            <category android:name="android.intent.category.LAUNCHER" />
+            <category android:name="android.intent.category.ALTERNATIVE" />
             </intent-filter>
             </activity>
         <activity android:name=".activities.AddMarkerActivity"></activity>
@@ -61,7 +60,6 @@
         <activity android:name=".activities.SignUpActivity"
             android:label="Sign Up">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
@@ -70,9 +68,8 @@
         <activity android:name=".activities.VetProfileActivity"
             android:label="Veterinary Profile">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.ALTERNATIVE" />
             </intent-filter>
 
         </activity>
@@ -80,7 +77,6 @@
         <activity android:name=".activities.SignUpFinalActivity"
         android:label="Sign Up Final Page">
         <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
 
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
@@ -88,15 +84,13 @@
          </activity>
         <activity android:name=".activities.SearchActivity"
             android:label="Search">
-            <action android:name="android.intent.action.MAIN" />
 
             <category android:name="android.intent.category.LAUNCHER" />
         </activity>
         <activity android:name=".activities.PetClinicProfileActivity"
             android:label="Pet Clinic Listing">
-            <action android:name="android.intent.action.MAIN" />
 
-            <category android:name="android.intent.category.LAUNCHER" />
+            <category android:name="android.intent.category.ALTERNATIVE" />
         </activity>
 
     </application>
