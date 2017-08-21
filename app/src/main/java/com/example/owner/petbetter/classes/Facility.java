@@ -8,10 +8,10 @@ import java.util.ArrayList;
 
 public class Facility {
     private long id;
-    private int vetId;
+    private int vetId, rating;
     private String faciName, location, hoursOpen, hoursClose, contactInfo;
 
-    public Facility(int id, String faciName, String location, String hoursOpen, String hoursClose, String contactInfo, int vetId) {
+    public Facility(int id, String faciName, String location, String hoursOpen, String hoursClose, String contactInfo, int vetId, int rating) {
         this.id = id;
         this.faciName = faciName;
         this.location = location;
@@ -19,13 +19,21 @@ public class Facility {
         this.hoursClose = hoursClose;
         this.contactInfo = contactInfo;
         this.vetId = vetId;
+        this.rating = rating;
     }
 
-    public int getVet_id() {
+    public int getRating(){
+        return rating;
+    }
+    public void setRating(int rating){
+        this.rating = rating;
+    }
+
+    public int getVetId() {
         return vetId;
     }
 
-    public void setVet_id(int vetId) {
+    public void setVetId(int vetId) {
         this.vetId = vetId;
     }
 

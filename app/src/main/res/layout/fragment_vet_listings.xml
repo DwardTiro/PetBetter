@@ -4,42 +4,13 @@
     android:layout_height="250dp"
     android:background="@drawable/listing_border"
     android:layout_gravity="center"
-    android:onClick="vetListingClicked"
-    >
+    android:weightSum="1">
 
-    <ImageView
-        android:id="@+id/vetListImage"
+    <android.support.v7.widget.RecyclerView
+        android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:layout_margin="3dp"
-        android:layout_marginRight="3dp"
-        android:background="@drawable/sample_vet_clinic"/>
-    <TextView
-        android:id="@+id/vetListName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="@string/sample_name"
-        android:textSize="@dimen/listing_font_size"
-        android:textColor="@color/darkAccent"
-        android:textStyle="bold"
-        android:layout_gravity="center_horizontal"/>
-    <TextView
-        android:id="@+id/vetListClinic"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_gravity="center"
-        android:text="works at Ivanhoe Veterinary Clinic"
-        android:textSize="15dp"
-        />
-    <TextView
-        android:id="@+id/vetListAddress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_gravity="center"
-        android:text="@string/sample_address"
-        />
+        android:id="@+id/vetListing"
+        android:scrollbars="vertical">
 
+    </android.support.v7.widget.RecyclerView>
 </LinearLayout>
