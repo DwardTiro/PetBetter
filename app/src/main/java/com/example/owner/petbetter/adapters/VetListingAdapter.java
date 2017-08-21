@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.classes.Veterinarian;
@@ -54,6 +55,8 @@ public class VetListingAdapter extends RecyclerView.Adapter<VetListingAdapter.Ve
         super.onAttachedToRecyclerView(recyclerView);
     }
 
+
+
     class VetListingViewHolder extends RecyclerView.ViewHolder{
 
         private ImageView vetListImage;
@@ -69,4 +72,5 @@ public class VetListingAdapter extends RecyclerView.Adapter<VetListingAdapter.Ve
             vetListRating = (TextView) itemView.findViewById(R.id.vetListRating);
         }
     }
+
 }

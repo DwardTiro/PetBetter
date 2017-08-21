@@ -202,7 +202,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
 
         Intent intent = new Intent(this, com.example.owner.petbetter.activities.VetProfileActivity.class);
+       // intent.putExtra("vetId",);
         startActivity(intent);
+
        /*
         Intent intent = new Intent(this, VetProfileActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -213,6 +215,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public void petCareListingClicked(View view){
 
         Intent intent = new Intent(this, com.example.owner.petbetter.activities.PetClinicProfileActivity.class);
+
         startActivity(intent);
     }
 

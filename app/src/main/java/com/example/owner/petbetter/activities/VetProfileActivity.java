@@ -23,6 +23,9 @@ public class VetProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstance){
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_vet_profile);
+
+        Intent intent = getIntent();
+
     }
     public void backClicked(View view){
         Intent intent = new Intent(this, com.example.owner.petbetter.activities.HomeActivity.class);
