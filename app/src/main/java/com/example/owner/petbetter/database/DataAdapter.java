@@ -205,6 +205,21 @@ public class DataAdapter {
         return ids;
     }
 
+    public ArrayList<Integer> getVetIds () {
+
+        ArrayList<Integer> ids = new ArrayList<>();
+
+        String sql = "SELECT _id FROM "+VET_TABLE;
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            ids.add(c.getInt(c.getColumnIndexOrThrow("_id")));
+        }
+
+        c.close();
+        return ids;
+    }
+
     public ArrayList<Marker> loadMarkers(long userId){
         ArrayList<Marker> results = new ArrayList<>();
 
