@@ -205,6 +205,7 @@ public class DataAdapter {
         return ids;
     }
 
+<<<<<<< HEAD
     public ArrayList<Integer> getUserIds () {
 
         ArrayList<Integer> ids = new ArrayList<>();
@@ -220,6 +221,8 @@ public class DataAdapter {
         return ids;
     }
 
+=======
+>>>>>>> origin/master
     public ArrayList<Integer> getVetIds () {
 
         ArrayList<Integer> ids = new ArrayList<>();
