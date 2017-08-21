@@ -4,12 +4,12 @@
     android:layout_height="250dp"
     android:background="@drawable/listing_border"
     android:layout_gravity="center"
-    android:weightSum="1">
+    >
 
     <android.support.v7.widget.RecyclerView
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"
         android:id="@+id/petCareListing"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:scrollbars="vertical">
 
     </android.support.v7.widget.RecyclerView>
