@@ -200,7 +200,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
 
         Intent intent = new Intent(this, com.example.owner.petbetter.activities.VetProfileActivity.class);
-       // intent.putExtra("vetId",);
+       
         startActivity(intent);
 
        /*
