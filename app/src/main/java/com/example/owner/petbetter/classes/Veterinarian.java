@@ -28,6 +28,10 @@ public class Veterinarian extends User {
         return specialty;
     }
 
+    public String getName() {
+        return super.getName();
+    }
+
     public void setSpecialty(String specialty) {
         this.specialty = specialty;
     }
