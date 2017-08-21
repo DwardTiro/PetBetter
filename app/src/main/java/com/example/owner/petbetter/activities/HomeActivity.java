@@ -43,6 +43,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private HorizontalScrollView menuBar;
     private Button vetButton;
     private Button petCareButton;
+    private Button commButton;
     private TextView textNavEmail, textNavUser;
 
     private String userName;
@@ -74,6 +75,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         menuBar = (HorizontalScrollView) findViewById(R.id.menu_bar);
         vetButton = (Button) findViewById(R.id.vetButton);
         petCareButton = (Button) findViewById(R.id.petCareButton);
+        commButton = (Button) findViewById(R.id.commButton);
 
         View headerView = navigationView.getHeaderView(0);
 
@@ -200,9 +202,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
 
         Intent intent = new Intent(this, com.example.owner.petbetter.activities.VetProfileActivity.class);
+<<<<<<< HEAD
        
+=======
+>>>>>>> 5e188fb990684e27637bb49963af0bd983c35da6
         startActivity(intent);
-
        /*
         Intent intent = new Intent(this, VetProfileActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -213,7 +217,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public void petCareListingClicked(View view){
 
         Intent intent = new Intent(this, com.example.owner.petbetter.activities.PetClinicProfileActivity.class);
-
         startActivity(intent);
     }
 
@@ -221,6 +224,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         FragmentPetClinicListing fragment = new FragmentPetClinicListing();
 
         getSupportFragmentManager().beginTransaction().add(R.id.frame_container,fragment).commit();
+    }
+
+    public void commButtonClicked(View view){
+
+        Toast.makeText(this,"Comm",Toast.LENGTH_SHORT).show();
     }
 
     @Override

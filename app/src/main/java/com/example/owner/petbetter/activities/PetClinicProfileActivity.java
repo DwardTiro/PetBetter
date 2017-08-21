@@ -107,7 +107,7 @@ public class PetClinicProfileActivity extends AppCompatActivity {
     public void setPetClinicRating(String str){
         petClinicRating.setText(str);
     }
-
+  
 
 
 
