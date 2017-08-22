@@ -192,7 +192,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         getSupportFragmentManager().beginTransaction().add(R.id.frame_container,fragment1).commit();
        // FragmentManager fm = getSupportFragmentManager();
        // FragmentTransaction ft = fm.beginTransaction();
-        //vetList = getVeterinarians();
+        // vetList = getVeterinarians();
 
         System.out.println("VET LIST SIZE: " + vetList.size());
 
@@ -202,6 +202,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
 
         Intent intent = new Intent(this, com.example.owner.petbetter.activities.VetProfileActivity.class);
+
+        Bundle extras = new Bundle();
+
+
 
         startActivity(intent);
        /*
@@ -224,8 +228,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void commButtonClicked(View view){
-
-        Toast.makeText(this,"Comm",Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -239,8 +241,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if(id == R.id.action_search){
-            Intent intent = new Intent(this, com.example.owner.petbetter.activities.SearchActivity.class);
-            startActivity(intent);
+           // Intent intent = new Intent(this, com.example.owner.petbetter.activities.SearchActivity.class);
+            //startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);

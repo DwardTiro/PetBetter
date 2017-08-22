@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.owner.petbetter.R;
+import com.example.owner.petbetter.activities.VetProfileActivity;
 import com.example.owner.petbetter.adapters.VetListingAdapter;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
@@ -38,6 +39,7 @@ public class FragmentVetListing extends Fragment {
     private SystemSessionManager systemSessionManager;
     private User user;
 
+    private VetProfileActivity vetProfileActivity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance){
@@ -107,9 +109,11 @@ public class FragmentVetListing extends Fragment {
         return result;
     }
 
+
     //create a list that will be getting stuff from data and follow the video on how it will pass the data to adapter.
     public void setNameTextView(String text){
         nameTextView.setText(text);
     }
+
 }
 
