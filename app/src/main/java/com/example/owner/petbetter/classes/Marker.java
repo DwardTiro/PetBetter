@@ -9,14 +9,24 @@ public class Marker {
     String bldgName, location;
     long id, userId;
     double longitude, latitude;
+    int type;
 
-    public Marker(long id, String bldgName, double longitude, double latitude, String location, long userId) {
+    public Marker(long id, String bldgName, double longitude, double latitude, String location, long userId, int type) {
         this.id = id;
         this.bldgName = bldgName;
         this.longitude = longitude;
         this.latitude = latitude;
         this.location = location;
         this.userId = userId;
+        this.type = type;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     public String getBldgName() {

@@ -13,6 +13,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,13 +34,14 @@ import java.util.Locale;
 public class AddMarkerActivity extends AppCompatActivity {
 
     private EditText editBldgName;
+    private Spinner locTypeSpinner;
 
     private DataAdapter petBetterDb;
     private SystemSessionManager systemSessionManager;
     private User user;
     private String email;
     private Address tempAddress = null;
-    private int markerId;
+    private int markerId, type;
 
     public static final int USE_ADDRESS_NAME = 1;
     public static final int USE_ADDRESS_LOCATION = 2;
@@ -68,6 +70,10 @@ public class AddMarkerActivity extends AppCompatActivity {
 
         email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
         user = getUser(email);
+        locTypeSpinner = (Spinner) findViewById(R.id.spinnerLocType);
+        if(user.getUserType()==2){
+            locTypeSpinner.setVisibility(View.INVISIBLE);
+        }
 
         Bundle extras = getIntent().getExtras();
         markerId = extras.getInt("MARKERID");
@@ -80,6 +86,7 @@ public class AddMarkerActivity extends AppCompatActivity {
 
 
         editBldgName = (EditText) findViewById(R.id.editBldgName);
+        editBldgName.requestFocusFromTouch();
 
     }
 
@@ -96,6 +103,13 @@ public class AddMarkerActivity extends AppCompatActivity {
     }
 
     public void okClicked(View view){
+
+        if(locTypeSpinner.getSelectedItem().toString()=="Save in Bookmarks"){
+            type= 1;
+        }
+        else{
+            type = 2;
+        }
 
         if(editBldgName.getText().toString().matches("")){
             Toast.makeText(this,"Give a name to the location",Toast.LENGTH_SHORT).show();
@@ -134,7 +148,7 @@ public class AddMarkerActivity extends AppCompatActivity {
         }catch (SQLException e) {
             e.printStackTrace();
         }
-        petBetterDb.touchMarker(markerId, bldgName, longitude, latitude, location, user.getUserId());
+        petBetterDb.touchMarker(markerId, bldgName, longitude, latitude, location, user.getUserId(), type);
         petBetterDb.closeDatabase();
 
     }

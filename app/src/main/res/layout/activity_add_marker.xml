@@ -41,6 +41,15 @@
         android:layout_marginTop="71dp"
         android:inputType="textPersonName"
         android:hint="Name of the location"
-        android:layout_alignEnd="@+id/cancelButton"
-        android:onClick="cancelClicked"/>
+        android:layout_alignEnd="@+id/cancelButton"/>
+
+    <Spinner
+        android:id="@+id/spinnerLocType"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:entries="@array/typeSpinner"/>
+
+
 </RelativeLayout>

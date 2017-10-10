@@ -65,7 +65,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        System.out.println("Eyy");
 
         systemSessionManager = new SystemSessionManager(this);
         if(systemSessionManager.checkLogin())
@@ -75,7 +74,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         initializeDatabase();
         email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
         user = getUser(email);
-
+        System.out.println("What's the problem?");
     }
 
 
@@ -135,11 +134,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
                 catch (Exception e) {
                     e.printStackTrace(); // getFromLocation() may sometimes fail
-                    Toast.makeText(MapsActivity.this, "Service is not available. Google Play Services not up to date", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(MapsActivity.this, "Service is not available. Google Play Services not up to date", Toast.LENGTH_LONG).show();
                 }
             }
         });
         loadMarkers(user.getUserId());
+        System.out.println("WHY ARE YOU SO LAGGY?");
     }
 
     public int generateMarkerId(){
@@ -176,6 +176,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         ArrayList<Marker> result = petBetterDb.loadMarkers(userId);
+        System.out.println("MARKERS RESULT SIZE: "+result.size());
         petBetterDb.closeDatabase();
 
         for(int i = 0;i<result.size();i++){

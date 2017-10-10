@@ -9,8 +9,17 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.owner.petbetter.R;
+import com.example.owner.petbetter.classes.Facility;
+import com.example.owner.petbetter.classes.User;
+import com.example.owner.petbetter.database.DataAdapter;
+import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
+import com.google.gson.Gson;
+
+import java.sql.SQLException;
+import java.util.HashMap;
 
 
 public class PetClinicProfileActivity extends AppCompatActivity {
@@ -33,6 +42,14 @@ public class PetClinicProfileActivity extends AppCompatActivity {
     private Button petClinicBookmarkButton;
 
     private LinearLayout serviceContainer;
+
+
+    private DataAdapter petBetterDb;
+    private SystemSessionManager systemSessionManager;
+    private User user;
+    private String email;
+    private Facility faciItem;
+
     @Override
     public void onCreate(Bundle savedInstance){
         super.onCreate(savedInstance);
@@ -51,6 +68,56 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         petClinicServiceThree = (ImageView) findViewById(R.id.imageServiceThree);
 
         serviceContainer = (LinearLayout) findViewById(R.id.serviceContainer);
+
+        systemSessionManager = new SystemSessionManager(this);
+        if(systemSessionManager.checkLogin())
+            finish();
+        HashMap<String, String> userIn = systemSessionManager.getUserDetails();
+
+        initializeDatabase();
+
+        email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
+        user = getUser(email);
+
+        String jsonMyObject;
+        Bundle extras = getIntent().getExtras();
+        jsonMyObject = extras.getString("thisClinic");
+
+        faciItem = new Gson().fromJson(jsonMyObject,Facility.class);
+
+        petClinicName.setText(faciItem.getFaciName());
+        petClinicAddress.setText(faciItem.getLocation());
+        petClinicRating.setText(String.valueOf(faciItem.getRating()));
+        petClinicLandline.setText(faciItem.getContactInfo());
+
+        //Toast.makeText(this, "Facility's Name: "+faciItem.getFaciName() + ". Delete this toast. Just to help you see where vet variable is", Toast.LENGTH_LONG).show();
+    }
+
+
+    private void initializeDatabase() {
+
+        petBetterDb = new DataAdapter(this);
+
+        try {
+            petBetterDb.createDatabase();
+        } catch(SQLException e ){
+            e.printStackTrace();
+        }
+
+    }
+
+    private User getUser(String email){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        User result = petBetterDb.getUser(email);
+        petBetterDb.closeDatabase();
+
+        return result;
     }
 
     //get methods

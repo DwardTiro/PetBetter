@@ -20,7 +20,6 @@
         android:label="PetBetter"
         android:roundIcon="@drawable/app_icon"
         android:supportsRtl="true"
-
         android:theme="@style/AppTheme">
         <activity
             android:name=".activities.MainActivity"
@@ -48,51 +47,53 @@
 
         <activity
             android:name=".activities.MapsActivity"
-            android:label="@string/title_activity_maps"
-            >
+            android:label="@string/title_activity_maps">
             <intent-filter>
-
-            <category android:name="android.intent.category.ALTERNATIVE" />
-            </intent-filter>
-            </activity>
-        <activity android:name=".activities.AddMarkerActivity"></activity>
-
-        <activity android:name=".activities.SignUpActivity"
-            android:label="Sign Up">
-            <intent-filter>
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
-        </activity>
-        <activity android:name=".activities.VetProfileActivity"
-            android:label="Veterinary Profile">
-            <intent-filter>
-
                 <category android:name="android.intent.category.ALTERNATIVE" />
             </intent-filter>
-
         </activity>
-
-        <activity android:name=".activities.SignUpFinalActivity"
-        android:label="Sign Up Final Page">
-        <intent-filter>
-
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-
-         </activity>
-        <activity android:name=".activities.SearchActivity"
+        <activity android:name=".activities.AddMarkerActivity" />
+        <activity
+            android:name=".activities.SignUpActivity"
+            android:label="Sign Up">
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.VetProfileActivity"
+            android:label="Veterinary Profile">
+            <intent-filter>
+                <category android:name="android.intent.category.ALTERNATIVE" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.SignUpFinalActivity"
+            android:label="Sign Up Final Page">
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.SearchActivity"
             android:label="Search">
-
             <category android:name="android.intent.category.LAUNCHER" />
         </activity>
-        <activity android:name=".activities.PetClinicProfileActivity"
+        <activity
+            android:name=".activities.PetClinicProfileActivity"
             android:label="Pet Clinic Listing">
-
             <category android:name="android.intent.category.ALTERNATIVE" />
         </activity>
-
+        <activity android:name=".activities.CommActivity" />
+        <activity android:name=".activities.BookmarksActivity" />
+        <activity android:name=".fragments.FragmentBookmarkListing" />
+        <activity android:name=".fragments.FragmentFacilityListing" />
+        <activity android:name=".fragments.FragmentHome" />
+        <activity android:name=".fragments.FragmentCommunity" />
+        <activity android:name=".fragments.FragmentMessages" />
+        <activity android:name=".fragments.FragmentUserProfile" />
+        <activity android:name=".activities.ComposeActivity" />
+        <activity android:name=".activities.PointLocActivity"></activity>
     </application>
 
 </manifest>

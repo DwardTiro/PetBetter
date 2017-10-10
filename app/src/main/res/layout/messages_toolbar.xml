@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.Toolbar android:id="@+id/toolbarMessages"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:background="@color/main_Color"
+    android:gravity="center_vertical|start"
+    app:popupTheme="@style/AppTheme.PopupOverlay"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/btnNotif"
+            android:scaleType="fitCenter"
+            android:text="Notifications"
+            android:textColor="@color/colorWhite"
+            android:adjustViewBounds="true"
+            android:background="@color/main_Color"/>
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/btnInbox"
+            android:scaleType="fitCenter"
+            android:text="Inbox"
+            android:textColor="@color/colorWhite"
+            android:adjustViewBounds="true"
+            android:background="@color/main_Color"/>
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/btnPosts"
+            android:scaleType="fitCenter"
+            android:text="Posts"
+            android:textColor="@color/colorWhite"
+            android:adjustViewBounds="true"
+            android:background="@color/main_Color"/>
+
+    </LinearLayout>
+</android.support.v7.widget.Toolbar>
+

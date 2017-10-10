@@ -21,4 +21,15 @@
     <string name="login_button">Log in</string>
     <string name="next_button">Next</string>
     <string name="signup_button">Sign up</string>
+
+    <string-array name="searchSpinner">
+        <item>Facilities</item>
+        <item>Veterinarians</item>
+        <item>Pet Owners</item>
+    </string-array>
+
+    <string-array name="typeSpinner">
+        <item>Save in Bookmarks</item>
+        <item>Register as Clinic</item>
+    </string-array>
 </resources>

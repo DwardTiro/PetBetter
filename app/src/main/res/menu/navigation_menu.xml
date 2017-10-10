@@ -11,7 +11,7 @@
         android:title="Join the Community"/>
     <item android:id="@+id/bookmarks"
         android:icon="@mipmap/ic_bookmark_black_24dp"
-        android:title="Saved Locations"/>
+        android:title="Bookmarks"/>
     <item android:id="@+id/add_location"
         android:icon="@mipmap/ic_location_on_black_24dp"
         android:title="Add Location"/>

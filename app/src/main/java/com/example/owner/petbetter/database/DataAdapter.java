@@ -6,11 +6,16 @@ package com.example.owner.petbetter.database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.example.owner.petbetter.classes.Facility;
 import com.example.owner.petbetter.classes.Marker;
+import com.example.owner.petbetter.classes.Message;
+import com.example.owner.petbetter.classes.MessageRep;
+import com.example.owner.petbetter.classes.Post;
+import com.example.owner.petbetter.classes.PostRep;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
 
@@ -32,9 +37,10 @@ public class DataAdapter {
     private static final String MARKER_TABLE = "markers";
     private static final String VET_TABLE = "veterinarians";
     private static final String FACI_TABLE = "facilities";
-    private static final String CASE_RECORD_HISTORY_TABLE = "tbl_case_record_history";
-    private static final String CASE_RECORD_ATTACHMENTS_TABLE = "tbl_case_record_attachments";
-    private static final String HEALTH_CENTER_TABLE = "tbl_health_centers";
+    private static final String POST_TABLE = "posts";
+    private static final String MESSAGE_TABLE = "messages";
+    private static final String POST_REP_TABLE = "postreps";
+    private static final String MESSAGE_REP_TABLE = "messagereps";
 
 
     public DataAdapter(Context context) {
@@ -190,6 +196,113 @@ public class DataAdapter {
         return result;
     }
 
+    public ArrayList<Post> getPosts(){
+
+        ArrayList<Post> results = new ArrayList<>();
+
+        String sql = "SELECT * FROM "+POST_TABLE+" INNER JOIN "+USER_TABLE+" ON posts.user_id = users._id";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            Post post= new Post(c.getInt(c.getColumnIndexOrThrow("_id")),
+                    c.getLong(c.getColumnIndexOrThrow("user_id")),
+                    c.getString(c.getColumnIndexOrThrow("topic_name")),
+                    c.getString(c.getColumnIndexOrThrow("topic_content")),
+                    c.getString(c.getColumnIndexOrThrow("first_name")),
+                    c.getString(c.getColumnIndexOrThrow("last_name")));
+            results.add(post);
+        }
+
+        c.close();
+        return results;
+    }
+
+    public ArrayList<Message> getMessages(long userId){
+        //probably needs userid as parameter
+
+        ArrayList<Message> results = new ArrayList<>();
+
+        String sql = "SELECT * FROM "+MESSAGE_TABLE+" INNER JOIN "+USER_TABLE+" ON messages.from_id = users._id WHERE user_id = '" + userId + "'";
+
+
+        //SELECT * FROM messages INNER JOIN users ON messages.from_id = users._id WHERE messages.user_id = messageId
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            Message message = new Message(c.getInt(c.getColumnIndexOrThrow("_id")),
+                    c.getLong(c.getColumnIndexOrThrow("user_id")),
+                    c.getLong(c.getColumnIndexOrThrow("from_id")),
+                    c.getString(c.getColumnIndexOrThrow("first_name")),
+                    c.getString(c.getColumnIndexOrThrow("last_name")));
+            message.setMessageContent(getLatestRep((int) message.getId()));
+            results.add(message);
+        }
+
+        c.close();
+        return results;
+    }
+
+    public String getLatestRep(int messageId) {
+
+        String result;
+
+        String sql = "SELECT * FROM " + MESSAGE_REP_TABLE + " WHERE message_id = '" + messageId + "'";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        try{
+
+            c.moveToLast();
+            result = c.getString(c.getColumnIndexOrThrow("rep_content"));
+            c.close();
+        }catch(CursorIndexOutOfBoundsException e){
+            result = "";
+        }
+
+        return result;
+    }
+
+
+        public ArrayList<MessageRep> getMessageReps(int messageId){
+        //probably needs userid as parameter
+
+        ArrayList<MessageRep> results = new ArrayList<>();
+
+        String sql = "SELECT * FROM "+MESSAGE_REP_TABLE + " WHERE message_id = '" + messageId + "'";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            MessageRep messagerep = new MessageRep(c.getInt(c.getColumnIndexOrThrow("_id")),
+                    c.getLong(c.getColumnIndexOrThrow("user_id")),
+                    c.getInt(c.getColumnIndexOrThrow("message_id")),
+                    c.getString(c.getColumnIndexOrThrow("rep_content")),
+                    c.getInt(c.getColumnIndexOrThrow("is_sent")));
+            results.add(messagerep);
+        }
+
+        c.close();
+        return results;
+    }
+
+    public ArrayList<PostRep> getPostReps(int postId){
+        //probably needs userid as parameter
+
+        ArrayList<PostRep> results = new ArrayList<>();
+
+        String sql = "SELECT * FROM "+POST_REP_TABLE + " WHERE post_id = '" + postId + "'";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            PostRep postrep = new PostRep(c.getInt(c.getColumnIndexOrThrow("_id")),
+                    c.getLong(c.getColumnIndexOrThrow("user_id")),
+                    c.getInt(c.getColumnIndexOrThrow("post_id")),
+                    c.getString(c.getColumnIndexOrThrow("rep_content")));
+            results.add(postrep);
+        }
+
+        c.close();
+        return results;
+    }
+
     public ArrayList<Integer> getMarkerIds () {
 
         ArrayList<Integer> ids = new ArrayList<>();
@@ -247,7 +360,29 @@ public class DataAdapter {
                     c.getDouble(c.getColumnIndexOrThrow("longitude")),
                     c.getDouble(c.getColumnIndexOrThrow("latitude")),
                     c.getString(c.getColumnIndexOrThrow("location")),
-                    c.getLong(c.getColumnIndexOrThrow("user_id")));
+                    c.getLong(c.getColumnIndexOrThrow("user_id")),
+                    c.getInt(c.getColumnIndexOrThrow("type")));
+            results.add(marker);
+        }
+
+        c.close();
+        return results;
+    }
+
+    public ArrayList<Marker> getBookmarks(long userId, int type){
+        ArrayList<Marker> results = new ArrayList<>();
+
+        String sql = "SELECT * FROM "+MARKER_TABLE + " WHERE user_id = '" + userId + "' AND type = '" + type + "'";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            Marker marker = new Marker(c.getInt(c.getColumnIndexOrThrow("_id")),
+                    c.getString(c.getColumnIndexOrThrow("bldg_name")),
+                    c.getDouble(c.getColumnIndexOrThrow("longitude")),
+                    c.getDouble(c.getColumnIndexOrThrow("latitude")),
+                    c.getString(c.getColumnIndexOrThrow("location")),
+                    c.getLong(c.getColumnIndexOrThrow("user_id")),
+                    c.getInt(c.getColumnIndexOrThrow("type")));
             results.add(marker);
         }
 
@@ -345,7 +480,7 @@ public class DataAdapter {
         return result;
     }
 
-    public long touchMarker(int rowId, String bldgName, double longitude, double latitude, String location, long userId){
+    public long touchMarker(int rowId, String bldgName, double longitude, double latitude, String location, long userId, int type){
         long result;
 
         ContentValues cv = new ContentValues();
@@ -355,6 +490,7 @@ public class DataAdapter {
         cv.put("latitude", latitude);
         cv.put("location", location);
         cv.put("user_id", userId);
+        cv.put("type", type);
 
 
         result = petBetterDb.insert(MARKER_TABLE, null, cv);

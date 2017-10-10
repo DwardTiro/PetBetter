@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,17 +20,24 @@ import java.util.ArrayList;
 
 public class VetListingAdapter extends RecyclerView.Adapter<VetListingAdapter.VetListingViewHolder>{
 
+    public interface OnItemClickListener {
+        void onItemClick(Veterinarian item);
+    }
+
     private LayoutInflater inflater;
     private ArrayList<Veterinarian> vetList;
-    public VetListingAdapter(Context context, ArrayList<Veterinarian> vetList) {
+    private final OnItemClickListener listener;
+
+    public VetListingAdapter(Context context, ArrayList<Veterinarian> vetList, OnItemClickListener listener) {
         inflater = LayoutInflater.from(context);
         this.vetList = vetList;
+        this.listener = listener;
     }
 
     @Override
     public VetListingViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.fragment_vet_item, parent, false);
-        System.out.println("We here mate");
+        System.out.println("We here mate kek wew");
         VetListingViewHolder holder = new VetListingViewHolder(view);
         return holder;
 
@@ -42,10 +50,12 @@ public class VetListingAdapter extends RecyclerView.Adapter<VetListingAdapter.Ve
         System.out.println("The vet's name is "+holder.vetListName.getText());
         holder.vetListSpecialty.setText(thisVet.getSpecialty());
         holder.vetListRating.setText(Integer.toString(thisVet.getRating()));
+        holder.bind(thisVet, listener);
     }
 
     @Override
     public int getItemCount() {
+
         return (vetList.size() > 0 ? vetList.size() : 1);
     }
 
@@ -67,6 +77,15 @@ public class VetListingAdapter extends RecyclerView.Adapter<VetListingAdapter.Ve
             vetListName = (TextView) itemView.findViewById(R.id.vetListName);
             vetListSpecialty = (TextView) itemView.findViewById(R.id.vetListSpecialty);
             vetListRating = (TextView) itemView.findViewById(R.id.vetListRating);
+        }
+
+        public void bind(final Veterinarian item, final OnItemClickListener listener) {
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    listener.onItemClick(item);
+                }
+            });
         }
     }
 }

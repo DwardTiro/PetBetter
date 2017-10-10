@@ -40,7 +40,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
 
 
-    private HorizontalScrollView menuBar;
+    private Toolbar menuBar;
     private Button vetButton;
     private Button petCareButton;
     private Button commButton;
@@ -72,10 +72,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        menuBar = (HorizontalScrollView) findViewById(R.id.menu_bar);
+        menuBar = (Toolbar) findViewById(R.id.menu_bar);
         vetButton = (Button) findViewById(R.id.vetButton);
         petCareButton = (Button) findViewById(R.id.petCareButton);
-        commButton = (Button) findViewById(R.id.commButton);
 
         View headerView = navigationView.getHeaderView(0);
 
@@ -112,6 +111,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private void hideItems(){
         Menu menu = navigationView.getMenu();
         menu.findItem(R.id.settings).setVisible(false);
+        menu.findItem(R.id.profile).setVisible(false);
     }
 
     private void initializeDatabase() {
@@ -149,6 +149,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
 
         ArrayList<Veterinarian> result = petBetterDb.getVeterinarians();
+        System.out.println("The number of veterinarians is: "+result.size());
         petBetterDb.closeDatabase();
 
         return result;
@@ -197,7 +198,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         System.out.println("VET LIST SIZE: " + vetList.size());
 
     }
-
+/*
     public void vetListingClicked(View view){
 
 
@@ -208,19 +209,22 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
 
         startActivity(intent);
-       /*
+
         Intent intent = new Intent(this, VetProfileActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);*/
+        startActivity(intent);
        //setContentView(R.layout.activity_vet_profile);
     }
+    */
+
+/*
     public void petCareListingClicked(View view){
 
         Intent intent = new Intent(this, com.example.owner.petbetter.activities.PetClinicProfileActivity.class);
         startActivity(intent);
     }
-
+*/
     public void petCareButtonClicked(View view){
         FragmentPetClinicListing fragment = new FragmentPetClinicListing();
 
@@ -241,8 +245,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if(id == R.id.action_search){
-           // Intent intent = new Intent(this, com.example.owner.petbetter.activities.SearchActivity.class);
-            //startActivity(intent);
+            Intent intent = new Intent(this, com.example.owner.petbetter.activities.SearchActivity.class);
+            startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -260,10 +264,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             System.out.println("NYEEAAAMM");
         }
         else if(id == R.id.community){
-            System.out.println("NYEEAAAMM");
+            Intent intent = new Intent(this, com.example.owner.petbetter.activities.CommActivity.class);
+            startActivity(intent);
         }
         else if(id == R.id.bookmarks){
-            System.out.println("BOOKMARKS BACK!");
+            Intent intent = new Intent(this, com.example.owner.petbetter.activities.BookmarksActivity.class);
+            startActivity(intent);
         }
         else if(id==R.id.add_location){
             //Toast.makeText(this,"Location",Toast.LENGTH_SHORT).show();

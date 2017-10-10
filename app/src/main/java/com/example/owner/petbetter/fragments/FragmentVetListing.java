@@ -1,8 +1,10 @@
 package com.example.owner.petbetter.fragments;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,6 +21,7 @@ import com.example.owner.petbetter.classes.Veterinarian;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.google.android.gms.vision.text.Text;
+import com.google.gson.Gson;
 
 import java.lang.reflect.Array;
 import java.sql.SQLException;
@@ -48,10 +51,21 @@ public class FragmentVetListing extends Fragment {
 
         initializeDatabase();
         recyclerView = (RecyclerView) view.findViewById(R.id.vetListing);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
         vetList = getVeterinarians();
-        //System.out.println("Rating is "+vetList.get(0).getRating());
-        vetListingAdapter = new VetListingAdapter(getActivity(), vetList);
+        System.out.println("Rating is "+vetList.get(0).getRating());
+
+        vetListingAdapter = new VetListingAdapter(getActivity(), vetList, new VetListingAdapter.OnItemClickListener() {
+            @Override public void onItemClick(Veterinarian item) {
+
+                Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.VetProfileActivity.class);
+                intent.putExtra("thisVet", new Gson().toJson(item));
+                startActivity(intent);
+            }
+        });
         recyclerView.setAdapter(vetListingAdapter);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         nameTextView = (TextView) view.findViewById(R.id.vetListName);

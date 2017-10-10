@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="370dp"
+    android:layout_height="120dp"
+    android:background="@drawable/listing_border"
+    android:layout_gravity="center"
+    android:onClick="homeListingClicked"
+    android:weightSum="1">
+    <TextView
+        android:id="@+id/topicName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text= "@string/sample_clinic"
+        android:textSize="@dimen/listing_font_size"
+        android:textColor="@color/darkAccent"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginStart="14dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp" />
+
+    <TextView
+        android:id="@+id/topicDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/sample_address"
+
+        android:layout_centerVertical="true"
+        android:layout_alignStart="@+id/topicName" />
+
+    <TextView
+        android:id="@+id/topicUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/sample_address"
+
+        android:layout_marginBottom="12dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/topicDescription" />
+
+</RelativeLayout>

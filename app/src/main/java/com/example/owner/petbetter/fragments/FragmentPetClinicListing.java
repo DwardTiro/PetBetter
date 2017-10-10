@@ -1,5 +1,6 @@
 package com.example.owner.petbetter.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,6 +16,7 @@ import com.example.owner.petbetter.classes.Facility;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
+import com.google.gson.Gson;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -41,7 +43,14 @@ public class FragmentPetClinicListing extends Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.petCareListing);
         faciList = getClinics();
         //System.out.println("Rating is "+vetList.get(0).getRating());
-        clinicListingAdapter = new ClinicListingAdapter(getActivity(), faciList);
+        clinicListingAdapter = new ClinicListingAdapter(getActivity(), faciList, new ClinicListingAdapter.OnItemClickListener() {
+            @Override public void onItemClick(Facility item) {
+
+                Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.PetClinicProfileActivity.class);
+                intent.putExtra("thisClinic", new Gson().toJson(item));
+                startActivity(intent);
+            }
+        });
         recyclerView.setAdapter(clinicListingAdapter);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
