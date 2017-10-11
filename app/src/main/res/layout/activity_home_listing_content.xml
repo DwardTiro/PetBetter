@@ -59,6 +59,19 @@
 
         </LinearLayout>
          <TextView
+             android:id="@+id/homeListPostTitle"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_marginTop="10dp"
+
+             android:paddingLeft="15dp"
+             android:paddingRight="15dp"
+
+             android:text="This is a text."
+             android:textStyle="bold"
+             android:textColor="@color/black"
+             android:textSize="20sp"/>
+         <TextView
             android:id="@+id/homeListContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
