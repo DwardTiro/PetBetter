@@ -4,7 +4,7 @@
     android:layout_height="250dp"
     android:background="@drawable/listing_border"
     android:layout_gravity="center"
-    android:onClick="vetListingClicked"
+
     android:weightSum="1">
 
 

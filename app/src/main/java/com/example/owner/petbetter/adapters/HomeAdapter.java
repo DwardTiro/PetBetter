@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.classes.Marker;
@@ -61,6 +62,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
         return postList.size();
     }
 
+
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView){
         super.onAttachedToRecyclerView(recyclerView);
@@ -79,5 +81,6 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
             topicDescription = (TextView) itemView.findViewById(R.id.topicDescription);
             topicUser = (TextView) itemView.findViewById(R.id.topicUser);
         }
+
     }
 }

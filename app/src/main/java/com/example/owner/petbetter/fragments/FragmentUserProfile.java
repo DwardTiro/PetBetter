@@ -23,10 +23,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class FragmentUserProfile extends Fragment {
-    private BookmarkListingAdapter bookmarkListingAdapter;
-    private RecyclerView recyclerView;
-    private ArrayList<Marker> bookmarkList;
-    private TextView nameTextView;
+
+    TextView upName;
+    TextView upEmail;
+    TextView upMobileNum;
+    TextView upLandLine;
+    TextView upType;
 
     private DataAdapter petBetterDb;
     private SystemSessionManager systemSessionManager;
@@ -36,7 +38,7 @@ public class FragmentUserProfile extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance){
-        View view = inflater.inflate(R.layout.activity_petclinic_profile,container, false);
+        View view = inflater.inflate(R.layout.fragment_user_profile,container, false);
         //If code above doesn't work inflate homeactivity instead.
 
         systemSessionManager = new SystemSessionManager(getActivity());
@@ -49,6 +51,22 @@ public class FragmentUserProfile extends Fragment {
         email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
         user = getUser(email);
         System.out.println("WASSUP BOYS");
+
+        upName = (TextView) view.findViewById(R.id.upName);
+        upEmail = (TextView) view.findViewById(R.id.upEmail);
+        upMobileNum = (TextView) view.findViewById(R.id.upMobileNum);
+        upLandLine = (TextView) view.findViewById(R.id.upLandLine);
+        upType = (TextView) view.findViewById(R.id.upType);
+
+        upName.setText(user.getFirstName()+" "+user.getLastName());
+        upEmail.setText(user.getEmail());
+        upMobileNum.append(user.getMobileNumber());
+        upLandLine.append(user.getPhoneNumber());
+        if(user.getUserType()==1)
+            upType.append("Veterinarian");
+        if(user.getUserType()==2)
+            upType.append("User");
+
         return view;
     }
 

@@ -9,4 +9,6 @@
     <color name ="main_White">#F1F1F1</color>
     <color name ="darkAccent">#06B7A5</color>
     <color name ="black">#000000</color>
+    <color name ="timestamp">#a0a3a7</color>
+    <color name ="listing_border">#c2c3c8</color>
 </resources>
