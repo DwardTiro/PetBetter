@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activities.HomeListContentActivity"
+    >
+
+    <item
+        android:id="@+id/viewPostBack"
+        android:icon="@mipmap/ic_keyboard_arrow_left_white_24dp"
+        android:title="Back"
+        app:showAsAction="always"
+        />
+
+</menu>

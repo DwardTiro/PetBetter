@@ -2,6 +2,7 @@ package com.example.owner.petbetter.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -39,12 +40,16 @@ public class HomeListContentActivity extends AppCompatActivity {
         super.onCreate(SavedInstance);
         setContentView(R.layout.activity_home_listing_content);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.viewPostToolbar);
+        setSupportActionBar(toolbar);
+
         profilePic = (ImageView) findViewById(R.id.homeListUserPicture);
         profileName = (TextView) findViewById(R.id.homeListUserName);
         postTimeStamp = (TextView) findViewById(R.id.homeListTimeStamp);
         postTitle = (TextView) findViewById(R.id.homeListPostTitle);
         homeListContent = (TextView) findViewById(R.id.homeListContent);
 
+        /*
         systemSessionManager = new SystemSessionManager(this);
         if(systemSessionManager.checkLogin())
             finish();
@@ -54,7 +59,7 @@ public class HomeListContentActivity extends AppCompatActivity {
 
         String jsonMyObject;
         Bundle extras = getIntent().getExtras();
-
+/*
         jsonMyObject = extras.getString("postContent");
 
         postItem = new Gson().fromJson(jsonMyObject, Post.class);
@@ -62,7 +67,7 @@ public class HomeListContentActivity extends AppCompatActivity {
         //profileName.setText(postItem.get);
         postTitle.setText(postItem.getTopicName());
         homeListContent.setText(postItem.getTopicContent());
-
+*/
     }
 
     private void initializeDatabase() {

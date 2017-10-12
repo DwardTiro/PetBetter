@@ -84,8 +84,16 @@
             android:label="Pet Clinic Listing">
             <category android:name="android.intent.category.ALTERNATIVE" />
         </activity>
+        <activity
+            android:name=".activities.HomeListContentActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:label="View Post">
+            <category android:name="android.intent.category.ALTERNATIVE" />
+        </activity>
+
         <activity android:name=".activities.CommActivity" />
         <activity android:name=".activities.BookmarksActivity" />
+
         <activity android:name=".fragments.FragmentBookmarkListing" />
         <activity android:name=".fragments.FragmentFacilityListing" />
         <activity android:name=".fragments.FragmentHome" />

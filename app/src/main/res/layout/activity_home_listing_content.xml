@@ -1,19 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/main_White">
+    android:background="@color/main_White"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/viewPostToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/main_Color"
+        android:gravity="center_vertical|start"
+        app:popupTheme="@style/AppTheme.PopupOverlay"
+
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/rounded_bg_corner"
         android:orientation="vertical"
-        android:paddingBottom="20dp"
+        android:paddingBottom="10dp"
         android:paddingTop="20dp">
 
         <LinearLayout
@@ -33,17 +45,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingStart="10dp"
-                android:paddingEnd="0dp">
+                android:paddingEnd="0dp"
+                android:paddingStart="10dp">
 
                 <TextView
                     android:id="@+id/homeListUserName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Kristian Sisayan"
+                    android:textColor="@color/black"
                     android:textSize="15sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/homeListTimeStamp"
@@ -56,22 +68,23 @@
             </LinearLayout>
 
 
-
         </LinearLayout>
-         <TextView
-             android:id="@+id/homeListPostTitle"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:layout_marginTop="10dp"
 
-             android:paddingLeft="15dp"
-             android:paddingRight="15dp"
+        <TextView
+            android:id="@+id/homeListPostTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
 
-             android:text="This is a text."
-             android:textStyle="bold"
-             android:textColor="@color/black"
-             android:textSize="20sp"/>
-         <TextView
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+
+            android:text="This is a text."
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
             android:id="@+id/homeListContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -81,25 +94,27 @@
             android:paddingTop="15dp"
             android:text="This is a text. This is a text. This is a text. This is a text. This is a text. This is a text. This is a text. This is a text."
             android:textSize="15sp"
-            />
+            android:textColor="@color/black"/>
+
         <LinearLayout
-            android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:background="@drawable/post_border"
+            android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-           >
+            android:background="@drawable/comment_box"
+            android:paddingTop="10dp">
 
             <EditText
                 android:id="@+id/homeListCommentBox"
-                android:layout_width="260dp"
+                android:layout_width="245dp"
                 android:layout_height="wrap_content"
 
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
                 android:layout_marginLeft="15dp"
+
                 android:layout_marginRight="15dp"
+                android:background="@drawable/custom_edittext"
 
                 android:hint="Write a comment."
+                android:paddingLeft="10dp"
                 android:textColorHint="@color/timestamp"
                 android:textSize="15sp"
 
@@ -107,17 +122,16 @@
 
             <Button
                 android:id="@+id/homeListPostCommentButton"
-                android:layout_width="60dp"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="50dp"
+
                 android:layout_height="30dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="0dp"
+                android:background="@color/main_White"
                 android:text="Post"
                 android:textAllCaps="false"
-                android:textColor="@color/main_Color"
-                android:textSize="17sp"
 
-                android:background="@color/main_White"
-                />
+                android:textColor="@color/main_Color"
+                android:textSize="17sp" />
 
         </LinearLayout>
     </LinearLayout>

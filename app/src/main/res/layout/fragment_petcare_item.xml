@@ -2,10 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="330dp"
     android:layout_height="250dp"
-    android:background="@drawable/listing_border"
-    android:layout_gravity="center"
+    android:background="@drawable/rounded_bg_corner"
     android:onClick="petCareListingClicked"
-    android:weightSum="1">
+    android:weightSum="1"
+    android:gravity="center">
     <ImageView
         android:id="@+id/clinicListImage"
         android:layout_width="match_parent"
@@ -20,7 +20,7 @@
         android:layout_marginTop="10dp"
         android:text= "@string/sample_clinic"
         android:textSize="@dimen/listing_font_size"
-        android:textColor="@color/darkAccent"
+        android:textColor="@color/black"
         android:textStyle="bold"
         android:layout_gravity="center_horizontal"/>
 
