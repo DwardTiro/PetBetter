@@ -85,7 +85,7 @@
             <category android:name="android.intent.category.ALTERNATIVE" />
         </activity>
         <activity
-            android:name=".activities.HomeListContentActivity"
+            android:name=".activities.PostContentActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:label="View Post">
             <category android:name="android.intent.category.ALTERNATIVE" />

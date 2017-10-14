@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_White"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/viewPostToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/main_Color"
+        android:gravity="center_vertical|start"
+        app:popupTheme="@style/AppTheme.PopupOverlay"
+
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="11dp"
+        android:background="@drawable/rounded_bg_corner"
+        android:orientation="vertical"
+        android:paddingBottom="10dp"
+        android:paddingTop="20dp"
+        android:layout_below="@+id/viewPostToolbar"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/linearLayout">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp">
+
+            <ImageView
+                android:id="@+id/homeListUserPicture"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/app_icon" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingEnd="0dp"
+                android:paddingStart="10dp">
+
+                <TextView
+                    android:id="@+id/homeListUserName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Kristian Sisayan"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/homeListTimeStamp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="20 hrs"
+                    android:textColor="@color/timestamp"
+                    android:textSize="13sp" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/homeListPostTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+
+            android:text="This is a text."
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/homeListContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="15dp"
+            android:text="This is a text. This is a text. This is a text. This is a text. This is a text. This is a text. This is a text. This is a text."
+            android:textSize="15sp"
+            android:textColor="@color/black"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/comment_box"
+            android:paddingTop="10dp">
+
+            <EditText
+                android:id="@+id/homeListCommentBox"
+                android:layout_width="245dp"
+                android:layout_height="wrap_content"
+
+                android:layout_marginLeft="15dp"
+
+                android:layout_marginRight="15dp"
+                android:background="@drawable/custom_edittext"
+
+                android:hint="Write a comment."
+                android:paddingLeft="10dp"
+                android:textColorHint="@color/timestamp"
+                android:textSize="15sp"
+
+                />
+
+            <Button
+                android:id="@+id/homeListPostCommentButton"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="50dp"
+
+                android:layout_height="30dp"
+                android:background="@color/main_White"
+                android:text="Reply"
+                android:textAllCaps="false"
+
+                android:textColor="@color/main_Color"
+                android:textSize="17sp" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/postrep_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/linearLayout">
+
+    </FrameLayout>
+
+</RelativeLayout>

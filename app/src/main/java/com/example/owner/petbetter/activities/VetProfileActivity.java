@@ -106,25 +106,6 @@ public class VetProfileActivity extends AppCompatActivity {
 
     }
 
-    public ImageView getProfileBG(){
-        return profileBG;
-    }
-    public TextView getVetName(){
-        return vetName;
-    }
-
-    public TextView getVetLandline(){
-        return vetLandline;
-    }
-    public void setProfileBG(){
-
-    }
-    public void setVetName(String str){
-        vetName.setText(str);
-    }
-    public void setVetLandline(String str){
-        vetLandline.setText(str);
-    }
 
     //Integrate to db to display stuff on page
 }

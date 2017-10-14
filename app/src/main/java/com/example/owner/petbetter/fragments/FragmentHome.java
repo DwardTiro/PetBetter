@@ -1,5 +1,6 @@
 package com.example.owner.petbetter.fragments;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
+import com.google.gson.Gson;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -57,7 +59,17 @@ public class FragmentHome extends Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.postListing);
         postList = getPosts();
         System.out.println("Size of postList "+postList.size());
-        homeAdapter = new HomeAdapter(getActivity(), postList);
+
+        homeAdapter = new HomeAdapter(getActivity(), postList,new HomeAdapter.OnItemClickListener() {
+            @Override public void onItemClick(Post item) {
+                //Execute command here
+                Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.PostContentActivity.class);
+                System.out.println("PLEASE BAKIT KA GANYAN "+item.getId());
+                intent.putExtra("thisPost", new Gson().toJson(item));
+                startActivity(intent);
+            }
+        });
+        //homeAdapter = new HomeAdapter(getActivity(), postList);
         homeAdapter.notifyItemRangeChanged(0, homeAdapter.getItemCount());
         recyclerView.setAdapter(homeAdapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());

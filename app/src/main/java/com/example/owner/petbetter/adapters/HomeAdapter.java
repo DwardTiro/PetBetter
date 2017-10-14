@@ -20,12 +20,18 @@ import java.util.ArrayList;
 
 public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder>{
 
+    public interface OnItemClickListener {
+        void onItemClick(Post item);
+    }
+
     private LayoutInflater inflater;
     private ArrayList<Post> postList;
+    private final OnItemClickListener listener;
 
-    public HomeAdapter(Context context, ArrayList<Post> postList) {
+    public HomeAdapter(Context context, ArrayList<Post> postList, OnItemClickListener listener) {
         inflater = LayoutInflater.from(context);
         this.postList = postList;
+        this.listener = listener;
     }
 
     @Override
@@ -44,6 +50,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
         holder.topicName.setText(thisPost.getTopicName());
         holder.topicDescription.setText(thisPost.getTopicContent());
         holder.topicUser.setText(thisPost.getTopicUser());
+        holder.bind(thisPost, listener);
         /*
         holder.bookmarkListName.setText(thisBookmark.getBldgName());
         System.out.println("Bldg name is: " +holder.bookmarkListName.getText());
@@ -82,5 +89,13 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
             topicUser = (TextView) itemView.findViewById(R.id.topicUser);
         }
 
+        public void bind(final Post item, final OnItemClickListener listener) {
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    listener.onItemClick(item);
+                }
+            });
+        }
     }
 }
