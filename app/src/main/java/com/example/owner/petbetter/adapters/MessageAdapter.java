@@ -20,12 +20,18 @@ import java.util.ArrayList;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder>{
 
+    public interface OnItemClickListener {
+        void onItemClick(Message item);
+    }
+
     private LayoutInflater inflater;
     private ArrayList<Message> messageList;
+    private final OnItemClickListener listener;
 
-    public MessageAdapter(Context context, ArrayList<Message> messageList) {
+    public MessageAdapter(Context context, ArrayList<Message> messageList, OnItemClickListener listener) {
         inflater = LayoutInflater.from(context);
         this.messageList = messageList;
+        this.listener = listener;
     }
 
     @Override
@@ -44,6 +50,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
         holder.messageSender.setText(thisMessage.getFromName());
         holder.messageContent.setText(thisMessage.getMessageContent());
+        holder.bind(thisMessage, listener);
         //set messageContent dude
         /*
         holder.bookmarkListName.setText(thisBookmark.getBldgName());
@@ -77,6 +84,15 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             super(itemView);
             messageSender = (TextView) itemView.findViewById(R.id.messageSender);
             messageContent = (TextView) itemView.findViewById(R.id.messageContent);
+        }
+
+        public void bind(final Message item, final OnItemClickListener listener) {
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    listener.onItemClick(item);
+                }
+            });
         }
     }
 }

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.owner.petbetter.activities.MessageActivity">
+
+
+
+    <FrameLayout
+        android:id="@+id/message_container"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_below="@+id/fromTextView"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="17dp"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@+id/linearLayout3">
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/fromTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:text="Juan Dela Cruz"
+        android:textSize="32dp"
+        android:layout_marginTop="20dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/comment_box"
+        android:paddingTop="10dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/linearLayout3">
+
+        <EditText
+            android:id="@+id/messageText"
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+
+            android:layout_marginLeft="15dp"
+
+            android:layout_marginRight="15dp"
+            android:background="@drawable/custom_edittext"
+
+            android:hint="Write a comment."
+            android:paddingLeft="10dp"
+            android:textColorHint="@color/timestamp"
+            android:textSize="15sp"
+
+            />
+
+        <Button
+            android:id="@+id/replyButton"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="50dp"
+
+            android:layout_height="30dp"
+            android:background="@color/main_White"
+            android:text="Reply"
+            android:textAllCaps="false"
+
+            android:textColor="@color/main_Color"
+            android:textSize="17sp" />
+
+    </LinearLayout>
+
+</RelativeLayout>

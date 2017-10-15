@@ -247,7 +247,13 @@ public class DataAdapter {
 
         ArrayList<Message> results = new ArrayList<>();
 
-        String sql = "SELECT * FROM "+MESSAGE_TABLE+" INNER JOIN "+USER_TABLE+" ON messages.from_id = users._id WHERE user_id = '" + userId + "'";
+        //String sql = "SELECT * FROM "+MESSAGE_TABLE+" INNER JOIN "+USER_TABLE+" ON messages.from_id = users._id WHERE user_id = '" + userId + "'";
+
+        String sql = "SELECT m._id AS _id, m.user_one AS user_one, m.user_two AS user_two, u.first_name AS first_name, " +
+                "u.last_name AS last_name FROM messages AS m INNER JOIN users AS u ON m.user_one = u._id WHERE u._id = '" + userId + "'" +
+                "UNION " +
+                "SELECT m._id AS _id, m.user_one AS user_one, m.user_two AS user_two, u.first_name AS first_name, " +
+                "u.last_name AS last_name FROM messages AS m INNER JOIN users AS u ON m.user_two = u._id WHERE u._id = '" + userId + "'";
 
 
         //SELECT * FROM messages INNER JOIN users ON messages.from_id = users._id WHERE messages.user_id = messageId
@@ -255,8 +261,8 @@ public class DataAdapter {
 
         while(c.moveToNext()) {
             Message message = new Message(c.getInt(c.getColumnIndexOrThrow("_id")),
-                    c.getLong(c.getColumnIndexOrThrow("user_id")),
-                    c.getLong(c.getColumnIndexOrThrow("from_id")),
+                    c.getLong(c.getColumnIndexOrThrow("user_one")),
+                    c.getLong(c.getColumnIndexOrThrow("user_two")),
                     c.getString(c.getColumnIndexOrThrow("first_name")),
                     c.getString(c.getColumnIndexOrThrow("last_name")));
             message.setMessageContent(getLatestRep((int) message.getId()));
@@ -287,12 +293,15 @@ public class DataAdapter {
     }
 
 
-        public ArrayList<MessageRep> getMessageReps(int messageId){
+        public ArrayList<MessageRep> getMessageReps(long messageId){
         //probably needs userid as parameter
 
         ArrayList<MessageRep> results = new ArrayList<>();
 
-        String sql = "SELECT * FROM "+MESSAGE_REP_TABLE + " WHERE message_id = '" + messageId + "'";
+        String sql = "SELECT mr._id AS _id, mr.user_id AS user_id, mr.message_id AS message_id, " +
+                "mr.rep_content AS rep_content, mr.is_sent AS is_sent, mr.date_performed AS date_performed, " +
+                "u.first_name AS first_name, u.last_name AS last_name FROM messagereps AS mr INNER JOIN users AS u " +
+                "ON mr.user_id = u._id WHERE mr.message_id = '" + messageId + "'";
         Cursor c = petBetterDb.rawQuery(sql, null);
 
         while(c.moveToNext()) {
@@ -300,7 +309,10 @@ public class DataAdapter {
                     c.getLong(c.getColumnIndexOrThrow("user_id")),
                     c.getInt(c.getColumnIndexOrThrow("message_id")),
                     c.getString(c.getColumnIndexOrThrow("rep_content")),
-                    c.getInt(c.getColumnIndexOrThrow("is_sent")));
+                    c.getInt(c.getColumnIndexOrThrow("is_sent")),
+                    c.getString(c.getColumnIndexOrThrow("date_performed")),
+                    c.getString(c.getColumnIndexOrThrow("first_name")),
+                    c.getString(c.getColumnIndexOrThrow("last_name")));
             results.add(messagerep);
         }
 
@@ -546,6 +558,21 @@ public class DataAdapter {
         return ids;
     }
 
+    public ArrayList<Integer> getMessageRepIds () {
+
+        ArrayList<Integer> ids = new ArrayList<>();
+
+        String sql = "SELECT _id FROM "+MESSAGE_REP_TABLE;
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            ids.add(c.getInt(c.getColumnIndexOrThrow("_id")));
+        }
+
+        c.close();
+        return ids;
+    }
+
 
 
     public long addPostRep(int postRepId, int userId, int postId, int parentId, String repContent, String datePerformed){
@@ -590,7 +617,7 @@ public class DataAdapter {
         String sql = "SELECT pr._id AS _id, pr.user_id AS user_id, pr.post_id AS post_id, pr.parent_id AS parent_id, " +
                 "pr.rep_content AS rep_content, pr.date_performed as date_performed, " +
                 "pr.is_deleted AS is_deleted, u.first_name AS first_name, u.last_name AS last_name " +
-                "FROM postreps AS pr INNER JOIN users AS u ON pr.user_id = u._id WHERE pr.post_id = 1";
+                "FROM postreps AS pr INNER JOIN users AS u ON pr.user_id = u._id WHERE pr.post_id = '" + postId + "'";
 
         Cursor c = petBetterDb.rawQuery(sql, null);
 
@@ -611,5 +638,20 @@ public class DataAdapter {
         return results;
     }
 
+    public long addMessageRep(int messageRepId, int userId, int messageId, String repContent, int isSent, String datePerformed){
+        long result;
+
+        ContentValues cv = new ContentValues();
+        cv.put("_id", messageRepId);
+        cv.put("user_id", userId);
+        cv.put("message_id", messageId);
+        cv.put("rep_content", repContent);
+        cv.put("is_sent", isSent);
+        cv.put("date_performed", datePerformed);
+
+        result = petBetterDb.insert(MESSAGE_REP_TABLE, null, cv);
+
+        return result;
+    }
 
 }

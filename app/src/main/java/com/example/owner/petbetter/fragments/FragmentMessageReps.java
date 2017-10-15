@@ -1,10 +1,8 @@
 package com.example.owner.petbetter.fragments;
 
 import android.content.Intent;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,9 +13,9 @@ import android.widget.TextView;
 
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.adapters.BookmarkListingAdapter;
-import com.example.owner.petbetter.adapters.MessageAdapter;
+import com.example.owner.petbetter.adapters.MessageRepAdapter;
 import com.example.owner.petbetter.classes.Marker;
-import com.example.owner.petbetter.classes.Message;
+import com.example.owner.petbetter.classes.MessageRep;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
@@ -27,26 +25,28 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class FragmentMessages extends Fragment {
+/**
+ * Created by owner on 15/10/2017.
+ */
 
-    private MessageAdapter messageAdapter;
+public class FragmentMessageReps extends Fragment {
+
+    private MessageRepAdapter messageRepAdapter;
     private RecyclerView recyclerView;
-    private ArrayList<Message> messageList;
+    private ArrayList<MessageRep> messageRepList;
     private TextView nameTextView;
 
     private DataAdapter petBetterDb;
     private SystemSessionManager systemSessionManager;
     private User user;
     private String email;
-    private FloatingActionButton fab;
-
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance){
-        View view = inflater.inflate(R.layout.fragment_messages,container, false);
+        View view = inflater.inflate(R.layout.fragment_messagereps_listing,container, false);
         //If code above doesn't work inflate homeactivity instead.
-        System.out.println("ARE WE HERE DOE?");
+
         systemSessionManager = new SystemSessionManager(getActivity());
         if(systemSessionManager.checkLogin())
             getActivity().finish();
@@ -57,36 +57,26 @@ public class FragmentMessages extends Fragment {
         email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
         user = getUser(email);
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.messagesListing);
-        //cause of error. change to where the recyclerview is.
-        messageList = getMessages(user.getUserId());
-        System.out.println("Size of list "+messageList.size());
-        messageAdapter = new MessageAdapter(getActivity(), messageList,new MessageAdapter.OnItemClickListener() {
-            @Override public void onItemClick(Message item) {
+        Bundle bundle = this.getArguments();
+        long messageId = bundle.getLong("messageId");
+
+        recyclerView = (RecyclerView) view.findViewById(R.id.messageRepListing);
+        messageRepList = getMessageReps(messageId);
+        System.out.println("Size of list "+messageRepList.size());
+        messageRepAdapter = new MessageRepAdapter(getActivity(), messageRepList,new MessageRepAdapter.OnItemClickListener() {
+            @Override public void onItemClick(MessageRep item) {
                 //Execute command here
-                Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.MessageActivity.class);
-                System.out.println("Item: "+item.getMessageContent());
-                intent.putExtra("thisMessage", new Gson().toJson(item));
-                startActivity(intent);
             }
         });
-        //messageAdapter = new MessageAdapter(getActivity(), messageList);
-        messageAdapter.notifyItemRangeChanged(0, messageAdapter.getItemCount());
-        recyclerView.setAdapter(messageAdapter);
+        messageRepAdapter.notifyItemRangeChanged(0, messageRepAdapter.getItemCount());
+        recyclerView.setAdapter(messageRepAdapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        fab = (FloatingActionButton) view.findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.ComposeActivity.class);
-                startActivity(intent);
-            }
-        });
-
+        System.out.println("We did this I guess");
         return view;
     }
+
 
     private void initializeDatabase() {
 
@@ -98,20 +88,6 @@ public class FragmentMessages extends Fragment {
             e.printStackTrace();
         }
 
-    }
-
-    public ArrayList<Message> getMessages(long userId){
-
-        //modify this method in such a way that it only gets bookmarks tagged by user. Separate from facilities.
-        try {
-            petBetterDb.openDatabase();
-        }catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        ArrayList<Message> result = petBetterDb.getMessages(userId);
-        petBetterDb.closeDatabase();
-        return result;
     }
 
     private User getUser(String email){
@@ -128,4 +104,18 @@ public class FragmentMessages extends Fragment {
         return result;
     }
 
+
+    public ArrayList<MessageRep> getMessageReps(long messageId){
+
+        //modify this method in such a way that it only gets bookmarks tagged by user. Separate from facilities.
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<MessageRep> result = petBetterDb.getMessageReps(messageId);
+        petBetterDb.closeDatabase();
+        return result;
+    }
 }

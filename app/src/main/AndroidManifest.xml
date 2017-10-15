@@ -86,14 +86,12 @@
         </activity>
         <activity
             android:name=".activities.PostContentActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:label="View Post">
+            android:label="View Post"
+            android:theme="@style/AppTheme.NoActionBar">
             <category android:name="android.intent.category.ALTERNATIVE" />
         </activity>
-
         <activity android:name=".activities.CommActivity" />
         <activity android:name=".activities.BookmarksActivity" />
-
         <activity android:name=".fragments.FragmentBookmarkListing" />
         <activity android:name=".fragments.FragmentFacilityListing" />
         <activity android:name=".fragments.FragmentHome" />
@@ -101,7 +99,8 @@
         <activity android:name=".fragments.FragmentMessages" />
         <activity android:name=".fragments.FragmentUserProfile" />
         <activity android:name=".activities.ComposeActivity" />
-        <activity android:name=".activities.PointLocActivity"></activity>
+        <activity android:name=".activities.PointLocActivity" />
+        <activity android:name=".activities.MessageActivity"></activity>
     </application>
 
 </manifest>
