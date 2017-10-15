@@ -111,6 +111,34 @@ public class FragmentMessages extends Fragment {
 
         ArrayList<Message> result = petBetterDb.getMessages(userId);
         petBetterDb.closeDatabase();
+        User tempUser;
+
+        for(int i=0;i<result.size();i++){
+            tempUser = getUserWithId(result.get(i).getUserId());
+            if(tempUser.getUserId()==user.getUserId()){
+                tempUser = getUserWithId(result.get(i).getFromId());
+                result.get(i).setFromName(tempUser.getName());
+            }
+            else{
+                tempUser = getUserWithId(result.get(i).getUserId());
+                result.get(i).setFromName(tempUser.getName());
+            }
+        }
+
+        return result;
+    }
+
+    private User getUserWithId(long id){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        User result = petBetterDb.getUserWithId((int) id);
+        petBetterDb.closeDatabase();
+
         return result;
     }
 
