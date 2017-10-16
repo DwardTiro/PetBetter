@@ -34,7 +34,7 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
 
     @Override
     public PostRepViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.fragment_post_content_item, parent, false);
+        View view = inflater.inflate(R.layout.fragment_home_listing_comment, parent, false);
         System.out.println("We here mate kek wew");
         PostRepViewHolder holder = new PostRepViewHolder(view);
         return holder;

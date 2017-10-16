@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="370dp"
+    android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="120dp"
-    android:background="@drawable/listing_border"
-    android:layout_gravity="center"
+    android:background="@drawable/notifications_border"
+
     android:onClick="homeListingClicked"
     android:weightSum="1">
     <TextView

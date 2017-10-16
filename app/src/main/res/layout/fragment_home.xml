@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:scrollbars="vertical"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="52dp"
+
         android:layout_alignParentStart="true">
     </android.support.v7.widget.RecyclerView>
 
