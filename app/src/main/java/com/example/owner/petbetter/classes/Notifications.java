@@ -6,41 +6,74 @@ package com.example.owner.petbetter.classes;
 
 public class Notifications {
 
-    int notifProfilePic;
-    String notifProfileName;
-    String notifTimeStamp;
-    String notifPostTitle;
+    long id, userId, doerId;
+    int isRead, type;
+    String datePerformed, doerName;
 
-    public int getNotifProfilePic(){
-        return this.notifProfilePic;
-    }
-    public String getNotifProfileName() {
-        return this.notifProfileName;
-    }
-
-    public String getNotifTimeStamp() {
-        return this.notifTimeStamp;
+    public Notifications(long id, long userId, long doerId, int isRead, int type, String datePerformed, String first_name, String last_name) {
+        this.id = id;
+        this.userId = userId;
+        this.doerId = doerId;
+        this.isRead = isRead;
+        this.type = type;
+        this.datePerformed = datePerformed;
+        this.doerName= first_name+" "+last_name;
     }
 
-    public String getNotifPostTitle() {
-        return this.notifPostTitle;
+    public String getDoerName() {
+        return doerName;
     }
 
-    public void setNotifProfilePic(int profPic){
-        this.notifProfilePic=profPic;
-    }
-    public void setNotifProfileName(String profileName) {
-        this.notifProfileName= profileName;
+    public void setDoerName(String doerName) {
+        this.doerName = doerName;
     }
 
-    public void setNotifTimeStamp(String timeStamp) {
-
-        this.notifTimeStamp=timeStamp;
+    public long getId() {
+        return id;
     }
 
-    public void setNotifPostTitle(String postTitle) {
+    public void setId(long id) {
+        this.id = id;
+    }
 
-        this.notifPostTitle = postTitle;
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
+
+    public long getDoerId() {
+        return doerId;
+    }
+
+    public void setDoerId(long doerId) {
+        this.doerId = doerId;
+    }
+
+    public int getIsRead() {
+        return isRead;
+    }
+
+    public void setIsRead(int isRead) {
+        this.isRead = isRead;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public String getDatePerformed() {
+        return datePerformed;
+    }
+
+    public void setDatePerformed(String datePerformed) {
+        this.datePerformed = datePerformed;
     }
 }
 

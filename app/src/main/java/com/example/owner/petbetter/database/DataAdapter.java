@@ -14,6 +14,7 @@ import com.example.owner.petbetter.classes.Facility;
 import com.example.owner.petbetter.classes.Marker;
 import com.example.owner.petbetter.classes.Message;
 import com.example.owner.petbetter.classes.MessageRep;
+import com.example.owner.petbetter.classes.Notifications;
 import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.PostRep;
 import com.example.owner.petbetter.classes.User;
@@ -41,6 +42,7 @@ public class DataAdapter {
     private static final String MESSAGE_TABLE = "messages";
     private static final String POST_REP_TABLE = "postreps";
     private static final String MESSAGE_REP_TABLE = "messagereps";
+    private static final String NOTIF_TABLE = "notifications";
 
 
     public DataAdapter(Context context) {
@@ -652,6 +654,30 @@ public class DataAdapter {
         result = petBetterDb.insert(MESSAGE_REP_TABLE, null, cv);
 
         return result;
+    }
+
+    public ArrayList<Notifications> getNotifications(long userId){
+        ArrayList<Notifications> results = new ArrayList<>();
+
+        String sql = "SELECT n._id AS _id, n.user_id AS user_id, n.doer_id AS doer_id, n.is_read AS is_read, \n" +
+                "n.type AS type, n.date_performed as date_performed, u.first_name AS first_name, u.last_name AS last_name \n" +
+                "FROM notifications AS n INNER JOIN users AS u ON n.doer_id = u._id WHERE n.user_id = '" + userId + "'";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            Notifications notifs = new Notifications(c.getInt(c.getColumnIndexOrThrow("_id")),
+                    c.getLong(c.getColumnIndexOrThrow("user_id")),
+                    c.getLong(c.getColumnIndexOrThrow("doer_id")),
+                    c.getInt(c.getColumnIndexOrThrow("is_read")),
+                    c.getInt(c.getColumnIndexOrThrow("type")),
+                    c.getString(c.getColumnIndexOrThrow("date_performed")),
+                    c.getString(c.getColumnIndexOrThrow("first_name")),
+                    c.getString(c.getColumnIndexOrThrow("last_name")));
+            results.add(notifs);
+        }
+
+        c.close();
+        return results;
     }
 
 }
