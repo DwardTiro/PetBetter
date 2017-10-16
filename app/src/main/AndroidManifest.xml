@@ -98,6 +98,7 @@
         <activity android:name=".fragments.FragmentCommunity" />
         <activity android:name=".fragments.FragmentMessages" />
         <activity android:name=".fragments.FragmentUserProfile" />
+
         <activity android:name=".activities.ComposeActivity" />
         <activity android:name=".activities.PointLocActivity" />
         <activity android:name=".activities.MessageActivity"></activity>

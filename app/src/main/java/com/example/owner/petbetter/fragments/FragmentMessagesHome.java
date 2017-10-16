@@ -67,6 +67,7 @@ public class FragmentMessagesHome extends Fragment{
                 FragmentMessages fragment3 = new FragmentMessages();
                 FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
                 transaction.add(R.id.fragment_child_container, fragment3).commit();
+                //getSupportFragmentManager().
                 //view.getSupFragmentManager().beginTransaction().add(R.id.comm_container,fragment3).commit();
             }
         });
