@@ -62,11 +62,11 @@ public class FragmentCommunity extends Fragment {
 
         communityAdapter = new CommunityAdapter(getActivity(), topicList,new CommunityAdapter.OnItemClickListener() {
             @Override public void onItemClick(Topic item) {
-                /*
-                Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.TopicActivity.class);
+
+                Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.TopicContentActivity.class);
                 intent.putExtra("thisTopic", new Gson().toJson(item));
                 startActivity(intent);
-                */
+
             }
         });
         //homeAdapter = new HomeAdapter(getActivity(), postList);
@@ -79,9 +79,9 @@ public class FragmentCommunity extends Fragment {
         fab = (FloatingActionButton) view.findViewById(R.id.fabCom);
         fab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                /*
-                Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.AddTopicActivity.class);
-                startActivity(intent);*/
+
+                Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.NewTopicActivity.class);
+                startActivity(intent);
             }
         });
 

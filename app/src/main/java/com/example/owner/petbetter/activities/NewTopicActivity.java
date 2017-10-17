@@ -5,11 +5,11 @@ import android.os.Bundle;
 
 import com.example.owner.petbetter.R;
 
-public class ComposeActivity extends AppCompatActivity {
+public class NewTopicActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_compose);
+        setContentView(R.layout.activity_new_topic);
     }
 }

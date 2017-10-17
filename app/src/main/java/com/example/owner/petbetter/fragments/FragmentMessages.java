@@ -80,7 +80,7 @@ public class FragmentMessages extends Fragment {
         fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.ComposeActivity.class);
+                Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.NewMessageActivity.class);
                 startActivity(intent);
             }
         });
