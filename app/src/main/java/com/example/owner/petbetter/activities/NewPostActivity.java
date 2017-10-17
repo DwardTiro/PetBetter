@@ -1,16 +1,15 @@
 package com.example.owner.petbetter.activities;
 
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 
-/**
- * Created by Kristian on 10/16/2017.
- */
+import com.example.owner.petbetter.R;
 
 public class NewPostActivity extends AppCompatActivity {
 
     @Override
-    public void onCreate(Bundle savedInstance){
-        super.onCreate(savedInstance);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_new_post);
     }
 }

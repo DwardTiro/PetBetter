@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.owner.petbetter.activities.NewTopicActivity">
+    tools:context="com.example.owner.petbetter.activities.NewPostActivity">
+
 
 
     <TextView
@@ -16,39 +17,36 @@
         android:layout_marginStart="15dp"
         android:layout_marginTop="15dp"
         android:textSize="30dp"
-        android:text="Create a Topic" />
+        android:text="Write a Post" />
 
     <EditText
-    android:id="@+id/newTopicTitle"
-    android:layout_width="350dp"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="21dp"
-    android:hint="What is your topic about?"
-    android:textColorHint="@color/timestamp"
-    android:background="@drawable/custom_edittext"
-    android:layout_below="@+id/textView4"
-    android:layout_alignStart="@+id/textView4" />
-
-    <EditText
-        android:id="@+id/newTopicDesc"
+        android:id="@+id/newPostTitle"
         android:layout_width="350dp"
-        android:layout_height="300dp"
-        android:hint="More details about the topic"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="21dp"
+        android:hint="What is your post about?"
         android:textColorHint="@color/timestamp"
         android:background="@drawable/custom_edittext"
-        android:layout_marginTop="24dp"
-        android:layout_below="@+id/newTopicTitle"
-        android:layout_alignStart="@+id/newTopicTitle" />
+        android:layout_below="@+id/textView4"
+        android:layout_alignStart="@+id/textView4" />
+
+    <EditText
+        android:id="@+id/newPostDesc"
+        android:layout_width="350dp"
+        android:layout_height="300dp"
+        android:hint="More details about the post"
+        android:textColorHint="@color/timestamp"
+        android:background="@drawable/custom_edittext"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 
     <Button
-        android:id="@+id/newTopicButton"
+        android:id="@+id/newPostButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
         android:text="Create Topic"
-        android:layout_below="@+id/newTopicDesc"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="18dp" />
-
+        android:layout_marginTop="26dp"
+        android:layout_below="@+id/newPostDesc"
+        android:layout_alignEnd="@+id/newPostDesc" />
 
 </RelativeLayout>

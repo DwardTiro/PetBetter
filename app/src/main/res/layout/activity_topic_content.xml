@@ -1,9 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.owner.petbetter.activities.TopicContentActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <TextView
+        android:id="@+id/topicContentName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="17dp"
+        android:layout_marginTop="17dp"
+        android:textSize="30dp"
+        android:text="Topic Content Name"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+
+    <android.support.v7.widget.SearchView
+        android:id="@+id/searchView"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/topicContentName"
+        android:queryHint="Search Here"/>
+
+    <FrameLayout
+        android:id="@+id/topic_container"
+        android:layout_width="100dp"
+        android:layout_height="450dp"
+        tools:layout_editor_absoluteY="18dp"
+        tools:layout_editor_absoluteX="8dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/searchView">
+    </FrameLayout>
+</RelativeLayout>

@@ -110,7 +110,7 @@
         <activity android:name=".activities.TopicActivity" />
         <activity android:name=".activities.AddTopicActivity" />
         <activity android:name=".activities.NewTopicActivity" />
-        <activity android:name=".activities.TopicContentActivity"></activity>
+        <activity android:name=".activities.TopicContentActivity" />
     </application>
 
 </manifest>
