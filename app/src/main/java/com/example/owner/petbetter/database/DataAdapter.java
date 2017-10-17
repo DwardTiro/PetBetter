@@ -14,8 +14,10 @@ import com.example.owner.petbetter.classes.Facility;
 import com.example.owner.petbetter.classes.Marker;
 import com.example.owner.petbetter.classes.Message;
 import com.example.owner.petbetter.classes.MessageRep;
+import com.example.owner.petbetter.classes.Notifications;
 import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.PostRep;
+import com.example.owner.petbetter.classes.Topic;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
 
@@ -41,6 +43,8 @@ public class DataAdapter {
     private static final String MESSAGE_TABLE = "messages";
     private static final String POST_REP_TABLE = "postreps";
     private static final String MESSAGE_REP_TABLE = "messagereps";
+    private static final String NOTIF_TABLE = "notifications";
+    private static final String TOPIC_TABLE = "topics";
 
 
     public DataAdapter(Context context) {
@@ -604,7 +608,8 @@ public class DataAdapter {
         Post result = new Post(c.getInt(c.getColumnIndexOrThrow("_id")),
                 c.getLong(c.getColumnIndexOrThrow("user_id")),
                 c.getString(c.getColumnIndexOrThrow("topic_name")),
-                c.getString(c.getColumnIndexOrThrow("topic_content")));
+                c.getString(c.getColumnIndexOrThrow("topic_content")),
+                c.getLong(c.getColumnIndexOrThrow("topic_id")));
 
         c.close();
         return result;
@@ -652,6 +657,56 @@ public class DataAdapter {
         result = petBetterDb.insert(MESSAGE_REP_TABLE, null, cv);
 
         return result;
+    }
+
+    public ArrayList<Notifications> getNotifications(long userId){
+        ArrayList<Notifications> results = new ArrayList<>();
+
+        String sql = "SELECT n._id AS _id, n.user_id AS user_id, n.doer_id AS doer_id, n.is_read AS is_read, " +
+                "n.type AS type, n.date_performed as date_performed, u.first_name AS first_name, u.last_name AS last_name " +
+                "FROM notifications AS n INNER JOIN users AS u ON n.doer_id = u._id WHERE n.user_id = '" + userId + "'";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            Notifications notifs = new Notifications(c.getInt(c.getColumnIndexOrThrow("_id")),
+                    c.getLong(c.getColumnIndexOrThrow("user_id")),
+                    c.getLong(c.getColumnIndexOrThrow("doer_id")),
+                    c.getInt(c.getColumnIndexOrThrow("is_read")),
+                    c.getInt(c.getColumnIndexOrThrow("type")),
+                    c.getString(c.getColumnIndexOrThrow("date_performed")),
+                    c.getString(c.getColumnIndexOrThrow("first_name")),
+                    c.getString(c.getColumnIndexOrThrow("last_name")));
+            results.add(notifs);
+        }
+
+        c.close();
+        return results;
+    }
+
+    public ArrayList<Topic> getTopics(){
+        ArrayList<Topic> results = new ArrayList<>();
+
+        String sql = "SELECT t._id AS _id, t.creator_id AS creator_id, t.topic_name AS topic_name, " +
+                "t.topic_desc AS topic_desc, t.date_created AS date_created, t.is_deleted AS is_deleted, " +
+                "u.first_name AS first_name, u.last_name AS last_name FROM topics AS t LEFT JOIN users as u " +
+                "ON t.creator_id = u._id";
+
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            Topic topic = new Topic(c.getInt(c.getColumnIndexOrThrow("_id")),
+                    c.getLong(c.getColumnIndexOrThrow("creator_id")),
+                    c.getString(c.getColumnIndexOrThrow("topic_name")),
+                    c.getString(c.getColumnIndexOrThrow("topic_desc")),
+                    c.getString(c.getColumnIndexOrThrow("date_created")),
+                    c.getInt(c.getColumnIndexOrThrow("is_deleted")),
+                    c.getString(c.getColumnIndexOrThrow("first_name")),
+                    c.getString(c.getColumnIndexOrThrow("last_name")));
+            results.add(topic);
+        }
+
+        c.close();
+        return results;
     }
 
 }

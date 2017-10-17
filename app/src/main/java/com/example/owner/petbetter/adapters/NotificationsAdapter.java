@@ -1,6 +1,7 @@
 package com.example.owner.petbetter.adapters;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
 import android.view.LayoutInflater;
@@ -23,15 +24,19 @@ import java.util.ArrayList;
 public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdapter.NotificationsViewHolder> {
 
 
+    public interface OnItemClickListener {
+        void onItemClick(Notifications item);
+    }
+
     private LayoutInflater inflater;
     private ArrayList<Notifications> notifs;
-    //private final FaciListingAdapter.OnItemClickListener listener;
+    private final OnItemClickListener listener;
 
-    public NotificationsAdapter(Context context, ArrayList<Notifications> notifs){
+    public NotificationsAdapter(Context context, ArrayList<Notifications> notifs, OnItemClickListener listener){
 
         inflater = LayoutInflater.from(context);
         this.notifs = notifs;
-  //      this.listener = listener;
+        this.listener = listener;
 
     }
     @Override
@@ -43,14 +48,23 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
 
     @Override
     public void onBindViewHolder(NotificationsViewHolder holder, int position) {
+        //(size-1)-position;
+        Notifications notif = notifs.get((notifs.size()-1)-position);
+        holder.notifProfileName.setText(notif.getDoerName());
+        if(notif.getIsRead()==0){
+            holder.notifPostTitle.setTypeface(null, Typeface.BOLD);
+        }
 
-        Notifications notif = notifs.get(position);
-        holder.notifProfilePic.setImageResource(notif.getNotifProfilePic());
-        holder.notifProfileName.setText(notif.getNotifProfileName());
-        holder.notifTimeStamp.setText(notif.getNotifTimeStamp());
-        holder.notifPostTitle.setText(notif.getNotifPostTitle());
+        if(notif.getType()==1){
+            holder.notifPostTitle.setText("has replied to your post.");
+            //get group name;
+        }
+        if(notif.getType()==2){
+            holder.notifPostTitle.setText("has messaged you.");
+        }
 
-       // holder.bind();
+        holder.notifTimeStamp.setText("");
+        holder.bind(notif, listener);
 
     }
 
@@ -72,6 +86,14 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
             notifProfileName = (TextView) itemView.findViewById(R.id.notifProfileName);
             notifPostTitle = (TextView) itemView.findViewById(R.id.notifContent);
             notifTimeStamp = (TextView) itemView.findViewById(R.id.notifTimeStamp);
+        }
+        public void bind(final Notifications item, final OnItemClickListener listener) {
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    listener.onItemClick(item);
+                }
+            });
         }
     }
 }

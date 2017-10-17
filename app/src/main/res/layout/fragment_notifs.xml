@@ -5,29 +5,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.owner.petbetter.fragments.FragmentNotifs">
 
-    <LinearLayout
-        android:id="@+id/containerNotifs"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:orientation="vertical">
-
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="234dp"
-        android:layout_marginStart="40dp"
-        android:text="TextView" />
-    </LinearLayout>
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/fragmentNotifs"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scrollbars="vertical"
-        >
-
+        android:layout_width="200dp"
+        android:layout_height="510dp"
+        tools:layout_editor_absoluteY="18dp"
+        tools:layout_editor_absoluteX="8dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true">
     </android.support.v7.widget.RecyclerView>
 </RelativeLayout>

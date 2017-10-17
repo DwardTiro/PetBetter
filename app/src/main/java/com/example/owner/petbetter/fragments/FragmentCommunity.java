@@ -1,8 +1,12 @@
 package com.example.owner.petbetter.fragments;
 
+import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,25 +15,29 @@ import android.widget.TextView;
 
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.adapters.BookmarkListingAdapter;
+import com.example.owner.petbetter.adapters.CommunityAdapter;
 import com.example.owner.petbetter.classes.Marker;
+import com.example.owner.petbetter.classes.Topic;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
+import com.google.gson.Gson;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class FragmentCommunity extends Fragment {
-    private BookmarkListingAdapter bookmarkListingAdapter;
+    private CommunityAdapter communityAdapter;
     private RecyclerView recyclerView;
-    private ArrayList<Marker> bookmarkList;
+    private ArrayList<Topic> topicList;
     private TextView nameTextView;
 
     private DataAdapter petBetterDb;
     private SystemSessionManager systemSessionManager;
     private User user;
     private String email;
+    private FloatingActionButton fab;
 
 
     @Override
@@ -46,7 +54,37 @@ public class FragmentCommunity extends Fragment {
 
         email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
         user = getUser(email);
-        System.out.println("WASSUP BOYS");
+
+
+        recyclerView = (RecyclerView) view.findViewById(R.id.topicListing);
+        topicList = getTopics();
+        System.out.println("Size of postList "+topicList.size());
+
+        communityAdapter = new CommunityAdapter(getActivity(), topicList,new CommunityAdapter.OnItemClickListener() {
+            @Override public void onItemClick(Topic item) {
+                /*
+                Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.TopicActivity.class);
+                intent.putExtra("thisTopic", new Gson().toJson(item));
+                startActivity(intent);
+                */
+            }
+        });
+        //homeAdapter = new HomeAdapter(getActivity(), postList);
+        communityAdapter.notifyItemRangeChanged(0, communityAdapter.getItemCount());
+        recyclerView.setAdapter(communityAdapter);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        fab = (FloatingActionButton) view.findViewById(R.id.fabCom);
+        fab.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                /*
+                Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.AddTopicActivity.class);
+                startActivity(intent);*/
+            }
+        });
+
         return view;
     }
 
@@ -71,6 +109,20 @@ public class FragmentCommunity extends Fragment {
         }
 
         User result = petBetterDb.getUser(email);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<Topic> getTopics(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Topic> result = petBetterDb.getTopics();
         petBetterDb.closeDatabase();
 
         return result;

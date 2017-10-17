@@ -106,7 +106,7 @@ public class PostContentActivity extends AppCompatActivity {
                     sdf.setTimeZone(TimeZone.getTimeZone("GMT+8"));
                     timeStamp = sdf.format(new Date());
 
-                    addPostRep(postrepid, (int) postUser.getUserId(), (int) postItem.getId(), 0, commentText.getText().toString(),timeStamp);
+                    addPostRep(postrepid, (int) user.getUserId(), (int) postItem.getId(), 0, commentText.getText().toString(),timeStamp);
 
                     Intent intent = new Intent(PostContentActivity.this, com.example.owner.petbetter.activities.PostContentActivity.class);
                     intent.putExtra("thisPost", new Gson().toJson(postItem));

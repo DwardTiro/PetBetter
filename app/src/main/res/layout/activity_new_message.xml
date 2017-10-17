@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/newMsgToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/main_Color"
+        >
+
+    </android.support.v7.widget.Toolbar>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="463dp"
+        android:background="@drawable/notifications_border">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/newMsgSendTo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
+                android:hint="Send a message to"
+                android:textColorHint="@color/timestamp"
+                android:background="@drawable/custom_edittext"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/messageRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                >
+
+            </android.support.v7.widget.RecyclerView>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+
+        android:orientation="horizontal"
+        android:background="@drawable/notifications_border"
+        >
+
+        <EditText
+            android:id="@+id/newMsgContent"
+            android:layout_width="270dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="5dp"
+            android:hint="Write a message."
+            android:textColorHint="@color/timestamp"
+            android:background="@drawable/custom_edittext"/>
+        <Button
+            android:id="@+id/newMsgSendBtn"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="5dp"
+            android:text="Send"
+            android:textAllCaps="false"
+            android:textColor="@color/main_Color"
+            android:textSize="17sp"
+            android:background="@color/main_White"
+            style="?android:attr/borderlessButtonStyle"/>
+    </LinearLayout>
+
+
+</LinearLayout>

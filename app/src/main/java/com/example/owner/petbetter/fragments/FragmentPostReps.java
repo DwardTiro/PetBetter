@@ -65,19 +65,20 @@ public class FragmentPostReps extends Fragment{
 
         System.out.println("topic name: "+postItem.getTopicName());
         postRepList = getPostReps(postItem.getId());
-        System.out.println("POST REP LIST SIZE: "+postRepList.size());
 
-        postRepAdapter = new PostRepAdapter(getActivity(), postRepList, new PostRepAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(PostRep item) {
+        if(postRepList.size()>0){
+            postRepAdapter = new PostRepAdapter(getActivity(), postRepList, new PostRepAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(PostRep item) {
 
-            }
-        });
-        recyclerView.setAdapter(postRepAdapter);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        nameTextView = (TextView) view.findViewById(R.id.vetListName);
+                }
+            });
+            recyclerView.setAdapter(postRepAdapter);
+            recyclerView.setItemAnimator(new DefaultItemAnimator());
+            recyclerView.setHasFixedSize(true);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            nameTextView = (TextView) view.findViewById(R.id.vetListName);
+        }
 
         return view;
     }

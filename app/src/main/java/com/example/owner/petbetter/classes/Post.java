@@ -10,13 +10,15 @@ public class Post {
     private String topicName;
     private String topicContent;
     private String topicUser;
+    private long topicId;
 
-    public Post(long id, long userId, String topicName, String topicContent, String topicUser) {
+    public Post(long id, long userId, String topicName, String topicContent, long topicId) {
         this.id = id;
         this.userId = userId;
         this.topicName = topicName;
         this.topicContent = topicContent;
-        this.topicUser = topicUser;
+        //this.topicUser = firstName+" "+lastName;
+        this.topicId = topicId;
     }
 
     public Post(long id, long userId, String topicName, String topicContent) {
