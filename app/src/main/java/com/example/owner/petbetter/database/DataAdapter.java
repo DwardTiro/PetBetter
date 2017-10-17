@@ -708,4 +708,78 @@ public class DataAdapter {
         c.close();
         return results;
     }
+
+    public long createMessage(int messageId, long userId, long toId){
+        long result;
+
+        ContentValues cv = new ContentValues();
+        cv.put("_id", messageId);
+        cv.put("user_one", userId);
+        cv.put("user_two", toId);
+
+        result = petBetterDb.insert(MESSAGE_TABLE, null, cv);
+
+        return result;
+    }
+
+    public ArrayList<Integer> getMessageIds () {
+
+        ArrayList<Integer> ids = new ArrayList<>();
+
+        String sql = "SELECT _id FROM "+MESSAGE_TABLE;
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            ids.add(c.getInt(c.getColumnIndexOrThrow("_id")));
+        }
+
+        c.close();
+        return ids;
+    }
+
+    public ArrayList<Integer> generateMessageRepIds () {
+
+        ArrayList<Integer> ids = new ArrayList<>();
+
+        String sql = "SELECT _id FROM "+MESSAGE_REP_TABLE;
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            ids.add(c.getInt(c.getColumnIndexOrThrow("_id")));
+        }
+
+        c.close();
+        return ids;
+    }
+
+    public ArrayList<Integer> getNotifIds () {
+
+        ArrayList<Integer> ids = new ArrayList<>();
+
+        String sql = "SELECT _id FROM "+NOTIF_TABLE;
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            ids.add(c.getInt(c.getColumnIndexOrThrow("_id")));
+        }
+
+        c.close();
+        return ids;
+    }
+
+    public long notifyMessage(int notifId, long toId, long userId, int isRead, int type, String timeStamp){
+        long result;
+
+        ContentValues cv = new ContentValues();
+        cv.put("_id", notifId);
+        cv.put("user_id", toId);
+        cv.put("doer_id", userId);
+        cv.put("is_read", isRead);
+        cv.put("type", type);
+        cv.put("date_performed", timeStamp);
+
+        result = petBetterDb.insert(NOTIF_TABLE, null, cv);
+
+        return result;
+    }
 }
