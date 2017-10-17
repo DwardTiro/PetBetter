@@ -90,6 +90,15 @@
             android:theme="@style/AppTheme.NoActionBar">
             <category android:name="android.intent.category.ALTERNATIVE" />
         </activity>
+        <activity android:name=".activities.NewPostActivity"
+            android:label="New Post">
+
+        </activity>
+        <activity android:name=".activities.NewMessageActivity"
+            android:label="New Message">
+
+        </activity>
+
         <activity android:name=".activities.CommActivity" />
         <activity android:name=".activities.BookmarksActivity" />
         <activity android:name=".fragments.FragmentBookmarkListing" />
