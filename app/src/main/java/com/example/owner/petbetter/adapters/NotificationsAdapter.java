@@ -62,7 +62,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         if(notif.getType()==2){
             holder.notifPostTitle.setText("has messaged you.");
         }
-
         holder.notifTimeStamp.setText("");
         holder.bind(notif, listener);
 

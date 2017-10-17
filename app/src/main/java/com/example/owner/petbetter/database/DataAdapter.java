@@ -708,5 +708,4 @@ public class DataAdapter {
         c.close();
         return results;
     }
-
 }
