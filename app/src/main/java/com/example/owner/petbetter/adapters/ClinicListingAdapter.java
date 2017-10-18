@@ -11,7 +11,10 @@ import android.widget.TextView;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.classes.Facility;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * Created by owner on 21/8/2017.
@@ -48,7 +51,9 @@ public class ClinicListingAdapter extends RecyclerView.Adapter<ClinicListingAdap
         Facility thisClinic = faciList.get(position);
         holder.clinicListName.setText(thisClinic.getFaciName());
         holder.clinicListAddress.setText(thisClinic.getLocation());
-        holder.clinicListRating.setText(Integer.toString(thisClinic.getRating()));
+        holder.clinicListRating.setText(String.format(Locale.getDefault(),"%.1f",thisClinic.getRating()));
+        holder.clinicOpenTime.setText(thisClinic.getHoursOpen());
+        holder.clinicClosetime.setText(thisClinic.getHoursClose());
         holder.bind(thisClinic, listener);
 
     }
@@ -69,6 +74,8 @@ public class ClinicListingAdapter extends RecyclerView.Adapter<ClinicListingAdap
         private TextView clinicListName;
         private TextView clinicListAddress;
         private TextView clinicListRating;
+        private TextView clinicOpenTime;
+        private TextView clinicClosetime;
 
         public ClinicListingViewHolder(View itemView) {
             super(itemView);
@@ -76,6 +83,8 @@ public class ClinicListingAdapter extends RecyclerView.Adapter<ClinicListingAdap
             clinicListName = (TextView) itemView.findViewById(R.id.clinicListName);
             clinicListAddress = (TextView) itemView.findViewById(R.id.clinicListAddress);
             clinicListRating = (TextView) itemView.findViewById(R.id.clinicListRating);
+            clinicOpenTime = (TextView) itemView.findViewById(R.id.clinicOpenTime);
+            clinicClosetime = (TextView) itemView.findViewById(R.id.clinicOpenTime);
         }
 
         public void bind(final Facility item, final OnItemClickListener listener) {

@@ -13,6 +13,7 @@ import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.classes.Veterinarian;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * Created by owner on 15/8/2017.
@@ -49,7 +50,7 @@ public class VetListingAdapter extends RecyclerView.Adapter<VetListingAdapter.Ve
         holder.vetListName.setText(thisVet.getName());
         System.out.println("The vet's name is "+holder.vetListName.getText());
         holder.vetListSpecialty.setText(thisVet.getSpecialty());
-        holder.vetListRating.setText(Integer.toString(thisVet.getRating()));
+        holder.vetListRating.setText(String.format(Locale.getDefault(),"%.1f",thisVet.getRating()));
         holder.bind(thisVet, listener);
     }
 

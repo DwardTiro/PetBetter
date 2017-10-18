@@ -6,10 +6,11 @@ package com.example.owner.petbetter.classes;
 
 public class Veterinarian extends User {
     String specialty;
-    int id, rating;
+    int id;
+    float rating;
 
     public Veterinarian(int id, long userId, String lastName, String firstName, String mobileNumber, String phoneNumber,
-                        String email, String password, int age, int userType, String specialty, int rating) {
+                        String email, String password, int age, int userType, String specialty, float rating) {
         super(userId, lastName, firstName, mobileNumber, phoneNumber, email, password, age, userType);
         this.id = id;
         this.specialty = specialty;
@@ -36,11 +37,11 @@ public class Veterinarian extends User {
         this.specialty = specialty;
     }
 
-    public int getRating() {
+    public float getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(float rating) {
         this.rating = rating;
     }
 }

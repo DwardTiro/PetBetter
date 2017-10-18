@@ -74,12 +74,14 @@ public class FaciListingAdapter extends RecyclerView.Adapter<FaciListingAdapter.
 
         private TextView faciListName;
         private TextView faciListAddress;
+        private TextView faciRating;
 
         public FaciListingViewHolder(View itemView) {
             super(itemView);
 
             faciListName = (TextView) itemView.findViewById(R.id.faciListName);
             faciListAddress = (TextView) itemView.findViewById(R.id.faciListAddress);
+
         }
 
         public void bind(final Marker item, final OnItemClickListener listener) {
