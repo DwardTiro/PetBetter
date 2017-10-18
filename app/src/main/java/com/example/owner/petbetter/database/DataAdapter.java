@@ -708,4 +708,134 @@ public class DataAdapter {
         c.close();
         return results;
     }
+
+    public long createMessage(int messageId, long userId, long toId){
+        long result;
+
+        ContentValues cv = new ContentValues();
+        cv.put("_id", messageId);
+        cv.put("user_one", userId);
+        cv.put("user_two", toId);
+
+        result = petBetterDb.insert(MESSAGE_TABLE, null, cv);
+
+        return result;
+    }
+
+    public ArrayList<Integer> getMessageIds () {
+
+        ArrayList<Integer> ids = new ArrayList<>();
+
+        String sql = "SELECT _id FROM "+MESSAGE_TABLE;
+
+        Cursor c = petBetterDb.rawQuery(sql, null);
+        while(c.moveToNext()) {
+            ids.add(c.getInt(c.getColumnIndexOrThrow("_id")));
+        }
+
+        c.close();
+        return ids;
+    }
+
+    public ArrayList<Integer> generateMessageRepIds () {
+
+        ArrayList<Integer> ids = new ArrayList<>();
+
+        String sql = "SELECT _id FROM "+MESSAGE_REP_TABLE;
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            ids.add(c.getInt(c.getColumnIndexOrThrow("_id")));
+        }
+
+        c.close();
+        return ids;
+    }
+
+    public ArrayList<Integer> getNotifIds () {
+
+        ArrayList<Integer> ids = new ArrayList<>();
+
+        String sql = "SELECT _id FROM "+NOTIF_TABLE;
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            ids.add(c.getInt(c.getColumnIndexOrThrow("_id")));
+        }
+
+        c.close();
+        return ids;
+    }
+
+    public long notifyMessage(int notifId, long toId, long userId, int isRead, int type, String timeStamp){
+        long result;
+
+        ContentValues cv = new ContentValues();
+        cv.put("_id", notifId);
+        cv.put("user_id", toId);
+        cv.put("doer_id", userId);
+        cv.put("is_read", isRead);
+        cv.put("type", type);
+        cv.put("date_performed", timeStamp);
+
+        result = petBetterDb.insert(NOTIF_TABLE, null, cv);
+
+        return result;
+    }
+
+    public ArrayList<Integer> getTopicIds () {
+
+        ArrayList<Integer> ids = new ArrayList<>();
+
+        String sql = "SELECT _id FROM "+TOPIC_TABLE;
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            ids.add(c.getInt(c.getColumnIndexOrThrow("_id")));
+        }
+
+        c.close();
+        return ids;
+    }
+
+    public long createTopic(int topicId, long userId, String topicTitle, String topicDesc, String timeStamp, int isDeleted){
+        long result;
+
+        ContentValues cv = new ContentValues();
+        cv.put("_id", topicId);
+        cv.put("creator_id", userId);
+        cv.put("topic_name", topicTitle);
+        cv.put("topic_desc", topicDesc);
+        cv.put("date_created", timeStamp);
+        cv.put("is_deleted", isDeleted);
+
+        result = petBetterDb.insert(TOPIC_TABLE, null, cv);
+
+        return result;
+    }
+
+    public ArrayList<Post> getTopicPosts(long topicId){
+
+        ArrayList<Post> results = new ArrayList<>();
+
+
+        String sql = "SELECT p._id AS _id, p.user_id, p.topic_name AS topic_name, p.topic_content AS topic_content, " +
+                "u.first_name AS first_name, u.last_name AS last_name FROM posts AS p INNER JOIN users u " +
+                "ON p.user_id = u._id INNER JOIN topics t ON p.topic_id = t._id WHERE p.topic_id = '" + topicId + "'";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            System.out.println("DATA ADAPTER "+ c.getInt(c.getColumnIndexOrThrow("_id")));
+            Post post= new Post(c.getInt(c.getColumnIndexOrThrow("_id")),
+                    c.getLong(c.getColumnIndexOrThrow("user_id")),
+                    c.getString(c.getColumnIndexOrThrow("topic_name")),
+                    c.getString(c.getColumnIndexOrThrow("topic_content")),
+                    c.getString(c.getColumnIndexOrThrow("first_name")),
+                    c.getString(c.getColumnIndexOrThrow("last_name")));
+            results.add(post);
+        }
+
+        c.close();
+        return results;
+    }
 }
