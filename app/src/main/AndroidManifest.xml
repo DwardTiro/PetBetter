@@ -86,8 +86,8 @@
         </activity>
         <activity
             android:name=".activities.PostContentActivity"
-            android:label="View Post"
-            android:theme="@style/AppTheme.NoActionBar">
+
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <category android:name="android.intent.category.ALTERNATIVE" />
         </activity>
         <activity
