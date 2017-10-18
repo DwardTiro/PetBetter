@@ -11,6 +11,8 @@ public class Post {
     private String topicContent;
     private String topicUser;
     private long topicId;
+    private String dateCreated;
+    private int isDeleted;
 
     public Post(long id, long userId, String topicName, String topicContent, long topicId) {
         this.id = id;
@@ -28,12 +30,43 @@ public class Post {
         this.topicContent = topicContent;
     }
 
-    public Post(long id, long userId, String topicName, String topicContent, String firstName, String lastName) {
+    public Post(long id, long userId, String topicName, String topicContent, String dateCreated, String firstName, String lastName,
+                int isDeleted) {
         this.id = id;
         this.userId = userId;
         this.topicName = topicName;
         this.topicContent = topicContent;
+        this.dateCreated = dateCreated;
         this.topicUser = firstName +" "+ lastName;
+        this.isDeleted = isDeleted;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public long getTopicId() {
+        return topicId;
+    }
+
+    public void setTopicId(long topicId) {
+        this.topicId = topicId;
+    }
+
+    public int getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(int isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
+    public String getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(String dateCreated) {
+        this.dateCreated = dateCreated;
     }
 
     public long getId() {

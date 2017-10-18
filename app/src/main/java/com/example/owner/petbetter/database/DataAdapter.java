@@ -228,7 +228,8 @@ public class DataAdapter {
         ArrayList<Post> results = new ArrayList<>();
 
         String sql = "SELECT p._id AS _id, p.user_id, p.topic_name AS topic_name, p.topic_content AS topic_content, " +
-                "u.first_name AS first_name, u.last_name AS last_name FROM posts AS p INNER JOIN users u ON p.user_id = u._id";
+                "p.date_created AS date_created, u.first_name AS first_name, u.last_name AS last_name, p.is_deleted AS is_deleted" +
+                " FROM posts AS p INNER JOIN users u ON p.user_id = u._id";
         Cursor c = petBetterDb.rawQuery(sql, null);
 
         while(c.moveToNext()) {
@@ -237,8 +238,10 @@ public class DataAdapter {
                     c.getLong(c.getColumnIndexOrThrow("user_id")),
                     c.getString(c.getColumnIndexOrThrow("topic_name")),
                     c.getString(c.getColumnIndexOrThrow("topic_content")),
+                    c.getString(c.getColumnIndexOrThrow("date_created")),
                     c.getString(c.getColumnIndexOrThrow("first_name")),
-                    c.getString(c.getColumnIndexOrThrow("last_name")));
+                    c.getString(c.getColumnIndexOrThrow("last_name")),
+                    c.getInt(c.getColumnIndexOrThrow("is_deleted")));
             results.add(post);
         }
 
@@ -767,7 +770,7 @@ public class DataAdapter {
         return ids;
     }
 
-    public long notifyMessage(int notifId, long toId, long userId, int isRead, int type, String timeStamp){
+    public long notifyUser(int notifId, long toId, long userId, int isRead, int type, String timeStamp){
         long result;
 
         ContentValues cv = new ContentValues();
@@ -820,8 +823,9 @@ public class DataAdapter {
 
 
         String sql = "SELECT p._id AS _id, p.user_id, p.topic_name AS topic_name, p.topic_content AS topic_content, " +
-                "u.first_name AS first_name, u.last_name AS last_name FROM posts AS p INNER JOIN users u " +
-                "ON p.user_id = u._id INNER JOIN topics t ON p.topic_id = t._id WHERE p.topic_id = '" + topicId + "'";
+                "p.date_created AS date_created, u.first_name AS first_name, u.last_name AS last_name, p.is_deleted AS is_deleted" +
+                " FROM posts AS p INNER JOIN users u ON p.user_id = u._id INNER JOIN topics t " +
+                "ON p.topic_id = t._id WHERE p.topic_id = '" + topicId + "'";
         Cursor c = petBetterDb.rawQuery(sql, null);
 
         while(c.moveToNext()) {
@@ -830,12 +834,47 @@ public class DataAdapter {
                     c.getLong(c.getColumnIndexOrThrow("user_id")),
                     c.getString(c.getColumnIndexOrThrow("topic_name")),
                     c.getString(c.getColumnIndexOrThrow("topic_content")),
+                    c.getString(c.getColumnIndexOrThrow("date_created")),
                     c.getString(c.getColumnIndexOrThrow("first_name")),
-                    c.getString(c.getColumnIndexOrThrow("last_name")));
+                    c.getString(c.getColumnIndexOrThrow("last_name")),
+                    c.getInt(c.getColumnIndexOrThrow("is_deleted")));
             results.add(post);
         }
 
         c.close();
         return results;
     }
+
+    public ArrayList<Integer> getPostIds () {
+
+        ArrayList<Integer> ids = new ArrayList<>();
+
+        String sql = "SELECT _id FROM "+POST_TABLE;
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            ids.add(c.getInt(c.getColumnIndexOrThrow("_id")));
+        }
+
+        c.close();
+        return ids;
+    }
+
+    public long createPost(int pId, long userId, String postTitle, String postDesc, long topicId, String timeStamp, int isDeleted){
+        long result;
+
+        ContentValues cv = new ContentValues();
+        cv.put("_id", pId);
+        cv.put("user_id", userId);
+        cv.put("topic_name", postTitle);
+        cv.put("topic_content", postDesc);
+        cv.put("topic_id", topicId);
+        cv.put("date_created", timeStamp);
+        cv.put("is_deleted", isDeleted);
+
+        result = petBetterDb.insert(POST_TABLE, null, cv);
+
+        return result;
+    }
+
 }

@@ -174,7 +174,7 @@ public class NewMessageActivity extends AppCompatActivity {
         }
 
 
-        result = petBetterDb.notifyMessage(notifId, toId, userId, isRead, type, timeStamp);
+        result = petBetterDb.notifyUser(notifId, toId, userId, isRead, type, timeStamp);
         petBetterDb.closeDatabase();
 
 

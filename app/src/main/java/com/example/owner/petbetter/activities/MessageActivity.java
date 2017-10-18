@@ -39,6 +39,7 @@ public class MessageActivity extends AppCompatActivity {
     private SystemSessionManager systemSessionManager;
     private User user, messageUser;
     private String timeStamp, email;
+    private int nId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +101,15 @@ public class MessageActivity extends AppCompatActivity {
 
                     addMessageRep(messageRepId, (int) user.getUserId(), (int) messageItem.getId(),
                             messageText.getText().toString(), 1, timeStamp);
+
+
+
+                    nId = generateNotifsId();
+
+                    if(messageItem.getUserId()==user.getUserId())
+                        notifyMessage(nId, messageItem.getFromId(), user.getUserId(), 0, 2, timeStamp);
+                    else
+                        notifyMessage(nId, messageItem.getUserId(), user.getUserId(), 0, 2, timeStamp);
 
                     Intent intent = new Intent(MessageActivity.this, com.example.owner.petbetter.activities.MessageActivity.class);
                     intent.putExtra("thisMessage", new Gson().toJson(messageItem));
@@ -187,6 +197,48 @@ public class MessageActivity extends AppCompatActivity {
 
         User result = petBetterDb.getPostUser(userId);
         petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    public int generateNotifsId(){
+        ArrayList<Integer> storedIds;
+        int markerId = 1;
+
+        try {
+            petBetterDb.openDatabase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        storedIds = petBetterDb.getNotifIds();
+        petBetterDb.closeDatabase();
+
+
+        if(storedIds.isEmpty()) {
+            return markerId;
+        } else {
+            while (storedIds.contains(markerId)){
+                markerId += 1;
+            }
+
+            return markerId;
+        }
+    }
+
+    private long notifyMessage(int notifId, long toId, long userId, int isRead, int type, String timeStamp){
+        long  result;
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+        result = petBetterDb.notifyUser(notifId, toId, userId, isRead, type, timeStamp);
+        petBetterDb.closeDatabase();
+
 
         return result;
     }

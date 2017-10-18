@@ -2,6 +2,7 @@ package com.example.owner.petbetter.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -39,6 +40,7 @@ public class FragmentPosts extends Fragment {
     private User user;
     private String email;
     private long topicId;
+    private FloatingActionButton fab;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_posts,container, false);
@@ -78,6 +80,15 @@ public class FragmentPosts extends Fragment {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        fab = (FloatingActionButton) view.findViewById(R.id.fabPosts);
+        fab.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.NewPostActivity.class);
+                intent.putExtra("thisTopicId", topicId);
+                startActivity(intent);
+            }
+        });
 
         return view;
     }
