@@ -3,6 +3,7 @@ package com.example.owner.petbetter.activities;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -43,6 +44,13 @@ public class MessageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.viewPostToolbar);
+        final TextView activityTitle = (TextView) findViewById(R.id.activity_title);
+        activityTitle.setText("View Message");
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
 
         String jsonMyObject;
         Bundle extras = getIntent().getExtras();
@@ -100,6 +108,10 @@ public class MessageActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public void viewPostBackButtonClicked(View view){
+        finish();
     }
     private void initializeDatabase() {
 

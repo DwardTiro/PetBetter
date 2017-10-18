@@ -1,24 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/newMsgToolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/main_Color"
-        >
-
-    </android.support.v7.widget.Toolbar>
-
+   <include
+       android:id="@+id/newMessageToolbar"
+       layout="@layout/toolbar_viewpost"
+       android:layout_height="wrap_content"
+       android:layout_width="match_parent"
+       />
 
 
     <LinearLayout
+        android:id="@+id/newMessageLayout"
         android:layout_width="match_parent"
         android:layout_height="463dp"
-        android:background="@drawable/notifications_border">
+        android:background="@drawable/notifications_border"
+        android:layout_below="@+id/newMessageToolbar">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -58,6 +57,7 @@
 
         android:orientation="horizontal"
         android:background="@drawable/notifications_border"
+        android:layout_below="@+id/newMessageLayout"
         >
 
         <EditText
@@ -84,4 +84,4 @@
     </LinearLayout>
 
 
-</LinearLayout>
+</RelativeLayout>

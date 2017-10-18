@@ -3,53 +3,66 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
+
+    <include
+        android:id="@+id/addMarkerToolbar"
+        layout="@layout/toolbar_viewpost"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="101dp"
-        android:text="Add Location to database" />
+        android:layout_width="match_parent"/>
 
-    <Button
-        android:id="@+id/okButton"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/addMarkerLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Ok"
-        android:layout_alignParentBottom="true"
-        android:layout_toStartOf="@+id/textView3"
-        android:layout_marginBottom="178dp"
-        android:onClick="okClicked"/>
+        android:layout_below="@+id/addMarkerToolbar">
 
-    <Button
-        android:id="@+id/cancelButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Cancel"
-        android:layout_alignBaseline="@+id/okButton"
-        android:layout_alignBottom="@+id/okButton"
-        android:layout_toEndOf="@+id/textView3"
-        android:onClick="cancelClicked"/>
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="101dp"
+            android:text="Add Location to database" />
 
-    <EditText
-        android:id="@+id/editBldgName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/okButton"
-        android:layout_below="@+id/textView3"
-        android:layout_marginTop="71dp"
-        android:inputType="textPersonName"
-        android:hint="Name of the location"
-        android:layout_alignEnd="@+id/cancelButton"/>
+        <Button
+            android:id="@+id/okButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="178dp"
+            android:layout_toStartOf="@+id/textView3"
+            android:onClick="okClicked"
+            android:text="Ok" />
 
-    <Spinner
-        android:id="@+id/spinnerLocType"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:entries="@array/typeSpinner"/>
+        <Button
+            android:id="@+id/cancelButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/okButton"
+            android:layout_alignBottom="@+id/okButton"
+            android:layout_toEndOf="@+id/textView3"
+            android:onClick="cancelClicked"
+            android:text="Cancel" />
 
+        <EditText
+            android:id="@+id/editBldgName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/cancelButton"
+            android:layout_alignStart="@+id/okButton"
+            android:layout_below="@+id/textView3"
+            android:layout_marginTop="71dp"
+            android:hint="Name of the location"
+            android:inputType="textPersonName" />
 
+        <Spinner
+            android:id="@+id/spinnerLocType"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:entries="@array/typeSpinner" />
+
+    </RelativeLayout>
 </RelativeLayout>

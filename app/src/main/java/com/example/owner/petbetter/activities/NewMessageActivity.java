@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.classes.Message;
@@ -48,10 +49,15 @@ public class NewMessageActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstance){
         super.onCreate(savedInstance);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.newMsgToolbar);
-        setSupportActionBar(toolbar);
         setContentView(R.layout.activity_new_message);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.viewPostToolbar);
+        setSupportActionBar(toolbar);
+        final TextView activityTitle = (TextView) findViewById(R.id.activity_title);
+        activityTitle.setText("New Message");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+
 
         systemSessionManager = new SystemSessionManager(this);
 
@@ -112,6 +118,9 @@ public class NewMessageActivity extends AppCompatActivity {
 
     }
 
+    public void viewPostBackButtonClicked(View view){
+        finish();
+    }
     private void initializeDatabase() {
 
         petBetterDb = new DataAdapter(this);

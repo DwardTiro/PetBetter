@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.classes.Post;
@@ -56,7 +57,10 @@ public class PostContentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_post_content);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.viewPostToolbar);
+
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
 
         profilePic = (ImageView) findViewById(R.id.homeListUserPicture);
         profileName = (TextView) findViewById(R.id.homeListUserName);
@@ -115,6 +119,10 @@ public class PostContentActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public void viewPostBackButtonClicked(View view){
+        finish();
     }
 
     private void initializeDatabase() {

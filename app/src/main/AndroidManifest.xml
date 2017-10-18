@@ -92,12 +92,16 @@
         </activity>
         <activity
             android:name=".activities.NewPostActivity"
-            android:label="New Post" />
+            android:label="New Post"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity
             android:name=".activities.NewMessageActivity"
-            android:label="New Message" />
-        <activity android:name=".activities.CommActivity" />
-        <activity android:name=".activities.BookmarksActivity" />
+            android:label="New Message"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity android:name=".activities.CommActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity android:name=".activities.BookmarksActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity android:name=".fragments.FragmentBookmarkListing" />
         <activity android:name=".fragments.FragmentFacilityListing" />
         <activity android:name=".fragments.FragmentHome" />
@@ -105,12 +109,16 @@
         <activity android:name=".fragments.FragmentMessages" />
         <activity android:name=".fragments.FragmentUserProfile" />
         <activity android:name=".activities.ComposeActivity" />
-        <activity android:name=".activities.PointLocActivity" />
-        <activity android:name=".activities.MessageActivity" />
+        <activity android:name=".activities.PointLocActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity android:name=".activities.MessageActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            />
         <activity android:name=".activities.TopicActivity" />
         <activity android:name=".activities.AddTopicActivity" />
         <activity android:name=".activities.NewTopicActivity" />
-        <activity android:name=".activities.TopicContentActivity" />
+        <activity android:name=".activities.TopicContentActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
     </application>
 
 </manifest>

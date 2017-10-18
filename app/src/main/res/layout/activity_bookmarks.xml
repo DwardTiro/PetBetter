@@ -6,8 +6,17 @@
     android:layout_height="match_parent"
     tools:context="com.example.owner.petbetter.activities.BookmarksActivity">
 
+    <include
+        android:id="@+id/bookmarkToolbar"
+        layout="@layout/toolbar_viewpost"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        />
     <include android:id="@+id/toolbarBook"
-        layout="@layout/bookmark_toolbar">
+        layout="@layout/bookmark_toolbar"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/bookmarkToolbar">
     </include>
 
     <FrameLayout

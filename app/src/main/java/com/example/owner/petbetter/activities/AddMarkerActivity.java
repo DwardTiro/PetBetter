@@ -6,6 +6,7 @@ import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -58,6 +59,11 @@ public class AddMarkerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_marker);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.viewPostToolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        final TextView activityTitle = (TextView) findViewById(R.id.activity_title);
+        activityTitle.setText("Add Marker");
 
 
 
@@ -89,7 +95,9 @@ public class AddMarkerActivity extends AppCompatActivity {
         editBldgName.requestFocusFromTouch();
 
     }
-
+    public void viewPostBackButtonClicked(View view){
+        finish();
+    }
     private void initializeDatabase() {
 
         petBetterDb = new DataAdapter(this);

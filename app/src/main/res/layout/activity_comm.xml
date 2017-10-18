@@ -7,9 +7,18 @@
     tools:context="com.example.owner.petbetter.activities.CommActivity">
 
 
+    <include
+        android:id="@+id/communityToolbar"
+        layout="@layout/toolbar_viewpost"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        />
     <include android:id="@+id/toolbarComm"
-        layout="@layout/comm_toolbar">
-    </include>
+        layout="@layout/comm_toolbar"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/communityToolbar"/>
+
     <FrameLayout
         android:id="@+id/comm_container"
         android:layout_width="100dp"

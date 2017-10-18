@@ -3,9 +3,11 @@ package com.example.owner.petbetter.activities;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.fragments.FragmentBookmarkListing;
@@ -22,6 +24,12 @@ public class BookmarksActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bookmarks);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.viewPostToolbar);
+        setSupportActionBar(toolbar);
+        final TextView activityTitle = (TextView) findViewById(R.id.activity_title);
+        activityTitle.setText("Bookmarks");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         btnBookmarks = (ImageButton) findViewById(R.id.bookmarkMapsButton);
         btnFaci = (ImageButton) findViewById(R.id.faciMapsButton);
@@ -60,6 +68,10 @@ public class BookmarksActivity extends AppCompatActivity {
                 getSupportFragmentManager().beginTransaction().add(R.id.bookmark_container,fragment).commit();
             }
         });
+    }
+
+    public void viewPostBackButtonClicked(View view){
+        finish();
     }
     /*
     public void bookmarkClicked(View v){

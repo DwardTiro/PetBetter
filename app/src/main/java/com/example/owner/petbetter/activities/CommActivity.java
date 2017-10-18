@@ -5,9 +5,11 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.fragments.FragmentCommunity;
@@ -28,6 +30,12 @@ public class CommActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comm);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.viewPostToolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        final TextView activityTitle = (TextView) findViewById(R.id.activity_title);
+        activityTitle.setText("PetBetter Community");
 
         btnHome = (ImageButton) findViewById(R.id.btnHome);
         btnCommunity = (ImageButton) findViewById(R.id.btnCommunity);
@@ -100,6 +108,10 @@ public class CommActivity extends AppCompatActivity {
                 getSupportFragmentManager().beginTransaction().add(R.id.comm_container,fragment1).commit();
             }
         });
+    }
+
+    public void viewPostBackButtonClicked(View view){
+        finish();
     }
 
 }
