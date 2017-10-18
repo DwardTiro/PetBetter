@@ -84,7 +84,7 @@ public class FragmentMessagesHome extends Fragment{
 
                 //FragmentNotifs
                 myContainer.removeAllViews();
-                FragmentPosts fragment3 = new FragmentPosts();
+                FragmentUserPosts fragment3 = new FragmentUserPosts();
                 FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
                 transaction.add(R.id.fragment_child_container, fragment3).commit();
                 //view.getSupportFragmentManager().beginTransaction().add(R.id.comm_container,fragment3).commit();

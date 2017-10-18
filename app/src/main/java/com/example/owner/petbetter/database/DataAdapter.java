@@ -877,4 +877,31 @@ public class DataAdapter {
         return result;
     }
 
+    public ArrayList<Post> getPostsWithUserId(long userId){
+
+        ArrayList<Post> results = new ArrayList<>();
+
+
+        String sql = "SELECT p._id AS _id, p.user_id, p.topic_name AS topic_name, p.topic_content AS topic_content, " +
+                "p.date_created AS date_created, u.first_name AS first_name, u.last_name AS last_name, p.is_deleted AS is_deleted" +
+                " FROM posts AS p INNER JOIN users u ON p.user_id = u._id INNER JOIN topics t " +
+                "ON p.topic_id = t._id WHERE p.user_id = '" + userId + "'";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            System.out.println("DATA ADAPTER "+ c.getInt(c.getColumnIndexOrThrow("_id")));
+            Post post= new Post(c.getInt(c.getColumnIndexOrThrow("_id")),
+                    c.getLong(c.getColumnIndexOrThrow("user_id")),
+                    c.getString(c.getColumnIndexOrThrow("topic_name")),
+                    c.getString(c.getColumnIndexOrThrow("topic_content")),
+                    c.getString(c.getColumnIndexOrThrow("date_created")),
+                    c.getString(c.getColumnIndexOrThrow("first_name")),
+                    c.getString(c.getColumnIndexOrThrow("last_name")),
+                    c.getInt(c.getColumnIndexOrThrow("is_deleted")));
+            results.add(post);
+        }
+
+        c.close();
+        return results;
+    }
 }
