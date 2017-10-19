@@ -22,6 +22,7 @@ import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
 
 import java.io.IOException;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -45,6 +46,9 @@ public class DataAdapter {
     private static final String MESSAGE_REP_TABLE = "messagereps";
     private static final String NOTIF_TABLE = "notifications";
     private static final String TOPIC_TABLE = "topics";
+    private static final String VET_RANK_TABLE = "veterinarians_rating";
+    private static final String FACI_RANK_TABLE = "facilities_rating";
+
 
 
     public DataAdapter(Context context) {
@@ -904,4 +908,91 @@ public class DataAdapter {
         c.close();
         return results;
     }
+
+    public long createVetRating(int pId,long userId, long vet_id, float rating, String comment, String timeStamp, int isDeleted){
+        long result;
+
+        ContentValues cv = new ContentValues();
+        cv.put("_id", pId);
+        cv.put("rater_id", userId);
+        cv.put("vet_id", vet_id);
+        cv.put("rating", rating);
+        cv.put("comment", comment);
+        cv.put("date_created", timeStamp);
+        cv.put("is_deleted", isDeleted);
+
+        result = petBetterDb.insert(VET_RANK_TABLE, null, cv);
+
+        System.out.println("did we go here");
+        return result;
+    }
+    public ArrayList<Integer> getVetRatingIds() {
+
+        ArrayList<Integer> ids = new ArrayList<>();
+
+        String sql = "SELECT _id FROM "+VET_RANK_TABLE;
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            ids.add(c.getInt(c.getColumnIndexOrThrow("_id")));
+        }
+
+        c.close();
+        return ids;
+    }
+    public long createFacilityRating(int pId,long userId, long faci_id, float rating, String comment, String timeStamp, int isDeleted){
+        long result;
+
+        ContentValues cv = new ContentValues();
+        cv.put("_id", pId);
+        cv.put("rater_id", userId);
+        cv.put("facility_id", faci_id);
+        cv.put("rating", rating);
+        cv.put("comment", comment);
+        cv.put("date_created", timeStamp);
+        cv.put("is_deleted", isDeleted);
+
+        result = petBetterDb.insert(FACI_RANK_TABLE, null, cv);
+
+        System.out.println("did we go here");
+        return result;
+    }
+    public ArrayList<Integer> getFacilityRatingIds() {
+
+        ArrayList<Integer> ids = new ArrayList<>();
+
+        String sql = "SELECT _id FROM "+FACI_RANK_TABLE;
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            ids.add(c.getInt(c.getColumnIndexOrThrow("_id")));
+        }
+
+        c.close();
+        return ids;
+    }
+    public ArrayList<Float> getVeterinarianRatings(long vet_id){
+
+        ArrayList<Float> ratings = new ArrayList<>();
+
+        String sql = "SELECT rating FROM veterinarians_rating WHERE vet_id = "+vet_id;
+        Cursor c = petBetterDb.rawQuery(sql,null);
+
+        while (c.moveToNext()){
+            ratings.add(c.getFloat(c.getColumnIndexOrThrow("rating")));
+        }
+
+        c.close();
+
+        return ratings;
+    }
+    public void setNewVetRating(float newRating, long vet_id){
+        ContentValues cv = new ContentValues();
+        //cv.put("specialty","Topical Disease");
+        cv.put("rating", newRating);
+
+        String[] whereArgs = new String[]{String.valueOf(vet_id)};
+        petBetterDb.update(VET_TABLE,cv,"_id=?", whereArgs);
+    }
+
 }

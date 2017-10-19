@@ -119,6 +119,13 @@
         <activity android:name=".activities.NewTopicActivity" />
         <activity android:name=".activities.TopicContentActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity android:name=".activities.RateVetActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            >
+            <category android:name="android.intent.category.ALTERNATIVE" />
+
+        </activity>
     </application>
+
 
 </manifest>

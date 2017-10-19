@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.owner.petbetter.R;
@@ -32,6 +33,7 @@ public class FragmentPetClinicListing extends Fragment {
     private ArrayList<Facility> faciList;
     private TextView nameTextView;
 
+
     private DataAdapter petBetterDb;
     private SystemSessionManager systemSessionManager;
     private User user;
@@ -42,6 +44,9 @@ public class FragmentPetClinicListing extends Fragment {
         initializeDatabase();
         recyclerView = (RecyclerView) view.findViewById(R.id.petCareListing);
         faciList = getClinics();
+
+
+
         //System.out.println("Rating is "+vetList.get(0).getRating());
         clinicListingAdapter = new ClinicListingAdapter(getActivity(), faciList, new ClinicListingAdapter.OnItemClickListener() {
             @Override public void onItemClick(Facility item) {

@@ -87,36 +87,37 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Open from "
-                android:textColor="@color/main_Color"
+                android:textColor="@color/teal_blue"
                 android:textSize="13sp" />
 
             <TextView
-                android:id="@+id/clinicOpenTime"
+                android:id="@+id/clinicListOpenTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="5:00"
-                android:textColor="@color/main_Color"
+                android:textColor="@color/teal_blue"
                 android:textSize="13sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=" - "
-                android:textColor="@color/main_Color"
+                android:textColor="@color/teal_blue"
                 android:textSize="13sp" />
 
             <TextView
-                android:id="@+id/clinicCloseTime"
+                android:id="@+id/clinicListCloseTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="16:00"
-                android:textColor="@color/main_Color"
+                android:textColor="@color/teal_blue"
                 android:textSize="13sp" />
         </LinearLayout>
     </LinearLayout>

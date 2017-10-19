@@ -67,6 +67,8 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         petClinicServiceTwo = (ImageView) findViewById(R.id.imageServiceTwo);
         petClinicServiceThree = (ImageView) findViewById(R.id.imageServiceThree);
 
+        petClinicRateButton = (Button) findViewById(R.id.rateClinicButton);
+
         serviceContainer = (LinearLayout) findViewById(R.id.serviceContainer);
 
         systemSessionManager = new SystemSessionManager(this);
@@ -79,7 +81,7 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
         user = getUser(email);
 
-        String jsonMyObject;
+        final String jsonMyObject;
         Bundle extras = getIntent().getExtras();
         jsonMyObject = extras.getString("thisClinic");
 
@@ -90,6 +92,14 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         petClinicRating.setText(String.valueOf(faciItem.getRating()));
         petClinicLandline.setText(faciItem.getContactInfo());
 
+        petClinicRateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(),RateFacilityActivity.class);
+                intent.putExtra("thisClinic",jsonMyObject);
+                startActivity(intent);
+            }
+        });
         //Toast.makeText(this, "Facility's Name: "+faciItem.getFaciName() + ". Delete this toast. Just to help you see where vet variable is", Toast.LENGTH_LONG).show();
     }
 

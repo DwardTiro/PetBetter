@@ -4,16 +4,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
-import com.google.android.gms.vision.text.Text;
 import com.google.gson.Gson;
 
 import java.sql.SQLException;
@@ -30,6 +29,8 @@ public class VetProfileActivity extends AppCompatActivity {
     private TextView vetLandline;
     private TextView vetSpecialty;
     private TextView vetRating;
+    private Button rateVetButton;
+
 
     private DataAdapter petBetterDb;
     private SystemSessionManager systemSessionManager;
@@ -48,6 +49,8 @@ public class VetProfileActivity extends AppCompatActivity {
         vetLandline = (TextView) findViewById(R.id.profileLandLine);
         vetSpecialty = (TextView) findViewById(R.id.vetSpecialty);
         vetRating = (TextView) findViewById(R.id.vetListRating);
+        rateVetButton = (Button) findViewById(R.id.rateVetButton);
+
 
         systemSessionManager = new SystemSessionManager(this);
         if(systemSessionManager.checkLogin())
@@ -59,7 +62,7 @@ public class VetProfileActivity extends AppCompatActivity {
         email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
         user = getUser(email);
 
-        String jsonMyObject;
+        final String jsonMyObject;
         Bundle extras = getIntent().getExtras();
         jsonMyObject = extras.getString("thisVet");
 
@@ -69,6 +72,17 @@ public class VetProfileActivity extends AppCompatActivity {
         vetLandline.setText(vetItem.getMobileNumber());
         vetSpecialty.setText(vetItem.getSpecialty());
         vetRating.setText(String.valueOf(vetItem.getRating()));
+
+        rateVetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(view.getContext(),RateVetActivity.class);
+                intent.putExtra("thisVet", jsonMyObject);
+                startActivity(intent);
+
+            }
+        });
 
 
         //Toast.makeText(this, "Vet's Name: "+vetItem.getName() + ". Delete this toast. Just to help you see where vet variable is", Toast.LENGTH_LONG).show();
@@ -101,10 +115,10 @@ public class VetProfileActivity extends AppCompatActivity {
     }
 
     public void backClicked(View view){
-        Intent intent = new Intent(this, com.example.owner.petbetter.activities.HomeActivity.class);
-        startActivity(intent);
+       finish();
 
     }
+
 
 
     //Integrate to db to display stuff on page

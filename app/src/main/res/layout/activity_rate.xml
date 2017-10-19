@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/main_White">
+
+    <include
+        android:id="@+id/rateActivityToolbar"
+        layout="@layout/toolbar_rateactivity"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@+id/rateActivityToolbar">
+
+        <RatingBar
+            android:id="@+id/ratingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="0dp"
+            android:layout_marginStart="70dp"
+            android:layout_marginTop="10dp"
+            android:stepSize=".5"/>
+
+        <EditText
+            android:id="@+id/reviewEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:hint="Write something about your experience, or you may simply give a rating."
+
+            android:textColorHint="@color/timestamp"
+            android:background="@drawable/custom_edittext"
+            />
+    </LinearLayout>
+</RelativeLayout>

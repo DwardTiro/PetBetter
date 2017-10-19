@@ -83,8 +83,8 @@ public class ClinicListingAdapter extends RecyclerView.Adapter<ClinicListingAdap
             clinicListName = (TextView) itemView.findViewById(R.id.clinicListName);
             clinicListAddress = (TextView) itemView.findViewById(R.id.clinicListAddress);
             clinicListRating = (TextView) itemView.findViewById(R.id.clinicListRating);
-            clinicOpenTime = (TextView) itemView.findViewById(R.id.clinicOpenTime);
-            clinicClosetime = (TextView) itemView.findViewById(R.id.clinicOpenTime);
+            clinicOpenTime = (TextView) itemView.findViewById(R.id.clinicListOpenTime);
+            clinicClosetime = (TextView) itemView.findViewById(R.id.clinicListCloseTime);
         }
 
         public void bind(final Facility item, final OnItemClickListener listener) {
