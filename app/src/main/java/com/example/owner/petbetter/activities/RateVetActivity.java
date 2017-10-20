@@ -1,5 +1,6 @@
 package com.example.owner.petbetter.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -100,7 +101,12 @@ public class RateVetActivity extends AppCompatActivity {
 
                 setNewRating(newRating, vetItem.getId());
 
-                finish();
+                System.out.println("Recorded new rating is " + vetItem.getRating());
+                System.out.println("New Specialty is " + vetItem.getSpecialty());
+
+                Intent intent = new Intent(view.getContext(),com.example.owner.petbetter.activities.HomeActivity.class);
+                startActivity(intent);
+
             }
         });
 
@@ -205,6 +211,7 @@ public class RateVetActivity extends AppCompatActivity {
         } catch(SQLException e){
             e.printStackTrace();
         }
+
         petBetterDb.setNewVetRating(newRating,vet_id);
         petBetterDb.closeDatabase();
     }

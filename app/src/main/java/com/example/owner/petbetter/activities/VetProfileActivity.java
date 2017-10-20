@@ -87,6 +87,11 @@ public class VetProfileActivity extends AppCompatActivity {
 
         //Toast.makeText(this, "Vet's Name: "+vetItem.getName() + ". Delete this toast. Just to help you see where vet variable is", Toast.LENGTH_LONG).show();
     }
+    @Override
+    protected void onResume(){
+        super.onResume();
+
+    }
 
     private void initializeDatabase() {
 

@@ -465,7 +465,7 @@ public class DataAdapter {
                     user.getAge(),
                     user.getUserType(),
                     c.getString(c.getColumnIndexOrThrow("specialty")),
-                    c.getInt(c.getColumnIndexOrThrow("rating")));
+                    c.getFloat(c.getColumnIndexOrThrow("rating")));
             results.add(vet);
         }
 
@@ -489,7 +489,7 @@ public class DataAdapter {
                     c.getString(c.getColumnIndexOrThrow("hours_close")),
                     c.getString(c.getColumnIndexOrThrow("contact_info")),
                     c.getInt(c.getColumnIndexOrThrow("vet_id")),
-                    c.getInt(c.getColumnIndexOrThrow("rating")));
+                    c.getFloat(c.getColumnIndexOrThrow("rating")));
             results.add(facility);
         }
 
@@ -988,11 +988,13 @@ public class DataAdapter {
     }
     public void setNewVetRating(float newRating, long vet_id){
         ContentValues cv = new ContentValues();
-        //cv.put("specialty","Topical Disease");
+        cv.put("specialty","Canine Behavior");
         cv.put("rating", newRating);
 
+        System.out.println("Newrating in SetNewVet: "+newRating);
         String[] whereArgs = new String[]{String.valueOf(vet_id)};
         petBetterDb.update(VET_TABLE,cv,"_id=?", whereArgs);
+        petBetterDb.close();
     }
 
 }

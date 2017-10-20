@@ -90,6 +90,7 @@ public class NewPostActivity extends AppCompatActivity {
 
         try {
             petBetterDb.createDatabase();
+
         } catch(SQLException e ){
             e.printStackTrace();
         }

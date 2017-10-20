@@ -107,6 +107,19 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         vetButtonClicked(this.findViewById(android.R.id.content));
 
     }
+    @Override
+    protected void onResume(){
+        super.onResume();
+
+
+        systemSessionManager = new SystemSessionManager(this);
+        if(systemSessionManager.checkLogin())
+            finish();
+
+        initializeDatabase();
+        vetButtonClicked(this.findViewById(android.R.id.content));
+
+    }
 
     private void hideItems(){
         Menu menu = navigationView.getMenu();
