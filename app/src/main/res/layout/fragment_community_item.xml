@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="120dp"
+    android:background="@drawable/notifications_border"
+
+    android:onClick="homeListingClicked"
+    android:weightSum="1">
+    <TextView
+        android:id="@+id/topicComName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text= "@string/sample_clinic"
+        android:textSize="@dimen/listing_font_size"
+        android:textColor="@color/darkAccent"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginStart="14dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp"
+        android:maxLines="1"
+        android:maxLength="30"/>
+
+    <TextView
+        android:id="@+id/topicComDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/sample_address"
+
+        android:layout_centerVertical="true"
+        android:layout_alignStart="@+id/topicName"
+        android:maxLines="2"
+        android:maxLength="30"/>
+
+    <TextView
+        android:id="@+id/topicComUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/sample_address"
+
+        android:layout_marginBottom="12dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/topicComDescription" />
+
+
+    <TextView
+        android:id="@+id/textViewFollowers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="25dp"
+        android:text="99"
+        android:layout_marginEnd="19dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true" />
+</RelativeLayout>

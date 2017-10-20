@@ -58,6 +58,9 @@ public class FragmentCommunity extends Fragment {
 
         recyclerView = (RecyclerView) view.findViewById(R.id.topicListing);
         topicList = getTopics();
+        for(int i = 0;i<topicList.size();i++){
+            topicList.get(i).setFollowerCount(getFollowerCount((int) topicList.get(i).getId()));
+        }
         System.out.println("Size of postList "+topicList.size());
 
         communityAdapter = new CommunityAdapter(getActivity(), topicList,new CommunityAdapter.OnItemClickListener() {
@@ -123,6 +126,20 @@ public class FragmentCommunity extends Fragment {
         }
 
         ArrayList<Topic> result = petBetterDb.getTopics();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private int getFollowerCount(int topicId){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        int result = petBetterDb.getFollowerCount(topicId);
         petBetterDb.closeDatabase();
 
         return result;

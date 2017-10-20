@@ -1,6 +1,7 @@
 package com.example.owner.petbetter.activities;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -8,6 +9,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -70,6 +72,7 @@ public class PostContentActivity extends AppCompatActivity {
         commentButton = (Button) findViewById(R.id.homeListPostCommentButton);
         commentText = (EditText) findViewById(R.id.homeListCommentBox);
 
+
         systemSessionManager = new SystemSessionManager(this);
         if(systemSessionManager.checkLogin())
             finish();
@@ -99,6 +102,8 @@ public class PostContentActivity extends AppCompatActivity {
         email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
         user = getUser(email);
 
+
+
         commentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -119,6 +124,7 @@ public class PostContentActivity extends AppCompatActivity {
                 }
             }
         });
+
     }
 
     public void viewPostBackButtonClicked(View view){
@@ -134,7 +140,6 @@ public class PostContentActivity extends AppCompatActivity {
         } catch(SQLException e ){
             e.printStackTrace();
         }
-
     }
 
     public int generatePostRepId(){
@@ -202,4 +207,7 @@ public class PostContentActivity extends AppCompatActivity {
 
         return result;
     }
+
+
+
 }

@@ -48,6 +48,7 @@ public class DataAdapter {
     private static final String TOPIC_TABLE = "topics";
     private static final String VET_RANK_TABLE = "veterinarians_rating";
     private static final String FACI_RANK_TABLE = "facilities_rating";
+    private static final String FOLLOWER_TABLE = "followers";
 
 
 
@@ -996,5 +997,74 @@ public class DataAdapter {
         petBetterDb.update(VET_TABLE,cv,"_id=?", whereArgs);
         petBetterDb.close();
     }
+
+    public ArrayList<Integer> getFollowerIds () {
+
+        ArrayList<Integer> ids = new ArrayList<>();
+
+        String sql = "SELECT _id FROM "+FOLLOWER_TABLE;
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            ids.add(c.getInt(c.getColumnIndexOrThrow("_id")));
+        }
+
+        c.close();
+        return ids;
+    }
+
+    public long addFollower(int followerId, int topicId, int userId){
+        long result;
+
+        ContentValues cv = new ContentValues();
+        cv.put("_id", followerId);
+        cv.put("topic_id", topicId);
+        cv.put("user_id", userId);
+
+        result = petBetterDb.insert(FOLLOWER_TABLE, null, cv);
+
+        return result;
+    }
+
+    public int getFollowerCount (int topicId) {
+
+        int result=0;
+
+        String sql = "SELECT _id FROM "+FOLLOWER_TABLE+" WHERE topic_id = '"+topicId+"'";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            result++;
+        }
+
+        c.close();
+        return result;
+    }
+
+    public boolean checkIfFollower (int topicId, int userId) {
+
+        ArrayList<Integer> ids = new ArrayList<>();
+
+        String sql = "SELECT _id FROM "+FOLLOWER_TABLE+" WHERE user_id = '"+userId+"' AND topic_id = '"+ topicId +"'";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            ids.add(c.getInt(c.getColumnIndexOrThrow("_id")));
+        }
+
+        c.close();
+        if(ids.size()>0)
+            return true;
+        else
+            return false;
+    }
+
+    public void deleteFollower (int topicId, int userId) {
+        petBetterDb.delete(FOLLOWER_TABLE, "user_id = " + userId + " AND topic_id = "+ topicId, null);
+    }
+
+    //check if follower
+    //getFollowerCount
+    //SELECT _id FROM followers WHERE user_id = 1;
 
 }

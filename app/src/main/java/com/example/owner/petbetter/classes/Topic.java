@@ -9,6 +9,7 @@ public class Topic {
     String topicName, topicDesc, dateCreated;
     int isDeleted;
     private String creatorName;
+    private int followerCount;
 
     public Topic(long id, long creatorId, String topicName, String topicDesc, String dateCreated, int isDeleted, String firstName,
                  String lastName) {
@@ -22,6 +23,14 @@ public class Topic {
             this.creatorName="";
         else
             this.creatorName = firstName+" "+lastName;
+    }
+
+    public int getFollowerCount() {
+        return followerCount;
+    }
+
+    public void setFollowerCount(int followerCount) {
+        this.followerCount = followerCount;
     }
 
     public String getCreatorName() {

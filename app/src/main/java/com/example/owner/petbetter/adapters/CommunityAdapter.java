@@ -33,7 +33,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
 
     @Override
     public CommunityViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.fragment_home_item, parent, false);
+        View view = inflater.inflate(R.layout.fragment_community_item, parent, false);
         System.out.println("Are we even reaching this?");
         CommunityViewHolder holder = new CommunityViewHolder(view);
         return holder;
@@ -46,6 +46,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
         holder.topicName.setText(thisTopic.getTopicName());
         holder.topicDescription.setText(thisTopic.getTopicDesc());
         holder.topicUser.setText(thisTopic.getCreatorName());
+        holder.textviewFollowers.setText(Integer.toString(thisTopic.getFollowerCount()));
         holder.bind(thisTopic, listener);
 
     }
@@ -67,13 +68,15 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
         private TextView topicName;
         private TextView topicDescription;
         private TextView topicUser;
+        private TextView textviewFollowers;
 
         public CommunityViewHolder(View itemView) {
             super(itemView);
 
-            topicName = (TextView) itemView.findViewById(R.id.topicName);
-            topicDescription = (TextView) itemView.findViewById(R.id.topicDescription);
-            topicUser = (TextView) itemView.findViewById(R.id.topicUser);
+            topicName = (TextView) itemView.findViewById(R.id.topicComName);
+            topicDescription = (TextView) itemView.findViewById(R.id.topicComDescription);
+            topicUser = (TextView) itemView.findViewById(R.id.topicComUser);
+            textviewFollowers = (TextView) itemView.findViewById(R.id.textViewFollowers);
         }
 
         public void bind(final Topic item, final OnItemClickListener listener) {
