@@ -52,6 +52,7 @@ public class PostContentActivity extends AppCompatActivity {
     private Button commentButton;
     private EditText commentText;
     private String timeStamp;
+    private int nId;
 
     @Override
     protected void onCreate(Bundle SavedInstance){
@@ -116,6 +117,9 @@ public class PostContentActivity extends AppCompatActivity {
                     timeStamp = sdf.format(new Date());
 
                     addPostRep(postrepid, (int) user.getUserId(), (int) postItem.getId(), 0, commentText.getText().toString(),timeStamp);
+
+                    nId = generateNotifsId();
+                    notifyPostRep(nId, postItem.getUserId(), user.getUserId(), 0, 1, timeStamp);
 
                     Intent intent = new Intent(PostContentActivity.this, com.example.owner.petbetter.activities.PostContentActivity.class);
                     intent.putExtra("thisPost", new Gson().toJson(postItem));
@@ -208,6 +212,43 @@ public class PostContentActivity extends AppCompatActivity {
         return result;
     }
 
+    public int generateNotifsId(){
+        ArrayList<Integer> storedIds;
+        int markerId = 1;
 
+        try {
+            petBetterDb.openDatabase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        storedIds = petBetterDb.getNotifIds();
+        petBetterDb.closeDatabase();
+
+
+        if(storedIds.isEmpty()) {
+            return markerId;
+        } else {
+            while (storedIds.contains(markerId)){
+                markerId += 1;
+            }
+
+            return markerId;
+        }
+    }
+
+    public long notifyPostRep(int notifId, long toId, long userId, int isRead, int type, String timeStamp){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        long result = petBetterDb.notifyUser(notifId, toId, userId, isRead, type, timeStamp);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
 
 }

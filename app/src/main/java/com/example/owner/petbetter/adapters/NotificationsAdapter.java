@@ -62,6 +62,9 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         if(notif.getType()==2){
             holder.notifPostTitle.setText("has messaged you.");
         }
+        if(notif.getType()==3){
+            holder.notifPostTitle.setText("has posted in a topic that you follow.");
+        }
         holder.notifTimeStamp.setText("");
         holder.bind(notif, listener);
 

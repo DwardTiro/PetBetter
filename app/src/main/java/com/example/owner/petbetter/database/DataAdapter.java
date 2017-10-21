@@ -11,6 +11,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.example.owner.petbetter.classes.Facility;
+import com.example.owner.petbetter.classes.Follower;
 import com.example.owner.petbetter.classes.Marker;
 import com.example.owner.petbetter.classes.Message;
 import com.example.owner.petbetter.classes.MessageRep;
@@ -1063,8 +1064,23 @@ public class DataAdapter {
         petBetterDb.delete(FOLLOWER_TABLE, "user_id = " + userId + " AND topic_id = "+ topicId, null);
     }
 
-    //check if follower
-    //getFollowerCount
-    //SELECT _id FROM followers WHERE user_id = 1;
+    public ArrayList<Follower> getTopicFollowers(long topicId){
+
+        ArrayList<Follower> results = new ArrayList<>();
+
+
+        String sql = "SELECT * FROM followers WHERE topic_id = '" + topicId + "'";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            Follower follower= new Follower(c.getInt(c.getColumnIndexOrThrow("_id")),
+                    c.getLong(c.getColumnIndexOrThrow("topic_id")),
+                    c.getLong(c.getColumnIndexOrThrow("user_id")));
+            results.add(follower);
+        }
+
+        c.close();
+        return results;
+    }
 
 }

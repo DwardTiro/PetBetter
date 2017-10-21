@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.owner.petbetter.R;
+import com.example.owner.petbetter.classes.Follower;
 import com.example.owner.petbetter.classes.Topic;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
@@ -34,6 +35,7 @@ public class NewPostActivity extends AppCompatActivity {
     private String timeStamp;
     private int pId, nId;
     private long topicId;
+    private ArrayList<Follower> topicFollowers;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,8 +78,15 @@ public class NewPostActivity extends AppCompatActivity {
 
                     //notifyMessage(nId, messageItem.getFromId(), user.getUserId(), 0, 2, timeStamp, sourceId);
 
-                    //nId = generateNotifsId();
-                    //notifyPost(nId, ) <---- you can only do this after you could follow a topic
+                    topicFollowers = getTopicFollowers(topicId);
+
+                    for(int i = 0;i<topicFollowers.size();i++){
+                        if(topicFollowers.get(i).getUserId()!=user.getUserId()){
+                            nId = generateNotifsId();
+                            notifyTopicPost(nId, topicFollowers.get(i).getUserId(), user.getUserId(), 0, 3, timeStamp);
+                        }
+                    }
+
                     finish();
                 }
             }
@@ -179,6 +188,37 @@ public class NewPostActivity extends AppCompatActivity {
 
             return markerId;
         }
+    }
+
+    private ArrayList<Follower> getTopicFollowers(long topicId){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Follower> result = petBetterDb.getTopicFollowers(topicId);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    //nId, topicFollowers.get(i).getUserId(), user.getUserId(), 0, 3, timeStamp
+
+    public long notifyTopicPost(int notifId, long toId, long userId, int isRead, int type, String timeStamp){
+
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        long result = petBetterDb.notifyUser(notifId, toId, userId, isRead, type, timeStamp);
+        petBetterDb.closeDatabase();
+
+        return result;
     }
 
 }

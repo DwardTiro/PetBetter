@@ -28,10 +28,10 @@
         android:layout_gravity="center"
         android:text="@string/sample_address"
 
-        android:layout_centerVertical="true"
-        android:layout_alignStart="@+id/topicName"
         android:maxLines="2"
-        android:maxLength="30"/>
+        android:maxLength="30"
+        android:layout_centerVertical="true"
+        android:layout_alignStart="@+id/topicComName" />
 
     <TextView
         android:id="@+id/topicComUser"
