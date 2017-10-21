@@ -60,7 +60,7 @@ public class FragmentHome extends Fragment {
         postList = getPosts();
         System.out.println("Size of postList "+postList.size());
 
-        homeAdapter = new HomeAdapter(getActivity(), postList,new HomeAdapter.OnItemClickListener() {
+        homeAdapter = new HomeAdapter(getActivity(), postList, user, new HomeAdapter.OnItemClickListener() {
             @Override public void onItemClick(Post item) {
                 //Execute command here
                 Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.PostContentActivity.class);

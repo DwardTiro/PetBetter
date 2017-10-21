@@ -5,12 +5,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.classes.PostRep;
+import com.example.owner.petbetter.classes.User;
+import com.example.owner.petbetter.database.DataAdapter;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -25,11 +29,16 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
     private LayoutInflater inflater;
     private ArrayList<PostRep> postRepList;
     private final OnItemClickListener listener;
+    private User user;
+    private DataAdapter petBetterDb;
+    private Context context;
 
-    public PostRepAdapter(Context context, ArrayList<PostRep> postRepList, OnItemClickListener listener) {
+    public PostRepAdapter(Context context, ArrayList<PostRep> postRepList, User user, OnItemClickListener listener) {
         inflater = LayoutInflater.from(context);
+        this.context = context;
         this.postRepList = postRepList;
         this.listener = listener;
+        this.user = user;
     }
 
     @Override
@@ -43,12 +52,26 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
 
     @Override
     public void onBindViewHolder(PostRepViewHolder holder, int position) {
-        PostRep thisComment = postRepList.get(position);
+        final PostRep thisComment = postRepList.get(position);
 
         holder.postRepName.setText(thisComment.getUserName());
         holder.postRepTime.setText(thisComment.getDatePerformed());
         holder.postRepContent.setText(thisComment.getRepContent());
         holder.bind(thisComment, listener);
+
+        if(user.getUserId()==thisComment.getUserId()){
+            holder.deletePostRepButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    initializeDatabase();
+                    deletePostRep(thisComment.getId());
+                }
+            });
+        }
+        else{
+            holder.deletePostRepButton.setVisibility(View.INVISIBLE);
+            holder.deletePostRepButton.setEnabled(false);
+        }
         /*
         Veterinarian thisVet = vetList.get(position);
         holder.vetListName.setText(thisVet.getName());
@@ -57,6 +80,31 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
         holder.vetListRating.setText(Integer.toString(thisVet.getRating()));
         holder.bind(thisVet, listener);
         */
+    }
+
+    private void initializeDatabase() {
+
+        petBetterDb = new DataAdapter(context);
+
+        try {
+            petBetterDb.createDatabase();
+        } catch(SQLException e ){
+            e.printStackTrace();
+        }
+
+    }
+
+    private long deletePostRep(long postRepId){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        long result = petBetterDb.deletePostRep(postRepId);
+        petBetterDb.closeDatabase();
+
+        return result;
     }
 
     @Override
@@ -77,6 +125,7 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
         private TextView postRepName;
         private TextView postRepContent;
         private TextView postRepTime;
+        private ImageButton deletePostRepButton;
 
         public PostRepViewHolder(View itemView) {
             super(itemView);
@@ -85,6 +134,7 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
             postRepName = (TextView) itemView.findViewById(R.id.commentUserProfileName);
             postRepContent = (TextView) itemView.findViewById(R.id.commentContent);
             postRepTime = (TextView) itemView.findViewById(R.id.commentTimeStamp);
+            deletePostRepButton = (ImageButton) itemView.findViewById(R.id.deletePostRepButton);
         }
 
         public void bind(final PostRep item, final OnItemClickListener listener) {

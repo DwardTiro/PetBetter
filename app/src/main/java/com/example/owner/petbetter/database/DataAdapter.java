@@ -235,7 +235,7 @@ public class DataAdapter {
 
         String sql = "SELECT p._id AS _id, p.user_id, p.topic_name AS topic_name, p.topic_content AS topic_content, " +
                 "p.date_created AS date_created, u.first_name AS first_name, u.last_name AS last_name, p.is_deleted AS is_deleted" +
-                " FROM posts AS p INNER JOIN users u ON p.user_id = u._id";
+                " FROM posts AS p INNER JOIN users u ON p.user_id = u._id WHERE p.is_deleted != 1";
         Cursor c = petBetterDb.rawQuery(sql, null);
 
         while(c.moveToNext()) {
@@ -338,7 +338,7 @@ public class DataAdapter {
 
         ArrayList<PostRep> results = new ArrayList<>();
 
-        String sql = "SELECT * FROM "+POST_REP_TABLE + " WHERE post_id = '" + postId + "'";
+        String sql = "SELECT * FROM "+POST_REP_TABLE + " WHERE post_id = '" + postId + "' AND is_deleted != 1";
         Cursor c = petBetterDb.rawQuery(sql, null);
 
         while(c.moveToNext()) {
@@ -607,7 +607,7 @@ public class DataAdapter {
 
     public Post getPost(long postId){
 
-        String sql = "SELECT * FROM " + POST_TABLE + " WHERE _id = '" + postId + "'";
+        String sql = "SELECT * FROM " + POST_TABLE + " WHERE _id = '" + postId + "' AND is_deleted != 1";
         Cursor c = petBetterDb.rawQuery(sql, null);
 
         Log.e("cursor", c.getCount() + "");
@@ -631,7 +631,7 @@ public class DataAdapter {
         String sql = "SELECT pr._id AS _id, pr.user_id AS user_id, pr.post_id AS post_id, pr.parent_id AS parent_id, " +
                 "pr.rep_content AS rep_content, pr.date_performed as date_performed, " +
                 "pr.is_deleted AS is_deleted, u.first_name AS first_name, u.last_name AS last_name " +
-                "FROM postreps AS pr INNER JOIN users AS u ON pr.user_id = u._id WHERE pr.post_id = '" + postId + "'";
+                "FROM postreps AS pr INNER JOIN users AS u ON pr.user_id = u._id WHERE pr.post_id = '" + postId + "' AND pr.is_deleted != 1";
 
         Cursor c = petBetterDb.rawQuery(sql, null);
 
@@ -699,7 +699,7 @@ public class DataAdapter {
         String sql = "SELECT t._id AS _id, t.creator_id AS creator_id, t.topic_name AS topic_name, " +
                 "t.topic_desc AS topic_desc, t.date_created AS date_created, t.is_deleted AS is_deleted, " +
                 "u.first_name AS first_name, u.last_name AS last_name FROM topics AS t LEFT JOIN users as u " +
-                "ON t.creator_id = u._id";
+                "ON t.creator_id = u._id WHERE t.is_deleted != 1";
 
         Cursor c = petBetterDb.rawQuery(sql, null);
 
@@ -833,7 +833,7 @@ public class DataAdapter {
         String sql = "SELECT p._id AS _id, p.user_id, p.topic_name AS topic_name, p.topic_content AS topic_content, " +
                 "p.date_created AS date_created, u.first_name AS first_name, u.last_name AS last_name, p.is_deleted AS is_deleted" +
                 " FROM posts AS p INNER JOIN users u ON p.user_id = u._id INNER JOIN topics t " +
-                "ON p.topic_id = t._id WHERE p.topic_id = '" + topicId + "'";
+                "ON p.topic_id = t._id WHERE p.topic_id = '" + topicId + "' AND p.is_deleted != 1";
         Cursor c = petBetterDb.rawQuery(sql, null);
 
         while(c.moveToNext()) {
@@ -893,7 +893,7 @@ public class DataAdapter {
         String sql = "SELECT p._id AS _id, p.user_id, p.topic_name AS topic_name, p.topic_content AS topic_content, " +
                 "p.date_created AS date_created, u.first_name AS first_name, u.last_name AS last_name, p.is_deleted AS is_deleted" +
                 " FROM posts AS p INNER JOIN users u ON p.user_id = u._id INNER JOIN topics t " +
-                "ON p.topic_id = t._id WHERE p.user_id = '" + userId + "'";
+                "ON p.topic_id = t._id WHERE p.user_id = '" + userId + "' AND p.is_deleted != 1";
         Cursor c = petBetterDb.rawQuery(sql, null);
 
         while(c.moveToNext()) {
@@ -1125,7 +1125,7 @@ public class DataAdapter {
         String sql = "SELECT t._id AS _id, t.creator_id AS creator_id, t.topic_name AS topic_name, " +
                 "t.topic_desc AS topic_desc, t.date_created AS date_created, t.is_deleted AS is_deleted, " +
                 "u.first_name AS first_name, u.last_name AS last_name FROM topics AS t LEFT JOIN users as u " +
-                "ON t.creator_id = u._id WHERE t._id= '"+topicId+"'";
+                "ON t.creator_id = u._id WHERE t._id= '"+topicId+"' AND t.is_deleted != 1";
 
         Cursor c = petBetterDb.rawQuery(sql, null);
 
@@ -1144,6 +1144,39 @@ public class DataAdapter {
 
 
         c.close();
+        return result;
+    }
+
+    public long deletePost(long postId){
+        ContentValues cv = new ContentValues();
+        cv.put("is_deleted",1);
+
+        String[] whereArgs = new String[]{String.valueOf(postId)};
+        long result = petBetterDb.update(POST_TABLE,cv,"_id=?", whereArgs);
+        petBetterDb.close();
+
+        return result;
+    }
+
+    public long deletePostRep(long postRepId){
+        ContentValues cv = new ContentValues();
+        cv.put("is_deleted",1);
+
+        String[] whereArgs = new String[]{String.valueOf(postRepId)};
+        long result = petBetterDb.update(POST_REP_TABLE,cv,"_id=?", whereArgs);
+        petBetterDb.close();
+
+        return result;
+    }
+
+    public long deleteTopic(long topicId){
+        ContentValues cv = new ContentValues();
+        cv.put("is_deleted",1);
+
+        String[] whereArgs = new String[]{String.valueOf(topicId)};
+        long result = petBetterDb.update(TOPIC_TABLE,cv,"_id=?", whereArgs);
+        petBetterDb.close();
+
         return result;
     }
 }

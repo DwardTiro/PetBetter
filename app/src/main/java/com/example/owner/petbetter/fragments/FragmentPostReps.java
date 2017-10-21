@@ -25,6 +25,7 @@ import com.google.gson.Gson;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by owner on 14/10/2017.
@@ -36,12 +37,13 @@ public class FragmentPostReps extends Fragment{
     private ArrayList<PostRep> postRepList;
     private TextView nameTextView;
 
-    private DataAdapter petBetterDb;
-    private SystemSessionManager systemSessionManager;
     private User postUser;
     private Post postItem;
 
-    private VetProfileActivity vetProfileActivity;
+    private DataAdapter petBetterDb;
+    private SystemSessionManager systemSessionManager;
+    private User user;
+    private String email;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance){
@@ -60,6 +62,18 @@ public class FragmentPostReps extends Fragment{
         System.out.println("POST ID IS: "+ postId);
 
         postItem = getPost(postId);
+
+
+        systemSessionManager = new SystemSessionManager(getActivity());
+        if(systemSessionManager.checkLogin())
+            getActivity().finish();
+        HashMap<String, String> userIn = systemSessionManager.getUserDetails();
+
+        initializeDatabase();
+
+        email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
+        user = getUser(email);
+
         recyclerView = (RecyclerView) view.findViewById(R.id.postRepListing);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -67,7 +81,7 @@ public class FragmentPostReps extends Fragment{
         postRepList = getPostReps(postItem.getId());
 
         if(postRepList.size()>0){
-            postRepAdapter = new PostRepAdapter(getActivity(), postRepList, new PostRepAdapter.OnItemClickListener() {
+            postRepAdapter = new PostRepAdapter(getActivity(), postRepList, user, new PostRepAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(PostRep item) {
 
@@ -93,6 +107,20 @@ public class FragmentPostReps extends Fragment{
             e.printStackTrace();
         }
 
+    }
+
+    private User getUser(String email){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        User result = petBetterDb.getUser(email);
+        petBetterDb.closeDatabase();
+
+        return result;
     }
 
     public int generateVetId(){

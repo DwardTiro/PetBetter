@@ -1,15 +1,22 @@
 package com.example.owner.petbetter.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.owner.petbetter.R;
+import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.Topic;
+import com.example.owner.petbetter.classes.User;
+import com.example.owner.petbetter.database.DataAdapter;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -24,11 +31,17 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
     private LayoutInflater inflater;
     private ArrayList<Topic> topicList;
     private final OnItemClickListener listener;
+    private User user;
+    private Context context;
+    private DataAdapter petBetterDb;
+    private ArrayList<Post> topicPosts;
 
-    public CommunityAdapter(Context context, ArrayList<Topic> topicList, OnItemClickListener listener) {
+    public CommunityAdapter(Context context, ArrayList<Topic> topicList, User user, OnItemClickListener listener) {
         inflater = LayoutInflater.from(context);
+        this.context = context;
         this.topicList = topicList;
         this.listener = listener;
+        this.user = user;
     }
 
     @Override
@@ -42,13 +55,82 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
 
     @Override
     public void onBindViewHolder(CommunityViewHolder holder, int position) {
-        Topic thisTopic = topicList.get(position);
+        final Topic thisTopic = topicList.get(position);
         holder.topicName.setText(thisTopic.getTopicName());
         holder.topicDescription.setText(thisTopic.getTopicDesc());
         holder.topicUser.setText(thisTopic.getCreatorName());
         holder.textviewFollowers.setText(Integer.toString(thisTopic.getFollowerCount()));
         holder.bind(thisTopic, listener);
 
+        if(user.getUserId()==thisTopic.getCreatorId()){
+            holder.deleteTopicButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    initializeDatabase();
+                    topicPosts = getTopicPosts(thisTopic.getId());
+                    deleteTopic(thisTopic.getId());
+                    for(int i=0;i<topicPosts.size();i++){
+                        deletePost(topicPosts.get(i).getId());
+                    }
+                }
+            });
+        }
+        else{
+            holder.deleteTopicButton.setVisibility(View.INVISIBLE);
+            holder.deleteTopicButton.setEnabled(false);
+        }
+
+    }
+
+    private void initializeDatabase() {
+
+        petBetterDb = new DataAdapter(context);
+
+        try {
+            petBetterDb.createDatabase();
+        } catch(SQLException e ){
+            e.printStackTrace();
+        }
+
+    }
+
+    private long deleteTopic(long topicId){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        long result = petBetterDb.deleteTopic(topicId);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<Post> getTopicPosts(long topicId){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Post> result = petBetterDb.getTopicPosts(topicId);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private long deletePost(long postId){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        long result = petBetterDb.deletePost(postId);
+        petBetterDb.closeDatabase();
+
+        return result;
     }
 
     @Override
@@ -69,6 +151,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
         private TextView topicDescription;
         private TextView topicUser;
         private TextView textviewFollowers;
+        private ImageButton deleteTopicButton;
 
         public CommunityViewHolder(View itemView) {
             super(itemView);
@@ -77,6 +160,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
             topicDescription = (TextView) itemView.findViewById(R.id.topicComDescription);
             topicUser = (TextView) itemView.findViewById(R.id.topicComUser);
             textviewFollowers = (TextView) itemView.findViewById(R.id.textViewFollowers);
+            deleteTopicButton = (ImageButton) itemView.findViewById(R.id.deleteTopicButton);
         }
 
         public void bind(final Topic item, final OnItemClickListener listener) {

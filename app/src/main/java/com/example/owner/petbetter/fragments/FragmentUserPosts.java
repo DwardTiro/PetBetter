@@ -64,7 +64,7 @@ public class FragmentUserPosts extends Fragment {
         //cause of error. change to where the recyclerview is.
         postList = getPostsWithUserId(user.getUserId());
 
-        homeAdapter = new HomeAdapter(getActivity(), postList,new HomeAdapter.OnItemClickListener() {
+        homeAdapter = new HomeAdapter(getActivity(), postList, user, new HomeAdapter.OnItemClickListener() {
             @Override public void onItemClick(Post item) {
                 //Execute command here
                 Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.PostContentActivity.class);

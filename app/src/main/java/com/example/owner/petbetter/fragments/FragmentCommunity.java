@@ -63,7 +63,7 @@ public class FragmentCommunity extends Fragment {
         }
         System.out.println("Size of postList "+topicList.size());
 
-        communityAdapter = new CommunityAdapter(getActivity(), topicList,new CommunityAdapter.OnItemClickListener() {
+        communityAdapter = new CommunityAdapter(getActivity(), topicList, user, new CommunityAdapter.OnItemClickListener() {
             @Override public void onItemClick(Topic item) {
 
                 Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.TopicContentActivity.class);

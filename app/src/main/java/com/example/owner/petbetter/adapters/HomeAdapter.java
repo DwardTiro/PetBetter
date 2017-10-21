@@ -5,13 +5,17 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.classes.Marker;
 import com.example.owner.petbetter.classes.Post;
+import com.example.owner.petbetter.classes.User;
+import com.example.owner.petbetter.database.DataAdapter;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -27,11 +31,17 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
     private LayoutInflater inflater;
     private ArrayList<Post> postList;
     private final OnItemClickListener listener;
+    private User user;
+    private DataAdapter petBetterDb;
+    private Context context;
 
-    public HomeAdapter(Context context, ArrayList<Post> postList, OnItemClickListener listener) {
+
+    public HomeAdapter(Context context, ArrayList<Post> postList, User user, OnItemClickListener listener) {
         inflater = LayoutInflater.from(context);
         this.postList = postList;
         this.listener = listener;
+        this.context = context;
+        this.user = user;
     }
 
     @Override
@@ -45,17 +55,56 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
 
     @Override
     public void onBindViewHolder(HomeViewHolder holder, int position) {
-        Post thisPost = postList.get(position);
+        final Post thisPost = postList.get(position);
 
         holder.topicName.setText(thisPost.getTopicName());
         holder.topicDescription.setText(thisPost.getTopicContent());
         holder.topicUser.setText(thisPost.getTopicUser());
         holder.bind(thisPost, listener);
+
+        if(user.getUserId()==thisPost.getUserId()){
+            holder.deletePostButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    initializeDatabase();
+                    deletePost(thisPost.getId());
+                }
+            });
+        }
+        else{
+            holder.deletePostButton.setVisibility(View.INVISIBLE);
+            holder.deletePostButton.setEnabled(false);
+        }
         /*
         holder.bookmarkListName.setText(thisBookmark.getBldgName());
         System.out.println("Bldg name is: " +holder.bookmarkListName.getText());
         holder.bookmarkListAddress.setText(thisBookmark.getLocation());
         */
+    }
+
+    private void initializeDatabase() {
+
+        petBetterDb = new DataAdapter(context);
+
+        try {
+            petBetterDb.createDatabase();
+        } catch(SQLException e ){
+            e.printStackTrace();
+        }
+
+    }
+
+    private long deletePost(long postId){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        long result = petBetterDb.deletePost(postId);
+        petBetterDb.closeDatabase();
+
+        return result;
     }
 
     public void update(ArrayList<Post> list){
@@ -80,6 +129,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
         private TextView topicName;
         private TextView topicDescription;
         private TextView topicUser;
+        private ImageButton deletePostButton;
 
         public HomeViewHolder(View itemView) {
             super(itemView);
@@ -87,6 +137,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
             topicName = (TextView) itemView.findViewById(R.id.topicName);
             topicDescription = (TextView) itemView.findViewById(R.id.topicDescription);
             topicUser = (TextView) itemView.findViewById(R.id.topicUser);
+            deletePostButton = (ImageButton) itemView.findViewById(R.id.deletePostButton);
         }
 
         public void bind(final Post item, final OnItemClickListener listener) {
