@@ -107,9 +107,9 @@ public class MessageActivity extends AppCompatActivity {
                     nId = generateNotifsId();
 
                     if(messageItem.getUserId()==user.getUserId())
-                        notifyMessage(nId, messageItem.getFromId(), user.getUserId(), 0, 2, timeStamp);
+                        notifyMessage(nId, messageItem.getFromId(), user.getUserId(), 0, 2, timeStamp, (int) messageItem.getId());
                     else
-                        notifyMessage(nId, messageItem.getUserId(), user.getUserId(), 0, 2, timeStamp);
+                        notifyMessage(nId, messageItem.getUserId(), user.getUserId(), 0, 2, timeStamp, (int) messageItem.getId());
 
                     Intent intent = new Intent(MessageActivity.this, com.example.owner.petbetter.activities.MessageActivity.class);
                     intent.putExtra("thisMessage", new Gson().toJson(messageItem));
@@ -226,7 +226,7 @@ public class MessageActivity extends AppCompatActivity {
         }
     }
 
-    private long notifyMessage(int notifId, long toId, long userId, int isRead, int type, String timeStamp){
+    private long notifyMessage(int notifId, long toId, long userId, int isRead, int type, String timeStamp, int messageId){
         long  result;
 
         try {
@@ -236,7 +236,7 @@ public class MessageActivity extends AppCompatActivity {
         }
 
 
-        result = petBetterDb.notifyUser(notifId, toId, userId, isRead, type, timeStamp);
+        result = petBetterDb.notifyUser(notifId, toId, userId, isRead, type, timeStamp, messageId);
         petBetterDb.closeDatabase();
 
 

@@ -60,10 +60,13 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
             //get group name;
         }
         if(notif.getType()==2){
-            holder.notifPostTitle.setText("has messaged you.");
+            holder.notifPostTitle.setText("has sent you a message.");
         }
         if(notif.getType()==3){
             holder.notifPostTitle.setText("has posted in a topic that you follow.");
+        }
+        if(notif.getType()==4){
+            holder.notifPostTitle.setText("has followed your topic.");
         }
         holder.notifTimeStamp.setText("");
         holder.bind(notif, listener);

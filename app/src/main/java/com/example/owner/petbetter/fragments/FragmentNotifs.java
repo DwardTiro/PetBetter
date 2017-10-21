@@ -16,7 +16,10 @@ import android.widget.TextView;
 
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.adapters.NotificationsAdapter;
+import com.example.owner.petbetter.classes.Message;
 import com.example.owner.petbetter.classes.Notifications;
+import com.example.owner.petbetter.classes.Post;
+import com.example.owner.petbetter.classes.Topic;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
@@ -42,6 +45,9 @@ public class FragmentNotifs extends Fragment {
     private SystemSessionManager systemSessionManager;
     private User user;
     private String email;
+    private Post postItem;
+    private Message messageItem;
+    private Topic topicItem;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -63,6 +69,26 @@ public class FragmentNotifs extends Fragment {
         notifAdapter = new NotificationsAdapter(getActivity(), notifList,new NotificationsAdapter.OnItemClickListener() {
             @Override public void onItemClick(Notifications item) {
                 //Execute command here
+                notifRead(item.getId());
+                if(item.getType()==1){
+                    Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.PostContentActivity.class);
+                    postItem = getPost(item.getSourceId());
+                    intent.putExtra("thisPost", new Gson().toJson(postItem));
+                    startActivity(intent);
+                }
+                if(item.getType()==2){
+                    Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.MessageActivity.class);
+                    messageItem = getMessage(item.getSourceId());
+                    intent.putExtra("thisMessage", new Gson().toJson(messageItem));
+                    startActivity(intent);
+                }
+                if(item.getType()==3||item.getType()==4){
+                    Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.TopicContentActivity.class);
+                    topicItem = getTopic(item.getSourceId());
+                    intent.putExtra("thisTopic", new Gson().toJson(topicItem));
+                    startActivity(intent);
+                }
+
                 System.out.println("Yay you clicked a notif");
             }
         });
@@ -115,4 +141,59 @@ public class FragmentNotifs extends Fragment {
         return result;
     }
 
+    public long notifRead(long notifId){
+
+        //modify this method in such a way that it only gets bookmarks tagged by user. Separate from facilities.
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        long result = petBetterDb.notifRead(notifId);
+        petBetterDb.closeDatabase();
+        return result;
+    }
+
+    private Post getPost(long postId){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        Post result = petBetterDb.getPost(postId);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private Message getMessage(long messageId){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        Message result = petBetterDb.getMessage(messageId);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private Topic getTopic(long topicId){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        Topic result = petBetterDb.getTopic(topicId);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
 }

@@ -6,18 +6,27 @@ package com.example.owner.petbetter.classes;
 
 public class Notifications {
 
-    long id, userId, doerId;
+    long id, userId, doerId, sourceId;
     int isRead, type;
     String datePerformed, doerName;
 
-    public Notifications(long id, long userId, long doerId, int isRead, int type, String datePerformed, String first_name, String last_name) {
+    public Notifications(long id, long userId, long doerId, int isRead, int type, String datePerformed, long sourceId, String first_name, String last_name) {
         this.id = id;
         this.userId = userId;
         this.doerId = doerId;
         this.isRead = isRead;
         this.type = type;
         this.datePerformed = datePerformed;
+        this.sourceId = sourceId;
         this.doerName= first_name+" "+last_name;
+    }
+
+    public long getSourceId() {
+        return sourceId;
+    }
+
+    public void setSourceId(long sourceId) {
+        this.sourceId = sourceId;
     }
 
     public String getDoerName() {

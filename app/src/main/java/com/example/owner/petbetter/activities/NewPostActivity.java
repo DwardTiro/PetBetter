@@ -83,7 +83,7 @@ public class NewPostActivity extends AppCompatActivity {
                     for(int i = 0;i<topicFollowers.size();i++){
                         if(topicFollowers.get(i).getUserId()!=user.getUserId()){
                             nId = generateNotifsId();
-                            notifyTopicPost(nId, topicFollowers.get(i).getUserId(), user.getUserId(), 0, 3, timeStamp);
+                            notifyTopicPost(nId, topicFollowers.get(i).getUserId(), user.getUserId(), 0, 3, timeStamp, (int) topicId);
                         }
                     }
 
@@ -206,7 +206,7 @@ public class NewPostActivity extends AppCompatActivity {
 
     //nId, topicFollowers.get(i).getUserId(), user.getUserId(), 0, 3, timeStamp
 
-    public long notifyTopicPost(int notifId, long toId, long userId, int isRead, int type, String timeStamp){
+    public long notifyTopicPost(int notifId, long toId, long userId, int isRead, int type, String timeStamp, int topicId){
 
 
         try {
@@ -215,7 +215,7 @@ public class NewPostActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        long result = petBetterDb.notifyUser(notifId, toId, userId, isRead, type, timeStamp);
+        long result = petBetterDb.notifyUser(notifId, toId, userId, isRead, type, timeStamp, topicId);
         petBetterDb.closeDatabase();
 
         return result;

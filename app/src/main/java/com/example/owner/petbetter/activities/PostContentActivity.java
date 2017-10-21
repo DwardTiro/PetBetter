@@ -119,7 +119,7 @@ public class PostContentActivity extends AppCompatActivity {
                     addPostRep(postrepid, (int) user.getUserId(), (int) postItem.getId(), 0, commentText.getText().toString(),timeStamp);
 
                     nId = generateNotifsId();
-                    notifyPostRep(nId, postItem.getUserId(), user.getUserId(), 0, 1, timeStamp);
+                    notifyPostRep(nId, postItem.getUserId(), user.getUserId(), 0, 1, timeStamp, (int) postItem.getId());
 
                     Intent intent = new Intent(PostContentActivity.this, com.example.owner.petbetter.activities.PostContentActivity.class);
                     intent.putExtra("thisPost", new Gson().toJson(postItem));
@@ -237,7 +237,7 @@ public class PostContentActivity extends AppCompatActivity {
         }
     }
 
-    public long notifyPostRep(int notifId, long toId, long userId, int isRead, int type, String timeStamp){
+    public long notifyPostRep(int notifId, long toId, long userId, int isRead, int type, String timeStamp, int postId){
 
         try {
             petBetterDb.openDatabase();
@@ -245,7 +245,7 @@ public class PostContentActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        long result = petBetterDb.notifyUser(notifId, toId, userId, isRead, type, timeStamp);
+        long result = petBetterDb.notifyUser(notifId, toId, userId, isRead, type, timeStamp, postId);
         petBetterDb.closeDatabase();
 
         return result;

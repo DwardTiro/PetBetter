@@ -110,7 +110,7 @@ public class NewMessageActivity extends AppCompatActivity {
                     }
 
                     nId = generateNotifsId();
-                    notifyMessage(nId, usertwo.getUserId(), user.getUserId(), 0, 2, timeStamp);
+                    notifyMessage(nId, usertwo.getUserId(), user.getUserId(), 0, 2, timeStamp, mId);
                     finish();
                 }
             }
@@ -164,7 +164,7 @@ public class NewMessageActivity extends AppCompatActivity {
     }
 
     //nId, usertwo.getUserId(), user.getUserId(), 0, 2, timeStamp
-    private long notifyMessage(int notifId, long toId, long userId, int isRead, int type, String timeStamp){
+    private long notifyMessage(int notifId, long toId, long userId, int isRead, int type, String timeStamp, int mId){
         long  result;
 
         try {
@@ -174,7 +174,7 @@ public class NewMessageActivity extends AppCompatActivity {
         }
 
 
-        result = petBetterDb.notifyUser(notifId, toId, userId, isRead, type, timeStamp);
+        result = petBetterDb.notifyUser(notifId, toId, userId, isRead, type, timeStamp, mId);
         petBetterDb.closeDatabase();
 
 

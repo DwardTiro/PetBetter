@@ -672,7 +672,7 @@ public class DataAdapter {
         ArrayList<Notifications> results = new ArrayList<>();
 
         String sql = "SELECT n._id AS _id, n.user_id AS user_id, n.doer_id AS doer_id, n.is_read AS is_read, " +
-                "n.type AS type, n.date_performed as date_performed, u.first_name AS first_name, u.last_name AS last_name " +
+                "n.type AS type, n.date_performed as date_performed, n.source_id as source_id, u.first_name AS first_name, u.last_name AS last_name " +
                 "FROM notifications AS n INNER JOIN users AS u ON n.doer_id = u._id WHERE n.user_id = '" + userId + "'";
         Cursor c = petBetterDb.rawQuery(sql, null);
 
@@ -683,6 +683,7 @@ public class DataAdapter {
                     c.getInt(c.getColumnIndexOrThrow("is_read")),
                     c.getInt(c.getColumnIndexOrThrow("type")),
                     c.getString(c.getColumnIndexOrThrow("date_performed")),
+                    c.getLong(c.getColumnIndexOrThrow("source_id")),
                     c.getString(c.getColumnIndexOrThrow("first_name")),
                     c.getString(c.getColumnIndexOrThrow("last_name")));
             results.add(notifs);
@@ -776,7 +777,7 @@ public class DataAdapter {
         return ids;
     }
 
-    public long notifyUser(int notifId, long toId, long userId, int isRead, int type, String timeStamp){
+    public long notifyUser(int notifId, long toId, long userId, int isRead, int type, String timeStamp, int sourceId){
         long result;
 
         ContentValues cv = new ContentValues();
@@ -786,6 +787,7 @@ public class DataAdapter {
         cv.put("is_read", isRead);
         cv.put("type", type);
         cv.put("date_performed", timeStamp);
+        cv.put("source_id", sourceId);
 
         result = petBetterDb.insert(NOTIF_TABLE, null, cv);
 
@@ -1083,4 +1085,65 @@ public class DataAdapter {
         return results;
     }
 
+    public long notifRead(long notifId){
+        ContentValues cv = new ContentValues();
+        cv.put("is_read",1);
+
+        String[] whereArgs = new String[]{String.valueOf(notifId)};
+        long result = petBetterDb.update(NOTIF_TABLE,cv,"_id=?", whereArgs);
+        petBetterDb.close();
+
+        return result;
+    }
+
+    public Message getMessage(long messageId){
+
+        String sql = "SELECT m._id AS _id, m.user_one AS user_one, m.user_two AS user_two, u.first_name AS first_name, " +
+                "u.last_name AS last_name FROM messages AS m INNER JOIN users AS u ON m.user_one = u._id WHERE m._id = '" + messageId + "'";
+
+        //String sql = "SELECT * FROM " + MESSAGE_TABLE + " WHERE _id = '" + messageId + "'";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        Log.e("cursor", c.getCount() + "");
+
+        c.moveToFirst();
+
+        Message result = new Message(c.getInt(c.getColumnIndexOrThrow("_id")),
+                c.getLong(c.getColumnIndexOrThrow("user_one")),
+                c.getLong(c.getColumnIndexOrThrow("user_two")),
+                c.getString(c.getColumnIndexOrThrow("first_name")),
+                c.getString(c.getColumnIndexOrThrow("last_name")));
+        result.setMessageContent(getLatestRep((int) result.getId()));
+
+        c.close();
+        return result;
+
+    }
+
+    public Topic getTopic(long topicId){
+
+        String sql = "SELECT t._id AS _id, t.creator_id AS creator_id, t.topic_name AS topic_name, " +
+                "t.topic_desc AS topic_desc, t.date_created AS date_created, t.is_deleted AS is_deleted, " +
+                "u.first_name AS first_name, u.last_name AS last_name FROM topics AS t LEFT JOIN users as u " +
+                "ON t.creator_id = u._id WHERE t._id= '"+topicId+"'";
+
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        Log.e("cursor", c.getCount() + "");
+        c.moveToFirst();
+
+        Topic result = new Topic(c.getInt(c.getColumnIndexOrThrow("_id")),
+                c.getLong(c.getColumnIndexOrThrow("creator_id")),
+                c.getString(c.getColumnIndexOrThrow("topic_name")),
+                c.getString(c.getColumnIndexOrThrow("topic_desc")),
+                c.getString(c.getColumnIndexOrThrow("date_created")),
+                c.getInt(c.getColumnIndexOrThrow("is_deleted")),
+                c.getString(c.getColumnIndexOrThrow("first_name")),
+                c.getString(c.getColumnIndexOrThrow("last_name")));
+
+
+
+        c.close();
+        return result;
+    }
 }

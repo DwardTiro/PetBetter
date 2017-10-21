@@ -21,8 +21,12 @@ import com.google.android.gms.vision.text.Text;
 import com.google.gson.Gson;
 
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class TopicContentActivity extends AppCompatActivity {
 
@@ -35,6 +39,8 @@ public class TopicContentActivity extends AppCompatActivity {
 
     private TextView topicContentName;
     private ImageButton followButton;
+    private int nId;
+    private String timeStamp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +105,12 @@ public class TopicContentActivity extends AppCompatActivity {
                     followButton.setImageResource(R.mipmap.ic_check_black_24dp);
                     int fId = generateFollowerId();
                     addFollower(fId, (int) topicItem.getId(), (int) user.getUserId());
+
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
+                    sdf.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+                    timeStamp = sdf.format(new Date());
+                    nId = generateNotifsId();
+                    notifyFollower(nId, topicItem.getCreatorId(), user.getUserId(),0, 4, timeStamp, (int) topicItem.getId());
                 }
 
             }
@@ -194,6 +206,46 @@ public class TopicContentActivity extends AppCompatActivity {
         }
 
         User result = petBetterDb.getUser(email);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    public int generateNotifsId(){
+        ArrayList<Integer> storedIds;
+        int markerId = 1;
+
+        try {
+            petBetterDb.openDatabase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        storedIds = petBetterDb.getNotifIds();
+        petBetterDb.closeDatabase();
+
+
+        if(storedIds.isEmpty()) {
+            return markerId;
+        } else {
+            while (storedIds.contains(markerId)){
+                markerId += 1;
+            }
+
+            return markerId;
+        }
+    }
+
+    public long notifyFollower(int notifId, long toId, long userId, int isRead, int type, String timeStamp, int topicId){
+
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        long result = petBetterDb.notifyUser(notifId, toId, userId, isRead, type, timeStamp, topicId);
         petBetterDb.closeDatabase();
 
         return result;
