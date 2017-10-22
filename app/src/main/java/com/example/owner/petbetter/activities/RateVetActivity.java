@@ -162,7 +162,7 @@ public class RateVetActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        storedIds = petBetterDb.getVetRatingIds();
+        storedIds = petBetterDb.getRatingIds();
         petBetterDb.closeDatabase();
 
 
@@ -176,7 +176,7 @@ public class RateVetActivity extends AppCompatActivity {
             return markerId;
         }
     }
-    public float calculateRating(float rating, long vet_id){
+    private float calculateRating(float rating, long vet_id){
         ArrayList<Float> ratings;
 
 
@@ -190,7 +190,8 @@ public class RateVetActivity extends AppCompatActivity {
         ratings = petBetterDb.getVeterinarianRatings(vet_id);
         petBetterDb.closeDatabase();
         if(ratings.isEmpty()){
-            newRating = rating;
+
+            newRating = rating ;
         }
         else{
             for(int i =0; i<ratings.size();i++){
@@ -204,7 +205,7 @@ public class RateVetActivity extends AppCompatActivity {
         return newRating;
 
     }
-    public void setNewRating(float newRating, long vet_id){
+    private void setNewRating(float newRating, long vet_id){
 
         try{
             petBetterDb.openDatabase();

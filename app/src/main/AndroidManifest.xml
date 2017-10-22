@@ -125,6 +125,12 @@
             <category android:name="android.intent.category.ALTERNATIVE" />
 
         </activity>
+        <activity android:name=".activities.RateFacilityActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            >
+            <category android:name="android.intent.category.ALTERNATIVE" />
+
+        </activity>
     </application>
 
 

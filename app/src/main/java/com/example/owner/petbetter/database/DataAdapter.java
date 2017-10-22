@@ -50,6 +50,7 @@ public class DataAdapter {
     private static final String VET_RANK_TABLE = "veterinarians_rating";
     private static final String FACI_RANK_TABLE = "facilities_rating";
     private static final String FOLLOWER_TABLE = "followers";
+    private static final String RATE_TABLE = "ratings";
 
 
 
@@ -919,53 +920,43 @@ public class DataAdapter {
         ContentValues cv = new ContentValues();
         cv.put("_id", pId);
         cv.put("rater_id", userId);
-        cv.put("vet_id", vet_id);
+        cv.put("rated_id", vet_id);
         cv.put("rating", rating);
+        cv.put("rating_type", 1);
         cv.put("comment", comment);
         cv.put("date_created", timeStamp);
         cv.put("is_deleted", isDeleted);
 
-        result = petBetterDb.insert(VET_RANK_TABLE, null, cv);
+        result = petBetterDb.insert(RATE_TABLE, null, cv);
 
         System.out.println("did we go here");
         return result;
     }
-    public ArrayList<Integer> getVetRatingIds() {
 
-        ArrayList<Integer> ids = new ArrayList<>();
-
-        String sql = "SELECT _id FROM "+VET_RANK_TABLE;
-        Cursor c = petBetterDb.rawQuery(sql, null);
-
-        while(c.moveToNext()) {
-            ids.add(c.getInt(c.getColumnIndexOrThrow("_id")));
-        }
-
-        c.close();
-        return ids;
-    }
-    public long createFacilityRating(int pId,long userId, long faci_id, float rating, String comment, String timeStamp, int isDeleted){
+    public long createFacilityRating(int pId,long userId, long facility_id, float rating, String comment, String timeStamp, int isDeleted){
         long result;
 
         ContentValues cv = new ContentValues();
         cv.put("_id", pId);
         cv.put("rater_id", userId);
-        cv.put("facility_id", faci_id);
+        cv.put("rated_id", facility_id);
         cv.put("rating", rating);
+        cv.put("rating_type", 2);
         cv.put("comment", comment);
         cv.put("date_created", timeStamp);
         cv.put("is_deleted", isDeleted);
 
-        result = petBetterDb.insert(FACI_RANK_TABLE, null, cv);
+        result = petBetterDb.insert(RATE_TABLE, null, cv);
 
         System.out.println("did we go here");
         return result;
     }
-    public ArrayList<Integer> getFacilityRatingIds() {
+
+    public ArrayList<Integer> getRatingIds() {
 
         ArrayList<Integer> ids = new ArrayList<>();
 
-        String sql = "SELECT _id FROM "+FACI_RANK_TABLE;
+        String sql = "SELECT _id FROM ratings";
         Cursor c = petBetterDb.rawQuery(sql, null);
 
         while(c.moveToNext()) {
@@ -974,12 +965,42 @@ public class DataAdapter {
 
         c.close();
         return ids;
-    }
+    }/*
+    public ArrayList<Integer> getFacilityRatingIds() {
+
+        ArrayList<Integer> ids = new ArrayList<>();
+
+        String sql = "SELECT _id FROM ratings WHERE rated_id = 2";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            ids.add(c.getInt(c.getColumnIndexOrThrow("_id")));
+        }
+
+        c.close();
+        return ids;
+    }*/
     public ArrayList<Float> getVeterinarianRatings(long vet_id){
 
         ArrayList<Float> ratings = new ArrayList<>();
 
-        String sql = "SELECT rating FROM veterinarians_rating WHERE vet_id = "+vet_id;
+        String sql = "SELECT rating FROM ratings WHERE rating_type = 1 AND rated_id = "+vet_id;
+        Cursor c = petBetterDb.rawQuery(sql,null);
+
+        System.out.println("rate received");
+        while (c.moveToNext()){
+            ratings.add(c.getFloat(c.getColumnIndexOrThrow("rating")));
+        }
+
+        c.close();
+
+        return ratings;
+    }
+    public ArrayList<Float> getFacilityRatings(long facility_id){
+
+        ArrayList<Float> ratings = new ArrayList<>();
+
+        String sql = "SELECT rating FROM ratings WHERE rating_type = 2 AND rated_id = "+ facility_id;
         Cursor c = petBetterDb.rawQuery(sql,null);
 
         while (c.moveToNext()){
@@ -990,9 +1011,10 @@ public class DataAdapter {
 
         return ratings;
     }
+
     public void setNewVetRating(float newRating, long vet_id){
         ContentValues cv = new ContentValues();
-        cv.put("specialty","Canine Behavior");
+        //cv.put("specialty","Canine Behavior");
         cv.put("rating", newRating);
 
         System.out.println("Newrating in SetNewVet: "+newRating);
@@ -1000,6 +1022,18 @@ public class DataAdapter {
         petBetterDb.update(VET_TABLE,cv,"_id=?", whereArgs);
         petBetterDb.close();
     }
+
+    public void setNewFacilityRating(float newRating, long facility_id){
+        ContentValues cv = new ContentValues();
+        //cv.put("specialty","Canine Behavior");
+        cv.put("rating", newRating);
+
+        System.out.println("Newrating in SetNewVet: "+newRating);
+        String[] whereArgs = new String[]{String.valueOf(facility_id)};
+        petBetterDb.update(FACI_TABLE,cv,"_id=?", whereArgs);
+        petBetterDb.close();
+    }
+
 
     public ArrayList<Integer> getFollowerIds () {
 

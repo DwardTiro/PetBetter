@@ -1,5 +1,6 @@
 package com.example.owner.petbetter.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -93,7 +94,13 @@ public class RateFacilityActivity extends AppCompatActivity {
                 timeStamp = sdf.format(new Date());
                 pId = generateFacilityRatingId();
                 System.out.println(ratingBar.getRating());
+
+                float newRating = calculateRating(ratingBar.getRating(),faciItem.getId());
+                setNewRating(newRating,faciItem.getId());
                 createFacilityRating(pId, user.getUserId(), faciItem.getId(), ratingBar.getRating(), reviewText.getText().toString(), timeStamp, 0);
+
+                Intent intent = new Intent(view.getContext(),com.example.owner.petbetter.activities.HomeActivity.class);
+                startActivity(intent);
 
                 finish();
             }
@@ -152,7 +159,7 @@ public class RateFacilityActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        storedIds = petBetterDb.getFacilityRatingIds();
+        storedIds = petBetterDb.getRatingIds();
         petBetterDb.closeDatabase();
 
 
@@ -165,6 +172,48 @@ public class RateFacilityActivity extends AppCompatActivity {
 
             return markerId;
         }
+    }
+
+
+    private float calculateRating(float rating, long facility_id){
+        ArrayList<Float> ratings;
+
+
+        float sumRating = 0,newRating;
+
+        try{
+            petBetterDb.openDatabase();
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
+        ratings = petBetterDb.getFacilityRatings(facility_id);
+        petBetterDb.closeDatabase();
+        if(ratings.isEmpty()){
+            newRating = rating;
+        }
+        else{
+            for(int i =0; i<ratings.size();i++){
+                sumRating += ratings.get(i);
+                System.out.println("New sum = "+sumRating);
+            }
+            sumRating += rating;
+            System.out.println("New sum = "+sumRating);
+            newRating = sumRating/(ratings.size()+1);
+        }
+        return newRating;
+
+    }
+
+    private void setNewRating(float newRating, long facility_id){
+
+        try{
+            petBetterDb.openDatabase();
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
+
+        petBetterDb.setNewFacilityRating(  newRating,facility_id);
+        petBetterDb.closeDatabase();
     }
 
     public void rateBackButtonClicked(View view) {
