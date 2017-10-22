@@ -66,10 +66,11 @@
 
         <ImageButton
             android:id="@+id/deletePostRepButton"
-            android:layout_width="45dp"
+            android:layout_width="20dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="6dp"
             android:layout_marginEnd="13dp"
+            android:background="@color/main_White"
             android:src="@mipmap/ic_delete_black_24dp" />
     </LinearLayout>
 

@@ -223,5 +223,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
     }
+    public void mapBackButtonClicked(View view){ finish();}
     //Find a way to add markers with location or longlat.
 }
