@@ -1213,4 +1213,17 @@ public class DataAdapter {
 
         return result;
     }
+    public void editProfile(long _id, String firstName, String lastName, String emailAddress,String mobileNum, String landline){
+        ContentValues cv = new ContentValues();
+        cv.put("first_name",firstName);
+        cv.put("last_name",lastName);
+        cv.put("mobile_num", mobileNum);
+        cv.put("phone_num", landline);
+        cv.put("email",emailAddress);
+
+        String[] whereArgs= new String[]{String.valueOf(_id)};
+        petBetterDb.update(USER_TABLE,cv,"_id=?", whereArgs);
+        petBetterDb.close();
+
+    }
 }

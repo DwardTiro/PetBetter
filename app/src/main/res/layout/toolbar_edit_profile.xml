@@ -22,7 +22,7 @@
             android:layout_marginEnd="24dp"
             android:src="@mipmap/ic_keyboard_arrow_left_white_24dp"
             android:background="@color/main_Color"
-            android:onClick="rateBackButtonClicked"
+            android:onClick="editBackClicked"
             />
         <TextView
             android:id="@+id/rate_title"
@@ -37,17 +37,17 @@
 
             />
         <Button
-            android:id="@+id/rateButton"
+            android:id="@+id/saveButton"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="75dp"
             android:layout_marginEnd="0dp"
             android:text="Save"
             android:textAllCaps="false"
-            android:textColor="@color/main_White"
+            android:textColor="@color/colorWhite"
             android:textSize="18sp"
             android:background="@color/main_Color"
-            android:enabled="false"
+
             style="?android:attr/borderlessButtonStyle"
 
             />
