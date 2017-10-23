@@ -51,6 +51,32 @@ public class VetListingAdapter extends RecyclerView.Adapter<VetListingAdapter.Ve
         System.out.println("The vet's name is "+holder.vetListName.getText());
         holder.vetListSpecialty.setText(thisVet.getSpecialty());
         holder.vetListRating.setText(String.format(Locale.getDefault(),"%.1f",thisVet.getRating()));
+        if(thisVet.getRating() == 0.0){
+            holder.vetListRating.setBackgroundResource(R.color.teal_blue);
+        }
+        else if (thisVet.getRating() <= 5.0 && thisVet.getRating() >=4.5){
+            holder.vetListRating.setBackgroundResource(R.color.colorYellow);
+
+        }
+        else if (thisVet.getRating() < 4.5 && thisVet.getRating() >=4.0){
+            holder.vetListRating.setBackgroundResource(R.color.peridot);
+        }
+        else if (thisVet.getRating() < 3.5 && thisVet.getRating() >=2.0){
+            holder.vetListRating.setBackgroundResource(R.color.orange);
+        }
+        else if (thisVet.getRating() < 3.0 && thisVet.getRating() >=2.5){
+            holder.vetListRating.setBackgroundResource(R.color.dark_orange);
+        }
+        else if (thisVet.getRating() < 2.5 && thisVet.getRating() >=2.0){
+            holder.vetListRating.setBackgroundResource(R.color.fiery_red);
+        }
+        else if (thisVet.getRating() < 2.0 && thisVet.getRating() >=1.5){
+            holder.vetListRating.setBackgroundResource(R.color.flame_red);
+        }
+        else{
+            holder.vetListRating.setBackgroundResource(R.color.dark_candy_red);
+        }
+
         holder.bind(thisVet, listener);
     }
 

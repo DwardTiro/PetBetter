@@ -131,6 +131,12 @@
             <category android:name="android.intent.category.ALTERNATIVE" />
 
         </activity>
+        <activity android:name=".activities.EditProfileActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            >
+            <category android:name="android.intent.category.ALTERNATIVE" />
+
+        </activity>
     </application>
 
 

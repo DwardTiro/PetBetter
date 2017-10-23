@@ -69,6 +69,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         nDrawerLayout.setDrawerListener(nToggle);
         nToggle.syncState();
 
+
+
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -96,6 +98,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         hideItems();
 
 
+        if(user.getUserType() == 2)
+            navigationView.getMenu().removeItem(R.id.add_location);
+
+
         //userName = user.getName();
 
         System.out.println(user.getName());
@@ -104,6 +110,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         textNavUser.setText(user.getName());
 
         //vetButtonClicked(this.navigationView);
+
         vetButtonClicked(this.findViewById(android.R.id.content));
 
     }

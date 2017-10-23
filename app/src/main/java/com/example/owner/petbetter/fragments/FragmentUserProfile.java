@@ -1,5 +1,6 @@
 package com.example.owner.petbetter.fragments;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.owner.petbetter.R;
@@ -34,6 +36,7 @@ public class FragmentUserProfile extends Fragment {
     private SystemSessionManager systemSessionManager;
     private User user;
     private String email;
+    private Button upEditButton;
 
 
     @Override
@@ -67,6 +70,14 @@ public class FragmentUserProfile extends Fragment {
         if(user.getUserType()==2)
             upType.append("User");
 
+        upEditButton = (Button) view.findViewById(R.id.upEditButton);
+        upEditButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(),com.example.owner.petbetter.activities.EditProfileActivity.class);
+                startActivity(intent);
+            }
+        });
         return view;
     }
 

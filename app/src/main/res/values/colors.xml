@@ -12,4 +12,10 @@
     <color name ="timestamp">#a0a3a7</color>
     <color name ="listing_border">#c2c3c8</color>
     <color name ="teal_blue">#38618C</color>
+    <color name ="fiery_red">#FF5964</color>
+    <color name ="dark_candy_red">#A50104</color>
+    <color name ="dark_orange">#FF8C00</color>
+    <color name ="flame_red">#EC4E20</color>
+    <color name ="peridot">#E1E100</color>
+    <color name ="orange">#FFA500</color>
 </resources>
