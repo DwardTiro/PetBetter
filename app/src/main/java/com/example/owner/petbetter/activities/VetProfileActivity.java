@@ -233,10 +233,9 @@ public class VetProfileActivity extends AppCompatActivity {
         petBetterDb.closeDatabase();
 
 
-<<<<<<< HEAD
-=======
+
         return result;
     }
->>>>>>> df291dd99bcef6418fa9c8c000e253c53c0692e5
     //Integrate to db to display stuff on page
+
 }
