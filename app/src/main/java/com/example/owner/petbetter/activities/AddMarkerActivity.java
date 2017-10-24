@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.owner.petbetter.R;
+import com.example.owner.petbetter.classes.Facility;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
@@ -43,6 +44,8 @@ public class AddMarkerActivity extends AppCompatActivity {
     private String email;
     private Address tempAddress = null;
     private int markerId, type;
+    private int faciId;
+    private String bldgName;
 
     public static final int USE_ADDRESS_NAME = 1;
     public static final int USE_ADDRESS_LOCATION = 2;
@@ -112,22 +115,39 @@ public class AddMarkerActivity extends AppCompatActivity {
 
     public void okClicked(View view){
 
-        if(locTypeSpinner.getSelectedItem().toString()=="Save in Bookmarks"){
-            type= 1;
+        if(locTypeSpinner.getSelectedItem().toString()=="Register as Clinic"){
+            type = 2;
         }
         else{
-            type = 2;
+            type= 1;
         }
 
         if(editBldgName.getText().toString().matches("")){
             Toast.makeText(this,"Give a name to the location",Toast.LENGTH_SHORT).show();
         }
         else{
-            String bldgName = editBldgName.getText().toString();
-            touchMarker(bldgName, longitude, latitude, location);
 
-            Intent intent = new Intent(this, com.example.owner.petbetter.activities.MapsActivity.class);
-            startActivity(intent);
+            bldgName = editBldgName.getText().toString();
+            if(type==1||type==2){
+                touchMarker(bldgName, longitude, latitude, location);
+
+                Intent intent = new Intent(this, com.example.owner.petbetter.activities.MapsActivity.class);
+                startActivity(intent);
+            }
+            /*
+            if(type==2){
+
+                faciId = generateFaciId();
+
+            /*
+        markerId = extras.getInt("MARKERID");
+        location = extras.getString("LOCATION");
+        longitude = extras.getDouble("LONGITUDE");
+        latitude = extras.getDouble("LATITUDE");
+
+                Facility faciItem = new Facility(faciId, bldgName, location, hoursOpen, hoursClose,contactInfo, vetId, rating);
+                //sync to db
+            }*/
         }
     }
 
@@ -186,5 +206,28 @@ public class AddMarkerActivity extends AppCompatActivity {
         }
     }
 
+    public int generateFaciId(){
+        ArrayList<Integer> storedIds;
+        int markerId = 1;
 
+        try {
+            petBetterDb.openDatabase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        storedIds = petBetterDb.generateFaciIds();
+        petBetterDb.closeDatabase();
+
+
+        if(storedIds.isEmpty()) {
+            return markerId;
+        } else {
+            while (storedIds.contains(markerId)){
+                markerId += 1;
+            }
+
+            return markerId;
+        }
+    }
 }
