@@ -6,7 +6,7 @@
 
     <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/rateToolbar"
+        android:id="@+id/profileToolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/main_Color"
@@ -16,38 +16,23 @@
         app:theme="@style/ThemeOverlay.AppCompat.Light">
 
         <ImageButton
-            android:id="@+id/rateToolbarBack"
+            android:id="@+id/profileToolbarBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:src="@mipmap/ic_keyboard_arrow_left_white_24dp"
             android:background="@color/main_Color"
-            android:onClick="rateBackButtonClicked"
-            />
+            android:onClick="profileBackClicked" />
         <TextView
-            android:id="@+id/rate_title"
+            android:id="@+id/profileToolbarName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Send a Review"
-            android:textSize="20sp"
+            android:text="Name Here"
+            android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="@color/colorAccent"
 
-            />
-        <Button
-            android:id="@+id/rateButton"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-
-            android:text="Submit"
-            android:textAllCaps="false"
-            android:textColor="@color/main_White"
-            android:textSize="18sp"
-            android:background="@color/main_Color"
-            android:enabled="false"
-            style="?android:attr/borderlessButtonStyle"
 
             />
 

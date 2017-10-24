@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -16,6 +17,7 @@ import com.example.owner.petbetter.classes.Facility;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
+import com.google.android.gms.vision.text.Text;
 import com.google.gson.Gson;
 
 import java.sql.SQLException;
@@ -32,16 +34,10 @@ public class PetClinicProfileActivity extends AppCompatActivity {
     private TextView petClinicCloseTime;
     private TextView petClinicRating;
 
-    private ImageView petClinicImage;
-    private ImageView petClinicServiceOne;
-    private ImageView petClinicServiceTwo;
-    private ImageView petClinicServiceThree;
 
     private Button petClinicMessageButton;
     private Button petClinicRateButton;
-    private Button petClinicBookmarkButton;
 
-    private LinearLayout serviceContainer;
 
 
     private DataAdapter petBetterDb;
@@ -62,14 +58,16 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         petClinicCloseTime = (TextView) findViewById(R.id.clinicCloseTime);
         petClinicRating = (TextView) findViewById(R.id.clinicRatingNumerator);
 
-        petClinicImage = (ImageView) findViewById(R.id.clinicProfileImage);
-        petClinicServiceOne = (ImageView) findViewById(R.id.imageServiceOne);
-        petClinicServiceTwo = (ImageView) findViewById(R.id.imageServiceTwo);
-        petClinicServiceThree = (ImageView) findViewById(R.id.imageServiceThree);
 
         petClinicRateButton = (Button) findViewById(R.id.rateClinicButton);
 
-        serviceContainer = (LinearLayout) findViewById(R.id.serviceContainer);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.viewPostToolbar);
+        setSupportActionBar(toolbar);
+        final TextView activityTitle = (TextView) findViewById(R.id.activity_title);
+        activityTitle.setText("View Pet Facility Profile");
+
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
 
         systemSessionManager = new SystemSessionManager(this);
         if(systemSessionManager.checkLogin())
@@ -149,21 +147,6 @@ public class PetClinicProfileActivity extends AppCompatActivity {
     public TextView getPetClinicRating(){
         return petClinicRating;
     }
-    public ImageView getPetClinicImage(){
-        return petClinicImage;
-    }
-    public ImageView getPetClinicServiceOne(){
-        return petClinicServiceOne;
-    }
-    public ImageView getPetClinicServiceTwo(){
-        return petClinicServiceTwo;
-    }
-    public ImageView getPetClinicServiceThree(){
-        return petClinicServiceThree;
-    }
-    public LinearLayout getServiceContainer(){
-        return serviceContainer;
-    }
 
     //set methods
     public void setPetClinicName(String str){
@@ -189,7 +172,8 @@ public class PetClinicProfileActivity extends AppCompatActivity {
 
 
 
-    public void clinicBackClicked(View view){
+    public void viewPostBackButtonClicked(View view){
+
         Intent intent = new Intent(this, com.example.owner.petbetter.activities.HomeActivity.class);
         startActivity(intent);
     }

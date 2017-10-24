@@ -54,6 +54,7 @@ public class RateFacilityActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.rateToolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         ratingBar = (RatingBar) findViewById(R.id.ratingBar);
         reviewText = (EditText) findViewById(R.id.reviewEditText);
