@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.owner.petbetter.R;
+import com.example.owner.petbetter.classes.Message;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
 import com.example.owner.petbetter.database.DataAdapter;
@@ -18,6 +19,7 @@ import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.google.gson.Gson;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -32,6 +34,7 @@ public class VetProfileActivity extends AppCompatActivity {
     private TextView vetSpecialty;
     private TextView vetRating;
     private Button rateVetButton;
+    private Button messageVetButton;
 
 
     private DataAdapter petBetterDb;
@@ -39,6 +42,8 @@ public class VetProfileActivity extends AppCompatActivity {
     private User user;
     private String email;
     private Veterinarian vetItem;
+    private Message messageItem;
+    private long mId;
 
     @Override
     protected void onCreate(Bundle savedInstance){
@@ -58,7 +63,7 @@ public class VetProfileActivity extends AppCompatActivity {
         vetSpecialty = (TextView) findViewById(R.id.vetSpecialty);
         vetRating = (TextView) findViewById(R.id.vetListRating);
         rateVetButton = (Button) findViewById(R.id.rateVetButton);
-
+        messageVetButton = (Button) findViewById(R.id.messageVetButton);
 
         systemSessionManager = new SystemSessionManager(this);
         if(systemSessionManager.checkLogin())
@@ -74,6 +79,13 @@ public class VetProfileActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         jsonMyObject = extras.getString("thisVet");
 
+        /*
+        messageItem.setFromName(user.getName());
+        messageItem.setFromId(user.getUserId());
+        messageItem.setUserId(vetItem.getUserId());
+        */
+
+
         vetItem = new Gson().fromJson(jsonMyObject,Veterinarian.class);
 
         profileName.setText(vetItem.getFirstName()+" " +vetItem.getLastName());
@@ -82,12 +94,35 @@ public class VetProfileActivity extends AppCompatActivity {
         vetSpecialty.setText(vetItem.getSpecialty());
         vetRating.setText(String.valueOf(vetItem.getRating()));
 
+
+
+        mId = getMessageId(user.getUserId(), vetItem.getUserId());
+
         rateVetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 Intent intent = new Intent(view.getContext(),RateVetActivity.class);
                 intent.putExtra("thisVet", jsonMyObject);
+                startActivity(intent);
+
+            }
+        });
+        messageVetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if(mId!=0){
+                    messageItem = getMessage(mId);
+                }
+                else{
+                    mId = generateMessageId();
+                    createMessage((int) mId, user.getUserId(), vetItem.getUserId());
+                    messageItem = new Message(mId, vetItem.getUserId(),user.getUserId(), user.getFirstName(), user.getLastName());
+                }
+
+                Intent intent = new Intent(view.getContext(),MessageActivity.class);
+                intent.putExtra("thisMessage", new Gson().toJson(messageItem));
                 startActivity(intent);
 
             }
@@ -133,8 +168,75 @@ public class VetProfileActivity extends AppCompatActivity {
        finish();
     }
 
+    private long getMessageId(long fromId, long toId){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        long result = petBetterDb.getMessageId(fromId, toId);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private Message getMessage(long messageId){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        Message result = petBetterDb.getMessage(messageId);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    public int generateMessageId(){
+        ArrayList<Integer> storedIds;
+        int messageRepId = 1;
+
+        try {
+            petBetterDb.openDatabase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        storedIds = petBetterDb.getMessageIds();
+        petBetterDb.closeDatabase();
 
 
+        if(storedIds.isEmpty()) {
+            return messageRepId;
+        } else {
+            while (storedIds.contains(messageRepId)){
+                messageRepId += 1;
+            }
+            return messageRepId;
+        }
+    }
 
+    private long createMessage(int messageId, long userId, long toId){
+        long  result;
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        result = petBetterDb.createMessage(messageId, userId, toId);
+        petBetterDb.closeDatabase();
+
+
+<<<<<<< HEAD
+=======
+        return result;
+    }
+>>>>>>> df291dd99bcef6418fa9c8c000e253c53c0692e5
     //Integrate to db to display stuff on page
 }

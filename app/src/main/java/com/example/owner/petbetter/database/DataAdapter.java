@@ -1226,4 +1226,45 @@ public class DataAdapter {
         petBetterDb.close();
 
     }
+
+    public long getMessageId(long fromId, long toId){
+
+        long result;
+        String sql = "SELECT m._id AS _id FROM messages AS m INNER JOIN users AS u ON m.user_one = u._id " +
+                "WHERE u._id = '"+fromId+"' AND m.user_two = '"+toId+"' \n" +
+                "UNION \n" +
+                "SELECT m._id AS _id FROM messages AS m INNER JOIN users AS u ON m.user_two = u._id " +
+                "WHERE u._id = '"+fromId+"' AND m.user_one = '"+toId+"'";
+
+        //String sql = "SELECT * FROM " + MESSAGE_TABLE + " WHERE _id = '" + messageId + "'";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        Log.e("cursor", c.getCount() + "");
+
+        try{
+            c.moveToFirst();
+            result = c.getLong(c.getColumnIndexOrThrow("_id"));
+        }catch(CursorIndexOutOfBoundsException e){
+             result = 0;
+        }
+
+        c.close();
+        return result;
+
+    }
+
+    public ArrayList<Integer> generateFaciIds () {
+
+        ArrayList<Integer> ids = new ArrayList<>();
+
+        String sql = "SELECT _id FROM "+FACI_TABLE;
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            ids.add(c.getInt(c.getColumnIndexOrThrow("_id")));
+        }
+
+        c.close();
+        return ids;
+    }
 }

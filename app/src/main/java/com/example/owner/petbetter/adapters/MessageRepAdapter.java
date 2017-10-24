@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -48,6 +49,8 @@ public class MessageRepAdapter extends RecyclerView.Adapter<MessageRepAdapter.Me
         holder.messageRepName.setText(thisMessageRep.getUserName());
         holder.messageRepTime.setText(thisMessageRep.getDatePerformed());
         holder.messageRepContent.setText(thisMessageRep.getRepContent());
+        holder.deletePostRep.setVisibility(View.INVISIBLE);
+        holder.deletePostRep.setEnabled(false);
         holder.bind(thisMessageRep, listener);
 
     }
@@ -70,6 +73,7 @@ public class MessageRepAdapter extends RecyclerView.Adapter<MessageRepAdapter.Me
         private TextView messageRepName;
         private TextView messageRepContent;
         private TextView messageRepTime;
+        private ImageButton deletePostRep;
 
         public MessageRepViewHolder(View itemView) {
             super(itemView);
@@ -78,6 +82,7 @@ public class MessageRepAdapter extends RecyclerView.Adapter<MessageRepAdapter.Me
             messageRepName = (TextView) itemView.findViewById(R.id.commentUserProfileName);
             messageRepContent = (TextView) itemView.findViewById(R.id.commentContent);
             messageRepTime = (TextView) itemView.findViewById(R.id.commentTimeStamp);
+            deletePostRep = (ImageButton) itemView.findViewById(R.id.deletePostRepButton);
         }
 
         public void bind(final MessageRep item, final MessageRepAdapter.OnItemClickListener listener) {
