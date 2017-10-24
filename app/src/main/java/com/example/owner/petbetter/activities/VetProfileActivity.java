@@ -3,8 +3,10 @@ package com.example.owner.petbetter.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -43,6 +45,12 @@ public class VetProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_vet_profile);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.profileToolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        TextView profileName = (TextView) findViewById(R.id.profileToolbarName);
+
+
 
         profileBG = (ImageView) findViewById(R.id.profileImage);
         vetName = (TextView) findViewById(R.id.profileName);
@@ -68,6 +76,7 @@ public class VetProfileActivity extends AppCompatActivity {
 
         vetItem = new Gson().fromJson(jsonMyObject,Veterinarian.class);
 
+        profileName.setText(vetItem.getFirstName()+" " +vetItem.getLastName());
         vetName.setText(vetItem.getFirstName()+" "+vetItem.getLastName());
         vetLandline.setText(vetItem.getMobileNumber());
         vetSpecialty.setText(vetItem.getSpecialty());
@@ -119,10 +128,11 @@ public class VetProfileActivity extends AppCompatActivity {
         return result;
     }
 
-    public void backClicked(View view){
+    //back function found in toolbar profile for Image Button profileToolbarBack
+    public void profileBackClicked(View view){
        finish();
-
     }
+
 
 
 
