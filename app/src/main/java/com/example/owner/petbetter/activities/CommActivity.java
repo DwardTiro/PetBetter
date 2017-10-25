@@ -43,6 +43,8 @@ public class CommActivity extends AppCompatActivity {
         btnProfile = (ImageButton) findViewById(R.id.btnProfile);
         container = (FrameLayout) findViewById(R.id.comm_container);
 
+        FragmentHome fragment3 = new FragmentHome();
+        getSupportFragmentManager().beginTransaction().add(R.id.comm_container,fragment3).commit();
         btnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

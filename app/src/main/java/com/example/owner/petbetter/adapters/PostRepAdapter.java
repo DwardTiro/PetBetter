@@ -1,13 +1,19 @@
 package com.example.owner.petbetter.adapters;
 
 import android.content.Context;
+import android.icu.util.Measure;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.view.View.MeasureSpec;
 
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.classes.PostRep;
@@ -16,6 +22,7 @@ import com.example.owner.petbetter.database.DataAdapter;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+
 
 /**
  * Created by owner on 14/10/2017.
@@ -32,6 +39,7 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
     private User user;
     private DataAdapter petBetterDb;
     private Context context;
+    private PopupWindow popUpConfirmationWindow;
 
     public PostRepAdapter(Context context, ArrayList<PostRep> postRepList, User user, OnItemClickListener listener) {
         inflater = LayoutInflater.from(context);
@@ -63,8 +71,21 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
             holder.deletePostRepButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    initializeDatabase();
-                    deletePostRep(thisComment.getId());
+                   // RelativeLayout mainLayout = (RelativeLayout) v.findViewById(R.id.postContentLayout);
+                    //inflate a popup confirmation window before deleting
+                    LayoutInflater inflater = (LayoutInflater) v.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    View popUpConfirmation = inflater.inflate(R.layout.popup_window_confirmation,null);
+
+                    //popUpConfirmation.measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
+
+                    //int width = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
+
+                    popUpConfirmationWindow = new PopupWindow(popUpConfirmation, popUpConfirmationWindow.getWidth(),popUpConfirmationWindow.getHeight(),true);
+                    popUpConfirmationWindow.showAtLocation(popUpConfirmation, Gravity.CENTER,0,0);
+
+                  //  initializeDatabase();
+
+                   // deletePostRep(thisComment.getId());
                 }
             });
         }
