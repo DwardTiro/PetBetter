@@ -1,10 +1,13 @@
 package com.example.owner.petbetter.activities;
 
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -20,8 +23,15 @@ import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.google.android.gms.vision.text.Text;
 import com.google.gson.Gson;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 
 
 public class PetClinicProfileActivity extends AppCompatActivity {
@@ -35,7 +45,7 @@ public class PetClinicProfileActivity extends AppCompatActivity {
     private TextView petClinicRating;
 
 
-    private Button petClinicMessageButton;
+    private Button petClinicBookmarkButton;
     private Button petClinicRateButton;
 
 
@@ -45,6 +55,8 @@ public class PetClinicProfileActivity extends AppCompatActivity {
     private User user;
     private String email;
     private Facility faciItem;
+    private int mId;
+    private double longitude, latitude;
 
     @Override
     public void onCreate(Bundle savedInstance){
@@ -60,6 +72,9 @@ public class PetClinicProfileActivity extends AppCompatActivity {
 
 
         petClinicRateButton = (Button) findViewById(R.id.rateClinicButton);
+        petClinicBookmarkButton = (Button) findViewById(R.id.bookmarkClinicButton);
+
+        petClinicBookmarkButton.setVisibility(View.GONE);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.viewPostToolbar);
         setSupportActionBar(toolbar);
@@ -98,6 +113,44 @@ public class PetClinicProfileActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        petClinicBookmarkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                mId = generateMarkerId();
+
+
+                try{
+
+
+                    List<Address> addresses = null;
+                    Geocoder geo = new Geocoder(PetClinicProfileActivity.this.getApplicationContext(), Locale.getDefault());
+                    //Address address = addresses.get(0);
+
+                    addresses = geo.getFromLocationName(faciItem.getLocation(), 1);
+
+                    latitude = addresses.get(0).getLatitude();
+                    System.out.println("LATITUDE CLINIC: "+latitude);
+                    longitude = addresses.get(0).getLongitude();
+
+                    System.out.println("LONGITUDE CLINIC: "+longitude);
+                }catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+                convertFaciToBookmark(mId, faciItem.getFaciName(), longitude, latitude, faciItem.getLocation(), user.getUserId(), 1);
+                //Create a bookmark
+                //Call intent
+                /*
+                Intent intent = new Intent(view.getContext(),RateFacilityActivity.class);
+                intent.putExtra("thisClinic",jsonMyObject);
+                startActivity(intent);
+                */
+            }
+        });
+
         //Toast.makeText(this, "Facility's Name: "+faciItem.getFaciName() + ". Delete this toast. Just to help you see where vet variable is", Toast.LENGTH_LONG).show();
     }
 
@@ -123,6 +176,45 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         }
 
         User result = petBetterDb.getUser(email);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    public int generateMarkerId(){
+        ArrayList<Integer> storedIds;
+        int markerId = 1;
+
+        try {
+            petBetterDb.openDatabase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        storedIds = petBetterDb.getMarkerIds();
+        petBetterDb.closeDatabase();
+
+
+        if(storedIds.isEmpty()) {
+            return markerId;
+        } else {
+            while (storedIds.contains(markerId)){
+                markerId += 1;
+            }
+
+            return markerId;
+        }
+    }
+
+    //mId, faciItem.getFaciName(), faciItem.getLocation(), user.getUserId(), 1
+    public long convertFaciToBookmark(int mId, String bldgName,double longitude, double latitude, String location, long userId, int type){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        long result = petBetterDb.convertFaciToBookmark(mId, bldgName, longitude, latitude, location, userId, type);
         petBetterDb.closeDatabase();
 
         return result;

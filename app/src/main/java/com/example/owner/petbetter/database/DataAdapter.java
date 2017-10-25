@@ -510,8 +510,6 @@ public class DataAdapter {
 
         result = petBetterDb.insert(MARKER_TABLE, null, cv);
 
-        System.out.println("THE RESULT IS "+result);
-        System.out.println("MARKER ID IS " +rowId);
 
         return result;
     }
@@ -1266,5 +1264,94 @@ public class DataAdapter {
 
         c.close();
         return ids;
+    }
+
+    public ArrayList<Integer> generateVetIds () {
+
+        ArrayList<Integer> ids = new ArrayList<>();
+
+        String sql = "SELECT _id FROM "+VET_TABLE;
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            ids.add(c.getInt(c.getColumnIndexOrThrow("_id")));
+        }
+
+        c.close();
+        return ids;
+    }
+
+    public long convertFaciToBookmark(int mId, String bldgName, double longitude, double latitude, String location, long userId, int type){
+
+        long result;
+
+        ContentValues cv = new ContentValues();
+        cv.put("_id", mId);
+        cv.put("bldg_name", bldgName);
+        cv.put("longitude", longitude);
+        cv.put("latitude", latitude);
+        cv.put("location", location);
+        cv.put("user_id", userId);
+        cv.put("type", type);
+
+
+        result = petBetterDb.insert(MARKER_TABLE, null, cv);
+
+
+        return result;
+    }
+
+
+    public long convertBookmarkToFaci(int fId, String faciName, String location, long userId, int rating){
+        long result;
+
+        ContentValues cv = new ContentValues();
+        cv.put("_id", fId);
+        cv.put("faci_name", faciName);
+        cv.put("location", location);
+        cv.put("vet_id", userId);
+        cv.put("rating", rating);
+
+
+        result = petBetterDb.insert(FACI_TABLE, null, cv);
+
+
+        return result;
+    }
+
+    public Facility getFacility(int id){
+
+        String sql = "SELECT * FROM " + FACI_TABLE + " WHERE _id = '" + id + "'";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        Log.e("cursor", c.getCount() + "");
+
+        c.moveToFirst();
+
+        Facility result = new Facility(c.getInt(c.getColumnIndexOrThrow("_id")),
+                c.getString(c.getColumnIndexOrThrow("faci_name")),
+                c.getString(c.getColumnIndexOrThrow("location")),
+                c.getString(c.getColumnIndexOrThrow("hours_open")),
+                c.getString(c.getColumnIndexOrThrow("hours_close")),
+                c.getString(c.getColumnIndexOrThrow("contact_info")),
+                c.getInt(c.getColumnIndexOrThrow("vet_id")),
+                c.getFloat(c.getColumnIndexOrThrow("rating")));
+
+        c.close();
+        return result;
+    }
+
+    public long addVet(int vetId, int userId, int rating){
+        long result;
+
+        ContentValues cv = new ContentValues();
+        cv.put("_id", vetId);
+        cv.put("user_id", userId);
+        cv.put("rating", rating);
+
+
+        result = petBetterDb.insert(VET_TABLE, null, cv);
+
+        return result;
     }
 }

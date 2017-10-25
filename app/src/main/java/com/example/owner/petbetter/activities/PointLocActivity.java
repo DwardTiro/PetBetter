@@ -78,7 +78,7 @@ public class PointLocActivity extends FragmentActivity implements OnMapReadyCall
         jsonMyObject = extras.getString("thisBookmark");
         markerItem = new Gson().fromJson(jsonMyObject,Marker.class);
 
-        Toast.makeText(this, "Building Name: "+markerItem.getBldgName(), Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Longitude: "+markerItem.getLongitude()+"Latitude: "+markerItem.getLatitude(), Toast.LENGTH_LONG).show();
     }
 
 
