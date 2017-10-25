@@ -119,7 +119,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     List<Address> addresses = geo.getFromLocation(pointTemp.latitude,pointTemp.longitude, 1);
 
                     for(int i = 0; i < addresses.get(0).getMaxAddressLineIndex(); i++) {
-                        location += " --- " + addresses.get(0).getAddressLine(i);
+                        location += " " + addresses.get(0).getAddressLine(i);
                     }
 
                     // draws the marker at the currently touched location

@@ -98,9 +98,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         hideItems();
 
 
-        if(user.getUserType() == 2)
-            navigationView.getMenu().removeItem(R.id.add_location);
-
 
         //userName = user.getName();
 

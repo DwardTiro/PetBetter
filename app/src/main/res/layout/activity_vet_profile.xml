@@ -160,12 +160,6 @@
 
                     android:text="Message" />
 
-                <Button
-                    android:id="@+id/bookmarkVetButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-
-                    android:text="Bookmark" />
 
                 <Button
                     android:id="@+id/rateVetButton"

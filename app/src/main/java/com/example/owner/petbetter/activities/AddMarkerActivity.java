@@ -6,7 +6,6 @@ import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -43,9 +42,8 @@ public class AddMarkerActivity extends AppCompatActivity {
     private User user;
     private String email;
     private Address tempAddress = null;
-    private int markerId, type;
-    private int faciId;
-    private String bldgName;
+    private Facility faciItem;
+    private int markerId, type, fId;
 
     public static final int USE_ADDRESS_NAME = 1;
     public static final int USE_ADDRESS_LOCATION = 2;
@@ -62,11 +60,6 @@ public class AddMarkerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_marker);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.viewPostToolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        final TextView activityTitle = (TextView) findViewById(R.id.activity_title);
-        activityTitle.setText("Add Marker");
 
 
 
@@ -82,6 +75,7 @@ public class AddMarkerActivity extends AppCompatActivity {
         locTypeSpinner = (Spinner) findViewById(R.id.spinnerLocType);
         if(user.getUserType()==2){
             locTypeSpinner.setVisibility(View.INVISIBLE);
+            locTypeSpinner.setEnabled(false);
         }
 
         Bundle extras = getIntent().getExtras();
@@ -98,9 +92,7 @@ public class AddMarkerActivity extends AppCompatActivity {
         editBldgName.requestFocusFromTouch();
 
     }
-    public void viewPostBackButtonClicked(View view){
-        finish();
-    }
+
     private void initializeDatabase() {
 
         petBetterDb = new DataAdapter(this);
@@ -115,39 +107,29 @@ public class AddMarkerActivity extends AppCompatActivity {
 
     public void okClicked(View view){
 
-        if(locTypeSpinner.getSelectedItem().toString()=="Register as Clinic"){
-            type = 2;
+        if(locTypeSpinner.getSelectedItem().toString()=="Save in Bookmarks"){
+            type= 1;
         }
         else{
-            type= 1;
+            type = 2;
         }
 
         if(editBldgName.getText().toString().matches("")){
             Toast.makeText(this,"Give a name to the location",Toast.LENGTH_SHORT).show();
         }
         else{
+            String bldgName = editBldgName.getText().toString();
+            touchMarker(bldgName, longitude, latitude, location);
 
-            bldgName = editBldgName.getText().toString();
-            if(type==1||type==2){
-                touchMarker(bldgName, longitude, latitude, location);
-
-                Intent intent = new Intent(this, com.example.owner.petbetter.activities.MapsActivity.class);
-                startActivity(intent);
-            }
-            /*
             if(type==2){
+                fId = generateFaciId();
+                convertBookmarkToFaci(fId, bldgName, location, user.getUserId(), 0);
+                faciItem = getFacility(fId);
+            }
 
-                faciId = generateFaciId();
 
-            /*
-        markerId = extras.getInt("MARKERID");
-        location = extras.getString("LOCATION");
-        longitude = extras.getDouble("LONGITUDE");
-        latitude = extras.getDouble("LATITUDE");
-
-                Facility faciItem = new Facility(faciId, bldgName, location, hoursOpen, hoursClose,contactInfo, vetId, rating);
-                //sync to db
-            }*/
+            Intent intent = new Intent(this, com.example.owner.petbetter.activities.MapsActivity.class);
+            startActivity(intent);
         }
     }
 
@@ -181,31 +163,6 @@ public class AddMarkerActivity extends AppCompatActivity {
 
     }
 
-    public int generateMarkerId(){
-        ArrayList<Integer> storedIds;
-        int markerId = 1;
-
-        try {
-            petBetterDb.openDatabase();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        storedIds = petBetterDb.getMarkerIds();
-        petBetterDb.closeDatabase();
-
-
-        if(storedIds.isEmpty()) {
-            return markerId;
-        } else {
-            while (storedIds.contains(markerId)){
-                markerId += 1;
-            }
-
-            return markerId;
-        }
-    }
-
     public int generateFaciId(){
         ArrayList<Integer> storedIds;
         int markerId = 1;
@@ -229,5 +186,33 @@ public class AddMarkerActivity extends AppCompatActivity {
 
             return markerId;
         }
+    }
+
+
+    public long convertBookmarkToFaci(int fId, String faciName, String location, long userId, int rating){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        long result = petBetterDb.convertBookmarkToFaci(fId, faciName, location, userId, rating);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private Facility getFacility(int id){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        Facility result = petBetterDb.getFacility(id);
+        petBetterDb.closeDatabase();
+
+        return result;
     }
 }

@@ -11,6 +11,7 @@ public class Facility {
     private int vetId;
     private float rating;
     private String faciName, location, hoursOpen, hoursClose, contactInfo;
+    private double longitude, latitude;
 
     public Facility(int id, String faciName, String location, String hoursOpen, String hoursClose, String contactInfo, int vetId, float rating) {
         this.id = id;
@@ -21,6 +22,22 @@ public class Facility {
         this.contactInfo = contactInfo;
         this.vetId = vetId;
         this.rating = rating;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
     }
 
     public float getRating(){

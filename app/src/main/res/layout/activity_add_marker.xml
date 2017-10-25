@@ -14,7 +14,8 @@
         android:id="@+id/addMarkerLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/addMarkerToolbar">
+        android:layout_below="@+id/addMarkerToolbar"
+        android:layout_alignParentBottom="true">
 
         <TextView
             android:id="@+id/textView3"
@@ -29,11 +30,11 @@
             android:id="@+id/okButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="178dp"
-            android:layout_toStartOf="@+id/textView3"
             android:onClick="okClicked"
-            android:text="Ok" />
+            android:text="Ok"
+            android:layout_marginTop="14dp"
+            android:layout_below="@+id/spinnerLocType"
+            android:layout_toStartOf="@+id/textView3" />
 
         <Button
             android:id="@+id/cancelButton"

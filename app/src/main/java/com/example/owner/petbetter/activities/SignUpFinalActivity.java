@@ -98,6 +98,23 @@ public class SignUpFinalActivity extends AppCompatActivity implements AdapterVie
         petBetterDb.addUser(userId, fName, lName, emailAdd, pWord, userType2);
         petBetterDb.closeDatabase();
 
+        if(userType2==1){
+            int vetId = generateVetId();
+            addVet(vetId, userId, 0);
+        }
+
+    }
+
+    private long addVet(int vetId, int userId, int rating){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.addVet(vetId, userId, rating);
+        petBetterDb.closeDatabase();
+
+        return result;
     }
 
     private void initializeDatabase() {
@@ -134,6 +151,31 @@ public class SignUpFinalActivity extends AppCompatActivity implements AdapterVie
             return userId;
         }
     }
+
+    public int generateVetId(){
+        ArrayList<Integer> storedIds;
+        int userId = 1;
+
+        try {
+            petBetterDb.openDatabase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        storedIds = petBetterDb.generateVetIds();
+        petBetterDb.closeDatabase();
+
+
+        if(storedIds.isEmpty()) {
+            return userId;
+        } else {
+            while (storedIds.contains(userId)){
+                userId += 1;
+            }
+            return userId;
+        }
+    }
+
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
