@@ -1,12 +1,14 @@
 package com.example.owner.petbetter.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.icu.util.Measure;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -67,29 +69,53 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
         holder.postRepContent.setText(thisComment.getRepContent());
         holder.bind(thisComment, listener);
 
-        if(user.getUserId()==thisComment.getUserId()){
+        if (user.getUserId() == thisComment.getUserId()) {
             holder.deletePostRepButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                   // RelativeLayout mainLayout = (RelativeLayout) v.findViewById(R.id.postContentLayout);
+                    // RelativeLayout mainLayout = (RelativeLayout) v.findViewById(R.id.postContentLayout);
                     //inflate a popup confirmation window before deleting
+/*
                     LayoutInflater inflater = (LayoutInflater) v.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    View popUpConfirmation = inflater.inflate(R.layout.popup_window_confirmation,null);
+                    View popUpConfirmation = inflater.inflate(R.layout.popup_window_confirmation, null);
 
-                    //popUpConfirmation.measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
+                    popUpConfirmation.measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED), MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
 
                     //int width = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
 
-                    popUpConfirmationWindow = new PopupWindow(popUpConfirmation, popUpConfirmationWindow.getWidth(),popUpConfirmationWindow.getHeight(),true);
-                    popUpConfirmationWindow.showAtLocation(popUpConfirmation, Gravity.CENTER,0,0);
+                    popUpConfirmationWindow = new PopupWindow(popUpConfirmation, 750, 360, true);
+                    popUpConfirmationWindow.showAtLocation(popUpConfirmation, Gravity.CENTER, 0, 0);
 
-                  //  initializeDatabase();
+                    Button cancelButton = (Button) v.findViewById(R.id.popUpCancelButton);
+                    Button deleteButton = (Button) v.findViewById(R.id.popUpDeleteButton);
+                    cancelButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            popUpConfirmationWindow.dismiss();
+                        }
+                    });
 
-                   // deletePostRep(thisComment.getId());
+
+                    deleteButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            initializeDatabase();
+
+                            deletePostRep(thisComment.getId());
+                        }
+                    });
+*/
+                    initializeDatabase();
+
+                    deletePostRep(thisComment.getId());
+
+                    Intent intent = new Intent(v.getContext(),com.example.owner.petbetter.activities.PostContentActivity.class);
+                    v.getContext().startActivity(intent);
+
                 }
             });
-        }
-        else{
+        } else {
             holder.deletePostRepButton.setVisibility(View.INVISIBLE);
             holder.deletePostRepButton.setEnabled(false);
         }
@@ -109,16 +135,16 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
 
         try {
             petBetterDb.createDatabase();
-        } catch(SQLException e ){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
     }
 
-    private long deletePostRep(long postRepId){
+    private long deletePostRep(long postRepId) {
         try {
             petBetterDb.openDatabase();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -135,11 +161,11 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
     }
 
     @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView){
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
     }
 
-    class PostRepViewHolder extends RecyclerView.ViewHolder{
+    class PostRepViewHolder extends RecyclerView.ViewHolder {
 
         //edit this later
         private ImageView postRepImage;
@@ -161,7 +187,8 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
         public void bind(final PostRep item, final OnItemClickListener listener) {
 
             itemView.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) {
+                @Override
+                public void onClick(View v) {
                     listener.onItemClick(item);
                 }
             });

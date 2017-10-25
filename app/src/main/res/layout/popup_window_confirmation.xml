@@ -36,6 +36,7 @@
         android:layout_margin="1dp">
 
         <Button
+            android:id="@+id/popUpCancelButton"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="125dp"
             android:layout_height="wrap_content"
@@ -46,6 +47,8 @@
             android:textSize="17sp" />
 
         <Button
+
+            android:id="@+id/popUpDeleteButton"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="125dp"
             android:layout_height="wrap_content"
