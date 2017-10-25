@@ -6,6 +6,7 @@ import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -60,14 +61,10 @@ public class AddMarkerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_marker);
 
-<<<<<<< HEAD
         Button saveButton = (Button) findViewById(R.id.addMarkerSaveButton);
         Toolbar toolbar = (Toolbar) findViewById(R.id.addMarkerToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-
-=======
->>>>>>> f5a51e1a45a2927d17740d83d60256630a16fb54
 
 
 
@@ -98,56 +95,47 @@ public class AddMarkerActivity extends AppCompatActivity {
 
         editBldgName = (EditText) findViewById(R.id.editBldgName);
         editBldgName.requestFocusFromTouch();
+        saveButton = (Button) findViewById(R.id.addMarkerSaveButton);
+
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(locTypeSpinner.getSelectedItem().toString()=="Register as Clinic"){
-                    type = 2;
+
+                if(locTypeSpinner.getSelectedItem().toString()=="Save in Bookmarks"){
+                    type= 1;
                 }
                 else{
-                    type= 1;
+                    type = 2;
                 }
 
                 if(editBldgName.getText().toString().matches("")){
                     Toast.makeText(view.getContext(),"Give a name to the location",Toast.LENGTH_SHORT).show();
                 }
                 else{
+                    String bldgName = editBldgName.getText().toString();
+                    touchMarker(bldgName, longitude, latitude, location);
 
-                    bldgName = editBldgName.getText().toString();
-                    if(type==1||type==2){
-                        touchMarker(bldgName, longitude, latitude, location);
-
-                        Intent intent = new Intent(view.getContext(), com.example.owner.petbetter.activities.MapsActivity.class);
-                        startActivity(intent);
+                    if(type==2){
+                        fId = generateFaciId();
+                        convertBookmarkToFaci(fId, bldgName, location, user.getUserId(), 0);
+                        faciItem = getFacility(fId);
                     }
-            /*
-            if(type==2){
 
-                faciId = generateFaciId();
 
-            /*
-        markerId = extras.getInt("MARKERID");
-        location = extras.getString("LOCATION");
-        longitude = extras.getDouble("LONGITUDE");
-        latitude = extras.getDouble("LATITUDE");
-
-                Facility faciItem = new Facility(faciId, bldgName, location, hoursOpen, hoursClose,contactInfo, vetId, rating);
-                //sync to db
-            }*/
+                    Intent intent = new Intent(view.getContext(), com.example.owner.petbetter.activities.MapsActivity.class);
+                    startActivity(intent);
                 }
+
             }
         });
 
 
     }
-<<<<<<< HEAD
     public void addMarkerBackClicked(View view){
         finish();
     }
-=======
 
->>>>>>> f5a51e1a45a2927d17740d83d60256630a16fb54
     private void initializeDatabase() {
 
         petBetterDb = new DataAdapter(this);

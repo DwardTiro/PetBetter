@@ -223,6 +223,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
     }
-    public void mapBackButtonClicked(View view){ finish();}
+    public void mapBackButtonClicked(View view){
+        finish();
+        Intent intent = new Intent(view.getContext(),com.example.owner.petbetter.activities.HomeActivity.class);
+        startActivity(intent);
+    }
     //Find a way to add markers with location or longlat.
 }
