@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.classes.Facility;
+import com.example.owner.petbetter.classes.Marker;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
@@ -47,6 +48,7 @@ public class PetClinicProfileActivity extends AppCompatActivity {
 
     private Button petClinicBookmarkButton;
     private Button petClinicRateButton;
+    private Button viewClinicMapButton;
 
 
 
@@ -73,8 +75,11 @@ public class PetClinicProfileActivity extends AppCompatActivity {
 
         petClinicRateButton = (Button) findViewById(R.id.rateClinicButton);
         petClinicBookmarkButton = (Button) findViewById(R.id.bookmarkClinicButton);
+        viewClinicMapButton = (Button) findViewById(R.id.viewClinicMapButton);
 
-        petClinicBookmarkButton.setVisibility(View.GONE);
+        viewClinicMapButton.setEnabled(false);
+        viewClinicMapButton.setVisibility(View.INVISIBLE);
+        //petClinicBookmarkButton.setVisibility(View.GONE);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.viewPostToolbar);
         setSupportActionBar(toolbar);
@@ -119,13 +124,12 @@ public class PetClinicProfileActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 mId = generateMarkerId();
-
-
+                /*
                 try{
 
 
                     List<Address> addresses = null;
-                    Geocoder geo = new Geocoder(PetClinicProfileActivity.this.getApplicationContext(), Locale.getDefault());
+                    Geocoder geo = new Geocoder(PetClinicProfileActivity.this, Locale.getDefault());
                     //Address address = addresses.get(0);
 
                     addresses = geo.getFromLocationName(faciItem.getLocation(), 1);
@@ -138,9 +142,12 @@ public class PetClinicProfileActivity extends AppCompatActivity {
                 }catch (IOException e) {
                     e.printStackTrace();
                 }
+                */
 
 
-                convertFaciToBookmark(mId, faciItem.getFaciName(), longitude, latitude, faciItem.getLocation(), user.getUserId(), 1);
+                Marker markerItem = getMarker(faciItem.getFaciName());
+                convertFaciToBookmark(mId, markerItem.getBldgName(), markerItem.getLongitude(), markerItem.getLatitude(),
+                        markerItem.getLocation(), user.getUserId(), 1);
                 //Create a bookmark
                 //Call intent
                 /*
@@ -215,6 +222,19 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         }
 
         long result = petBetterDb.convertFaciToBookmark(mId, bldgName, longitude, latitude, location, userId, type);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    public Marker getMarker(String bldgName){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        Marker result = petBetterDb.getMarker(bldgName);
         petBetterDb.closeDatabase();
 
         return result;

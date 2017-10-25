@@ -1354,4 +1354,25 @@ public class DataAdapter {
 
         return result;
     }
+
+    public Marker getMarker(String bldgName){
+
+        String sql = "SELECT * FROM " + MARKER_TABLE + " WHERE bldg_name = '" + bldgName + "'";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        Log.e("cursor", c.getCount() + "");
+
+        c.moveToFirst();
+
+        Marker result = new Marker(c.getInt(c.getColumnIndexOrThrow("_id")),
+                c.getString(c.getColumnIndexOrThrow("bldg_name")),
+                c.getDouble(c.getColumnIndexOrThrow("longitude")),
+                c.getDouble(c.getColumnIndexOrThrow("latitude")),
+                c.getString(c.getColumnIndexOrThrow("location")),
+                c.getLong(c.getColumnIndexOrThrow("user_id")),
+                c.getInt(c.getColumnIndexOrThrow("type")));
+
+        c.close();
+        return result;
+    }
 }
