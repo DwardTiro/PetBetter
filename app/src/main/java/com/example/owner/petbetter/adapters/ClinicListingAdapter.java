@@ -62,7 +62,10 @@ public class ClinicListingAdapter extends RecyclerView.Adapter<ClinicListingAdap
         else if (thisClinic.getRating() < 4.5 && thisClinic.getRating() >=4.0){
             holder.clinicListRating.setBackgroundResource(R.color.peridot);
         }
-        else if (thisClinic.getRating() < 3.5 && thisClinic.getRating() >=2.0){
+        else if (thisClinic.getRating() < 4.0 && thisClinic.getRating() >=3.5){
+            holder.clinicListRating.setBackgroundResource(R.color.main_Color);
+        }
+        else if (thisClinic.getRating() < 3.5 && thisClinic.getRating() >=3.0){
             holder.clinicListRating.setBackgroundResource(R.color.orange);
         }
         else if (thisClinic.getRating() < 3.0 && thisClinic.getRating() >=2.5){

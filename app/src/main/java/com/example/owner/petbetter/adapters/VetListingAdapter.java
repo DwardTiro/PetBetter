@@ -61,7 +61,10 @@ public class VetListingAdapter extends RecyclerView.Adapter<VetListingAdapter.Ve
         else if (thisVet.getRating() < 4.5 && thisVet.getRating() >=4.0){
             holder.vetListRating.setBackgroundResource(R.color.peridot);
         }
-        else if (thisVet.getRating() < 3.5 && thisVet.getRating() >=2.0){
+        else if (thisVet.getRating() < 4.0 && thisVet.getRating() >=3.5){
+            holder.vetListRating.setBackgroundResource(R.color.main_Color);
+        }
+        else if (thisVet.getRating() < 3.5 && thisVet.getRating() >=3.0){
             holder.vetListRating.setBackgroundResource(R.color.orange);
         }
         else if (thisVet.getRating() < 3.0 && thisVet.getRating() >=2.5){

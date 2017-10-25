@@ -76,7 +76,13 @@
         </activity>
         <activity
             android:name=".activities.SearchActivity"
+            android:launchMode="singleTop"
             android:label="Search">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH"/>
+            </intent-filter>
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
             <category android:name="android.intent.category.LAUNCHER" />
         </activity>
         <activity
@@ -114,8 +120,6 @@
         <activity android:name=".activities.MessageActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             />
-        <activity android:name=".activities.TopicActivity" />
-        <activity android:name=".activities.AddTopicActivity" />
         <activity android:name=".activities.NewTopicActivity" />
         <activity android:name=".activities.TopicContentActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>

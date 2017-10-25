@@ -4,51 +4,64 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.owner.petbetter.activities.NewTopicActivity">
+    tools:context="com.example.owner.petbetter.activities.NewTopicActivity"
+    android:background="@color/colorWhite">
+
+    <include
+        android:id="@+id/createToolbar"
+        layout="@layout/toolbar_create_topic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="15dp"
-        android:textSize="30dp"
-        android:text="Create a Topic" />
+        android:layout_below="@+id/createToolbar"
+        android:orientation="vertical">
 
-    <EditText
-    android:id="@+id/newTopicTitle"
-    android:layout_width="350dp"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="21dp"
-    android:hint="What is your topic about?"
-    android:textColorHint="@color/timestamp"
-    android:background="@drawable/custom_edittext"
-    android:layout_below="@+id/textView4"
-    android:layout_alignStart="@+id/textView4" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/main_White">
 
-    <EditText
-        android:id="@+id/newTopicDesc"
-        android:layout_width="350dp"
-        android:layout_height="300dp"
-        android:hint="More details about the topic"
-        android:textColorHint="@color/timestamp"
-        android:background="@drawable/custom_edittext"
-        android:layout_marginTop="24dp"
-        android:layout_below="@+id/newTopicTitle"
-        android:layout_alignStart="@+id/newTopicTitle" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="0dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:text="Topic Title:"
+                android:textSize="15sp"
+                android:textColor="@color/black"/>
 
-    <Button
-        android:id="@+id/newTopicButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:text="Create Topic"
-        android:layout_below="@+id/newTopicDesc"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="18dp" />
+            <EditText
+                android:id="@+id/newTopicTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="3dp"
+                android:layout_marginTop="11dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/custom_edittext"
+                android:hint="What is your topic about?"
+                android:textColorHint="@color/timestamp" />
+
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/newTopicDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="3dp"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/custom_edittext_white"
+            android:hint="Want to write something about it?"
+            android:textColorHint="@color/timestamp" />
 
 
+    </LinearLayout>
 </RelativeLayout>

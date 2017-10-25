@@ -8,6 +8,6 @@
         android:left="8dp"
         android:right="8dp" />
 
-    <solid android:color="@color/main_White" />
+    <solid android:color="@color/colorWhite" />
 
 </shape>

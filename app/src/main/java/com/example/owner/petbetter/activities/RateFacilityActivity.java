@@ -100,10 +100,11 @@ public class RateFacilityActivity extends AppCompatActivity {
                 setNewRating(newRating,faciItem.getId());
                 createFacilityRating(pId, user.getUserId(), faciItem.getId(), ratingBar.getRating(), reviewText.getText().toString(), timeStamp, 0);
 
+                finish();
                 Intent intent = new Intent(view.getContext(),com.example.owner.petbetter.activities.HomeActivity.class);
                 startActivity(intent);
 
-                finish();
+
             }
         });
     }

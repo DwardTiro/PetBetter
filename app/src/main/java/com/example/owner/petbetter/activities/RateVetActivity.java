@@ -106,6 +106,7 @@ public class RateVetActivity extends AppCompatActivity {
                 System.out.println("Recorded new rating is " + vetItem.getRating());
                 System.out.println("New Specialty is " + vetItem.getSpecialty());
 
+                finish();
                 Intent intent = new Intent(view.getContext(),com.example.owner.petbetter.activities.HomeActivity.class);
                 startActivity(intent);
 
@@ -220,6 +221,7 @@ public class RateVetActivity extends AppCompatActivity {
     }
     public void rateBackButtonClicked(View view){
         finish();
+
     }
 
 

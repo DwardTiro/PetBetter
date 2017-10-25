@@ -1,5 +1,6 @@
 package com.example.owner.petbetter.activities;
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -30,7 +32,7 @@ import java.util.ArrayList;
 
 public class SearchActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
-    private Toolbar searchToolbar;
+
     private ActionMenuView amvMenu;
     private SearchView searchView;
     //private Spinner searchSpinner;
@@ -39,20 +41,22 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
     public void onCreate(Bundle savedInstance){
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_search);
-        searchToolbar = (Toolbar) findViewById(R.id.toolbarSearch);
 
-        amvMenu = (ActionMenuView) searchToolbar.findViewById(R.id.amvMenu);
+        Toolbar searchToolbar = (Toolbar) findViewById(R.id.searchToolbar);
+        setSupportActionBar(searchToolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+        // amvMenu = (ActionMenuView) searchToolbar.findViewById(R.id.amvMenu);
+/*
         amvMenu.setOnMenuItemClickListener(new ActionMenuView.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 return onOptionsItemSelected(item);
             }
         });
-        setSupportActionBar(searchToolbar);
-
-        searchView = (SearchView) findViewById(R.id.searchView);
-
+*/
+        //searchView = (SearchView) findViewById(R.id.searchView);
+/*
         searchView.setIconifiedByDefault(false);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
             public boolean onQueryTextSubmit(String query) {
@@ -68,7 +72,7 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
             }
         });
 
-
+*/
         //searchSpinner = (Spinner) findViewById(R.id.spinnerCategory);
 
 
@@ -85,11 +89,36 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
-        getMenuInflater().inflate(R.menu.search_toolbar_menu, amvMenu.getMenu());
+        //getMenuInflater().inflate(R.menu.search_toolbar_menu, amvMenu.getMenu());
+        MenuInflater inflater = getMenuInflater();
 
+        //inflate search action from menu folder
+        inflater.inflate(R.menu.options_menu,menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
 
-        Spinner searchSpinner = (Spinner) amvMenu.getMenu().findItem(R.id.spinner_category).getActionView();
+        //actions when making a query in search
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Toast.makeText(getBaseContext(),query,Toast.LENGTH_SHORT).show();
+                return false;
+            }
 
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        //get searchable info fro activity
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
+        //
+        // Associate searchable configuration with the SearchView
+        //Spinner searchSpinner = (Spinner) amvMenu.getMenu().findItem(R.id.spinner_category).getActionView();
+/*
         if(searchSpinner==null){
             Toast.makeText(this,"HUHU SADBOYS",Toast.LENGTH_SHORT).show();
         }
@@ -97,7 +126,7 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
         //searchSpinner.setAdapter(adapter);
 
         searchSpinner.setOnItemSelectedListener(this);
-        return true;
+  */      return true;
     }
 
     @Override
@@ -120,5 +149,14 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
         }
         return super.onOptionsItemSelected(item);
     }
+    public void searchBackButtonClicked(View view){
+        finish();
+    }
 
+    private void handleIntent(Intent intent){
+        if(Intent.ACTION_SEARCH.equals(intent.getAction())){
+            String query = intent.getStringExtra(SearchManager.QUERY);
+
+        }
+    }
 }

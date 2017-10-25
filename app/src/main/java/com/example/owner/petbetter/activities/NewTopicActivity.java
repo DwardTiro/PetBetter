@@ -1,7 +1,9 @@
 package com.example.owner.petbetter.activities;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -44,6 +46,11 @@ public class NewTopicActivity extends AppCompatActivity {
         if(systemSessionManager.checkLogin())
             finish();
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.createTopicToolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+
         HashMap<String, String> userIn = systemSessionManager.getUserDetails();
 
         initializeDatabase();
@@ -53,13 +60,14 @@ public class NewTopicActivity extends AppCompatActivity {
 
         newTopicTitle = (EditText) findViewById(R.id.newTopicTitle);
         newTopicDesc = (EditText) findViewById(R.id.newTopicDesc);
-        newTopicButton = (Button) findViewById(R.id.newTopicButton);
+        newTopicButton = (Button) findViewById(R.id.createButton);
 
         newTopicButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(newTopicTitle.getText().toString()!=""&&newTopicDesc.getText().toString()!=""){
+                if(!(newTopicTitle.getText().toString().equals("")&&newTopicDesc.getText().toString().equals(""))){
 
+                    newTopicButton.setEnabled(true);
                     tId = generateTopicId();
 
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
@@ -70,6 +78,8 @@ public class NewTopicActivity extends AppCompatActivity {
                             timeStamp, 0);
 
                     finish();
+                    Intent intent = new Intent(v.getContext(),com.example.owner.petbetter.activities.CommActivity.class);
+                    startActivity(intent);
                 }
             }
         });
@@ -146,5 +156,10 @@ public class NewTopicActivity extends AppCompatActivity {
 
 
         return result;
+    }
+    public void createTopicBackClicked(View view){
+        finish();
+        Intent intent = new Intent(view.getContext(),com.example.owner.petbetter.activities.CommActivity.class);
+        startActivity(intent);
     }
 }

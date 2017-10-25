@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/createTopicToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/main_Color"
+        android:gravity="center_vertical|start"
+
+        app:popupTheme="@style/AppTheme.PopupOverlay"
+        app:theme="@style/ThemeOverlay.AppCompat.Light">
+
+        <ImageButton
+            android:id="@+id/createTopicToolbarBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:src="@mipmap/ic_keyboard_arrow_left_white_24dp"
+            android:background="@color/main_Color"
+            android:onClick="createTopicBackClicked"
+            />
+        <TextView
+            android:id="@+id/rate_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Create Topic"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorAccent"
+
+            />
+        <Button
+            android:id="@+id/createButton"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginEnd="5dp"
+            android:text="Create"
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite"
+            android:textSize="16sp"
+            android:background="@color/main_Color"
+
+            style="?android:attr/borderlessButtonStyle"
+
+            />
+
+    </android.support.v7.widget.Toolbar>
+
+
+
+</LinearLayout>
