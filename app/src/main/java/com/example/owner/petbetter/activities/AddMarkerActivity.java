@@ -62,11 +62,11 @@ public class AddMarkerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_marker);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.viewPostToolbar);
+        Button saveButton = (Button) findViewById(R.id.addMarkerSaveButton);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.addMarkerToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        final TextView activityTitle = (TextView) findViewById(R.id.activity_title);
-        activityTitle.setText("Add Marker");
+
 
 
 
@@ -97,8 +97,49 @@ public class AddMarkerActivity extends AppCompatActivity {
         editBldgName = (EditText) findViewById(R.id.editBldgName);
         editBldgName.requestFocusFromTouch();
 
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(locTypeSpinner.getSelectedItem().toString()=="Register as Clinic"){
+                    type = 2;
+                }
+                else{
+                    type= 1;
+                }
+
+                if(editBldgName.getText().toString().matches("")){
+                    Toast.makeText(view.getContext(),"Give a name to the location",Toast.LENGTH_SHORT).show();
+                }
+                else{
+
+                    bldgName = editBldgName.getText().toString();
+                    if(type==1||type==2){
+                        touchMarker(bldgName, longitude, latitude, location);
+
+                        Intent intent = new Intent(view.getContext(), com.example.owner.petbetter.activities.MapsActivity.class);
+                        startActivity(intent);
+                    }
+            /*
+            if(type==2){
+
+                faciId = generateFaciId();
+
+            /*
+        markerId = extras.getInt("MARKERID");
+        location = extras.getString("LOCATION");
+        longitude = extras.getDouble("LONGITUDE");
+        latitude = extras.getDouble("LATITUDE");
+
+                Facility faciItem = new Facility(faciId, bldgName, location, hoursOpen, hoursClose,contactInfo, vetId, rating);
+                //sync to db
+            }*/
+                }
+            }
+        });
+
+
     }
-    public void viewPostBackButtonClicked(View view){
+    public void addMarkerBackClicked(View view){
         finish();
     }
     private void initializeDatabase() {

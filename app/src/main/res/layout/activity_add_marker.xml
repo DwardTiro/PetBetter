@@ -5,64 +5,48 @@
 
 
     <include
-        android:id="@+id/addMarkerToolbar"
-        layout="@layout/toolbar_viewpost"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"/>
+        android:id="@+id/markerToolbar"
+        layout="@layout/toolbar_add_marker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/addMarkerLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/addMarkerToolbar">
+        android:layout_below="@+id/markerToolbar"
+        android:orientation="vertical"
+        android:background="@color/main_White">
+
 
         <TextView
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="101dp"
-            android:text="Add Location to database" />
-
-        <Button
-            android:id="@+id/okButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="178dp"
-            android:layout_toStartOf="@+id/textView3"
-            android:onClick="okClicked"
-            android:text="Ok" />
-
-        <Button
-            android:id="@+id/cancelButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/okButton"
-            android:layout_alignBottom="@+id/okButton"
-            android:layout_toEndOf="@+id/textView3"
-            android:onClick="cancelClicked"
-            android:text="Cancel" />
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="0dp"
+            android:layout_marginTop="20dp"
+            android:text="Name of Location:"
+            android:textSize="15sp"
+            android:textColor="@color/black"/>
 
         <EditText
             android:id="@+id/editBldgName"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/cancelButton"
-            android:layout_alignStart="@+id/okButton"
-            android:layout_below="@+id/textView3"
-            android:layout_marginTop="71dp"
-            android:hint="Name of the location"
+
+            android:layout_marginTop="15dp"
+            android:hint="Write name of the location here."
+            android:background="@drawable/custom_edittext"
             android:inputType="textPersonName" />
 
         <Spinner
             android:id="@+id/spinnerLocType"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:entries="@array/typeSpinner" />
 
-    </RelativeLayout>
+    </LinearLayout>
 </RelativeLayout>
