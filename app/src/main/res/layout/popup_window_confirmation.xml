@@ -44,7 +44,8 @@
             android:text="Cancel"
             android:textAllCaps="false"
             android:textColor="@color/peridot"
-            android:textSize="17sp" />
+            android:textSize="17sp"
+           />
 
         <Button
 

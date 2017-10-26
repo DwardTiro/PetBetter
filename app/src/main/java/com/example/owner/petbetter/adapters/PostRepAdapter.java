@@ -75,7 +75,7 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
                 public void onClick(View v) {
                     // RelativeLayout mainLayout = (RelativeLayout) v.findViewById(R.id.postContentLayout);
                     //inflate a popup confirmation window before deleting
-/*
+
                     LayoutInflater inflater = (LayoutInflater) v.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                     View popUpConfirmation = inflater.inflate(R.layout.popup_window_confirmation, null);
 
@@ -86,8 +86,9 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
                     popUpConfirmationWindow = new PopupWindow(popUpConfirmation, 750, 360, true);
                     popUpConfirmationWindow.showAtLocation(popUpConfirmation, Gravity.CENTER, 0, 0);
 
-                    Button cancelButton = (Button) v.findViewById(R.id.popUpCancelButton);
-                    Button deleteButton = (Button) v.findViewById(R.id.popUpDeleteButton);
+                    Button cancelButton = (Button) popUpConfirmationWindow.getContentView().findViewById(R.id.popUpCancelButton);
+
+                    Button deleteButton = (Button) popUpConfirmationWindow.getContentView().findViewById(R.id.popUpDeleteButton);
                     cancelButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -103,15 +104,14 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
                             initializeDatabase();
 
                             deletePostRep(thisComment.getId());
+                            popUpConfirmationWindow.dismiss();
                         }
                     });
-*/
-                    initializeDatabase();
 
-                    deletePostRep(thisComment.getId());
+//                    initializeDatabase();
 
-                    Intent intent = new Intent(v.getContext(),com.example.owner.petbetter.activities.PostContentActivity.class);
-                    v.getContext().startActivity(intent);
+  //                  deletePostRep(thisComment.getId());
+
 
                 }
             });
@@ -153,6 +153,7 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
 
         return result;
     }
+
 
     @Override
     public int getItemCount() {
