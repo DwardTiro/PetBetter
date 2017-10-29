@@ -54,7 +54,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
     }
 
     @Override
-    public void onBindViewHolder(CommunityViewHolder holder, int position) {
+    public void onBindViewHolder(final CommunityViewHolder holder, final int position) {
         final Topic thisTopic = topicList.get(position);
         holder.topicName.setText(thisTopic.getTopicName());
         holder.topicDescription.setText(thisTopic.getTopicDesc());
@@ -72,6 +72,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
                     for(int i=0;i<topicPosts.size();i++){
                         deletePost(topicPosts.get(i).getId());
                     }
+                    update(position);
                 }
             });
         }
@@ -80,6 +81,11 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
             holder.deleteTopicButton.setEnabled(false);
         }
 
+    }
+
+    public void update(int position){
+        topicList.remove(position);
+        this.notifyDataSetChanged();
     }
 
     private void initializeDatabase() {

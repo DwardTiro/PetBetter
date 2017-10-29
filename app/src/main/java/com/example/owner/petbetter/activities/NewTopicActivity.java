@@ -12,6 +12,7 @@ import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.classes.Topic;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
+import com.example.owner.petbetter.fragments.FragmentCommunity;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 
 import java.sql.SQLException;
@@ -78,8 +79,8 @@ public class NewTopicActivity extends AppCompatActivity {
                             timeStamp, 0);
 
                     finish();
-                    Intent intent = new Intent(v.getContext(),com.example.owner.petbetter.activities.CommActivity.class);
-                    startActivity(intent);
+                    //Intent intent = new Intent(v.getContext(),com.example.owner.petbetter.activities.CommActivity.class);
+                    //startActivity(intent);
                 }
             }
         });

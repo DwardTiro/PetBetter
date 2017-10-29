@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -41,6 +42,7 @@ public class FragmentPosts extends Fragment {
     private String email;
     private long topicId;
     private FloatingActionButton fab;
+    private boolean allowRefresh = false;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_posts,container, false);
@@ -87,10 +89,22 @@ public class FragmentPosts extends Fragment {
                 Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.NewPostActivity.class);
                 intent.putExtra("thisTopicId", topicId);
                 startActivity(intent);
+                allowRefresh = true;
             }
         });
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(allowRefresh){
+            System.out.println("WHEN DO WE ENTER THIS?");
+            allowRefresh = false;
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.detach(this).attach(this).commit();
+        }
     }
 
     private void initializeDatabase() {

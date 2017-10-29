@@ -54,7 +54,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
     }
 
     @Override
-    public void onBindViewHolder(HomeViewHolder holder, int position) {
+    public void onBindViewHolder(HomeViewHolder holder, final int position) {
         final Post thisPost = postList.get(position);
 
         holder.topicName.setText(thisPost.getTopicName());
@@ -68,6 +68,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
                 public void onClick(View v) {
                     initializeDatabase();
                     deletePost(thisPost.getId());
+                    update(position);
                 }
             });
         }
@@ -107,10 +108,9 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
         return result;
     }
 
-    public void update(ArrayList<Post> list){
-        postList.clear();
-        postList.addAll(list);
-        notifyDataSetChanged();
+    public void update(int position){
+        postList.remove(position);
+        this.notifyDataSetChanged();
     }
 
     @Override
