@@ -21,6 +21,7 @@
     <string name="login_button">Log in</string>
     <string name="next_button">Next</string>
     <string name="signup_button">Sign up</string>
+    <string name="reply">Reply</string>
 
     <string-array name="searchSpinner">
         <item>Facilities</item>
