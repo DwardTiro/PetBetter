@@ -84,7 +84,7 @@
         android:weightSum="1">
 
         <Button
-            android:id="@+id/postRepButton"
+            android:id="@+id/postRepEditBtn"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="50dp"
             android:layout_height="30dp"
