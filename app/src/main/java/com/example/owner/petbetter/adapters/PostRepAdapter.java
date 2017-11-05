@@ -42,6 +42,8 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
     private DataAdapter petBetterDb;
     private Context context;
     private PopupWindow popUpConfirmationWindow;
+    private ArrayList<PostRep> postReps;
+    private int type;
 
     public PostRepAdapter(Context context, ArrayList<PostRep> postRepList, User user, OnItemClickListener listener) {
         inflater = LayoutInflater.from(context);
@@ -49,6 +51,7 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
         this.postRepList = postRepList;
         this.listener = listener;
         this.user = user;
+        this.type = type;
     }
 
     @Override
@@ -64,10 +67,22 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
     public void onBindViewHolder(PostRepViewHolder holder, int position) {
         final PostRep thisComment = postRepList.get(position);
 
+        initializeDatabase();
+
         holder.postRepName.setText(thisComment.getUserName());
         holder.postRepTime.setText(thisComment.getDatePerformed());
         holder.postRepContent.setText(thisComment.getRepContent());
         holder.bind(thisComment, listener);
+
+        postReps = getPostRepsFromParent(thisComment.getId());
+
+        if(postReps.size()>0)
+            holder.postRepCounter.setText(Integer.toString(postReps.size()));
+        else{
+            holder.postRepCounter.setVisibility(View.INVISIBLE);
+            holder.postRepCounter.setEnabled(false);
+        }
+
 
         if (user.getUserId() == thisComment.getUserId()) {
             holder.deletePostRepButton.setOnClickListener(new View.OnClickListener() {
@@ -100,8 +115,6 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
                     deleteButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-
-                            initializeDatabase();
 
                             deletePostRep(thisComment.getId());
                             popUpConfirmationWindow.dismiss();
@@ -155,6 +168,19 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
     }
 
 
+    public ArrayList<PostRep> getPostRepsFromParent(long parentId){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<PostRep> result = petBetterDb.getPostRepsFromParent((int) parentId);
+        petBetterDb.closeDatabase();
+        return result;
+    }
+
+
     @Override
     public int getItemCount() {
 
@@ -174,6 +200,7 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
         private TextView postRepContent;
         private TextView postRepTime;
         private ImageButton deletePostRepButton;
+        private TextView postRepCounter;
 
         public PostRepViewHolder(View itemView) {
             super(itemView);
@@ -183,6 +210,7 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
             postRepContent = (TextView) itemView.findViewById(R.id.commentContent);
             postRepTime = (TextView) itemView.findViewById(R.id.commentTimeStamp);
             deletePostRepButton = (ImageButton) itemView.findViewById(R.id.deletePostRepButton);
+            postRepCounter = (TextView) itemView.findViewById(R.id.postRepCounter);
         }
 
         public void bind(final PostRep item, final OnItemClickListener listener) {

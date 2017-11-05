@@ -339,7 +339,7 @@ public class DataAdapter {
 
         ArrayList<PostRep> results = new ArrayList<>();
 
-        String sql = "SELECT * FROM "+POST_REP_TABLE + " WHERE post_id = '" + postId + "' AND is_deleted != 1";
+        String sql = "SELECT * FROM "+POST_REP_TABLE + " WHERE post_id = '" + postId + "' AND is_deleted != 1 AND parent_id = 0";
         Cursor c = petBetterDb.rawQuery(sql, null);
 
         while(c.moveToNext()) {
@@ -630,7 +630,8 @@ public class DataAdapter {
         String sql = "SELECT pr._id AS _id, pr.user_id AS user_id, pr.post_id AS post_id, pr.parent_id AS parent_id, " +
                 "pr.rep_content AS rep_content, pr.date_performed as date_performed, " +
                 "pr.is_deleted AS is_deleted, u.first_name AS first_name, u.last_name AS last_name " +
-                "FROM postreps AS pr INNER JOIN users AS u ON pr.user_id = u._id WHERE pr.post_id = '" + postId + "' AND pr.is_deleted != 1";
+                "FROM postreps AS pr INNER JOIN users AS u ON pr.user_id = u._id WHERE pr.post_id = '" + postId + "' AND " +
+                "pr.is_deleted != 1 AND pr.parent_id = 0";
 
         Cursor c = petBetterDb.rawQuery(sql, null);
 
@@ -1371,6 +1372,58 @@ public class DataAdapter {
                 c.getString(c.getColumnIndexOrThrow("location")),
                 c.getLong(c.getColumnIndexOrThrow("user_id")),
                 c.getInt(c.getColumnIndexOrThrow("type")));
+
+        c.close();
+        return result;
+    }
+
+    public ArrayList<PostRep> getPostRepsFromParent(long parentId){
+
+        ArrayList<PostRep> results = new ArrayList<>();
+        String sql = "SELECT pr._id AS _id, pr.user_id AS user_id, pr.post_id AS post_id, pr.parent_id AS parent_id, pr.rep_content AS rep_content,\n" +
+                "pr.date_performed AS date_performed, pr.is_deleted AS is_deleted, u.first_name AS first_name, u.last_name AS last_name \n" +
+                "FROM postreps AS pr INNER JOIN users AS u ON pr.user_id = u._id WHERE pr.parent_id = '" + parentId + "' AND pr.is_deleted != 1";
+        //String sql = "SELECT * FROM " + POST_REP_TABLE + " WHERE _id = '" + postRepId + "' AND is_deleted != 1";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        Log.e("cursor", c.getCount() + "");
+        while(c.moveToNext()) {
+            PostRep postrep = new PostRep(c.getInt(c.getColumnIndexOrThrow("_id")),
+                    c.getLong(c.getColumnIndexOrThrow("user_id")),
+                    c.getInt(c.getColumnIndexOrThrow("post_id")),
+                    c.getInt(c.getColumnIndexOrThrow("parent_id")),
+                    c.getString(c.getColumnIndexOrThrow("rep_content")),
+                    c.getString(c.getColumnIndexOrThrow("date_performed")),
+                    c.getInt(c.getColumnIndexOrThrow("is_deleted")),
+                    c.getString(c.getColumnIndexOrThrow("first_name")),
+                    c.getString(c.getColumnIndexOrThrow("last_name")));
+            results.add(postrep);
+        }
+
+        c.close();
+        return results;
+
+    }
+
+    public PostRep getPostRepFromId(long postRepId){
+        String sql = "SELECT pr._id AS _id, pr.user_id AS user_id, pr.post_id AS post_id, pr.parent_id AS parent_id, pr.rep_content AS rep_content,\n" +
+                "pr.date_performed AS date_performed, pr.is_deleted AS is_deleted, u.first_name AS first_name, u.last_name AS last_name \n" +
+                "FROM postreps AS pr INNER JOIN users AS u ON pr.user_id = u._id WHERE pr._id = '"+postRepId+"' AND pr.is_deleted != 1";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        Log.e("cursor", c.getCount() + "");
+
+        c.moveToFirst();
+
+        PostRep result = new PostRep(c.getInt(c.getColumnIndexOrThrow("_id")),
+                c.getLong(c.getColumnIndexOrThrow("user_id")),
+                c.getInt(c.getColumnIndexOrThrow("post_id")),
+                c.getInt(c.getColumnIndexOrThrow("parent_id")),
+                c.getString(c.getColumnIndexOrThrow("rep_content")),
+                c.getString(c.getColumnIndexOrThrow("date_performed")),
+                c.getInt(c.getColumnIndexOrThrow("is_deleted")),
+                c.getString(c.getColumnIndexOrThrow("first_name")),
+                c.getString(c.getColumnIndexOrThrow("last_name")));
 
         c.close();
         return result;

@@ -76,13 +76,16 @@
         </activity>
         <activity
             android:name=".activities.SearchActivity"
-            android:launchMode="singleTop"
-            android:label="Search">
+            android:label="Search"
+            android:launchMode="singleTop">
             <intent-filter>
-                <action android:name="android.intent.action.SEARCH"/>
+                <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
-            <meta-data android:name="android.app.searchable"
+
+            <meta-data
+                android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
+
             <category android:name="android.intent.category.LAUNCHER" />
         </activity>
         <activity
@@ -92,22 +95,23 @@
         </activity>
         <activity
             android:name=".activities.PostContentActivity"
-
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <category android:name="android.intent.category.ALTERNATIVE" />
         </activity>
         <activity
             android:name=".activities.NewPostActivity"
             android:label="New Post"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".activities.NewMessageActivity"
             android:label="New Message"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-        <activity android:name=".activities.CommActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-        <activity android:name=".activities.BookmarksActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".activities.CommActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".activities.BookmarksActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".fragments.FragmentBookmarkListing" />
         <activity android:name=".fragments.FragmentFacilityListing" />
         <activity android:name=".fragments.FragmentHome" />
@@ -115,33 +119,32 @@
         <activity android:name=".fragments.FragmentMessages" />
         <activity android:name=".fragments.FragmentUserProfile" />
         <activity android:name=".activities.ComposeActivity" />
-        <activity android:name=".activities.PointLocActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-        <activity android:name=".activities.MessageActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            />
+        <activity
+            android:name=".activities.PointLocActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".activities.MessageActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".activities.NewTopicActivity" />
-        <activity android:name=".activities.TopicContentActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-        <activity android:name=".activities.RateVetActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            >
+        <activity
+            android:name=".activities.TopicContentActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".activities.RateVetActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <category android:name="android.intent.category.ALTERNATIVE" />
-
         </activity>
-        <activity android:name=".activities.RateFacilityActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            >
+        <activity
+            android:name=".activities.RateFacilityActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <category android:name="android.intent.category.ALTERNATIVE" />
-
         </activity>
-        <activity android:name=".activities.EditProfileActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            >
+        <activity
+            android:name=".activities.EditProfileActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <category android:name="android.intent.category.ALTERNATIVE" />
-
         </activity>
+        <activity android:name=".activities.PostRepActivity"></activity>
     </application>
-
 
 </manifest>

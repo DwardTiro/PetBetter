@@ -12,11 +12,14 @@ public class PostRep {
     private int isDeleted;
     private String userName;
 
-    public PostRep(long id, long userId, int postId, String repContent, String repUser) {
+    public PostRep(long id, long userId, int postId, int parentId, String repContent, String datePerformed, int isDeleted) {
         this.id = id;
         this.userId = userId;
         this.postId = postId;
+        this.parentId = parentId;
         this.repContent = repContent;
+        this.datePerformed = datePerformed;
+        this.isDeleted = isDeleted;
     }
 
     public PostRep(long id, long userId, int postId, int parentId, String repContent, String datePerformed, int isDeleted,

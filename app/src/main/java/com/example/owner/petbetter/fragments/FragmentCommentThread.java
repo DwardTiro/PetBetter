@@ -12,13 +12,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.owner.petbetter.R;
-import com.example.owner.petbetter.activities.VetProfileActivity;
 import com.example.owner.petbetter.adapters.PostRepAdapter;
-import com.example.owner.petbetter.adapters.VetListingAdapter;
 import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.PostRep;
 import com.example.owner.petbetter.classes.User;
-import com.example.owner.petbetter.classes.Veterinarian;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.google.gson.Gson;
@@ -28,10 +25,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by owner on 14/10/2017.
+ * Created by owner on 3/11/2017.
  */
 
-public class FragmentPostReps extends Fragment{
+public class FragmentCommentThread extends Fragment {
+
     private PostRepAdapter postRepAdapter;
     private RecyclerView recyclerView;
     private ArrayList<PostRep> postRepList, postChildList;
@@ -39,6 +37,7 @@ public class FragmentPostReps extends Fragment{
 
     private User postUser;
     private Post postItem;
+    private PostRep postRepItem;
 
     private DataAdapter petBetterDb;
     private SystemSessionManager systemSessionManager;
@@ -47,7 +46,7 @@ public class FragmentPostReps extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance){
-        View view = inflater.inflate(R.layout.fragment_post_content_listing,container, false);
+        View view = inflater.inflate(R.layout.fragment_comment_thread,container, false);
         //If code above doesn't work inflate homeactivity instead.
 
         /*
@@ -57,11 +56,11 @@ public class FragmentPostReps extends Fragment{
         */
         initializeDatabase();
         Bundle bundle = this.getArguments();
-        long postId = bundle.getLong("postId");
+        long postRepId = bundle.getLong("postRepId");
 
-        System.out.println("POST ID IS: "+ postId);
+        System.out.println("COMMENTTHREAD POSTREP ID IS: "+ postRepId);
 
-        postItem = getPost(postId);
+        postRepItem = getPostRepFromId(postRepId);
 
 
         systemSessionManager = new SystemSessionManager(getActivity());
@@ -74,11 +73,10 @@ public class FragmentPostReps extends Fragment{
         email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
         user = getUser(email);
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.postRepListing);
+        recyclerView = (RecyclerView) view.findViewById(R.id.comment_thread_listing);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        System.out.println("topic name: "+postItem.getTopicName());
-        postRepList = getPostReps(postItem.getId());
+        postRepList = getPostRepsFromParent(postRepItem.getId());
         //postChildList = getPostRepsFromParent(postItem.getId())
 
 
@@ -88,7 +86,6 @@ public class FragmentPostReps extends Fragment{
                 public void onItemClick(PostRep item) {
                     Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.PostRepActivity.class);
                     intent.putExtra("thisParent", new Gson().toJson(item));
-                    intent.putExtra("commentPost", new Gson().toJson(postItem));
                     startActivity(intent);
                 }
             });
@@ -165,7 +162,19 @@ public class FragmentPostReps extends Fragment{
         return result;
     }
 
-    private Post getPost(long postId){
+    public ArrayList<PostRep> getPostRepsFromParent(long postId){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<PostRep> result = petBetterDb.getPostRepsFromParent(postId);
+        petBetterDb.closeDatabase();
+        return result;
+    }
+
+    public PostRep getPostRepFromId(long postRepId){
 
         try {
             petBetterDb.openDatabase();
@@ -173,10 +182,9 @@ public class FragmentPostReps extends Fragment{
             e.printStackTrace();
         }
 
-        Post result = petBetterDb.getPost(postId);
+        PostRep result = petBetterDb.getPostRepFromId(postRepId);
         petBetterDb.closeDatabase();
 
         return result;
     }
-
 }

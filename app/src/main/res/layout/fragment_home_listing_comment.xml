@@ -85,12 +85,25 @@
         android:paddingRight="5dp"
         android:weightSum="1">
 
+        <TextView
+            android:id="@+id/postRepCounter"
+            android:layout_width="50dp"
+            android:layout_height="30dp"
+            android:text="1"
+            android:background="@color/main_White"
+            android:textAllCaps="false"
+            android:textColor="@color/main_Color"
+            android:textSize="25sp"
+            >
+
+        </TextView>
+
         <Button
             android:id="@+id/postRepButton"
             android:layout_width="50dp"
             android:layout_height="30dp"
             style="?android:attr/borderlessButtonStyle"
-            android:layout_marginLeft="250dp"
+            android:layout_marginLeft="175dp"
             android:background="@color/main_White"
             android:text="@string/reply"
             android:textAllCaps="false"
@@ -108,28 +121,5 @@
             android:textAllCaps="false"
             android:textColor="@color/main_Color"
             android:textSize="17sp" />
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/postRepLayout"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="5dp"
-
-        android:weightSum="1">
-
-        <Button
-            android:id="@+id/viewPostRepButton"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_marginLeft="5dp"
-            android:background="@color/main_White"
-            android:text="See Replies"
-            android:textAllCaps="false"
-            android:textColor="@color/main_Color"
-            android:textSize="17sp" />
-
     </LinearLayout>
 </LinearLayout>
