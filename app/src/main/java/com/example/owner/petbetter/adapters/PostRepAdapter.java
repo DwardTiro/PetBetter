@@ -1,8 +1,6 @@
 package com.example.owner.petbetter.adapters;
 
 import android.content.Context;
-import android.content.Intent;
-import android.icu.util.Measure;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -11,9 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.view.View.MeasureSpec;
 
@@ -92,7 +88,7 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
                     //inflate a popup confirmation window before deleting
 
                     LayoutInflater inflater = (LayoutInflater) v.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    View popUpConfirmation = inflater.inflate(R.layout.popup_window_confirmation, null);
+                    View popUpConfirmation = inflater.inflate(R.layout.popup_confirmation_delete_comment, null);
 
                     popUpConfirmation.measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED), MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
 

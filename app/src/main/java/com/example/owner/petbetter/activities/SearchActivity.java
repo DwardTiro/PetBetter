@@ -35,8 +35,6 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
 
     private ActionMenuView amvMenu;
     private SearchView searchView;
-    //private Spinner searchSpinner;
-
     @Override
     public void onCreate(Bundle savedInstance){
         super.onCreate(savedInstance);
@@ -46,45 +44,7 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
         setSupportActionBar(searchToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        // amvMenu = (ActionMenuView) searchToolbar.findViewById(R.id.amvMenu);
-/*
-        amvMenu.setOnMenuItemClickListener(new ActionMenuView.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                return onOptionsItemSelected(item);
-            }
-        });
-*/
-        //searchView = (SearchView) findViewById(R.id.searchView);
-/*
-        searchView.setIconifiedByDefault(false);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
-            public boolean onQueryTextSubmit(String query) {
-                //When user presses enter
 
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                //if you want to get something while text is changing
-                return false;
-            }
-        });
-
-*/
-        //searchSpinner = (Spinner) findViewById(R.id.spinnerCategory);
-
-
-
-/*
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(SearchActivity.this, android.R.layout.simple_list_item_1,
-                getResources().getStringArray(R.array.searchSpinner));
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        searchSpinner.setAdapter(adapter);
-        searchSpinner.setOnItemSelectedListener(SearchActivity.this);
-        */
     }
 
     @Override
@@ -102,6 +62,8 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
             @Override
             public boolean onQueryTextSubmit(String query) {
                 Toast.makeText(getBaseContext(),query,Toast.LENGTH_SHORT).show();
+
+
                 return false;
             }
 

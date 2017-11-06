@@ -1,7 +1,9 @@
 package com.example.owner.petbetter.activities;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -41,6 +43,9 @@ public class NewPostActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_post);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.createPostToolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         systemSessionManager = new SystemSessionManager(this);
 
@@ -56,7 +61,7 @@ public class NewPostActivity extends AppCompatActivity {
 
         newPostTitle = (EditText) findViewById(R.id.newPostTitle);
         newPostDesc = (EditText) findViewById(R.id.newPostDesc);
-        newPostButton = (Button) findViewById(R.id.newPostButton);
+        newPostButton = (Button) findViewById(R.id.createPostButton);
 
         Bundle extras = getIntent().getExtras();
         topicId = extras.getLong("thisTopicId");
@@ -219,6 +224,10 @@ public class NewPostActivity extends AppCompatActivity {
         petBetterDb.closeDatabase();
 
         return result;
+    }
+    public void createPostBackClicked(View view){
+        finish();
+
     }
 
 }

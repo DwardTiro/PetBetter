@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="15dp"
-            android:text="Delete Post"
+            android:text="Delete Comment"
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textSize="20sp" />
@@ -26,7 +26,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="7dp"
-            android:text="Would you like to delete this post?"
+            android:text="Would you like to delete this comment?"
+            android:textSize="13sp"
             android:textColor="@color/black" />
     </LinearLayout>
 

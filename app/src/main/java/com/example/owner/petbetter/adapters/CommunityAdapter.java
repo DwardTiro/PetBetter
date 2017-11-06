@@ -7,8 +7,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.view.View.MeasureSpec;
+import android.view.Gravity;
 
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.classes.Post;
@@ -35,6 +39,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
     private Context context;
     private DataAdapter petBetterDb;
     private ArrayList<Post> topicPosts;
+    private PopupWindow popUpConfirmationWindow;
 
     public CommunityAdapter(Context context, ArrayList<Topic> topicList, User user, OnItemClickListener listener) {
         inflater = LayoutInflater.from(context);
@@ -62,28 +67,57 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
         holder.textviewFollowers.setText(Integer.toString(thisTopic.getFollowerCount()));
         holder.bind(thisTopic, listener);
 
-        if(user.getUserId()==thisTopic.getCreatorId()){
+        if (user.getUserId() == thisTopic.getCreatorId()) {
             holder.deleteTopicButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    initializeDatabase();
-                    topicPosts = getTopicPosts(thisTopic.getId());
-                    deleteTopic(thisTopic.getId());
-                    for(int i=0;i<topicPosts.size();i++){
-                        deletePost(topicPosts.get(i).getId());
-                    }
-                    update(position);
+
+                    LayoutInflater inflater = (LayoutInflater) v.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    View popUpConfirmation = inflater.inflate(R.layout.popup_confirmation_delete_topic, null);
+
+
+                    popUpConfirmation.measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED), MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
+
+
+                    popUpConfirmationWindow = new PopupWindow(popUpConfirmation, 750, 360, true);
+                    popUpConfirmationWindow.showAtLocation(popUpConfirmation, Gravity.CENTER, 0, 0);
+
+                    Button cancelButton = (Button) popUpConfirmationWindow.getContentView().findViewById(R.id.popUpTopicCancelButton);
+
+                    Button deleteButton = (Button) popUpConfirmationWindow.getContentView().findViewById(R.id.popUpTopicDeleteButton);
+
+                    cancelButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            popUpConfirmationWindow.dismiss();
+                        }
+                    });
+
+                    deleteButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            initializeDatabase();
+                            topicPosts = getTopicPosts(thisTopic.getId());
+                            deleteTopic(thisTopic.getId());
+                            for (int i = 0; i < topicPosts.size(); i++) {
+                                deletePost(topicPosts.get(i).getId());
+                            }
+                            update(position);
+                            popUpConfirmationWindow.dismiss();
+                        }
+                    });
+
+
                 }
             });
-        }
-        else{
+        } else {
             holder.deleteTopicButton.setVisibility(View.INVISIBLE);
             holder.deleteTopicButton.setEnabled(false);
         }
 
     }
 
-    public void update(int position){
+    public void update(int position) {
         topicList.remove(position);
         this.notifyDataSetChanged();
     }
@@ -94,16 +128,16 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
 
         try {
             petBetterDb.createDatabase();
-        } catch(SQLException e ){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
     }
 
-    private long deleteTopic(long topicId){
+    private long deleteTopic(long topicId) {
         try {
             petBetterDb.openDatabase();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -113,10 +147,10 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
         return result;
     }
 
-    private ArrayList<Post> getTopicPosts(long topicId){
+    private ArrayList<Post> getTopicPosts(long topicId) {
         try {
             petBetterDb.openDatabase();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -126,10 +160,10 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
         return result;
     }
 
-    private long deletePost(long postId){
+    private long deletePost(long postId) {
         try {
             petBetterDb.openDatabase();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -145,13 +179,12 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
     }
 
     @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView){
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
     }
 
 
-
-    class CommunityViewHolder extends RecyclerView.ViewHolder{
+    class CommunityViewHolder extends RecyclerView.ViewHolder {
 
         private TextView topicName;
         private TextView topicDescription;
@@ -172,7 +205,8 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
         public void bind(final Topic item, final OnItemClickListener listener) {
 
             itemView.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) {
+                @Override
+                public void onClick(View v) {
                     listener.onItemClick(item);
                 }
             });

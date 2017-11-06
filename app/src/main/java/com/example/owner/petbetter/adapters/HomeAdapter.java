@@ -2,10 +2,13 @@ package com.example.owner.petbetter.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +37,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
     private User user;
     private DataAdapter petBetterDb;
     private Context context;
+    private PopupWindow popUpConfirmationWindow;
 
 
     public HomeAdapter(Context context, ArrayList<Post> postList, User user, OnItemClickListener listener) {
@@ -66,9 +70,35 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
             holder.deletePostButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    initializeDatabase();
-                    deletePost(thisPost.getId());
-                    update(position);
+
+                    LayoutInflater inflater = (LayoutInflater) v.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    View popUpConfirmation = inflater.inflate(R.layout.popup_confirmation_delete_post, null);
+
+                    popUpConfirmation.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+
+                    popUpConfirmationWindow = new PopupWindow(popUpConfirmation, 750, 360, true);
+                    popUpConfirmationWindow.showAtLocation(popUpConfirmation, Gravity.CENTER, 0, 0);
+
+                    Button cancelButton = (Button) popUpConfirmationWindow.getContentView().findViewById(R.id.popUpPostCancelButton);
+
+                    Button deleteButton = (Button) popUpConfirmationWindow.getContentView().findViewById(R.id.popUpPostDeleteButton);
+                    cancelButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            popUpConfirmationWindow.dismiss();
+                        }
+                    });
+                    deleteButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            initializeDatabase();
+                            deletePost(thisPost.getId());
+                            update(position);
+                            popUpConfirmationWindow.dismiss();
+                        }
+                    });
+
                 }
             });
         }
