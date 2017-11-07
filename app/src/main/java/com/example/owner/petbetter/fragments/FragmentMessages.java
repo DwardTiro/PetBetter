@@ -3,6 +3,7 @@ package com.example.owner.petbetter.fragments;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -39,6 +40,7 @@ public class FragmentMessages extends Fragment {
     private User user;
     private String email;
     private FloatingActionButton fab;
+    private boolean allowRefresh = false;
 
 
 
@@ -68,6 +70,7 @@ public class FragmentMessages extends Fragment {
                 System.out.println("Item: "+item.getMessageContent());
                 intent.putExtra("thisMessage", new Gson().toJson(item));
                 startActivity(intent);
+                allowRefresh = true;
             }
         });
         //messageAdapter = new MessageAdapter(getActivity(), messageList);
@@ -82,10 +85,22 @@ public class FragmentMessages extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.NewMessageActivity.class);
                 startActivity(intent);
+                allowRefresh = true;
             }
         });
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(allowRefresh){
+            System.out.println("WHEN DO WE ENTER THIS?");
+            allowRefresh = false;
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.detach(this).attach(this).commit();
+        }
     }
 
     private void initializeDatabase() {

@@ -36,7 +36,7 @@ public class MessageRepAdapter extends RecyclerView.Adapter<MessageRepAdapter.Me
 
     @Override
     public MessageRepViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.fragment_post_content_item, parent, false);
+        View view = inflater.inflate(R.layout.fragment_messagerep_item, parent, false);
         System.out.println("Are we even reaching this?");
         MessageRepViewHolder holder = new MessageRepViewHolder(view);
         return holder;
@@ -49,8 +49,6 @@ public class MessageRepAdapter extends RecyclerView.Adapter<MessageRepAdapter.Me
         holder.messageRepName.setText(thisMessageRep.getUserName());
         holder.messageRepTime.setText(thisMessageRep.getDatePerformed());
         holder.messageRepContent.setText(thisMessageRep.getRepContent());
-        holder.deletePostRep.setVisibility(View.INVISIBLE);
-        holder.deletePostRep.setEnabled(false);
         holder.bind(thisMessageRep, listener);
 
     }
@@ -82,7 +80,6 @@ public class MessageRepAdapter extends RecyclerView.Adapter<MessageRepAdapter.Me
             messageRepName = (TextView) itemView.findViewById(R.id.commentUserProfileName);
             messageRepContent = (TextView) itemView.findViewById(R.id.commentContent);
             messageRepTime = (TextView) itemView.findViewById(R.id.commentTimeStamp);
-            deletePostRep = (ImageButton) itemView.findViewById(R.id.deletePostRepButton);
         }
 
         public void bind(final MessageRep item, final MessageRepAdapter.OnItemClickListener listener) {

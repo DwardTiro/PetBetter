@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="250dp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/popup_window_rounded_corner"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="15dp"
+            android:text="Delete Post"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="7dp"
+            android:text="Would you like to delete this post?"
+            android:textColor="@color/black" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="1dp">
+
+        <Button
+            android:id="@+id/popUpCancelButton"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="125dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/popup_button_border"
+            android:text="Cancel"
+            android:textAllCaps="false"
+            android:textColor="@color/peridot"
+            android:textSize="17sp"
+           />
+
+        <Button
+
+            android:id="@+id/popUpDeleteButton"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="125dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/popup_button_border_right"
+            android:text="Delete"
+            android:textAllCaps="false"
+            android:textColor="@color/dark_candy_red"
+            android:textSize="17sp" />
+    </LinearLayout>
+</LinearLayout>

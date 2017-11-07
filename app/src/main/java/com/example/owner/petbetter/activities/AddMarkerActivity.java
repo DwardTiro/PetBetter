@@ -102,19 +102,22 @@ public class AddMarkerActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if(locTypeSpinner.getSelectedItem().toString()=="Save in Bookmarks"){
+                if(locTypeSpinner.getSelectedItem().toString().contains("B")){
                     type= 1;
+
                 }
                 else{
                     type = 2;
+
                 }
 
                 if(editBldgName.getText().toString().matches("")){
                     Toast.makeText(view.getContext(),"Give a name to the location",Toast.LENGTH_SHORT).show();
                 }
                 else{
+
                     String bldgName = editBldgName.getText().toString();
-                    touchMarker(bldgName, longitude, latitude, location);
+                    touchMarker(bldgName, longitude, latitude, location, type);
 
                     if(type==2){
                         fId = generateFaciId();
@@ -148,34 +151,6 @@ public class AddMarkerActivity extends AppCompatActivity {
 
     }
 
-    public void okClicked(View view){
-
-        if(locTypeSpinner.getSelectedItem().toString()=="Save in Bookmarks"){
-            type= 1;
-        }
-        else{
-            type = 2;
-        }
-
-        if(editBldgName.getText().toString().matches("")){
-            Toast.makeText(this,"Give a name to the location",Toast.LENGTH_SHORT).show();
-        }
-        else{
-            String bldgName = editBldgName.getText().toString();
-            touchMarker(bldgName, longitude, latitude, location);
-
-            if(type==2){
-                fId = generateFaciId();
-                convertBookmarkToFaci(fId, bldgName, location, user.getUserId(), 0);
-                faciItem = getFacility(fId);
-            }
-
-
-            Intent intent = new Intent(this, com.example.owner.petbetter.activities.MapsActivity.class);
-            startActivity(intent);
-        }
-    }
-
     public void cancelClicked(View view){
         Intent intent = new Intent(this, com.example.owner.petbetter.activities.MapsActivity.class);
         startActivity(intent);
@@ -195,7 +170,7 @@ public class AddMarkerActivity extends AppCompatActivity {
         return result;
     }
 
-    private void touchMarker(String bldgName, double longitude, double latitude, String location){
+    private void touchMarker(String bldgName, double longitude, double latitude, String location, int type){
         try {
             petBetterDb.openDatabase();
         }catch (SQLException e) {
