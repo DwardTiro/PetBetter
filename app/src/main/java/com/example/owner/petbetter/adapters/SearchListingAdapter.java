@@ -79,7 +79,7 @@ public class SearchListingAdapter extends RecyclerView.Adapter<RecyclerView.View
             View view = inflater.inflate(R.layout.fragment_vet_item, parent, false);
             return new VetViewHolder(view);
         } else if (viewType == ITEM_CLINIC_RESULT) {
-            View view = inflater.inflate(R.layout.fragment_facility_item, parent, false);
+            View view = inflater.inflate(R.layout.fragment_petcare_item, parent, false);
             return new ClinicViewHolder(view);
         } else if (viewType == ITEM_POST_RESULT) {
             View view = inflater.inflate(R.layout.fragment_community_item, parent, false);
@@ -104,6 +104,35 @@ public class SearchListingAdapter extends RecyclerView.Adapter<RecyclerView.View
             ((VetViewHolder) holder).vetListName.setText(((Veterinarian) searchResult).getFirstName()+" "+(((Veterinarian) searchResult).getLastName()));
             ((VetViewHolder) holder).vetListSpecialty.setText(((Veterinarian) searchResult).getSpecialty());
             ((VetViewHolder) holder).vetListRating.setText(String.format(Locale.getDefault(),"%.1f", ((Veterinarian) searchResult).getRating()));
+            if(((Veterinarian) searchResult).getRating() == 0.0){
+                ((VetViewHolder) holder).vetListRating.setBackgroundResource(R.color.teal_blue);
+            }
+            else if (((Veterinarian) searchResult).getRating() <= 5.0 && ((Veterinarian) searchResult).getRating() >=4.5){
+                ((VetViewHolder) holder).vetListRating.setBackgroundResource(R.color.colorYellow);
+
+            }
+            else if (((Veterinarian) searchResult).getRating() < 4.5 && ((Veterinarian) searchResult).getRating() >=4.0){
+                ((VetViewHolder) holder).vetListRating.setBackgroundResource(R.color.peridot);
+            }
+            else if (((Veterinarian) searchResult).getRating() < 4.0 && ((Veterinarian) searchResult).getRating() >=3.5){
+                ((VetViewHolder) holder).vetListRating.setBackgroundResource(R.color.main_Color);
+            }
+            else if (((Veterinarian) searchResult).getRating() < 3.5 && ((Veterinarian) searchResult).getRating() >=3.0){
+                ((VetViewHolder) holder).vetListRating.setBackgroundResource(R.color.orange);
+            }
+            else if (((Veterinarian) searchResult).getRating() < 3.0 && ((Veterinarian) searchResult).getRating() >=2.5){
+                ((VetViewHolder) holder).vetListRating.setBackgroundResource(R.color.dark_orange);
+            }
+            else if (((Veterinarian) searchResult).getRating() < 2.5 && ((Veterinarian) searchResult).getRating() >=2.0){
+                ((VetViewHolder) holder).vetListRating.setBackgroundResource(R.color.fiery_red);
+            }
+            else if (((Veterinarian) searchResult).getRating() < 2.0 && ((Veterinarian) searchResult).getRating() >=1.5){
+                ((VetViewHolder) holder).vetListRating.setBackgroundResource(R.color.flame_red);
+            }
+            else{
+                ((VetViewHolder) holder).vetListRating.setBackgroundResource(R.color.dark_candy_red);
+            }
+
             ((VetViewHolder) holder).bind(((Veterinarian) searchResult),listener);
         } else if (holder instanceof ClinicViewHolder) {
             ((ClinicViewHolder) holder).clinicListName.setText(((Facility) searchResult).getFaciName());
@@ -112,6 +141,34 @@ public class SearchListingAdapter extends RecyclerView.Adapter<RecyclerView.View
                     ((Facility) searchResult).getRating()));
             ((ClinicViewHolder) holder).clinicOpenTime.setText(((Facility) searchResult).getHoursOpen());
             ((ClinicViewHolder) holder).clinicClosetime.setText(((Facility) searchResult).getHoursClose());
+            if(((Facility) searchResult).getRating() == 0.0){
+                ((ClinicViewHolder) holder).clinicListRating.setBackgroundResource(R.color.teal_blue);
+            }
+            else if (((Facility) searchResult).getRating() <= 5.0 && ((Facility) searchResult).getRating() >=4.5){
+                ((ClinicViewHolder) holder).clinicListRating.setBackgroundResource(R.color.colorYellow);
+
+            }
+            else if (((Facility) searchResult).getRating() < 4.5 && ((Facility) searchResult).getRating() >=4.0){
+                ((ClinicViewHolder) holder).clinicListRating.setBackgroundResource(R.color.peridot);
+            }
+            else if (((Facility) searchResult).getRating() < 4.0 && ((Facility) searchResult).getRating() >=3.5){
+                ((ClinicViewHolder) holder).clinicListRating.setBackgroundResource(R.color.main_Color);
+            }
+            else if (((Facility) searchResult).getRating() < 3.5 && ((Facility) searchResult).getRating() >=3.0){
+                ((ClinicViewHolder) holder).clinicListRating.setBackgroundResource(R.color.orange);
+            }
+            else if (((Facility) searchResult).getRating() < 3.0 && ((Facility) searchResult).getRating() >=2.5){
+                ((ClinicViewHolder) holder).clinicListRating.setBackgroundResource(R.color.dark_orange);
+            }
+            else if (((Facility) searchResult).getRating() < 2.5 && ((Facility) searchResult).getRating() >=2.0){
+                ((ClinicViewHolder) holder).clinicListRating.setBackgroundResource(R.color.fiery_red);
+            }
+            else if (((Facility) searchResult).getRating() < 2.0 && ((Facility) searchResult).getRating() >=1.5){
+                ((ClinicViewHolder) holder).clinicListRating.setBackgroundResource(R.color.flame_red);
+            }
+            else{
+                ((ClinicViewHolder) holder).clinicListRating.setBackgroundResource(R.color.dark_candy_red);
+            }
 
             ((ClinicViewHolder) holder).bind(((Facility) searchResult),listener);
 

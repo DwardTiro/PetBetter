@@ -194,21 +194,21 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
                 //clinicList = getBookmarks();
                 for (int i = 0; i < vetList.size(); i++) {
                     String name = vetList.get(i).getFirstName().toLowerCase() + " " + vetList.get(i).getLastName().toLowerCase();
-                    if (name.contains(query) || vetList.get(i).getSpecialty().toLowerCase().contains(query)) {
+                    if (name.contains(query.toLowerCase()) || vetList.get(i).getSpecialty().toLowerCase().contains(query.toLowerCase())) {
                         System.out.println("Found at" + vetList.get(i).getFirstName() + " " + vetList.get(i).getLastName());
                         searchResults.add(vetList.get(i));
 
                     }
                 }
                 for (int i = 0; i < clinicList.size(); i++) {
-                    if (clinicList.get(i).getFaciName().toLowerCase().contains(query)) {
+                    if (clinicList.get(i).getFaciName().toLowerCase().contains(query.toLowerCase())) {
                         System.out.println("Found at" + clinicList.get(i).getFaciName());
                         searchResults.add(clinicList.get(i));
                     }
 
                 }
                 for (int i = 0; i < topicList.size(); i++) {
-                    if (topicList.get(i).getTopicName().toLowerCase().contains(query) || topicList.get(i).getTopicDesc().toLowerCase().contains(query)) {
+                    if (topicList.get(i).getTopicName().toLowerCase().contains(query.toLowerCase()) || topicList.get(i).getTopicDesc().toLowerCase().contains(query.toLowerCase())) {
                         System.out.println("Found in " + topicList.get(i).getTopicName());
                         searchResults.add(topicList.get(i));
 
