@@ -233,7 +233,9 @@ public class PostRepActivity extends AppCompatActivity {
                 markerId += 1;
             }
 
-            return markerId;
+            return markerId
+
+                    ;
         }
     }
 
@@ -249,5 +251,8 @@ public class PostRepActivity extends AppCompatActivity {
         petBetterDb.closeDatabase();
 
         return result;
+    }
+    public void viewPostBackButtonClicked(View view){
+        finish();
     }
 }

@@ -81,6 +81,7 @@ public class FragmentUserProfile extends Fragment {
         return view;
     }
 
+
     private void initializeDatabase() {
 
         petBetterDb = new DataAdapter(getActivity());

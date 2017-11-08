@@ -111,7 +111,7 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
                     deleteButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-
+                            initializeDatabase();
                             deletePostRep(thisComment.getId());
                             popUpConfirmationWindow.dismiss();
                         }

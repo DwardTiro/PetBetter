@@ -10,6 +10,17 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         layout="@layout/toolbar_search"/>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerViewSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbarSearch"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:scrollbars="vertical"
+        >
+
+    </android.support.v7.widget.RecyclerView>
 
 
 </RelativeLayout>
