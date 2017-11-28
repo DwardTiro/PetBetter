@@ -1,13 +1,31 @@
 package com.example.owner.petbetter.classes;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by owner on 17/10/2017.
  */
 
 public class Topic {
-    long id, creatorId;
-    String topicName, topicDesc, dateCreated;
+
+    @SerializedName("_id")
+    long id;
+
+    @SerializedName("creator_id")
+    long creatorId;
+
+    @SerializedName("topic_name")
+    String topicName;
+
+    @SerializedName("topic_desc")
+    String topicDesc;
+
+    @SerializedName("date_created")
+    String dateCreated;
+
+    @SerializedName("is_deleted")
     int isDeleted;
+
     private String creatorName;
     private int followerCount;
 

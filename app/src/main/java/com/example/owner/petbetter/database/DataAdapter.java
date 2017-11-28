@@ -109,13 +109,19 @@ public class DataAdapter {
 
         Cursor c = petBetterDb.rawQuery(sql, null);
 
-        if(c.getCount() > 0) {
-            c.close();
-            return true;
-        } else {
-            c.close();
-            return false;
-        }
+        c.moveToFirst();
+
+        User result = new User(c.getLong(c.getColumnIndexOrThrow("_id")),
+                c.getString(c.getColumnIndexOrThrow("first_name")),
+                c.getString(c.getColumnIndexOrThrow("last_name")),
+                c.getString(c.getColumnIndexOrThrow("mobile_num")),
+                c.getString(c.getColumnIndexOrThrow("phone_num")),
+                c.getString(c.getColumnIndexOrThrow("email")),
+                c.getString(c.getColumnIndexOrThrow("password")),
+                c.getInt(c.getColumnIndexOrThrow("age")),
+                c.getInt(c.getColumnIndexOrThrow("user_type")));
+        c.close();
+        return true;
     }
 
     public int getUserId(String username) {

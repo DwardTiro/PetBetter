@@ -1,14 +1,35 @@
 package com.example.owner.petbetter.classes;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by Kristian on 10/13/2017.
  */
 
 public class Notifications {
 
-    long id, userId, doerId, sourceId;
-    int isRead, type;
-    String datePerformed, doerName;
+    @SerializedName("_id")
+    long id;
+
+    @SerializedName("user_id")
+    long userId;
+
+    @SerializedName("doer_id")
+    long doerId;
+
+    @SerializedName("source_id")
+    long sourceId;
+
+    @SerializedName("is_read")
+    int isRead;
+
+    @SerializedName("type")
+    int type;
+
+    @SerializedName("date_performed")
+    String datePerformed;
+
+    String doerName;
 
     public Notifications(long id, long userId, long doerId, int isRead, int type, String datePerformed, long sourceId, String first_name, String last_name) {
         this.id = id;

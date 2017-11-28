@@ -12,15 +12,22 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
+import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.activities.SignUpActivity;
+import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.example.owner.petbetter.activities.HomeActivity;
-
 import java.sql.SQLException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private DataAdapter petBetterDb;
     private SystemSessionManager systemSessionManager;
     private TextView textInfo;
+    HerokuService service;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +51,9 @@ public class MainActivity extends AppCompatActivity {
         textInfo = (TextView) findViewById(R.id.textInfo);
         textInfo.setVisibility(View.INVISIBLE);
         initializeDatabase();
+
+        service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
     }
 
     public void userLogin(View v){
@@ -72,7 +83,44 @@ public class MainActivity extends AppCompatActivity {
 
         if (email.trim().length() > 0 && password.trim().length() > 0) {
 
+<<<<<<< HEAD
             if (!checkEmailValidity(email)||email.equals("")) {
+=======
+            /*
+            Call<User> call = service.checkLogin(email, password);
+
+            call.enqueue(new Callback<User>() {
+                @Override
+                public void onResponse(Call<User> call, Response<User> response) {
+                    System.out.println("Response: "+response.code());
+                    if(response.isSuccessful()){
+
+                        User user = response.body();
+                        System.out.println("From server: "+response.body().getClass().toString());
+                        systemSessionManager.createUserSession(user.getEmail());
+                        Intent intent = new Intent(MainActivity.this, com.example.owner.petbetter.activities.HomeActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+
+                        finish();
+                    }
+                    else{
+                        textInfo.setText("Invalid Email or Password");
+                        textInfo.setVisibility(View.VISIBLE);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<User> call, Throwable t) {
+                    textInfo.setText("Try again later.");
+                    textInfo.setVisibility(View.VISIBLE);
+                    Log.d("onFailure", t.getLocalizedMessage());
+                }
+            });
+            */
+            if (!email.contains("@")) {
+>>>>>>> ed1baf36c8ced065e7b6ee20f8f49b7a01b3dc3c
                 //System.out.println("Invalid email");
                 textInfo.setText("Invalid email or password");
                 textInfo.setVisibility(View.VISIBLE);
@@ -80,18 +128,15 @@ public class MainActivity extends AppCompatActivity {
 
                 if (checkLogin(email, password)) {
                     systemSessionManager.createUserSession(email);
-
-                    Intent intent = new Intent(this, com.example.owner.petbetter.activities.HomeActivity.class);
+                    Intent intent = new Intent(MainActivity.this, com.example.owner.petbetter.activities.HomeActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
 
                     finish();
-
-
                 } else {
                     //System.out.println("Invalid email or password");
-                    textInfo.setText("Invalid email or password");
+                    textInfo.setText("Invalid Email or Password");
                     textInfo.setVisibility(View.VISIBLE);
                 }
 
