@@ -1,11 +1,21 @@
 package com.example.owner.petbetter.classes;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by owner on 21/10/2017.
  */
 
 public class Follower {
-    long id, topicId, userId;
+
+    @SerializedName("_id")
+    long id;
+
+    @SerializedName("topic_id")
+    long topicId;
+
+    @SerializedName("user_id")
+    long userId;
 
     public Follower(long id, long topicId, long userId) {
         this.id = id;

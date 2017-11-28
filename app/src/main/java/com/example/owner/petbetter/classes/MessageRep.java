@@ -1,15 +1,32 @@
 package com.example.owner.petbetter.classes;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by owner on 4/10/2017.
  */
 
 public class MessageRep {
-    private long id, userId;
+
+    @SerializedName("_id")
+    private long id;
+
+    @SerializedName("user_id")
+    private long userId;
+
+    @SerializedName("message_id")
     private int messageId;
+
+    @SerializedName("rep_content")
     private String repContent;
+
+    @SerializedName("is_sent")
     private int isSent;
+
+    @SerializedName("date_performed")
     private String datePerformed;
+
+
     private String userName;
 
     public MessageRep(long id, long userId, int messageId, String repContent, int isSent, String datePerformed,

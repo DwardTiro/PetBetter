@@ -1,15 +1,34 @@
 package com.example.owner.petbetter.classes;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by owner on 4/10/2017.
  */
 
 public class PostRep {
-    private long id, userId;
-    private int postId, parentId;
+
+    @SerializedName("_id")
+    private long id;
+
+    @SerializedName("user_id")
+    private long userId;
+
+    @SerializedName("post_id")
+    private int postId;
+
+    @SerializedName("parent_id")
+    private int parentId;
+
+    @SerializedName("rep_content")
     private String repContent;
+
+    @SerializedName("date_performed")
     private String datePerformed;
+
+    @SerializedName("is_deleted")
     private int isDeleted;
+
     private String userName;
 
     public PostRep(long id, long userId, int postId, int parentId, String repContent, String datePerformed, int isDeleted) {

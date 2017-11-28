@@ -5,6 +5,7 @@ package com.example.owner.petbetter.classes;
  */
 
 public class Pet {
+
     private String name, classification, breed;
     float height, weight;
 

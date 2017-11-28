@@ -1,6 +1,7 @@
 package com.example.owner.petbetter.classes;
 
 import com.example.owner.petbetter.database.DataAdapter;
+import com.google.gson.annotations.SerializedName;
 
 import java.sql.SQLException;
 
@@ -10,10 +11,18 @@ import java.sql.SQLException;
 
 public class Message {
 
+    @SerializedName("_id")
     private long id;
-    private long userId, fromId;
-    private String messageContent;
+
+    @SerializedName("user_id")
+    private long userId;
+
+    @SerializedName("from_id")
+    private long fromId;
+
+
     private String fromName;
+    private String messageContent;
 
     public Message(long id, long userId, long fromId, String firstName, String lastName) {
         this.id = id;

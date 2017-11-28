@@ -4,14 +4,37 @@ package com.example.owner.petbetter.classes;
  * Created by owner on 28/7/2017.
  */
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 public class Facility {
+
+    @SerializedName("_id")
     private long id;
+
+    @SerializedName("vet_id")
     private int vetId;
+
+    @SerializedName("rating")
     private float rating;
-    private String faciName, location, hoursOpen, hoursClose, contactInfo;
-    private double longitude, latitude;
+
+    @SerializedName("faci_name")
+    private String faciName;
+
+    @SerializedName("location")
+    private String location;
+
+    @SerializedName("hours_open")
+    private String hoursOpen;
+
+    @SerializedName("hours_close")
+    private String hoursClose;
+
+    @SerializedName("contact_info")
+    private String contactInfo;
+    private double longitude;
+    private double latitude;
 
     public Facility(int id, String faciName, String location, String hoursOpen, String hoursClose, String contactInfo, int vetId, float rating) {
         this.id = id;
