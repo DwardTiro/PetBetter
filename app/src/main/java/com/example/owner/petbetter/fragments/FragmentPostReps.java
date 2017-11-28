@@ -21,6 +21,7 @@ import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
+import com.google.android.gms.vision.text.Text;
 import com.google.gson.Gson;
 
 import java.sql.SQLException;
@@ -36,6 +37,7 @@ public class FragmentPostReps extends Fragment{
     private RecyclerView recyclerView;
     private ArrayList<PostRep> postRepList, postChildList;
     private TextView nameTextView;
+    private TextView emptyView;
 
     private User postUser;
     private Post postItem;
@@ -75,13 +77,23 @@ public class FragmentPostReps extends Fragment{
         user = getUser(email);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.postRepListing);
+        emptyView = (TextView) view.findViewById(R.id.emptyView);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         System.out.println("topic name: "+postItem.getTopicName());
         postRepList = getPostReps(postItem.getId());
         //postChildList = getPostRepsFromParent(postItem.getId())
 
-
+/*
+        if (postRepList.isEmpty()){
+            recyclerView.setVisibility(View.GONE);
+            emptyView.setVisibility(View.VISIBLE);
+        }
+        else {
+            recyclerView.setVisibility(View.VISIBLE);
+            emptyView.setVisibility(View.GONE);
+        }*/
         if(postRepList.size()>0){
             postRepAdapter = new PostRepAdapter(getActivity(), postRepList, user, new PostRepAdapter.OnItemClickListener() {
                 @Override

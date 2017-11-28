@@ -19,6 +19,8 @@ import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.example.owner.petbetter.activities.HomeActivity;
 
 import java.sql.SQLException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -70,9 +72,9 @@ public class MainActivity extends AppCompatActivity {
 
         if (email.trim().length() > 0 && password.trim().length() > 0) {
 
-            if (!email.contains("@")) {
+            if (!checkEmailValidity(email)||email.equals("")) {
                 //System.out.println("Invalid email");
-                textInfo.setText("Invalid email");
+                textInfo.setText("Invalid email or password");
                 textInfo.setVisibility(View.VISIBLE);
             } else {
 
@@ -131,6 +133,17 @@ public class MainActivity extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+
+    }
+    private boolean checkEmailValidity(String email){
+
+        String regEx = "^[\\w\\.-]+@([\\w\\-]+\\.)+[a-zA-Z]{2,4}$";
+
+        Pattern pattern = Pattern.compile(regEx, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(email);
+
+        return matcher.matches();
+
 
     }
 

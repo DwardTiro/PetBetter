@@ -10,6 +10,9 @@ import android.widget.EditText;
 import com.example.owner.petbetter.activities.MainActivity;
 import com.example.owner.petbetter.R;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Created by Kristian on 8/5/2017.
  */
@@ -32,6 +35,8 @@ public class SignUpActivity extends AppCompatActivity {
         pWord = (EditText) findViewById(R.id.signUpPassword);
         confirmPWord = (EditText) findViewById(R.id.signUpConfirmPassword);
 
+
+
     }
     public void backClicked(View view){
         Intent intent = new Intent(this, com.example.owner.petbetter.activities.MainActivity.class);
@@ -43,6 +48,9 @@ public class SignUpActivity extends AppCompatActivity {
     public void nextClicked(View view){
         Intent intent = new Intent(this, com.example.owner.petbetter.activities.SignUpFinalActivity.class);
         Bundle extras = new Bundle();
+        if(checkEmailValidity(emailAdd.getText().toString()) ){
+            System.out.println("valid email");
+        }
         //try emailAdd.getText().toString() if it doesn't work.
         extras.putString("EMAILADD", emailAdd.getText().toString());
         extras.putString("PASSWORD", pWord.getText().toString());
@@ -50,4 +58,16 @@ public class SignUpActivity extends AppCompatActivity {
         intent.putExtras(extras);
         startActivity(intent);
     }
+    private boolean checkEmailValidity(String email){
+
+        String regEx = "^[\\w\\.-]+@([\\w\\-]+\\.)+[a-zA-Z]{2,4}$";
+
+        Pattern pattern = Pattern.compile(regEx, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(email);
+
+        return matcher.matches();
+
+
+    }
+
 }

@@ -1,6 +1,8 @@
 package com.example.owner.petbetter.adapters;
 
+import android.content.ClipData;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -40,6 +42,8 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
     private PopupWindow popUpConfirmationWindow;
     private ArrayList<PostRep> postReps;
     private int type;
+    final private int VIEW_TYPE_EMPTYLIST_PLACEHOLDER = 0;
+    final private int VIEW_TYPE_RECYCLERVIEW = 1;
 
     public PostRepAdapter(Context context, ArrayList<PostRep> postRepList, User user, OnItemClickListener listener) {
         inflater = LayoutInflater.from(context);
@@ -49,18 +53,33 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
         this.user = user;
         this.type = type;
     }
+/*
+    @Override
+    public int getItemViewType(int position) {
+        if (postRepList.isEmpty()) {
+            return VIEW_TYPE_EMPTYLIST_PLACEHOLDER;
+        } else if (!postRepList.isEmpty()) {
+            return VIEW_TYPE_RECYCLERVIEW;
+        }
+        return 0;
+
+    }
+*/
 
     @Override
     public PostRepViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.fragment_home_listing_comment, parent, false);
-        System.out.println("We here mate kek wew");
-        PostRepViewHolder holder = new PostRepViewHolder(view);
-        return holder;
+        return new PostRepViewHolder(view);
 
     }
 
     @Override
-    public void onBindViewHolder(PostRepViewHolder holder, int position) {
+    public void onBindViewHolder(PostRepViewHolder holder, final int position) {
+
+        //if (postRepList.isEmpty()) {
+
+
+        //}
         final PostRep thisComment = postRepList.get(position);
 
         initializeDatabase();
@@ -72,9 +91,9 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
 
         postReps = getPostRepsFromParent(thisComment.getId());
 
-        if(postReps.size()>0)
+        if (postReps.size() > 0)
             holder.postRepCounter.setText(Integer.toString(postReps.size()));
-        else{
+        else {
             holder.postRepCounter.setVisibility(View.INVISIBLE);
             holder.postRepCounter.setEnabled(false);
         }
@@ -114,12 +133,13 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
                             initializeDatabase();
                             deletePostRep(thisComment.getId());
                             popUpConfirmationWindow.dismiss();
+                            updateData(position);
                         }
                     });
 
 //                    initializeDatabase();
 
-  //                  deletePostRep(thisComment.getId());
+                    //                  deletePostRep(thisComment.getId());
 
 
                 }
@@ -136,6 +156,12 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
         holder.vetListRating.setText(Integer.toString(thisVet.getRating()));
         holder.bind(thisVet, listener);
         */
+
+    }
+
+    private void updateData(int position) {
+        postRepList.remove(position);
+        this.notifyDataSetChanged();
     }
 
     private void initializeDatabase() {
@@ -147,8 +173,8 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
+
 
     private long deletePostRep(long postRepId) {
         try {
@@ -164,10 +190,10 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
     }
 
 
-    public ArrayList<PostRep> getPostRepsFromParent(long parentId){
+    public ArrayList<PostRep> getPostRepsFromParent(long parentId) {
         try {
             petBetterDb.openDatabase();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -180,7 +206,8 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
     @Override
     public int getItemCount() {
 
-        return (postRepList.size() > 0 ? postRepList.size() : 1);
+        //return (postRepList.size() > 0 ? postRepList.size() : 1);
+        return postRepList.size();
     }
 
     @Override
@@ -188,7 +215,7 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
         super.onAttachedToRecyclerView(recyclerView);
     }
 
-    class PostRepViewHolder extends RecyclerView.ViewHolder {
+   class PostRepViewHolder extends RecyclerView.ViewHolder {
 
         //edit this later
         private ImageView postRepImage;
@@ -217,6 +244,17 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
                     listener.onItemClick(item);
                 }
             });
+        }
+    }
+
+    private class emptyPostRepViewHolder extends RecyclerView.ViewHolder {
+
+        private TextView emptyTextView;
+
+        public emptyPostRepViewHolder(View itemView) {
+            super(itemView);
+
+            TextView emptyTextView = (TextView) itemView.findViewById(R.id.emptyView);
         }
     }
 }

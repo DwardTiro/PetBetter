@@ -39,7 +39,7 @@
 
         android:paddingLeft="10dp"
         android:textColorHint="@color/main_White"
-        android:inputType="text"
+        android:inputType="textEmailAddress"
 
         />
     <EditText

@@ -115,7 +115,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     protected void onResume(){
         super.onResume();
 
-
         systemSessionManager = new SystemSessionManager(this);
         if(systemSessionManager.checkLogin())
             finish();
@@ -124,6 +123,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         vetButtonClicked(this.findViewById(android.R.id.content));
 
     }
+    @Override
+    protected void onRestart(){
+        super.onRestart();
+        recreate();
+    }
+
 
     private void hideItems(){
         Menu menu = navigationView.getMenu();
