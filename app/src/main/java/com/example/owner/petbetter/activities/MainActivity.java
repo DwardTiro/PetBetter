@@ -29,6 +29,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
+
 public class MainActivity extends AppCompatActivity {
 
     private Button loginButton;
@@ -83,9 +84,6 @@ public class MainActivity extends AppCompatActivity {
 
         if (email.trim().length() > 0 && password.trim().length() > 0) {
 
-<<<<<<< HEAD
-            if (!checkEmailValidity(email)||email.equals("")) {
-=======
             /*
             Call<User> call = service.checkLogin(email, password);
 
@@ -119,9 +117,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
             */
-            if (!email.contains("@")) {
->>>>>>> ed1baf36c8ced065e7b6ee20f8f49b7a01b3dc3c
-                //System.out.println("Invalid email");
+            if (!checkEmailValidity(email)||email.equals("")) {
+  //System.out.println("Invalid email");
                 textInfo.setText("Invalid email or password");
                 textInfo.setVisibility(View.VISIBLE);
             } else {
