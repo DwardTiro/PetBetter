@@ -123,19 +123,25 @@ public class MainActivity extends AppCompatActivity {
                 textInfo.setVisibility(View.VISIBLE);
             } else {
 
-                if (checkLogin(email, password)) {
-                    systemSessionManager.createUserSession(email);
-                    Intent intent = new Intent(MainActivity.this, com.example.owner.petbetter.activities.HomeActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
+                try{
+                    if (checkLogin(email, password)) {
+                        systemSessionManager.createUserSession(email);
+                        Intent intent = new Intent(MainActivity.this, com.example.owner.petbetter.activities.HomeActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
 
-                    finish();
-                } else {
-                    //System.out.println("Invalid email or password");
+                        finish();
+                    } else {
+                        //System.out.println("Invalid email or password");
+                        textInfo.setText("Invalid Email or Password");
+                        textInfo.setVisibility(View.VISIBLE);
+                    }
+                } catch (Exception e){
                     textInfo.setText("Invalid Email or Password");
                     textInfo.setVisibility(View.VISIBLE);
                 }
+
 
             }
 

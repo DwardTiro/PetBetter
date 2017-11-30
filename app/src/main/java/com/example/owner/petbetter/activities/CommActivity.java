@@ -111,6 +111,21 @@ public class CommActivity extends AppCompatActivity {
             }
         });
     }
+    @Override
+    public void onRestart(){
+        super.onRestart();
+        //recreate();
+        FragmentHome fragment3 = new FragmentHome();
+        btnHome.setBackgroundColor(Color.WHITE);
+        btnCommunity.setBackgroundResource(R.color.main_Color);
+        btnCommunity.setImageResource(R.mipmap.ic_people_white_24dp);
+        btnMessage.setBackgroundResource(R.color.main_Color);
+        btnMessage.setImageResource(R.mipmap.ic_mail_outline_white_24dp);
+        btnProfile.setBackgroundResource(R.color.main_Color);
+        btnProfile.setImageResource(R.mipmap.ic_account_circle_white_24dp);
+        container.removeAllViews();
+        getSupportFragmentManager().beginTransaction().add(R.id.comm_container,fragment3).commit();
+    }
 
     public void viewPostBackButtonClicked(View view){
         finish();
