@@ -1,9 +1,11 @@
 package com.example.owner.petbetter.activities;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -15,6 +17,7 @@ import android.widget.Toast;
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
+import com.example.owner.petbetter.TypefaceUtil;
 import com.example.owner.petbetter.activities.SignUpActivity;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
@@ -42,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        TypefaceUtil.overrideFont(getApplicationContext(),"SERIF","fonts/Roboto-Regular.ttf");
+
         setContentView(R.layout.activity_main);
 
         systemSessionManager = new SystemSessionManager(getApplicationContext());
@@ -52,6 +57,9 @@ public class MainActivity extends AppCompatActivity {
         textInfo = (TextView) findViewById(R.id.textInfo);
         textInfo.setVisibility(View.INVISIBLE);
         initializeDatabase();
+
+        editPassword.setTypeface(Typeface.DEFAULT);
+        editPassword.setTransformationMethod(new PasswordTransformationMethod());
 
         service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 

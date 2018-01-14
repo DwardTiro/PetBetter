@@ -9,7 +9,7 @@
         android:id="@+id/rateToolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/main_Color"
+        android:background="@color/medTurquoise"
         android:gravity="center_vertical|start"
 
         app:popupTheme="@style/AppTheme.PopupOverlay"
@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
             android:src="@mipmap/ic_keyboard_arrow_left_white_24dp"
-            android:background="@color/main_Color"
+            android:background="@color/medTurquoise"
             android:onClick="editBackClicked"
             />
         <TextView
@@ -46,7 +46,7 @@
             android:textAllCaps="false"
             android:textColor="@color/colorWhite"
             android:textSize="18sp"
-            android:background="@color/main_Color"
+            android:background="@color/medTurquoise"
 
             style="?android:attr/borderlessButtonStyle"
 

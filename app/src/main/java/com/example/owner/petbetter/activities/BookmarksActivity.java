@@ -37,7 +37,7 @@ public class BookmarksActivity extends AppCompatActivity {
 
         btnBookmarks.setBackgroundColor(Color.WHITE);
         btnBookmarks.setImageResource(R.mipmap.ic_bookmark_border_black_24dp);
-        btnFaci.setBackgroundResource(R.color.main_Color);
+        btnFaci.setBackgroundResource(R.color.medTurquoise);
         btnFaci.setImageResource(R.mipmap.ic_pets_white_24dp);
         FragmentBookmarkListing fragment = new FragmentBookmarkListing();
         getSupportFragmentManager().beginTransaction().add(R.id.bookmark_container,fragment).commit();
@@ -48,7 +48,7 @@ public class BookmarksActivity extends AppCompatActivity {
                 System.out.println("Fragment 1");
                 btnBookmarks.setBackgroundColor(Color.WHITE);
                 btnBookmarks.setImageResource(R.mipmap.ic_bookmark_border_black_24dp);
-                btnFaci.setBackgroundResource(R.color.main_Color);
+                btnFaci.setBackgroundResource(R.color.medTurquoise);
                 btnFaci.setImageResource(R.mipmap.ic_pets_white_24dp);
                 container.removeAllViews();
                 FragmentBookmarkListing fragment1 = new FragmentBookmarkListing();
@@ -61,7 +61,7 @@ public class BookmarksActivity extends AppCompatActivity {
                 System.out.println("Fragment 2");
                 btnFaci.setBackgroundColor(Color.WHITE);
                 btnFaci.setImageResource(R.mipmap.ic_pets_black_24dp);
-                btnBookmarks.setBackgroundResource(R.color.main_Color);
+                btnBookmarks.setBackgroundResource(R.color.medTurquoise);
                 btnBookmarks.setImageResource(R.mipmap.ic_bookmark_border_white_24dp);
                 container.removeAllViews();
                 FragmentFacilityListing fragment = new FragmentFacilityListing();

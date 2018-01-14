@@ -9,7 +9,7 @@
         android:id="@+id/commentThreadToolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/main_Color"
+        android:background="@color/medTurquoise"
         android:gravity="center_vertical|start"
 
         app:popupTheme="@style/AppTheme.PopupOverlay"
@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="24dp"
             android:src="@mipmap/ic_keyboard_arrow_left_white_24dp"
-            android:background="@color/main_Color"
+            android:background="@color/medTurquoise"
             android:onClick="viewPostBackButtonClicked"
             />
         <TextView

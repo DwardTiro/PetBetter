@@ -2,7 +2,7 @@
 <android.support.v7.widget.Toolbar android:id="@+id/toolbarMessages"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
-    android:background="@color/main_Color"
+    android:background="@color/medTurquoise"
     android:gravity="center_vertical|start"
     app:popupTheme="@style/AppTheme.PopupOverlay"
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -21,7 +21,7 @@
             android:text="Notifications"
             android:textColor="@color/colorWhite"
             android:adjustViewBounds="true"
-            android:background="@color/main_Color"/>
+            android:background="@color/medTurquoise"/>
 
         <Button
             android:layout_width="0dp"
@@ -32,7 +32,7 @@
             android:text="Inbox"
             android:textColor="@color/colorWhite"
             android:adjustViewBounds="true"
-            android:background="@color/main_Color"/>
+            android:background="@color/medTurquoise"/>
 
         <Button
             android:layout_width="0dp"
@@ -43,7 +43,7 @@
             android:text="Posts"
             android:textColor="@color/colorWhite"
             android:adjustViewBounds="true"
-            android:background="@color/main_Color"/>
+            android:background="@color/medTurquoise"/>
 
     </LinearLayout>
 </android.support.v7.widget.Toolbar>

@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/main_Color">
+    android:background="@color/medTurquoise">
 
     <ImageView
         android:id="@+id/signUpBack"
@@ -84,7 +84,7 @@
         android:onClick="nextButtonClicked"
         android:text="@string/signup_button"
 
-        android:textColor="@color/main_Color"
+        android:textColor="@color/medTurquoise"
         android:textSize="20dp"
         android:layout_below="@+id/signUpUsername"
         android:layout_centerHorizontal="true"

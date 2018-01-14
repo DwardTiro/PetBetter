@@ -50,11 +50,11 @@ public class CommActivity extends AppCompatActivity {
             public void onClick(View v) {
                 System.out.println("Fragment 1");
                 btnHome.setBackgroundColor(Color.WHITE);
-                btnCommunity.setBackgroundResource(R.color.main_Color);
+                btnCommunity.setBackgroundResource(R.color.medTurquoise);
                 btnCommunity.setImageResource(R.mipmap.ic_people_white_24dp);
-                 btnMessage.setBackgroundResource(R.color.main_Color);
+                 btnMessage.setBackgroundResource(R.color.medTurquoise);
                 btnMessage.setImageResource(R.mipmap.ic_mail_outline_white_24dp);
-                btnProfile.setBackgroundResource(R.color.main_Color);
+                btnProfile.setBackgroundResource(R.color.medTurquoise);
                 btnProfile.setImageResource(R.mipmap.ic_account_circle_white_24dp);
                 container.removeAllViews();
                 FragmentHome fragment3 = new FragmentHome();
@@ -67,10 +67,10 @@ public class CommActivity extends AppCompatActivity {
                 System.out.println("Fragment 2");
                 btnCommunity.setImageResource(R.mipmap.ic_people_black_24dp);
                 btnCommunity.setBackgroundColor(Color.WHITE);
-                btnHome.setBackgroundResource(R.color.main_Color);
-                btnMessage.setBackgroundResource(R.color.main_Color);
+                btnHome.setBackgroundResource(R.color.medTurquoise);
+                btnMessage.setBackgroundResource(R.color.medTurquoise);
                 btnMessage.setImageResource(R.mipmap.ic_mail_outline_white_24dp);
-                btnProfile.setBackgroundResource(R.color.main_Color);
+                btnProfile.setBackgroundResource(R.color.medTurquoise);
                 btnProfile.setImageResource(R.mipmap.ic_account_circle_white_24dp);
                 container.removeAllViews();
                 FragmentCommunity fragment2 = new FragmentCommunity();
@@ -83,10 +83,10 @@ public class CommActivity extends AppCompatActivity {
                 System.out.println("Fragment 3");
                 btnMessage.setImageResource(R.mipmap.ic_mail_outline_black_24dp);
                 btnMessage.setBackgroundColor(Color.WHITE);
-                btnHome.setBackgroundResource(R.color.main_Color);
-                btnCommunity.setBackgroundResource(R.color.main_Color);
+                btnHome.setBackgroundResource(R.color.medTurquoise);
+                btnCommunity.setBackgroundResource(R.color.medTurquoise);
                 btnCommunity.setImageResource(R.mipmap.ic_people_white_24dp);
-                btnProfile.setBackgroundResource(R.color.main_Color);
+                btnProfile.setBackgroundResource(R.color.medTurquoise);
                 btnProfile.setImageResource(R.mipmap.ic_account_circle_white_24dp);
                 container.removeAllViews();
                 //attach new fragment here
@@ -100,10 +100,10 @@ public class CommActivity extends AppCompatActivity {
                 System.out.println("Fragment 4");
                 btnProfile.setImageResource(R.mipmap.ic_account_circle_black_24dp);
                 btnProfile.setBackgroundColor(Color.WHITE);
-                btnHome.setBackgroundResource(R.color.main_Color);
-                btnCommunity.setBackgroundResource(R.color.main_Color);
+                btnHome.setBackgroundResource(R.color.medTurquoise);
+                btnCommunity.setBackgroundResource(R.color.medTurquoise);
                 btnCommunity.setImageResource(R.mipmap.ic_people_white_24dp);
-                btnMessage.setBackgroundResource(R.color.main_Color);
+                btnMessage.setBackgroundResource(R.color.medTurquoise);
                 btnMessage.setImageResource(R.mipmap.ic_mail_outline_white_24dp);
                 container.removeAllViews();
                 FragmentUserProfile fragment1 = new FragmentUserProfile();
@@ -117,11 +117,11 @@ public class CommActivity extends AppCompatActivity {
         //recreate();
         FragmentHome fragment3 = new FragmentHome();
         btnHome.setBackgroundColor(Color.WHITE);
-        btnCommunity.setBackgroundResource(R.color.main_Color);
+        btnCommunity.setBackgroundResource(R.color.medTurquoise);
         btnCommunity.setImageResource(R.mipmap.ic_people_white_24dp);
-        btnMessage.setBackgroundResource(R.color.main_Color);
+        btnMessage.setBackgroundResource(R.color.medTurquoise);
         btnMessage.setImageResource(R.mipmap.ic_mail_outline_white_24dp);
-        btnProfile.setBackgroundResource(R.color.main_Color);
+        btnProfile.setBackgroundResource(R.color.medTurquoise);
         btnProfile.setImageResource(R.mipmap.ic_account_circle_white_24dp);
         container.removeAllViews();
         getSupportFragmentManager().beginTransaction().add(R.id.comm_container,fragment3).commit();

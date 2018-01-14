@@ -69,7 +69,9 @@
             android:layout_marginEnd="5dp"
             android:hint="Write a message."
             android:textColorHint="@color/timestamp"
-            android:background="@drawable/custom_edittext"/>
+            android:background="@drawable/custom_edittext"
+
+            />
         <Button
             android:id="@+id/newMsgSendBtn"
             android:layout_width="60dp"
