@@ -23,10 +23,15 @@ import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.example.owner.petbetter.activities.HomeActivity;
+
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -63,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
         service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
+
     }
 
     public void userLogin(View v){
@@ -90,10 +96,12 @@ public class MainActivity extends AppCompatActivity {
 
         View focusView = null;
 
-        if (email.trim().length() > 0 && password.trim().length() > 0) {
+        System.out.println("weeee");
 
-            /*
+        if (checkEmailValidity(email)&& password.trim().length() > 0) {
+
             Call<User> call = service.checkLogin(email, password);
+            System.out.println("weeee2");
 
             call.enqueue(new Callback<User>() {
                 @Override
@@ -103,6 +111,8 @@ public class MainActivity extends AppCompatActivity {
 
                         User user = response.body();
                         System.out.println("From server: "+response.body().getClass().toString());
+                        textInfo.setText("From server: SUCCESS"+response.body().getClass().toString());
+                        textInfo.setVisibility(View.VISIBLE);
                         systemSessionManager.createUserSession(user.getEmail());
                         Intent intent = new Intent(MainActivity.this, com.example.owner.petbetter.activities.HomeActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -124,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("onFailure", t.getLocalizedMessage());
                 }
             });
-            */
+/*
             if (!checkEmailValidity(email)||email.equals("")) {
   //System.out.println("Invalid email");
                 textInfo.setText("Invalid email or password");
@@ -152,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
 
 
             }
-
+*/
         } else {
 
             if (email.trim().length() == 0) {
