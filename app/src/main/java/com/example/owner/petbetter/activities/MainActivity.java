@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
         if (checkEmailValidity(email)&& password.trim().length() > 0) {
 
             Call<User> call = service.checkLogin(email, password);
-            System.out.println("weeee2");
+            System.out.println("weeee2 "+call.request().toString());
 
             call.enqueue(new Callback<User>() {
                 @Override
@@ -110,9 +110,7 @@ public class MainActivity extends AppCompatActivity {
                     if(response.isSuccessful()){
 
                         User user = response.body();
-                        System.out.println("From server: "+response.body().getClass().toString());
-                        textInfo.setText("From server: SUCCESS"+response.body().getClass().toString());
-                        textInfo.setVisibility(View.VISIBLE);
+                        System.out.println("From server: "+response.body().toString());
                         systemSessionManager.createUserSession(user.getEmail());
                         Intent intent = new Intent(MainActivity.this, com.example.owner.petbetter.activities.HomeActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -129,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<User> call, Throwable t) {
-                    textInfo.setText("Try again later.");
+                    textInfo.setText("Wrong username/password");
                     textInfo.setVisibility(View.VISIBLE);
                     Log.d("onFailure", t.getLocalizedMessage());
                 }
