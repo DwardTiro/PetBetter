@@ -12,7 +12,7 @@
     <android.support.v7.widget.Toolbar android:id="@+id/menu_bar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/medTurquoise"
+        android:background="@color/myrtle_green"
         android:gravity="center_vertical|start"
         app:popupTheme="@style/AppTheme.PopupOverlay"
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -31,7 +31,7 @@
                 android:text="Veterinarians"
                 android:textColor="@color/colorWhite"
                 android:adjustViewBounds="true"
-                android:background="@color/medTurquoise"
+                android:background="@color/myrtle_green"
                 android:onClick="vetButtonClicked"/>
 
             <Button
@@ -43,7 +43,7 @@
                 android:text="Pet Care"
                 android:textColor="@color/colorWhite"
                 android:adjustViewBounds="true"
-                android:background="@color/medTurquoise"
+                android:background="@color/myrtle_green"
                 android:onClick="petCareButtonClicked"/>
 
 

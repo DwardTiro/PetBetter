@@ -9,13 +9,13 @@
 
     <ImageView
         android:id="@+id/logo"
-        android:layout_width="190dp"
-        android:layout_height="190dp"
-        android:layout_marginBottom="40dp"
+        android:layout_width="220dp"
+        android:layout_height="220dp"
+        android:layout_marginBottom="20dp"
         android:layout_marginTop="50dp"
 
         android:layout_centerHorizontal="true"
-        android:src="@drawable/pet_logo"
+        android:src="@drawable/app_icon_yellow"
         android:contentDescription="@string/app_name" />
 
     <TextView
@@ -52,7 +52,7 @@
         android:layout_width="260dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="15dp"
         android:layout_below="@id/editEmail"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
@@ -70,7 +70,7 @@
         android:layout_width="140dp"
         android:layout_height="50dp"
         android:layout_gravity="center"
-        android:layout_marginBottom="34dp"
+        android:layout_marginBottom="30dp"
         android:layout_below="@+id/editPassword"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
