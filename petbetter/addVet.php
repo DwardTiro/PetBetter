@@ -2,8 +2,9 @@
 
 require 'init.php';
 
-$email = $_POST['email'];
-$password = $_POST['password'];
+$_id = $_POST['_id'];
+$user_id = $_POST['user_id'];
+$rating = $_POST['rating'];
 
 $response = array(); 
 //$sql = "SELECT * FROM users WHERE email = ? AND password = ?";
@@ -13,17 +14,21 @@ $response = array();
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
 
-	if(!(isset($_POST['email']) and isset($_POST['password']))){
+	if(!(isset($_POST['_id']) and isset($_POST['user_id']) and isset($_POST['rating']))){
 		echo 'No username or password';
 		exit(0);
 	}
 
-	if($stmt = $mysqli->prepare("SELECT * FROM users WHERE email = ? AND password = ?")){
-		$stmt->bind_param("ss", $email , $password);
+	if($stmt = $mysqli->prepare("INSERT INTO veterinarians (_id, user_id, rating) VALUES (?,?,?)")){
+		$stmt->bind_param("sss", $_id, $user_id, $rating);
 		$stmt->execute();
-		$stmt->bind_result($_id, $first_name, $last_name, $mobile_num, $phone_num, $email,  $password, $age, $user_type);
-		$stmt->store_result();
+		$stmt->close();
+		echo 'Veterinarian added';
+		
+		//$stmt->bind_result($_id, $first_name, $last_name, $mobile_num, $phone_num, $email,  $password, $age, $user_type);
+		//$stmt->store_result();
 	
+	/*
 		if($stmt->fetch()){
 			
 			$stmt->close();
@@ -43,8 +48,12 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 			$stmt->close();
 			echo 'SQL Query Error';
 		}
+		*/
 		//echo json_encode($stmt);
 		//echo json_encode(array('user'=>$response));
+	}
+	else{
+		echo 'SQL Query Error';
 	}
 }
 

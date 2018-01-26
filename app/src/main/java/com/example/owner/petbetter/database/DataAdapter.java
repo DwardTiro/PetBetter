@@ -520,7 +520,7 @@ public class DataAdapter {
         return result;
     }
 
-    public long addUser(int userId, String firstName, String lastName, String email, String password, int userType){
+        public long addUser(int userId, String firstName, String lastName, String email, String password, int userType){
         long result;
 
         ContentValues cv = new ContentValues();

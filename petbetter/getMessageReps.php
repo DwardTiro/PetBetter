@@ -2,9 +2,7 @@
 
 require 'init.php';
 
-$email = $_POST['email'];
-$password = $_POST['password'];
-
+$message_id = $_POST['message_id'];
 $response = array(); 
 //$sql = "SELECT * FROM users WHERE email = ? AND password = ?";
 //$sql = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
@@ -13,30 +11,41 @@ $response = array();
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
 
-	if(!(isset($_POST['email']) and isset($_POST['password']))){
-		echo 'No username or password';
-		exit(0);
-	}
-
-	if($stmt = $mysqli->prepare("SELECT * FROM users WHERE email = ? AND password = ?")){
-		$stmt->bind_param("ss", $email , $password);
+	if($stmt = $mysqli->prepare("SELECT mr._id AS _id, mr.user_id AS user_id, mr.message_id AS message_id, 
+                mr.rep_content AS rep_content, mr.is_sent AS is_sent, mr.date_performed AS date_performed, 
+                u.first_name AS first_name, u.last_name AS last_name FROM messagereps AS mr INNER JOIN users AS u 
+                ON mr.user_id = u._id WHERE mr.message_id = ?")){
+		$stmt->bind_param("s", $message_id);
 		$stmt->execute();
-		$stmt->bind_result($_id, $first_name, $last_name, $mobile_num, $phone_num, $email,  $password, $age, $user_type);
+		$stmt->bind_result($_id, $user_id, $message_id, $rep_content, $is_sent, $date_performed, $first_name,  $last_name);
 		$stmt->store_result();
 	
 		if($stmt->fetch()){
 			
+			do{
+				array_push($response, array('_id'=>$_id,
+				'user_id'=>$user_id,
+				'message_id'=>$message_id,
+				'rep_content'=>$rep_content,
+				'is_sent'=>$is_sent,
+				'date_performed'=>$date_performed,
+				'first_name'=>$first_name,
+				'last_name'=>$last_name));
+			}while($stmt->fetch());
+			
+			
 			$stmt->close();
-			//echo json_encode($response);
+			
+			echo json_encode(array('messagereps'=>$response));
+			/*
 			echo json_encode(array('_id'=>$_id,
+			'user_id'=>$user_id,
+			'topic_name'=>$topic_name,
+			'topic_content'=>$topic_content,
+			'date_created'=>$date_created,
 			'first_name'=>$first_name,
-			'last_name'=>$last_name,
-			'mobile_num'=>$mobile_num,
-			'phone_num'=>$phone_num,
-			'email'=>$email,
-			'password'=>$password,
-			'age'=>$age,
-			'user_type'=>$user_type));
+			'is_deleted'=>$is_deleted));
+			*/
 		}
 		else{
 			

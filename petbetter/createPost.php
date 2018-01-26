@@ -2,8 +2,13 @@
 
 require 'init.php';
 
-$email = $_POST['email'];
-$password = $_POST['password'];
+$_id = $_POST['_id'];
+$user_id = $_POST['user_id'];
+$topic_name = $_POST['topic_name'];
+$topic_content = $_POST['topic_content'];
+$topic_id = $_POST['topic_id'];
+$date_created = $_POST['date_created'];
+$is_deleted = $_POST['is_deleted'];
 
 $response = array(); 
 //$sql = "SELECT * FROM users WHERE email = ? AND password = ?";
@@ -13,17 +18,22 @@ $response = array();
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
 
-	if(!(isset($_POST['email']) and isset($_POST['password']))){
-		echo 'No username or password';
+	if(!(isset($_POST['_id']) and isset($_POST['user_id']) and isset($_POST['topic_name']) and isset($_POST['topic_content']) and isset($_POST['topic_id']) 
+		and isset($_POST['date_created']) and isset($_POST['is_deleted']))){
+		echo 'Details are lacking';
 		exit(0);
 	}
 
-	if($stmt = $mysqli->prepare("SELECT * FROM users WHERE email = ? AND password = ?")){
-		$stmt->bind_param("ss", $email , $password);
+	if($stmt = $mysqli->prepare("INSERT INTO posts (_id, user_id, topic_name, topic_content, topic_id, date_created, is_deleted) VALUES (?,?,?,?,?,?,?)")){
+		$stmt->bind_param("sssssss", $_id, $user_id, $topic_name, $topic_content, $topic_id, $date_created, $is_deleted);
 		$stmt->execute();
-		$stmt->bind_result($_id, $first_name, $last_name, $mobile_num, $phone_num, $email,  $password, $age, $user_type);
-		$stmt->store_result();
+		$stmt->close();
+		echo 'Post added';
+		
+		//$stmt->bind_result($_id, $first_name, $last_name, $mobile_num, $phone_num, $email,  $password, $age, $user_type);
+		//$stmt->store_result();
 	
+	/*
 		if($stmt->fetch()){
 			
 			$stmt->close();
@@ -43,8 +53,12 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 			$stmt->close();
 			echo 'SQL Query Error';
 		}
+		*/
 		//echo json_encode($stmt);
 		//echo json_encode(array('user'=>$response));
+	}
+	else{
+		echo 'SQL Query Error';
 	}
 }
 

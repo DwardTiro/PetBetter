@@ -2,9 +2,7 @@
 
 require 'init.php';
 
-$email = $_POST['email'];
-$password = $_POST['password'];
-
+$user_id = $_POST['user_id'];
 $response = array(); 
 //$sql = "SELECT * FROM users WHERE email = ? AND password = ?";
 //$sql = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
@@ -13,35 +11,45 @@ $response = array();
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
 
-	if(!(isset($_POST['email']) and isset($_POST['password']))){
-		echo 'No username or password';
-		exit(0);
-	}
-
-	if($stmt = $mysqli->prepare("SELECT * FROM users WHERE email = ? AND password = ?")){
-		$stmt->bind_param("ss", $email , $password);
+	if($stmt = $mysqli->prepare("SELECT n._id AS _id, n.user_id AS user_id, n.doer_id AS doer_id, n.is_read AS is_read, 
+	n.type AS type, n.date_performed as date_performed, n.source_id as source_id, u.first_name AS first_name, u.last_name AS last_name 
+	FROM notifications AS n INNER JOIN users AS u ON n.doer_id = u._id WHERE n.user_id = ?")){
+		$stmt->bind_param("s", $user_id);
 		$stmt->execute();
-		$stmt->bind_result($_id, $first_name, $last_name, $mobile_num, $phone_num, $email,  $password, $age, $user_type);
+		$stmt->bind_result($_id, $user_id, $doer_id, $is_read, $type, $date_performed, $source_id, $first_name,  $last_name);
 		$stmt->store_result();
 	
 		if($stmt->fetch()){
 			
+			do{
+				array_push($response, array('_id'=>$_id,
+				'user_id'=>$user_id,
+				'doer_id'=>$doer_id,
+				'is_read'=>$is_read,
+				'type'=>$type,
+				'date_performed'=>$date_performed,
+				'first_name'=>$first_name,
+				'last_name'=>$last_name));
+			}while($stmt->fetch());
+			
+			
 			$stmt->close();
-			//echo json_encode($response);
+			
+			echo json_encode(array('notifications'=>$response));
+			/*
 			echo json_encode(array('_id'=>$_id,
+			'user_id'=>$user_id,
+			'topic_name'=>$topic_name,
+			'topic_content'=>$topic_content,
+			'date_created'=>$date_created,
 			'first_name'=>$first_name,
-			'last_name'=>$last_name,
-			'mobile_num'=>$mobile_num,
-			'phone_num'=>$phone_num,
-			'email'=>$email,
-			'password'=>$password,
-			'age'=>$age,
-			'user_type'=>$user_type));
+			'is_deleted'=>$is_deleted));
+			*/
 		}
 		else{
 			
 			$stmt->close();
-			echo 'SQL Query Error';
+			echo 'No notifications';
 		}
 		//echo json_encode($stmt);
 		//echo json_encode(array('user'=>$response));

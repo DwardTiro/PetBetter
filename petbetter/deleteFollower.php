@@ -2,8 +2,8 @@
 
 require 'init.php';
 
-$email = $_POST['email'];
-$password = $_POST['password'];
+$topic_id = $_POST['topic_id'];
+$user_id = $_POST['user_id'];
 
 $response = array(); 
 //$sql = "SELECT * FROM users WHERE email = ? AND password = ?";
@@ -13,17 +13,21 @@ $response = array();
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
 
-	if(!(isset($_POST['email']) and isset($_POST['password']))){
-		echo 'No username or password';
+	if(!(isset($_POST['topic_id']) and isset($_POST['user_id']))){
+		echo 'Details are lacking';
 		exit(0);
 	}
 
-	if($stmt = $mysqli->prepare("SELECT * FROM users WHERE email = ? AND password = ?")){
-		$stmt->bind_param("ss", $email , $password);
+	if($stmt = $mysqli->prepare("DELETE FROM followers WHERE user_id = ? AND topic_id = ?")){
+		$stmt->bind_param("ss", $user_id, $topic_id);
 		$stmt->execute();
-		$stmt->bind_result($_id, $first_name, $last_name, $mobile_num, $phone_num, $email,  $password, $age, $user_type);
-		$stmt->store_result();
+		$stmt->close();
+		echo 'Follower removed';
+		
+		//$stmt->bind_result($_id, $first_name, $last_name, $mobile_num, $phone_num, $email,  $password, $age, $user_type);
+		//$stmt->store_result();
 	
+	/*
 		if($stmt->fetch()){
 			
 			$stmt->close();
@@ -43,8 +47,12 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 			$stmt->close();
 			echo 'SQL Query Error';
 		}
+		*/
 		//echo json_encode($stmt);
 		//echo json_encode(array('user'=>$response));
+	}
+	else{
+		echo 'SQL Query Error';
 	}
 }
 

@@ -2,9 +2,9 @@
 
 require 'init.php';
 
-$email = $_POST['email'];
-$password = $_POST['password'];
-
+$_id = $_POST['_id'];
+$user_one = $_POST['user_one'];
+$user_two = $_POST['user_two'];
 $response = array(); 
 //$sql = "SELECT * FROM users WHERE email = ? AND password = ?";
 //$sql = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
@@ -13,17 +13,21 @@ $response = array();
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
 
-	if(!(isset($_POST['email']) and isset($_POST['password']))){
-		echo 'No username or password';
+	if(!(isset($_POST['_id']) and isset($_POST['user_one']) and isset($_POST['user_two']))){
+		echo 'Details are lacking';
 		exit(0);
 	}
 
-	if($stmt = $mysqli->prepare("SELECT * FROM users WHERE email = ? AND password = ?")){
-		$stmt->bind_param("ss", $email , $password);
+	if($stmt = $mysqli->prepare("INSERT INTO messages (_id, user_one, user_two) VALUES (?,?,?)")){
+		$stmt->bind_param("sss", $_id, $user_one, $user_two);
 		$stmt->execute();
-		$stmt->bind_result($_id, $first_name, $last_name, $mobile_num, $phone_num, $email,  $password, $age, $user_type);
-		$stmt->store_result();
+		$stmt->close();
+		echo 'Message created';
+		
+		//$stmt->bind_result($_id, $first_name, $last_name, $mobile_num, $phone_num, $email,  $password, $age, $user_type);
+		//$stmt->store_result();
 	
+	/*
 		if($stmt->fetch()){
 			
 			$stmt->close();
@@ -43,8 +47,12 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 			$stmt->close();
 			echo 'SQL Query Error';
 		}
+		*/
 		//echo json_encode($stmt);
 		//echo json_encode(array('user'=>$response));
+	}
+	else{
+		echo 'SQL Query Error';
 	}
 }
 

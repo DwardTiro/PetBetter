@@ -2,8 +2,12 @@
 
 require 'init.php';
 
+$_id = $_POST['_id'];
+$first_name = $_POST['first_name'];
+$last_name = $_POST['last_name'];
+$mobile_num = $_POST['mobile_num'];
+$phone_num = $_POST['phone_num'];
 $email = $_POST['email'];
-$password = $_POST['password'];
 
 $response = array(); 
 //$sql = "SELECT * FROM users WHERE email = ? AND password = ?";
@@ -13,38 +17,21 @@ $response = array();
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
 
-	if(!(isset($_POST['email']) and isset($_POST['password']))){
-		echo 'No username or password';
+	if(!(isset($_POST['_id']) and isset($_POST['first_name']) and isset($_POST['last_name']) and isset($_POST['mobile_num']) and isset($_POST['phone_num']) and isset($_POST['email']))){
+		echo 'Details are lacking';
 		exit(0);
 	}
 
-	if($stmt = $mysqli->prepare("SELECT * FROM users WHERE email = ? AND password = ?")){
-		$stmt->bind_param("ss", $email , $password);
+	if($stmt = $mysqli->prepare("UPDATE users SET first_name = ?, last_name = ?, mobile_num = ?,  phone_num = ?, email = ? WHERE _id = ?")){
+		$stmt->bind_param("ssssss", $first_name, $last_name, $mobile_num, $phone_num, $email, $_id);
 		$stmt->execute();
-		$stmt->bind_result($_id, $first_name, $last_name, $mobile_num, $phone_num, $email,  $password, $age, $user_type);
-		$stmt->store_result();
-	
-		if($stmt->fetch()){
-			
-			$stmt->close();
-			//echo json_encode($response);
-			echo json_encode(array('_id'=>$_id,
-			'first_name'=>$first_name,
-			'last_name'=>$last_name,
-			'mobile_num'=>$mobile_num,
-			'phone_num'=>$phone_num,
-			'email'=>$email,
-			'password'=>$password,
-			'age'=>$age,
-			'user_type'=>$user_type));
-		}
-		else{
-			
-			$stmt->close();
-			echo 'SQL Query Error';
-		}
+		$stmt->close();
+		echo 'Update successful';
 		//echo json_encode($stmt);
 		//echo json_encode(array('user'=>$response));
+	}
+	else{
+		echo 'Update unsuccessful';
 	}
 }
 

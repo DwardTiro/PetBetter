@@ -2,8 +2,13 @@
 
 require 'init.php';
 
-$email = $_POST['email'];
-$password = $_POST['password'];
+$_id = $_POST['_id'];
+$user_id = $_POST['user_id'];
+$post_id = $_POST['post_id'];
+$parent_id = $_POST['parent_id'];
+$rep_content = $_POST['rep_content'];
+$date_performed = $_POST['date_performed'];
+$is_deleted = 0;
 
 $response = array(); 
 //$sql = "SELECT * FROM users WHERE email = ? AND password = ?";
@@ -13,17 +18,21 @@ $response = array();
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
 
-	if(!(isset($_POST['email']) and isset($_POST['password']))){
+	if(!(isset($_POST['_id']) and isset($_POST['user_id']) and isset($_POST['post_id']) and isset($_POST['parent_id']) and isset($_POST['rep_content']) and isset($_POST['date_performed']))){
 		echo 'No username or password';
 		exit(0);
 	}
 
-	if($stmt = $mysqli->prepare("SELECT * FROM users WHERE email = ? AND password = ?")){
-		$stmt->bind_param("ss", $email , $password);
+	if($stmt = $mysqli->prepare("INSERT INTO postreps (_id, user_id, post_id, parent_id, rep_content, date_performed, is_deleted) VALUES (?,?,?,?,?,?,?)")){
+		$stmt->bind_param("sssssss", $_id, $user_id, $post_id, $parent_id, $rep_content, $date_performed, $is_deleted);
 		$stmt->execute();
-		$stmt->bind_result($_id, $first_name, $last_name, $mobile_num, $phone_num, $email,  $password, $age, $user_type);
-		$stmt->store_result();
+		$stmt->close();
+		echo 'Post reply added';
+		
+		//$stmt->bind_result($_id, $first_name, $last_name, $mobile_num, $phone_num, $email,  $password, $age, $user_type);
+		//$stmt->store_result();
 	
+	/*
 		if($stmt->fetch()){
 			
 			$stmt->close();
@@ -43,8 +52,12 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 			$stmt->close();
 			echo 'SQL Query Error';
 		}
+		*/
 		//echo json_encode($stmt);
 		//echo json_encode(array('user'=>$response));
+	}
+	else{
+		echo 'SQL Query Error';
 	}
 }
 

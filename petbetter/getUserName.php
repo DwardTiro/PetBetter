@@ -3,7 +3,6 @@
 require 'init.php';
 
 $email = $_POST['email'];
-$password = $_POST['password'];
 
 $response = array(); 
 //$sql = "SELECT * FROM users WHERE email = ? AND password = ?";
@@ -13,30 +12,23 @@ $response = array();
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
 
-	if(!(isset($_POST['email']) and isset($_POST['password']))){
+	if(!(isset($_POST['email']))){
 		echo 'No username or password';
 		exit(0);
 	}
 
-	if($stmt = $mysqli->prepare("SELECT * FROM users WHERE email = ? AND password = ?")){
-		$stmt->bind_param("ss", $email , $password);
+	if($stmt = $mysqli->prepare("SELECT first_name, last_name FROM users WHERE email = ?")){
+		$stmt->bind_param("s", $email);
 		$stmt->execute();
-		$stmt->bind_result($_id, $first_name, $last_name, $mobile_num, $phone_num, $email,  $password, $age, $user_type);
+		$stmt->bind_result($first_name, $last_name);
 		$stmt->store_result();
 	
 		if($stmt->fetch()){
 			
 			$stmt->close();
 			//echo json_encode($response);
-			echo json_encode(array('_id'=>$_id,
-			'first_name'=>$first_name,
-			'last_name'=>$last_name,
-			'mobile_num'=>$mobile_num,
-			'phone_num'=>$phone_num,
-			'email'=>$email,
-			'password'=>$password,
-			'age'=>$age,
-			'user_type'=>$user_type));
+			echo json_encode(array('first_name'=>$first_name,
+			'last_name'=>$last_name));
 		}
 		else{
 			

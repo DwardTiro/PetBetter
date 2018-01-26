@@ -14,7 +14,7 @@
   }
   
   if($con){
-	  echo "Connection Successful.";
+	  //echo "Connection Successful.";
   }
   else{
 	  echo "Connection Failed.";

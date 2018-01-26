@@ -2,8 +2,11 @@
 
 require 'init.php';
 
-$email = $_POST['email'];
-$password = $_POST['password'];
+$_id = $_POST['_id'];
+$faci_name = $_POST['faci_name'];
+$location = $_POST['location'];
+$vet_id = $_POST['vet_id'];
+$rating = $_POST['rating'];
 
 $response = array(); 
 //$sql = "SELECT * FROM users WHERE email = ? AND password = ?";
@@ -13,17 +16,21 @@ $response = array();
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
 
-	if(!(isset($_POST['email']) and isset($_POST['password']))){
-		echo 'No username or password';
+	if(!(isset($_POST['_id']) and isset($_POST['faci_name']) and isset($_POST['location']) and isset($_POST['vet_id']) and isset($_POST['rating']))){
+		echo 'Details are lacking';
 		exit(0);
 	}
 
-	if($stmt = $mysqli->prepare("SELECT * FROM users WHERE email = ? AND password = ?")){
-		$stmt->bind_param("ss", $email , $password);
+	if($stmt = $mysqli->prepare("INSERT INTO facilities (_id, faci_name, location, vet_id, rating) VALUES (?,?,?,?,?)")){
+		$stmt->bind_param("sssss", $_id, $faci_name, $location, $vet_id, $rating);
 		$stmt->execute();
-		$stmt->bind_result($_id, $first_name, $last_name, $mobile_num, $phone_num, $email,  $password, $age, $user_type);
-		$stmt->store_result();
+		$stmt->close();
+		echo 'Bookmark converted to facility';
+		
+		//$stmt->bind_result($_id, $first_name, $last_name, $mobile_num, $phone_num, $email,  $password, $age, $user_type);
+		//$stmt->store_result();
 	
+	/*
 		if($stmt->fetch()){
 			
 			$stmt->close();
@@ -43,8 +50,12 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 			$stmt->close();
 			echo 'SQL Query Error';
 		}
+		*/
 		//echo json_encode($stmt);
 		//echo json_encode(array('user'=>$response));
+	}
+	else{
+		echo 'SQL Query Error';
 	}
 }
 

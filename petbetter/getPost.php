@@ -2,8 +2,7 @@
 
 require 'init.php';
 
-$email = $_POST['email'];
-$password = $_POST['password'];
+$_id = $_POST['_id'];
 
 $response = array(); 
 //$sql = "SELECT * FROM users WHERE email = ? AND password = ?";
@@ -13,15 +12,15 @@ $response = array();
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
 
-	if(!(isset($_POST['email']) and isset($_POST['password']))){
+	if(!(isset($_POST['_id']))){
 		echo 'No username or password';
 		exit(0);
 	}
 
-	if($stmt = $mysqli->prepare("SELECT * FROM users WHERE email = ? AND password = ?")){
-		$stmt->bind_param("ss", $email , $password);
+	if($stmt = $mysqli->prepare("SELECT * FROM posts WHERE _id = ? AND is_deleted != 1")){
+		$stmt->bind_param("s", $_id);
 		$stmt->execute();
-		$stmt->bind_result($_id, $first_name, $last_name, $mobile_num, $phone_num, $email,  $password, $age, $user_type);
+		$stmt->bind_result($_id, $user_id, $topic_name, $topic_content, $topic_id, $date_created, $is_deleted);
 		$stmt->store_result();
 	
 		if($stmt->fetch()){
@@ -29,14 +28,12 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 			$stmt->close();
 			//echo json_encode($response);
 			echo json_encode(array('_id'=>$_id,
-			'first_name'=>$first_name,
-			'last_name'=>$last_name,
-			'mobile_num'=>$mobile_num,
-			'phone_num'=>$phone_num,
-			'email'=>$email,
-			'password'=>$password,
-			'age'=>$age,
-			'user_type'=>$user_type));
+			'user_id'=>$user_id,
+			'topic_name'=>$topic_name,
+			'topic_content'=>$topic_content,
+			'topic_id'=>$topic_id,
+			'date_created'=>$date_created,
+			'is_deleted'=>$is_deleted));
 		}
 		else{
 			
