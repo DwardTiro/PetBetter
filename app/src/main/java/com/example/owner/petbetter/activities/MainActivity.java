@@ -20,6 +20,8 @@ import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.TypefaceUtil;
 import com.example.owner.petbetter.activities.SignUpActivity;
 import com.example.owner.petbetter.classes.User;
+import com.example.owner.petbetter.classes.Veterinarian;
+import com.example.owner.petbetter.classes.VeterinarianList;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.example.owner.petbetter.activities.HomeActivity;
@@ -28,6 +30,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -96,28 +99,36 @@ public class MainActivity extends AppCompatActivity {
 
         View focusView = null;
 
-        System.out.println("weeee");
 
         if (checkEmailValidity(email)&& password.trim().length() > 0) {
 
             Call<User> call = service.checkLogin(email, password);
-            System.out.println("weeee2 "+call.request().toString());
 
             call.enqueue(new Callback<User>() {
                 @Override
                 public void onResponse(Call<User> call, Response<User> response) {
-                    System.out.println("Response: "+response.code());
+                    System.out.println("fuck this weird shit");
                     if(response.isSuccessful()){
 
+
+
+                        ArrayList<Veterinarian> vetList = getVeterinarians();
+                        System.out.println("VET LIST HERE: "+vetList.size());
+                        syncVetChanges(vetList);
+                        System.out.println("vet changes synced");
+                        //watch youtube tutorial first before touching this
+
                         User user = response.body();
-                        System.out.println("From server: "+response.body().toString());
+                        System.out.println("From server wew: "+response.body().toString());
                         systemSessionManager.createUserSession(user.getEmail());
                         Intent intent = new Intent(MainActivity.this, com.example.owner.petbetter.activities.HomeActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
 
+
                         finish();
+
                     }
                     else{
                         textInfo.setText("Invalid Email or Password");
@@ -177,6 +188,59 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void syncVetChanges(final ArrayList<Veterinarian> vets){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        System.out.println("WE HERE BOOIII");
+        final Call<ArrayList<Veterinarian>> call = service.getVeterinarians();
+        System.out.println("WAT HAPPEN");
+        call.enqueue(new Callback<ArrayList<Veterinarian>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Veterinarian>> call, Response<ArrayList<Veterinarian>> response) {
+                if(response.isSuccessful()){
+                    ArrayList<Veterinarian> vetList = response.body();
+                    if(!vets.equals(vetList)){
+                        final ArrayList<Veterinarian> unsyncedVets = getUnsyncedVets();
+                        System.out.println("UNSYNCED VETS: "+unsyncedVets.size());
+                        if(!unsyncedVets.isEmpty()){
+                            Call<Void> call2 = service2.addVets(unsyncedVets);
+                            System.out.println("WE HERE BOI? "+call2.toString());
+                            call2.enqueue(new Callback<Void>() {
+                                @Override
+                                public void onResponse(Call<Void> call, Response<Void> response) {
+                                    if(response.isSuccessful()){
+                                        System.out.println("VETS ADDED YEY");
+                                        dataSynced(1);
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<Void> call, Throwable t) {
+                                    Log.d("onFailure", t.getLocalizedMessage());
+                                }
+                            });
+                            //make addVet.php able to receive arraylists
+                        }
+                        if(vets.size()<vetList.size()){
+                            int n = vets.size();
+                            while(n<vetList.size()){
+                                petBetterDb.addVet(vetList.get(n).getId(), (int) vetList.get(n).getUserId(), (int) vetList.get(n).getRating());
+                                n+=1;
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Veterinarian>> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+
+    }
+
     private boolean checkLogin(String email, String password) {
 
         try {
@@ -191,6 +255,50 @@ public class MainActivity extends AppCompatActivity {
 
         return result;
     }
+
+    private ArrayList<Veterinarian> getVeterinarians(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Veterinarian> result = petBetterDb.getVeterinarians();
+        System.out.println("The number of veterinarians is: "+result.size());
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<Veterinarian> getUnsyncedVets(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Veterinarian> result = petBetterDb.getUnsyncedVets();
+        System.out.println("The number of veterinarians is: "+result.size());
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private void dataSynced(int n){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        petBetterDb.dataSynced(n);
+        petBetterDb.closeDatabase();
+
+    }
+
     public void signUp(View view){
 
         Intent intent = new Intent(this, SignUpActivity.class);

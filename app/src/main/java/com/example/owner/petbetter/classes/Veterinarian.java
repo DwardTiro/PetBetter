@@ -1,12 +1,20 @@
 package com.example.owner.petbetter.classes;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by owner on 28/7/2017.
  */
 
 public class Veterinarian extends User {
+
+    @SerializedName("specialty")
     String specialty;
+
+    @SerializedName("_id")
     int id;
+
+    @SerializedName("rating")
     float rating;
 
     public Veterinarian(int id, long userId, String lastName, String firstName, String mobileNumber, String phoneNumber,

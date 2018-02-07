@@ -2,33 +2,47 @@
 
 require 'init.php';
 
-$email = $_POST['email'];
-$password = $_POST['password'];
+//$vetlist = $_POST['vetlist'];;
 
-$response = array(); 
+$vetlist = json_decode(file_get_contents('php://input'),true);
 //$sql = "SELECT * FROM users WHERE email = ? AND password = ?";
 //$sql = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
 
 //$result = mysqli_query($con, $sql);
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
-
-	if(!(isset($_POST['email']) and isset($_POST['password']))){
-		echo 'No username or password';
-		exit(0);
-	}
-
-	if($stmt = $mysqli->prepare("SELECT * FROM users WHERE email = ? AND password = ?")){
-		$stmt->bind_param("ss", $email , $password);
-		$stmt->execute();
-		$stmt->bind_result($user_id, $first_name, $last_name, $mobile_num, $phone_num, $email,  $password, $age, $user_type);
-		$stmt->store_result();
 	
+	$n = count($vetlist);
+	//echo $n;
+	$i = 0;
+	//echo $vetlist[$i]['_id'];
+	
+	while($i<$n){
+		if($stmt = $mysqli->prepare("INSERT INTO veterinarians (_id, user_id, rating) VALUES (?,?,?)")){
+			$stmt->bind_param("sss", $vetlist[$i]['_id'], $vetlist[$i]['user_id'], $vetlist[$i]['rating']);
+			$stmt->execute();
+			$stmt->close();
+			$i = $i + 1;
+		}
+		else{
+			echo 'Failed to add to db';
+			break;
+		}
+		
+	}
+	
+		
+		//echo json_encode(array('_id'=>$vetlist['_id']));
+		
+		//$stmt->bind_result($_id, $first_name, $last_name, $mobile_num, $phone_num, $email,  $password, $age, $user_type);
+		//$stmt->store_result();
+	
+	/*
 		if($stmt->fetch()){
 			
 			$stmt->close();
 			//echo json_encode($response);
-			echo json_encode(array('user_id'=>$user_id,
+			echo json_encode(array('_id'=>$_id,
 			'first_name'=>$first_name,
 			'last_name'=>$last_name,
 			'mobile_num'=>$mobile_num,
@@ -43,9 +57,10 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 			$stmt->close();
 			echo 'SQL Query Error';
 		}
+		*/
 		//echo json_encode($stmt);
 		//echo json_encode(array('user'=>$response));
-	}
+	
 }
 
 /*

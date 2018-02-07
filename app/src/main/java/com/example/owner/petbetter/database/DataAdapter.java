@@ -9,7 +9,10 @@ import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+import android.view.View;
 
+import com.example.owner.petbetter.HerokuService;
+import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.classes.Facility;
 import com.example.owner.petbetter.classes.Follower;
 import com.example.owner.petbetter.classes.Marker;
@@ -23,9 +26,14 @@ import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class DataAdapter {
@@ -482,6 +490,71 @@ public class DataAdapter {
         return results;
     }
 
+    public void setClinics(ArrayList<Facility> clinics){
+
+        int id = 1;
+        ArrayList<Facility> clinicList = getClinics();
+        ContentValues cv = new ContentValues();
+        while(id <= clinicList.size()){
+            cv.put("faci_name", clinics.get(id-1).getFaciName());
+            cv.put("location", clinics.get(id-1).getLocation());
+            cv.put("hours_open", clinics.get(id-1).getHoursOpen());
+            cv.put("hours_close", clinics.get(id-1).getHoursClose());
+            cv.put("contact_info", clinics.get(id-1).getContactInfo());
+            cv.put("vet_id", clinics.get(id-1).getVetId());
+            cv.put("rating", clinics.get(id-1).getRating());
+
+            String[] whereArgs = new String[]{String.valueOf(id)};
+            petBetterDb.update(FACI_TABLE,cv,"_id=?", whereArgs);
+            id+=1;
+        }
+        //continue here
+
+
+        petBetterDb.close();
+    }
+
+    public ArrayList<Veterinarian> getUnsyncedVets(){
+        ArrayList<Veterinarian> results = new ArrayList<>();
+        int userId;
+        User user;
+
+        String sql = "SELECT * FROM "+VET_TABLE+" WHERE is_synced = 0";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            userId = c.getInt(c.getColumnIndexOrThrow("user_id"));
+            user = getUserWithId(userId);
+            Veterinarian vet = new Veterinarian(c.getInt(c.getColumnIndexOrThrow("_id")),
+                    user.getUserId(),
+                    user.getFirstName(),
+                    user.getLastName(),
+                    user.getMobileNumber(),
+                    user.getPhoneNumber(),
+                    user.getEmail(),
+                    user.getPassword(),
+                    user.getAge(),
+                    user.getUserType(),
+                    c.getString(c.getColumnIndexOrThrow("specialty")),
+                    c.getFloat(c.getColumnIndexOrThrow("rating")));
+            results.add(vet);
+        }
+
+        c.close();
+        return results;
+    }
+
+    public void dataSynced(int n){
+        ContentValues cv = new ContentValues();
+        //cv.put("specialty","Canine Behavior");
+        cv.put("is_synced", 1);
+        String[] whereArgs = new String[]{String.valueOf(0)};
+        if(n==1){
+            petBetterDb.update(VET_TABLE,cv,"is_synced=?", whereArgs);
+        }
+        petBetterDb.close();
+    }
+
     public ArrayList<Facility> getClinics(){
         ArrayList<Facility> results = new ArrayList<>();
         String temp;
@@ -520,7 +593,7 @@ public class DataAdapter {
         return result;
     }
 
-        public long addUser(int userId, String firstName, String lastName, String email, String password, int userType){
+    public long addUser(int userId, String firstName, String lastName, String email, String password, int userType){
         long result;
 
         ContentValues cv = new ContentValues();

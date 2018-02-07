@@ -13,7 +13,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
+import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.activities.VetProfileActivity;
 import com.example.owner.petbetter.classes.Facility;
 import com.example.owner.petbetter.classes.User;
@@ -53,6 +55,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private NavigationView navigationView;
 
     private ArrayList<Veterinarian> vetList;
+    HerokuService service;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +92,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         HashMap<String, String> userIn = systemSessionManager.getUserDetails();
 
         initializeDatabase();
+        service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        //instance
 
         String email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
         textNavEmail = (TextView) headerView.findViewById(R.id.textNavEmail);

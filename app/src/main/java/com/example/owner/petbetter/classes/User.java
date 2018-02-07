@@ -10,7 +10,7 @@ import com.google.gson.annotations.SerializedName;
 public class User {
 
 
-    @SerializedName("_id")
+    @SerializedName("user_id")
     private long userId;
 
     @SerializedName("last_name")

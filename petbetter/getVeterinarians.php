@@ -12,7 +12,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 
 	if($stmt = $mysqli->prepare("SELECT v._id AS _id, v.user_id, u.first_name AS first_name, u.last_name AS last_name, 
 	u.mobile_num AS mobile_num, u.phone_num AS phone_num, u.email AS email, u.password AS password, u.age AS age, u.user_type AS user_type, 
-	v.specialty AS specialty, v.rating AS rating FROM veterinarians AS v INNER JOIN users u ON v.user_id = u._id")){
+	v.specialty AS specialty, v.rating AS rating FROM veterinarians AS v INNER JOIN users u ON v.user_id = u.user_id")){
 		
 		$stmt->execute();
 		$stmt->bind_result($_id, $user_id, $first_name, $last_name, $mobile_num, $phone_num, $email, $password, $age, $user_type, $specialty, $rating);
@@ -38,7 +38,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 			
 			$stmt->close();
 			
-			echo json_encode(array('veterinarians'=>$response));
+			echo json_encode($response);
 			/*
 			echo json_encode(array('_id'=>$_id,
 			'user_id'=>$user_id,
