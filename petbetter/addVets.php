@@ -18,8 +18,8 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 	//echo $vetlist[$i]['_id'];
 	
 	while($i<$n){
-		if($stmt = $mysqli->prepare("INSERT INTO veterinarians (_id, user_id, rating) VALUES (?,?,?)")){
-			$stmt->bind_param("sss", $vetlist[$i]['_id'], $vetlist[$i]['user_id'], $vetlist[$i]['rating']);
+		if($stmt = $mysqli->prepare("INSERT INTO veterinarians (user_id, specialty, rating) VALUES (?,?,?)")){
+			$stmt->bind_param("sss", $vetlist[$i]['user_id'], $vetlist[$i]['specialty'], $vetlist[$i]['rating']);
 			$stmt->execute();
 			$stmt->close();
 			$i = $i + 1;
