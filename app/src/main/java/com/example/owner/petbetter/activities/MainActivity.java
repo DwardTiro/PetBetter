@@ -21,16 +21,22 @@ import com.example.owner.petbetter.TypefaceUtil;
 import com.example.owner.petbetter.activities.SignUpActivity;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
-import com.example.owner.petbetter.classes.VeterinarianList;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.example.owner.petbetter.activities.HomeActivity;
+import com.google.android.gms.gcm.Task;
 
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.FutureTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -107,27 +113,48 @@ public class MainActivity extends AppCompatActivity {
             call.enqueue(new Callback<User>() {
                 @Override
                 public void onResponse(Call<User> call, Response<User> response) {
-                    System.out.println("fuck this weird shit");
                     if(response.isSuccessful()){
+                        ExecutorService executorService = Executors.newSingleThreadExecutor();
+                        FutureTask<Boolean> futureTask = (FutureTask<Boolean>) executorService.submit(new Callable<Boolean>(){
+                            @Override
+                            public Boolean call() throws Exception{
+                                boolean result = true;
+                                ArrayList<Veterinarian> vetList = getVeterinarians();
+                                //Facility
+                                //Follower
+                                //Marker
+                                //Message
+                                //MessageRep
+                                //Notifications
+                                //Pet
+                                //PetOwner
+                                //Post
+                                //PostRep
+                                //Services
+                                //Topic
+
+                                syncVetChanges(vetList);
+                                return result;
+                            }
+                        });
+                        executorService.shutdown();
 
 
-
-                        ArrayList<Veterinarian> vetList = getVeterinarians();
-                        System.out.println("VET LIST HERE: "+vetList.size());
-                        syncVetChanges(vetList);
-                        System.out.println("vet changes synced");
-                        //watch youtube tutorial first before touching this
-
-                        User user = response.body();
-                        System.out.println("From server wew: "+response.body().toString());
-                        systemSessionManager.createUserSession(user.getEmail());
-                        Intent intent = new Intent(MainActivity.this, com.example.owner.petbetter.activities.HomeActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-
-
-                        finish();
+                        try {
+                            long futureTime = System.currentTimeMillis() + 10000;
+                            while(System.currentTimeMillis() < futureTime){
+                                User user = response.body();
+                                System.out.println("From server wew: " + response.body().toString());
+                                systemSessionManager.createUserSession(user.getEmail());
+                                Intent intent = new Intent(MainActivity.this, com.example.owner.petbetter.activities.HomeActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                                finish();
+                            }
+                        }catch(Exception e){
+                            e.printStackTrace();
+                        }
 
                     }
                     else{
@@ -193,52 +220,41 @@ public class MainActivity extends AppCompatActivity {
         final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         System.out.println("WE HERE BOOIII");
-        final Call<ArrayList<Veterinarian>> call = service.getVeterinarians();
-        System.out.println("WAT HAPPEN");
-        call.enqueue(new Callback<ArrayList<Veterinarian>>() {
-            @Override
-            public void onResponse(Call<ArrayList<Veterinarian>> call, Response<ArrayList<Veterinarian>> response) {
-                if(response.isSuccessful()){
-                    ArrayList<Veterinarian> vetList = response.body();
-                    if(!vets.equals(vetList)){
-                        final ArrayList<Veterinarian> unsyncedVets = getUnsyncedVets();
-                        System.out.println("UNSYNCED VETS: "+unsyncedVets.size());
-                        if(!unsyncedVets.isEmpty()){
-                            Call<Void> call2 = service2.addVets(unsyncedVets);
-                            System.out.println("WE HERE BOI? "+call2.toString());
-                            call2.enqueue(new Callback<Void>() {
-                                @Override
-                                public void onResponse(Call<Void> call, Response<Void> response) {
-                                    if(response.isSuccessful()){
-                                        System.out.println("VETS ADDED YEY");
-                                        dataSynced(1);
-                                    }
-                                }
+        ArrayList<Veterinarian> unsyncedVets = getUnsyncedVets();
 
-                                @Override
-                                public void onFailure(Call<Void> call, Throwable t) {
-                                    Log.d("onFailure", t.getLocalizedMessage());
-                                }
-                            });
-                            //make addVet.php able to receive arraylists
-                        }
-                        if(vets.size()<vetList.size()){
-                            int n = vets.size();
-                            while(n<vetList.size()){
-                                petBetterDb.addVet(vetList.get(n).getId(), (int) vetList.get(n).getUserId(), (int) vetList.get(n).getRating());
-                                n+=1;
+        final Call<Void> call = service.addVets(unsyncedVets);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    System.out.println("VETS ADDED YEY");
+                    dataSynced(1);
+
+                    final Call<ArrayList<Veterinarian>> call2 = service2.getVeterinarians();
+                    call2.enqueue(new Callback<ArrayList<Veterinarian>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<Veterinarian>> call, Response<ArrayList<Veterinarian>> response) {
+                            if(response.isSuccessful()){
+                                setVeterinarians(response.body());
+
                             }
                         }
-                    }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<Veterinarian>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+
+                        }
+                    });
+
                 }
             }
 
             @Override
-            public void onFailure(Call<ArrayList<Veterinarian>> call, Throwable t) {
+            public void onFailure(Call<Void> call, Throwable t) {
                 Log.d("onFailure", t.getLocalizedMessage());
             }
         });
-
     }
 
     private boolean checkLogin(String email, String password) {
@@ -286,6 +302,20 @@ public class MainActivity extends AppCompatActivity {
         return result;
     }
 
+    private long addVet(int vetId, int userId, int rating){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        long result = petBetterDb.addVet(vetId, userId, rating);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
     private void dataSynced(int n){
 
         try {
@@ -297,6 +327,18 @@ public class MainActivity extends AppCompatActivity {
         petBetterDb.dataSynced(n);
         petBetterDb.closeDatabase();
 
+    }
+
+    public long setVeterinarians(ArrayList<Veterinarian> vetList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setVeterinarians(vetList);
+        petBetterDb.closeDatabase();
+
+        return result;
     }
 
     public void signUp(View view){

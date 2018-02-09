@@ -13,7 +13,6 @@ import com.example.owner.petbetter.classes.PostRep;
 import com.example.owner.petbetter.classes.Topic;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
-import com.example.owner.petbetter.classes.VeterinarianList;
 
 import java.util.ArrayList;
 

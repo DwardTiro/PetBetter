@@ -1429,8 +1429,27 @@ public class DataAdapter {
         cv.put("user_id", userId);
         cv.put("rating", rating);
 
-
         result = petBetterDb.insert(VET_TABLE, null, cv);
+
+        return result;
+    }
+
+    public long setVeterinarians(ArrayList<Veterinarian> vetList){
+        long result = 0;
+
+        petBetterDb.delete(VET_TABLE, null, null);
+        System.out.println("REAL NUM OF VETS "+getVeterinarians().size());
+
+
+        for(Veterinarian vet:vetList){
+            ContentValues cv = new ContentValues();
+            cv.put("_id", vet.getId());
+            cv.put("user_id", vet.getUserId());
+            cv.put("rating", vet.getRating());
+            result = petBetterDb.insert(VET_TABLE, null, cv);
+            System.out.println("COUNT MEE");
+        }
+        System.out.println("2ND REAL NUM OF VETS "+getVeterinarians().size());
 
         return result;
     }

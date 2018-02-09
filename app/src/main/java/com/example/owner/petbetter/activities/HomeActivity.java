@@ -94,6 +94,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         initializeDatabase();
         service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         //instance
+        System.out.println("PLS HOW MANY "+getVeterinarians().size());
 
         String email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
         textNavEmail = (TextView) headerView.findViewById(R.id.textNavEmail);
@@ -101,8 +102,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         user = getUser(email);
         hideItems();
-
-
 
         //userName = user.getName();
 
