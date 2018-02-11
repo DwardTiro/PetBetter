@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_White"
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/toolbar_signup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="60dp"
+
+        android:text="Sign Up for PetBetter"
+        android:textSize="28dp"
+        android:textStyle="bold"
+        android:typeface="sans" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="165dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="40dp"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:text="FIRST NAME"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="165dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="40dp"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:text="LAST NAME"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp">
+
+        <EditText
+            android:id="@+id/signUpTextFirstName"
+            android:layout_width="165dp"
+            android:layout_height="42dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginTop="5dp"
+            android:background="#FFFFFF"
+
+            android:inputType="text"
+            android:paddingBottom="5dp"
+            android:paddingEnd="10dp"
+            android:paddingStart="10dp"
+            android:paddingTop="5dp"
+            android:textSize="16dp" />
+
+        <EditText
+            android:id="@+id/signUpTextLastName"
+            android:layout_width="165dp"
+            android:layout_height="42dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="0dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:background="#FFFFFF"
+
+            android:inputType="text"
+            android:paddingBottom="5dp"
+            android:paddingEnd="10dp"
+            android:paddingStart="10dp"
+            android:paddingTop="5dp"
+            android:textSize="16dp" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:paddingEnd="5dp"
+        android:paddingStart="5dp"
+        android:text="EMAIL ADDRESS"
+        android:textSize="14sp" />
+
+    <EditText
+        android:id="@+id/signUpTextEmailAddress"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:background="#FFFFFF"
+
+        android:inputType="textEmailAddress"
+        android:paddingBottom="5dp"
+        android:paddingEnd="10dp"
+        android:paddingLeft="10dp"
+        android:paddingStart="10dp"
+        android:paddingTop="5dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:paddingEnd="5dp"
+        android:paddingStart="5dp"
+        android:text="PASSWORD"
+        android:textSize="14sp" />
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/textInputLayoutSignUp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        app:passwordToggleDrawable="@drawable/toggle_password"
+        app:passwordToggleEnabled="true"
+
+        >
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/textInputEditTextSignUp"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:background="#FFFFFF"
+            android:imeOptions="actionDone"
+            android:inputType="textPassword"
+            android:paddingEnd="10dp"
+            android:paddingStart="10dp" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <Button
+        android:id="@+id/signUpNextButton"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="18dp"
+        android:background="#FFFFFF"
+        android:onClick="nextClicked"
+
+        android:text="Sign up"
+        android:textAllCaps="false"
+        android:textColor="@color/amazonite"
+        android:textSize="20dp" />
+</LinearLayout>
