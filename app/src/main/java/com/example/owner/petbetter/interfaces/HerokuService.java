@@ -96,7 +96,6 @@ public interface HerokuService {
     @POST("getVeterinarians.php")
     Call<ArrayList<Veterinarian>> getVeterinarians();
 
-    @FormUrlEncoded
     @POST("getClinics.php")
     Call<ArrayList<Facility>> getClinics();
 
@@ -320,6 +319,9 @@ public interface HerokuService {
 
     @POST("addVets.php")
     Call<Void> addVets(@Body ArrayList<Veterinarian> vetList);
+
+    @POST("addFacilities.php")
+    Call<Void> addFacilities(@Body ArrayList<Facility> faciList);
 
     @FormUrlEncoded
     @POST("getMarker.php")

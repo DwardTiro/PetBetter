@@ -1,15 +1,37 @@
 package com.example.owner.petbetter.classes;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by owner on 28/7/2017.
  */
 
 public class Pet {
 
-    private String name, classification, breed;
-    float height, weight;
+    @SerializedName("_id")
+    long id;
 
-    public Pet(String name, String classification, String breed, float height, float weight) {
+    @SerializedName("user_id")
+    long userId;
+
+    @SerializedName("name")
+    String name;
+
+    @SerializedName("classification")
+    String classification;
+
+    @SerializedName("breed")
+    String breed;
+
+    @SerializedName("height")
+    float height;
+
+    @SerializedName("weight")
+    float weight;
+
+    public Pet(long id, long userId, String name, String classification, String breed, float height, float weight) {
+        this.id = id;
+        this.userId = userId;
         this.name = name;
         this.classification = classification;
         this.breed = breed;

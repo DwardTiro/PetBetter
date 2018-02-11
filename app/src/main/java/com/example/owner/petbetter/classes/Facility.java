@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class Facility {
 
-    @SerializedName("_id")
+    @SerializedName("faci_id")
     private long id;
 
     @SerializedName("vet_id")

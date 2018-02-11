@@ -19,6 +19,17 @@ import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.TypefaceUtil;
 import com.example.owner.petbetter.activities.SignUpActivity;
+import com.example.owner.petbetter.classes.Facility;
+import com.example.owner.petbetter.classes.Follower;
+import com.example.owner.petbetter.classes.Marker;
+import com.example.owner.petbetter.classes.Message;
+import com.example.owner.petbetter.classes.MessageRep;
+import com.example.owner.petbetter.classes.Notifications;
+import com.example.owner.petbetter.classes.Pet;
+import com.example.owner.petbetter.classes.Post;
+import com.example.owner.petbetter.classes.PostRep;
+import com.example.owner.petbetter.classes.Services;
+import com.example.owner.petbetter.classes.Topic;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
 import com.example.owner.petbetter.database.DataAdapter;
@@ -115,25 +126,32 @@ public class MainActivity extends AppCompatActivity {
                 public void onResponse(Call<User> call, Response<User> response) {
                     if(response.isSuccessful()){
                         ExecutorService executorService = Executors.newSingleThreadExecutor();
+                        final User user = response.body();
                         FutureTask<Boolean> futureTask = (FutureTask<Boolean>) executorService.submit(new Callable<Boolean>(){
                             @Override
                             public Boolean call() throws Exception{
                                 boolean result = true;
-                                ArrayList<Veterinarian> vetList = getVeterinarians();
-                                //Facility
-                                //Follower
-                                //Marker
-                                //Message
-                                //MessageRep
-                                //Notifications
-                                //Pet
-                                //PetOwner
-                                //Post
-                                //PostRep
-                                //Services
-                                //Topic
+                                User thisUser = user;
 
+                                ArrayList<Veterinarian> vetList = getVeterinarians();
                                 syncVetChanges(vetList);
+
+                                ArrayList<Facility> faciList = getClinics();
+                                syncClinicChanges(faciList);
+                                /*
+                                ArrayList<Follower> followerList = getFollowers();
+                                ArrayList<Marker> markerList = loadMarkers(thisUser.getUserId());
+                                ArrayList<Message> messageList = getMessages(thisUser.getUserId());
+                                ArrayList<MessageRep> messagerepList = getMessageRepsFromUser(thisUser.getUserId());
+                                ArrayList<Notifications> notifList = getNotifications(thisUser.getUserId());
+                                ArrayList<Pet> petList = getPets(thisUser.getUserId());
+                                ArrayList<Post> postList = getPosts();
+                                ArrayList<PostRep> postrepList = getAllPostReps();
+                                ArrayList<Services> serviceList = getServices();
+                                ArrayList<Topic> topicList = getTopics();
+
+                                */
+
                                 return result;
                             }
                         });
@@ -143,7 +161,6 @@ public class MainActivity extends AppCompatActivity {
                         try {
                             long futureTime = System.currentTimeMillis() + 10000;
                             while(System.currentTimeMillis() < futureTime){
-                                User user = response.body();
                                 System.out.println("From server wew: " + response.body().toString());
                                 systemSessionManager.createUserSession(user.getEmail());
                                 Intent intent = new Intent(MainActivity.this, com.example.owner.petbetter.activities.HomeActivity.class);
@@ -257,6 +274,48 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public void syncClinicChanges(final ArrayList<Facility> faciList){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        System.out.println("WE HERE BOOIII");
+        ArrayList<Facility> unsyncedFacilities = getUnsyncedFacilities();
+
+        final Call<Void> call = service.addFacilities(unsyncedFacilities);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    System.out.println("FACILITIES ADDED YEY");
+                    dataSynced(2);
+
+                    final Call<ArrayList<Facility>> call2 = service2.getClinics();
+                    call2.enqueue(new Callback<ArrayList<Facility>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<Facility>> call, Response<ArrayList<Facility>> response) {
+                            if(response.isSuccessful()){
+                                System.out.println("Number of clinics from server: "+response.body().size());
+                                setFacilities(response.body());
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<Facility>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
     private boolean checkLogin(String email, String password) {
 
         try {
@@ -272,6 +331,20 @@ public class MainActivity extends AppCompatActivity {
         return result;
     }
 
+    private ArrayList<Facility> getClinics(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Facility> result = petBetterDb.getClinics();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
     private ArrayList<Veterinarian> getVeterinarians(){
 
         try {
@@ -281,7 +354,157 @@ public class MainActivity extends AppCompatActivity {
         }
 
         ArrayList<Veterinarian> result = petBetterDb.getVeterinarians();
-        System.out.println("The number of veterinarians is: "+result.size());
+        System.out.println("boi 1");
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<Post> getPosts(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Post> result = petBetterDb.getPosts();
+        System.out.println("boi 2");
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<PostRep> getAllPostReps(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<PostRep> result = petBetterDb.getAllPostReps();
+        System.out.println("boi 3");
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<Services> getServices(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Services> result = petBetterDb.getServices();
+        System.out.println("boi 4");
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<Topic> getTopics(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Topic> result = petBetterDb.getTopics();
+        System.out.println("boi 5");
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<Follower> getFollowers(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Follower> result = petBetterDb.getFollowers();
+        System.out.println("boi 6");
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<Message> getMessages(long userId){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Message> result = petBetterDb.getMessages(userId);
+        System.out.println("boi 7");
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<MessageRep> getMessageRepsFromUser(long userId){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<MessageRep> result = petBetterDb.getMessageRepsFromUser(userId);
+        System.out.println("boi 8");
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<Notifications> getNotifications(long userId){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Notifications> result = petBetterDb.getNotifications(userId);
+        System.out.println("boi 9");
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<Marker> loadMarkers(long userId){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Marker> result = petBetterDb.loadMarkers(userId);
+        System.out.println("boi 10");
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<Pet> getPets(long userId){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Pet> result = petBetterDb.getPets(userId);
+        System.out.println("boi 11");
         petBetterDb.closeDatabase();
 
         return result;
@@ -297,6 +520,20 @@ public class MainActivity extends AppCompatActivity {
 
         ArrayList<Veterinarian> result = petBetterDb.getUnsyncedVets();
         System.out.println("The number of veterinarians is: "+result.size());
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<Facility> getUnsyncedFacilities(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Facility> result = petBetterDb.getUnsyncedFacilities();
         petBetterDb.closeDatabase();
 
         return result;
@@ -336,6 +573,18 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         long result = petBetterDb.setVeterinarians(vetList);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    public long setFacilities(ArrayList<Facility> faciList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setFacilities(faciList);
         petBetterDb.closeDatabase();
 
         return result;

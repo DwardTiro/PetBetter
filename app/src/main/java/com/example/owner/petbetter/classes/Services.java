@@ -1,16 +1,31 @@
 package com.example.owner.petbetter.classes;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by owner on 28/7/2017.
  */
 
 public class Services {
-    String serviceName;
-    int servicePrice;
 
-    public Services(String serviceName, int servicePrice) {
+    @SerializedName("_id")
+    long id;
+
+    @SerializedName("faci_id")
+    long faciId;
+
+    @SerializedName("service_name")
+    String serviceName;
+
+    @SerializedName("service_price")
+    float servicePrice;
+
+    public Services(long id, long faciId, String serviceName, float servicePrice) {
+        this.id = id;
+        this.faciId = faciId;
         this.serviceName = serviceName;
         this.servicePrice = servicePrice;
+        //linked to facilities
     }
 
     public String getServiceName() {
@@ -21,11 +36,11 @@ public class Services {
         this.serviceName = serviceName;
     }
 
-    public int getServicePrice() {
+    public float getServicePrice() {
         return servicePrice;
     }
 
-    public void setServicePrice(int servicePrice) {
+    public void setServicePrice(float servicePrice) {
         this.servicePrice = servicePrice;
     }
 }

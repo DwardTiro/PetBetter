@@ -19,8 +19,10 @@ import com.example.owner.petbetter.classes.Marker;
 import com.example.owner.petbetter.classes.Message;
 import com.example.owner.petbetter.classes.MessageRep;
 import com.example.owner.petbetter.classes.Notifications;
+import com.example.owner.petbetter.classes.Pet;
 import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.PostRep;
+import com.example.owner.petbetter.classes.Services;
 import com.example.owner.petbetter.classes.Topic;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
@@ -59,6 +61,8 @@ public class DataAdapter {
     private static final String FACI_RANK_TABLE = "facilities_rating";
     private static final String FOLLOWER_TABLE = "followers";
     private static final String RATE_TABLE = "ratings";
+    private static final String PET_TABLE = "pets";
+    private static final String SERVICE_TABLE = "services";
 
 
 
@@ -321,7 +325,7 @@ public class DataAdapter {
     }
 
 
-        public ArrayList<MessageRep> getMessageReps(long messageId){
+    public ArrayList<MessageRep> getMessageReps(long messageId){
         //probably needs userid as parameter
 
         ArrayList<MessageRep> results = new ArrayList<>();
@@ -348,12 +352,39 @@ public class DataAdapter {
         return results;
     }
 
-    public ArrayList<PostRep> getPostReps(int postId){
+    public ArrayList<MessageRep> getMessageRepsFromUser(long userId){
+        //probably needs userid as parameter
+
+        ArrayList<MessageRep> results = new ArrayList<>();
+
+        String sql = "SELECT mr._id AS _id, mr.user_id AS user_id, mr.message_id AS message_id, " +
+                "mr.rep_content AS rep_content, mr.is_sent AS is_sent, mr.date_performed AS date_performed, " +
+                "u.first_name AS first_name, u.last_name AS last_name FROM messagereps AS mr INNER JOIN users AS u " +
+                "ON mr.user_id = u._id WHERE mr.user_id = '" + userId + "'";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            MessageRep messagerep = new MessageRep(c.getInt(c.getColumnIndexOrThrow("_id")),
+                    c.getLong(c.getColumnIndexOrThrow("user_id")),
+                    c.getInt(c.getColumnIndexOrThrow("message_id")),
+                    c.getString(c.getColumnIndexOrThrow("rep_content")),
+                    c.getInt(c.getColumnIndexOrThrow("is_sent")),
+                    c.getString(c.getColumnIndexOrThrow("date_performed")),
+                    c.getString(c.getColumnIndexOrThrow("first_name")),
+                    c.getString(c.getColumnIndexOrThrow("last_name")));
+            results.add(messagerep);
+        }
+
+        c.close();
+        return results;
+    }
+
+    public ArrayList<PostRep> getAllPostReps(){
         //probably needs userid as parameter
 
         ArrayList<PostRep> results = new ArrayList<>();
 
-        String sql = "SELECT * FROM "+POST_REP_TABLE + " WHERE post_id = '" + postId + "' AND is_deleted != 1 AND parent_id = 0";
+        String sql = "SELECT * FROM "+POST_REP_TABLE + " WHERE is_deleted != 1";
         Cursor c = petBetterDb.rawQuery(sql, null);
 
         while(c.moveToNext()) {
@@ -544,6 +575,28 @@ public class DataAdapter {
         return results;
     }
 
+    public ArrayList<Facility> getUnsyncedFacilities(){
+        ArrayList<Facility> results = new ArrayList<>();
+
+        String sql = "SELECT * FROM "+FACI_TABLE+" WHERE is_synced = 0";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            Facility facility = new Facility(c.getInt(c.getColumnIndexOrThrow("_id")),
+                    c.getString(c.getColumnIndexOrThrow("faci_name")),
+                    c.getString(c.getColumnIndexOrThrow("location")),
+                    c.getString(c.getColumnIndexOrThrow("hours_open")),
+                    c.getString(c.getColumnIndexOrThrow("hours_close")),
+                    c.getString(c.getColumnIndexOrThrow("contact_info")),
+                    c.getInt(c.getColumnIndexOrThrow("vet_id")),
+                    c.getFloat(c.getColumnIndexOrThrow("rating")));
+            results.add(facility);
+        }
+
+        c.close();
+        return results;
+    }
+
     public void dataSynced(int n){
         ContentValues cv = new ContentValues();
         //cv.put("specialty","Canine Behavior");
@@ -551,6 +604,9 @@ public class DataAdapter {
         String[] whereArgs = new String[]{String.valueOf(0)};
         if(n==1){
             petBetterDb.update(VET_TABLE,cv,"is_synced=?", whereArgs);
+        }
+        if(n==2){
+            petBetterDb.update(FACI_TABLE,cv,"is_synced=?", whereArgs);
         }
         petBetterDb.close();
     }
@@ -573,6 +629,91 @@ public class DataAdapter {
                     c.getInt(c.getColumnIndexOrThrow("vet_id")),
                     c.getFloat(c.getColumnIndexOrThrow("rating")));
             results.add(facility);
+        }
+
+        c.close();
+        return results;
+    }
+
+    public ArrayList<Marker> getMarkers(){
+        ArrayList<Marker> results = new ArrayList<>();
+        String temp;
+
+        //String sql = "SELECT * FROM " + FACI_TABLE + " WHERE vet_id = '" + veterinarian.getId() + "'";
+        String sql = "SELECT * FROM " + MARKER_TABLE;
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            Marker marker = new Marker(c.getInt(c.getColumnIndexOrThrow("_id")),
+                    c.getString(c.getColumnIndexOrThrow("bldg_name")),
+                    c.getDouble(c.getColumnIndexOrThrow("longitude")),
+                    c.getDouble(c.getColumnIndexOrThrow("latitude")),
+                    c.getString(c.getColumnIndexOrThrow("location")),
+                    c.getLong(c.getColumnIndexOrThrow("user_id")),
+                    c.getInt(c.getColumnIndexOrThrow("type")));
+            results.add(marker);
+        }
+
+        c.close();
+        return results;
+    }
+
+    public ArrayList<Follower> getFollowers(){
+        ArrayList<Follower> results = new ArrayList<>();
+        String temp;
+
+        //String sql = "SELECT * FROM " + FACI_TABLE + " WHERE vet_id = '" + veterinarian.getId() + "'";
+        String sql = "SELECT * FROM " + FOLLOWER_TABLE;
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            Follower follower = new Follower(c.getInt(c.getColumnIndexOrThrow("_id")),
+                    c.getLong(c.getColumnIndexOrThrow("topic_id")),
+                    c.getLong(c.getColumnIndexOrThrow("user_id")));
+            results.add(follower);
+        }
+
+        c.close();
+        return results;
+    }
+
+    public ArrayList<Pet> getPets(long userId){
+        ArrayList<Pet> results = new ArrayList<>();
+        String temp;
+
+        String sql = "SELECT * FROM " + PET_TABLE + " WHERE user_id = '" + userId + "'";
+        //String sql = "SELECT * FROM " + FOLLOWER_TABLE;
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            Pet pet = new Pet(c.getInt(c.getColumnIndexOrThrow("_id")),
+                    c.getLong(c.getColumnIndexOrThrow("user_id")),
+                    c.getString(c.getColumnIndexOrThrow("name")),
+                    c.getString(c.getColumnIndexOrThrow("classification")),
+                    c.getString(c.getColumnIndexOrThrow("breed")),
+                    c.getFloat(c.getColumnIndexOrThrow("height")),
+                    c.getFloat(c.getColumnIndexOrThrow("weight")));
+            results.add(pet);
+        }
+
+        c.close();
+        return results;
+    }
+
+    public ArrayList<Services> getServices(){
+        ArrayList<Services> results = new ArrayList<>();
+        String temp;
+
+        //String sql = "SELECT * FROM " + FACI_TABLE + " WHERE vet_id = '" + veterinarian.getId() + "'";
+        String sql = "SELECT * FROM " + SERVICE_TABLE;
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            Services services = new Services(c.getInt(c.getColumnIndexOrThrow("_id")),
+                    c.getLong(c.getColumnIndexOrThrow("faci_id")),
+                    c.getString(c.getColumnIndexOrThrow("service_name")),
+                    c.getFloat(c.getColumnIndexOrThrow("service_price")));
+            results.add(services);
         }
 
         c.close();
@@ -771,6 +912,7 @@ public class DataAdapter {
         c.close();
         return results;
     }
+
 
     public ArrayList<Topic> getTopics(){
         ArrayList<Topic> results = new ArrayList<>();
@@ -1447,9 +1589,34 @@ public class DataAdapter {
             cv.put("user_id", vet.getUserId());
             cv.put("rating", vet.getRating());
             result = petBetterDb.insert(VET_TABLE, null, cv);
-            System.out.println("COUNT MEE");
         }
         System.out.println("2ND REAL NUM OF VETS "+getVeterinarians().size());
+
+        return result;
+    }
+
+    public long setFacilities(ArrayList<Facility> faciList){
+        long result = 0;
+
+        petBetterDb.delete(FACI_TABLE, null, null);
+        System.out.println("REAL NUM OF FACIS "+getClinics().size());
+        System.out.println("size of array: "+faciList.size());
+
+
+        for(Facility facility:faciList){
+            ContentValues cv = new ContentValues();
+            //cv.put("_id", facility.getId());
+            cv.put("faci_name", facility.getFaciName());
+            cv.put("location", facility.getLocation());
+            cv.put("hours_open", facility.getHoursOpen());
+            cv.put("hours_close", facility.getHoursClose());
+            cv.put("contact_info", facility.getContactInfo());
+            cv.put("vet_id", facility.getVetId());
+            cv.put("rating", facility.getRating());
+            result = petBetterDb.insert(FACI_TABLE, null, cv);
+            System.out.println("how meni? "+result);
+        }
+        System.out.println("2ND REAL NUM OF FACIS "+getClinics().size());
 
         return result;
     }
