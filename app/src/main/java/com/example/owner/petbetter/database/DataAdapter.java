@@ -382,21 +382,21 @@ public class DataAdapter {
     public ArrayList<PostRep> getAllPostReps(){
         //probably needs userid as parameter
 
+        System.out.println("We done???");
         ArrayList<PostRep> results = new ArrayList<>();
 
         String sql = "SELECT * FROM "+POST_REP_TABLE + " WHERE is_deleted != 1";
         Cursor c = petBetterDb.rawQuery(sql, null);
 
+
         while(c.moveToNext()) {
-            PostRep postrep = new PostRep(c.getInt(c.getColumnIndexOrThrow("_id")),
+            PostRep postrep = new PostRep(c.getLong(c.getColumnIndexOrThrow("_id")),
                     c.getLong(c.getColumnIndexOrThrow("user_id")),
                     c.getInt(c.getColumnIndexOrThrow("post_id")),
                     c.getInt(c.getColumnIndexOrThrow("parent_id")),
                     c.getString(c.getColumnIndexOrThrow("rep_content")),
                     c.getString(c.getColumnIndexOrThrow("date_performed")),
-                    c.getInt(c.getColumnIndexOrThrow("is_deleted")),
-                    c.getString(c.getColumnIndexOrThrow("first_name")),
-                    c.getString(c.getColumnIndexOrThrow("last_name")));
+                    c.getInt(c.getColumnIndexOrThrow("is_deleted")));
             results.add(postrep);
         }
 
@@ -575,6 +575,25 @@ public class DataAdapter {
         return results;
     }
 
+    public ArrayList<Follower> getUnsyncedFollowers(){
+        ArrayList<Follower> results = new ArrayList<>();
+        int userId;
+        User user;
+
+        String sql = "SELECT * FROM "+FOLLOWER_TABLE+" WHERE is_synced = 0";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            Follower follower = new Follower(c.getInt(c.getColumnIndexOrThrow("_id")),
+                    c.getLong(c.getColumnIndexOrThrow("topic_id")),
+                    c.getLong(c.getColumnIndexOrThrow("user_id")));
+            results.add(follower);
+        }
+
+        c.close();
+        return results;
+    }
+
     public ArrayList<Facility> getUnsyncedFacilities(){
         ArrayList<Facility> results = new ArrayList<>();
 
@@ -607,6 +626,9 @@ public class DataAdapter {
         }
         if(n==2){
             petBetterDb.update(FACI_TABLE,cv,"is_synced=?", whereArgs);
+        }
+        if(n==3){
+            petBetterDb.update(FOLLOWER_TABLE,cv,"is_synced=?", whereArgs);
         }
         petBetterDb.close();
     }
@@ -1580,7 +1602,6 @@ public class DataAdapter {
         long result = 0;
 
         petBetterDb.delete(VET_TABLE, null, null);
-        System.out.println("REAL NUM OF VETS "+getVeterinarians().size());
 
 
         for(Veterinarian vet:vetList){
@@ -1590,7 +1611,25 @@ public class DataAdapter {
             cv.put("rating", vet.getRating());
             result = petBetterDb.insert(VET_TABLE, null, cv);
         }
-        System.out.println("2ND REAL NUM OF VETS "+getVeterinarians().size());
+
+        return result;
+    }
+
+    public long setFollowers(ArrayList<Follower> followerList){
+        long result = 0;
+
+        petBetterDb.delete(FOLLOWER_TABLE, null, null);
+        System.out.println("REAL NUM OF FOLLOWERS "+getFollowers().size());
+
+
+        for(Follower follower:followerList){
+            ContentValues cv = new ContentValues();
+            cv.put("_id", follower.getId());
+            cv.put("topic_id", follower.getTopicId());
+            cv.put("user_id", follower.getUserId());
+            result = petBetterDb.insert(FOLLOWER_TABLE, null, cv);
+        }
+        System.out.println("2ND REAL NUM OF FOLLOWERS "+getFollowers().size());
 
         return result;
     }

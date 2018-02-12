@@ -99,6 +99,9 @@ public interface HerokuService {
     @POST("getClinics.php")
     Call<ArrayList<Facility>> getClinics();
 
+    @POST("getFollowers.php")
+    Call<ArrayList<Follower>> getFollowers();
+
     @FormUrlEncoded
     @POST("addUser.php")
     Call<Integer> addUser(@Field("_id") int userId, @Field("first_name") String firstName, @Field("last_name") String lastName,
@@ -322,6 +325,9 @@ public interface HerokuService {
 
     @POST("addFacilities.php")
     Call<Void> addFacilities(@Body ArrayList<Facility> faciList);
+
+    @POST("addFollowers.php")
+    Call<Void> addFollowers(@Body ArrayList<Follower> followerList);
 
     @FormUrlEncoded
     @POST("getMarker.php")

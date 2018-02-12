@@ -138,19 +138,28 @@ public class MainActivity extends AppCompatActivity {
 
                                 ArrayList<Facility> faciList = getClinics();
                                 syncClinicChanges(faciList);
-                                /*
+
                                 ArrayList<Follower> followerList = getFollowers();
+                                syncFollowerChanges(followerList);
+
+
                                 ArrayList<Marker> markerList = loadMarkers(thisUser.getUserId());
                                 ArrayList<Message> messageList = getMessages(thisUser.getUserId());
                                 ArrayList<MessageRep> messagerepList = getMessageRepsFromUser(thisUser.getUserId());
                                 ArrayList<Notifications> notifList = getNotifications(thisUser.getUserId());
+
                                 ArrayList<Pet> petList = getPets(thisUser.getUserId());
                                 ArrayList<Post> postList = getPosts();
+
+
+
                                 ArrayList<PostRep> postrepList = getAllPostReps();
+                                System.out.println("POST REP LIST SIZE IS: " +postrepList.size());
                                 ArrayList<Services> serviceList = getServices();
+
                                 ArrayList<Topic> topicList = getTopics();
 
-                                */
+
 
                                 return result;
                             }
@@ -159,8 +168,19 @@ public class MainActivity extends AppCompatActivity {
 
 
                         try {
-                            long futureTime = System.currentTimeMillis() + 10000;
+                            /*
+                            long futureTime = System.currentTimeMillis() + 2000;
                             while(System.currentTimeMillis() < futureTime){
+                                System.out.println("From server wew: " + response.body().toString());
+                                systemSessionManager.createUserSession(user.getEmail());
+                                Intent intent = new Intent(MainActivity.this, com.example.owner.petbetter.activities.HomeActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                                finish();
+                            }*/
+                            futureTask.get();
+                            if(futureTask.isDone()){
                                 System.out.println("From server wew: " + response.body().toString());
                                 systemSessionManager.createUserSession(user.getEmail());
                                 Intent intent = new Intent(MainActivity.this, com.example.owner.petbetter.activities.HomeActivity.class);
@@ -259,6 +279,49 @@ public class MainActivity extends AppCompatActivity {
 
                         @Override
                         public void onFailure(Call<ArrayList<Veterinarian>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
+    public void syncFollowerChanges(final ArrayList<Follower> followers){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        System.out.println("WE HERE BOO");
+        ArrayList<Follower> unsyncedFollowers = getUnsyncedFollowers();
+
+        final Call<Void> call = service.addFollowers(unsyncedFollowers);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    System.out.println("Followers ADDED YEY");
+                    dataSynced(3);
+
+                    final Call<ArrayList<Follower>> call2 = service2.getFollowers();
+                    call2.enqueue(new Callback<ArrayList<Follower>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<Follower>> call, Response<ArrayList<Follower>> response) {
+                            if(response.isSuccessful()){
+                                setFollowers(response.body());
+                                //get back here boys
+
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<Follower>> call, Throwable t) {
                             Log.d("onFailure", t.getLocalizedMessage());
 
                         }
@@ -525,6 +588,20 @@ public class MainActivity extends AppCompatActivity {
         return result;
     }
 
+    private ArrayList<Follower> getUnsyncedFollowers(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Follower> result = petBetterDb.getUnsyncedFollowers();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
     private ArrayList<Facility> getUnsyncedFacilities(){
 
         try {
@@ -573,6 +650,18 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         long result = petBetterDb.setVeterinarians(vetList);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    public long setFollowers(ArrayList<Follower> followerList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setFollowers(followerList);
         petBetterDb.closeDatabase();
 
         return result;
