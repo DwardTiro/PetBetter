@@ -16,6 +16,7 @@ import com.example.owner.petbetter.classes.Veterinarian;
 
 import java.util.ArrayList;
 
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -59,15 +60,14 @@ public interface HerokuService {
 
     @FormUrlEncoded
     @POST("getMessages.php")
-    Call<ArrayList<Message>> getMessages(@Field("_id") long id);
+    Call<ArrayList<Message>> getMessages(@Field("user_id") long id);
+
+    @POST("getMessageReps.php")
+    Call<ArrayList<MessageRep>> getMessageReps();
 
     @FormUrlEncoded
     @POST("getLatestRep.php")
     Call<String> getLatestRep(@Field("_id") String id);
-
-    @FormUrlEncoded
-    @POST("getMessageReps.php")
-    Call<MessageRep> getMessageReps(@Field("_id") long id);
 
     @FormUrlEncoded
     @POST("getPostReps.php")
@@ -321,13 +321,22 @@ public interface HerokuService {
                                      @Field("rating") int rating);
 
     @POST("addVets.php")
-    Call<Void> addVets(@Body ArrayList<Veterinarian> vetList);
+    Call<Void> addVets(@Body RequestBody vetList);
+
+    @POST("addMarkers.php")
+    Call<Void> addMarkers(@Body RequestBody markerList);
 
     @POST("addFacilities.php")
-    Call<Void> addFacilities(@Body ArrayList<Facility> faciList);
+    Call<Void> addFacilities(@Body RequestBody faciList);
 
     @POST("addFollowers.php")
-    Call<Void> addFollowers(@Body ArrayList<Follower> followerList);
+    Call<Void> addFollowers(@Body RequestBody followerList);
+
+    @POST("addMessages.php")
+    Call<Void> addMessages(@Body RequestBody messageList);
+
+    @POST("addMessageReps.php")
+    Call<Void> addMessageReps(@Body RequestBody messageRepList);
 
     @FormUrlEncoded
     @POST("getMarker.php")

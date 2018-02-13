@@ -36,6 +36,7 @@ import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.example.owner.petbetter.activities.HomeActivity;
 import com.google.android.gms.gcm.Task;
+import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
@@ -51,6 +52,7 @@ import java.util.concurrent.FutureTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -144,19 +146,19 @@ public class MainActivity extends AppCompatActivity {
 
 
                                 ArrayList<Marker> markerList = loadMarkers(thisUser.getUserId());
-                                ArrayList<Message> messageList = getMessages(thisUser.getUserId());
-                                ArrayList<MessageRep> messagerepList = getMessageRepsFromUser(thisUser.getUserId());
-                                ArrayList<Notifications> notifList = getNotifications(thisUser.getUserId());
+                                syncMarkerChanges(markerList);
 
+                                ArrayList<Message> messageList = getMessages(thisUser.getUserId());
+                                syncMessageChanges(messageList, thisUser.getUserId());
+
+                                ArrayList<MessageRep> messagerepList = getAllMessageReps();
+                                syncMessageRepChanges(messagerepList);
+
+                                ArrayList<Notifications> notifList = getNotifications(thisUser.getUserId());
                                 ArrayList<Pet> petList = getPets(thisUser.getUserId());
                                 ArrayList<Post> postList = getPosts();
-
-
-
                                 ArrayList<PostRep> postrepList = getAllPostReps();
-                                System.out.println("POST REP LIST SIZE IS: " +postrepList.size());
                                 ArrayList<Services> serviceList = getServices();
-
                                 ArrayList<Topic> topicList = getTopics();
 
 
@@ -259,7 +261,10 @@ public class MainActivity extends AppCompatActivity {
         System.out.println("WE HERE BOOIII");
         ArrayList<Veterinarian> unsyncedVets = getUnsyncedVets();
 
-        final Call<Void> call = service.addVets(unsyncedVets);
+        Gson gson = new Gson();
+        String jsonArray = gson.toJson(unsyncedVets);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.addVets(body);
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
@@ -294,14 +299,155 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public void syncMarkerChanges(final ArrayList<Marker> markers){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        System.out.println("WE HERE BOOIII");
+        ArrayList<Marker> unsyncedMarkers = getUnsyncedMarkers();
+        Gson gson = new Gson();
+        String jsonArray = gson.toJson(unsyncedMarkers);
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.addMarkers(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    System.out.println("MARKERS ADDED YEY");
+                    dataSynced(4);
+
+                    final Call<ArrayList<Marker>> call2 = service2.loadMarkers(markers.get(0).getUserId());
+                    call2.enqueue(new Callback<ArrayList<Marker>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<Marker>> call, Response<ArrayList<Marker>> response) {
+                            if(response.isSuccessful()){
+                                setMarkers(response.body());
+
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<Marker>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
+
+    public void syncMessageChanges(final ArrayList<Message> messages, final long userId){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+        ArrayList<Message> unsyncedMessages = getUnsyncedMessages();
+        System.out.println("UNSYNCED MESSAGES: "+unsyncedMessages.size());
+        Gson gson = new Gson();
+        String jsonArray = gson.toJson(unsyncedMessages);
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.addMessages(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    System.out.println("MESSAGES ADDED YEY");
+                    dataSynced(5);
+
+                    final Call<ArrayList<Message>> call2 = service2.getMessages(userId);
+                    call2.enqueue(new Callback<ArrayList<Message>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<Message>> call, Response<ArrayList<Message>> response) {
+                            if(response.isSuccessful()){
+                                System.out.println("response size "+response.body().size());
+                                setMessages(response.body());
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<Message>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
+    public void syncMessageRepChanges(final ArrayList<MessageRep> messagereps){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+        ArrayList<MessageRep> unsyncedMessages = getUnsyncedMessageReps();
+        System.out.println("UNSYNCED MESSAGEREPS: "+unsyncedMessages.size());
+        Gson gson = new Gson();
+        String jsonArray = gson.toJson(unsyncedMessages);
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.addMessageReps(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    System.out.println("MESSAGEREPS ADDED YEY");
+                    dataSynced(6);
+
+                    final Call<ArrayList<MessageRep>> call2 = service2.getMessageReps();
+                    call2.enqueue(new Callback<ArrayList<MessageRep>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<MessageRep>> call, Response<ArrayList<MessageRep>> response) {
+                            if(response.isSuccessful()){
+                                System.out.println("response size messagereps "+response.body().size());
+                                setMessageReps(response.body());
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<MessageRep>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
     public void syncFollowerChanges(final ArrayList<Follower> followers){
 
         final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         System.out.println("WE HERE BOO");
         ArrayList<Follower> unsyncedFollowers = getUnsyncedFollowers();
+        Gson gson = new Gson();
+        String jsonArray = gson.toJson(unsyncedFollowers);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
 
-        final Call<Void> call = service.addFollowers(unsyncedFollowers);
+        final Call<Void> call = service.addFollowers(body);
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
@@ -343,8 +489,10 @@ public class MainActivity extends AppCompatActivity {
         final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         System.out.println("WE HERE BOOIII");
         ArrayList<Facility> unsyncedFacilities = getUnsyncedFacilities();
-
-        final Call<Void> call = service.addFacilities(unsyncedFacilities);
+        Gson gson = new Gson();
+        String jsonArray = gson.toJson(unsyncedFacilities);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.addFacilities(body);
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
@@ -418,6 +566,20 @@ public class MainActivity extends AppCompatActivity {
 
         ArrayList<Veterinarian> result = petBetterDb.getVeterinarians();
         System.out.println("boi 1");
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<MessageRep> getAllMessageReps(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<MessageRep> result = petBetterDb.getAllMessageReps();
         petBetterDb.closeDatabase();
 
         return result;
@@ -507,7 +669,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         ArrayList<Message> result = petBetterDb.getMessages(userId);
-        System.out.println("boi 7");
         petBetterDb.closeDatabase();
 
         return result;
@@ -588,6 +749,48 @@ public class MainActivity extends AppCompatActivity {
         return result;
     }
 
+    private ArrayList<MessageRep> getUnsyncedMessageReps(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<MessageRep> result = petBetterDb.getUnsyncedMessageReps();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<Message> getUnsyncedMessages(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Message> result = petBetterDb.getUnsyncedMessages();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<Marker> getUnsyncedMarkers(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Marker> result = petBetterDb.getUnsyncedMarkers();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
     private ArrayList<Follower> getUnsyncedFollowers(){
 
         try {
@@ -650,6 +853,42 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         long result = petBetterDb.setVeterinarians(vetList);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    public long setMessages(ArrayList<Message> messageList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setMessages(messageList);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    public long setMessageReps(ArrayList<MessageRep> messageRepList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setMessageReps(messageRepList);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    public long setMarkers(ArrayList<Marker> markerList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setMarkers(markerList);
         petBetterDb.closeDatabase();
 
         return result;

@@ -14,9 +14,9 @@ $response = array();
 if($_SERVER['REQUEST_METHOD']=='POST'){
 	
 	if($stmt = $mysqli->prepare("SELECT m._id AS _id, m.user_one AS user_one, m.user_two AS user_two, u.first_name AS first_name, 
-	u.last_name AS last_name FROM messages AS m INNER JOIN users AS u ON m.user_one = u._id WHERE u._id = ? UNION  
+	u.last_name AS last_name FROM messages AS m INNER JOIN users AS u ON m.user_one = u.user_id WHERE u.user_id = ? UNION  
 	SELECT m._id AS _id, m.user_one AS user_one, m.user_two AS user_two, u.first_name AS first_name, 
-	u.last_name AS last_name FROM messages AS m INNER JOIN users AS u ON m.user_two = u._id WHERE u._id = ?")){
+	u.last_name AS last_name FROM messages AS m INNER JOIN users AS u ON m.user_two = u.user_id WHERE u.user_id = ?")){
 		$stmt->bind_param("ss", $user_id, $user_id);
 		$stmt->execute();
 		$stmt->bind_result($_id, $user_one, $user_two, $first_name, $last_name);
@@ -34,7 +34,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 			
 			$stmt->close();
 			
-			echo json_encode(array('messages'=>$response));
+			echo json_encode($response);
 			/*
 			echo json_encode(array('_id'=>$_id,
 			'user_id'=>$user_id,

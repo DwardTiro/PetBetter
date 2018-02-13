@@ -2,7 +2,9 @@
 
 require 'init.php';
 
-$message_id = $_POST['message_id'];
+
+//$user_id = $_POST['user_id'];
+
 $response = array(); 
 //$sql = "SELECT * FROM users WHERE email = ? AND password = ?";
 //$sql = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
@@ -10,14 +12,11 @@ $response = array();
 //$result = mysqli_query($con, $sql);
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
-
-	if($stmt = $mysqli->prepare("SELECT mr._id AS _id, mr.user_id AS user_id, mr.message_id AS message_id, 
-                mr.rep_content AS rep_content, mr.is_sent AS is_sent, mr.date_performed AS date_performed, 
-                u.first_name AS first_name, u.last_name AS last_name FROM messagereps AS mr INNER JOIN users AS u 
-                ON mr.user_id = u._id WHERE mr.message_id = ?")){
-		$stmt->bind_param("s", $message_id);
+	
+	if($stmt = $mysqli->prepare("SELECT * FROM messagereps")){
+		//$stmt->bind_param("ss", $user_id, $user_id);
 		$stmt->execute();
-		$stmt->bind_result($_id, $user_id, $message_id, $rep_content, $is_sent, $date_performed, $first_name,  $last_name);
+		$stmt->bind_result($_id, $user_id, $message_id, $rep_content, $is_sent, $date_performed);
 		$stmt->store_result();
 	
 		if($stmt->fetch()){
@@ -28,15 +27,12 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 				'message_id'=>$message_id,
 				'rep_content'=>$rep_content,
 				'is_sent'=>$is_sent,
-				'date_performed'=>$date_performed,
-				'first_name'=>$first_name,
-				'last_name'=>$last_name));
+				'date_performed'=>$date_performed));
 			}while($stmt->fetch());
-			
 			
 			$stmt->close();
 			
-			echo json_encode(array('messagereps'=>$response));
+			echo json_encode($response);
 			/*
 			echo json_encode(array('_id'=>$_id,
 			'user_id'=>$user_id,
@@ -50,7 +46,6 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 		else{
 			
 			$stmt->close();
-			echo 'SQL Query Error';
 		}
 		//echo json_encode($stmt);
 		//echo json_encode(array('user'=>$response));

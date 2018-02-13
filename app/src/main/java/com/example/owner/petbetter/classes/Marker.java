@@ -1,14 +1,32 @@
 package com.example.owner.petbetter.classes;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by owner on 28/7/2017.
  */
 
 public class Marker {
 
-    String bldgName, location;
-    long id, userId;
-    double longitude, latitude;
+    @SerializedName("bldg_name")
+    String bldgName;
+
+    @SerializedName("location")
+    String location;
+
+    @SerializedName("_id")
+    long id;
+
+    @SerializedName("user_id")
+    long userId;
+
+    @SerializedName("longitude")
+    double longitude;
+
+    @SerializedName("latitude")
+    double latitude;
+
+    @SerializedName("type")
     int type;
 
     public Marker(long id, String bldgName, double longitude, double latitude, String location, long userId, int type) {

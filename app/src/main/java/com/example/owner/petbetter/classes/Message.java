@@ -24,6 +24,12 @@ public class Message {
     private String fromName;
     private String messageContent;
 
+    public Message(long id, long userId, long fromId) {
+        this.id = id;
+        this.userId = userId;
+        this.fromId = fromId;
+    }
+
     public Message(long id, long userId, long fromId, String firstName, String lastName) {
         this.id = id;
         this.userId = userId;

@@ -2,55 +2,68 @@
 
 require 'init.php';
 
-$user_id = $_POST['user_id'];
-$response = array(); 
+//$vetlist = $_POST['vetlist'];;
+
+$messagereplist = json_decode(file_get_contents('php://input'),true);
 //$sql = "SELECT * FROM users WHERE email = ? AND password = ?";
 //$sql = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
 
 //$result = mysqli_query($con, $sql);
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
-
-	if($stmt = $mysqli->prepare("SELECT * FROM markers WHERE user_id = ?")){
-		$stmt->bind_param("s", $user_id);
-		$stmt->execute();
-		$stmt->bind_result($_id, $bldg_name, $longitude, $latitude, $location, $user_id, $type);
-		$stmt->store_result();
 	
+	$n = count($messagereplist);
+	echo $n;
+	$i = 0;
+	echo $messagereplist[$i]['_id'];
+	
+	while($i<$n){
+		echo 'and here?';
+		if($stmt = $mysqli->prepare("INSERT INTO messagereps (user_id, message_id, rep_content, is_sent, date_performed) VALUES (?,?,?,?,?)")){
+			$stmt->bind_param("sssss", $messagereplist[$i]['user_id'], $messagereplist[$i]['message_id'], $messagereplist[$i]['rep_content'], $messagereplist[$i]['is_sent'], 
+				$messagereplist[$i]['date_performed']);
+			$stmt->execute();
+			$stmt->close();
+			$i = $i + 1;
+			echo 'and here?';
+		}
+		else{
+			//echo 'and here?';
+			break;
+		}
+		
+	}
+	
+		
+		//echo json_encode(array('_id'=>$vetlist['_id']));
+		
+		//$stmt->bind_result($_id, $first_name, $last_name, $mobile_num, $phone_num, $email,  $password, $age, $user_type);
+		//$stmt->store_result();
+	
+	/*
 		if($stmt->fetch()){
 			
-			do{
-				array_push($response, array('_id'=>$_id,
-				'bldg_name'=>$bldg_name,
-				'longitude'=>$longitude,
-				'latitude'=>$latitude,
-				'location'=>$location,
-				'user_id'=>$user_id,
-				'type'=>$type));
-			}while($stmt->fetch());
-			
-			
 			$stmt->close();
-			
-			echo json_encode($response);
-			/*
+			//echo json_encode($response);
 			echo json_encode(array('_id'=>$_id,
-			'user_id'=>$user_id,
-			'topic_name'=>$topic_name,
-			'topic_content'=>$topic_content,
-			'date_created'=>$date_created,
 			'first_name'=>$first_name,
-			'is_deleted'=>$is_deleted));
-			*/
+			'last_name'=>$last_name,
+			'mobile_num'=>$mobile_num,
+			'phone_num'=>$phone_num,
+			'email'=>$email,
+			'password'=>$password,
+			'age'=>$age,
+			'user_type'=>$user_type));
 		}
 		else{
 			
 			$stmt->close();
 			echo 'SQL Query Error';
 		}
+		*/
 		//echo json_encode($stmt);
 		//echo json_encode(array('user'=>$response));
-	}
+	
 }
 
 /*

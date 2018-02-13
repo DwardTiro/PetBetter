@@ -352,6 +352,28 @@ public class DataAdapter {
         return results;
     }
 
+    public ArrayList<MessageRep> getAllMessageReps(){
+        //probably needs userid as parameter
+
+        ArrayList<MessageRep> results = new ArrayList<>();
+
+        String sql = "SELECT * FROM "+MESSAGE_REP_TABLE;
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            MessageRep messagerep = new MessageRep(c.getInt(c.getColumnIndexOrThrow("_id")),
+                    c.getLong(c.getColumnIndexOrThrow("user_id")),
+                    c.getInt(c.getColumnIndexOrThrow("message_id")),
+                    c.getString(c.getColumnIndexOrThrow("rep_content")),
+                    c.getInt(c.getColumnIndexOrThrow("is_sent")),
+                    c.getString(c.getColumnIndexOrThrow("date_performed")));
+            results.add(messagerep);
+        }
+
+        c.close();
+        return results;
+    }
+
     public ArrayList<MessageRep> getMessageRepsFromUser(long userId){
         //probably needs userid as parameter
 
@@ -575,6 +597,51 @@ public class DataAdapter {
         return results;
     }
 
+    public ArrayList<MessageRep> getUnsyncedMessageReps(){
+        ArrayList<MessageRep> results = new ArrayList<>();
+        int userId;
+        User user;
+
+        String sql = "SELECT * FROM "+MESSAGE_REP_TABLE+" WHERE is_synced = 0";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            MessageRep messagerep = new MessageRep(c.getInt(c.getColumnIndexOrThrow("_id")),
+                    c.getLong(c.getColumnIndexOrThrow("user_id")),
+                    c.getInt(c.getColumnIndexOrThrow("message_id")),
+                    c.getString(c.getColumnIndexOrThrow("rep_content")),
+                    c.getInt(c.getColumnIndexOrThrow("is_sent")),
+                    c.getString(c.getColumnIndexOrThrow("date_performed")));
+            results.add(messagerep);
+        }
+
+        c.close();
+        return results;
+    }
+
+    public ArrayList<Marker> getUnsyncedMarkers(){
+        ArrayList<Marker> results = new ArrayList<>();
+        int userId;
+        User user;
+
+        String sql = "SELECT * FROM "+MARKER_TABLE+" WHERE is_synced = 0";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            Marker marker = new Marker(c.getInt(c.getColumnIndexOrThrow("_id")),
+                    c.getString(c.getColumnIndexOrThrow("bldg_name")),
+                    c.getDouble(c.getColumnIndexOrThrow("longitude")),
+                    c.getDouble(c.getColumnIndexOrThrow("latitude")),
+                    c.getString(c.getColumnIndexOrThrow("location")),
+                    c.getLong(c.getColumnIndexOrThrow("user_id")),
+                    c.getInt(c.getColumnIndexOrThrow("type")));
+            results.add(marker);
+        }
+
+        c.close();
+        return results;
+    }
+
     public ArrayList<Follower> getUnsyncedFollowers(){
         ArrayList<Follower> results = new ArrayList<>();
         int userId;
@@ -588,6 +655,25 @@ public class DataAdapter {
                     c.getLong(c.getColumnIndexOrThrow("topic_id")),
                     c.getLong(c.getColumnIndexOrThrow("user_id")));
             results.add(follower);
+        }
+
+        c.close();
+        return results;
+    }
+
+    public ArrayList<Message> getUnsyncedMessages(){
+        ArrayList<Message> results = new ArrayList<>();
+        int userId;
+        User user;
+
+        String sql = "SELECT * FROM "+MESSAGE_TABLE+" WHERE is_synced = 0";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            Message message = new Message(c.getInt(c.getColumnIndexOrThrow("_id")),
+                    c.getLong(c.getColumnIndexOrThrow("user_one")),
+                    c.getLong(c.getColumnIndexOrThrow("user_two")));
+            results.add(message);
         }
 
         c.close();
@@ -630,6 +716,19 @@ public class DataAdapter {
         if(n==3){
             petBetterDb.update(FOLLOWER_TABLE,cv,"is_synced=?", whereArgs);
         }
+        if(n==4){
+            petBetterDb.update(MARKER_TABLE,cv,"is_synced=?", whereArgs);
+        }
+        if(n==5){
+            petBetterDb.update(MESSAGE_TABLE,cv,"is_synced=?", whereArgs);
+        }
+        if(n==6){
+            petBetterDb.update(MESSAGE_REP_TABLE,cv,"is_synced=?", whereArgs);
+            ContentValues cv2 = new ContentValues();
+            cv2.put("is_sent", 1);
+            petBetterDb.update(MESSAGE_REP_TABLE,cv2,"is_sent=?", whereArgs);
+        }
+
         petBetterDb.close();
     }
 
@@ -1611,6 +1710,68 @@ public class DataAdapter {
             cv.put("rating", vet.getRating());
             result = petBetterDb.insert(VET_TABLE, null, cv);
         }
+
+        return result;
+    }
+
+    public long setMessages(ArrayList<Message> messageList){
+        long result = 0;
+
+        petBetterDb.delete(MESSAGE_TABLE, null, null);
+        System.out.println("REAL NUM OF MESSAGES "+getMessageIds().size());
+
+        System.out.println("REAL NUM OF MESSAGELIST "+messageList.size());
+        for(Message message:messageList){
+            ContentValues cv = new ContentValues();
+            cv.put("_id", message.getId());
+            cv.put("user_one", message.getUserId());
+            cv.put("user_two", message.getFromId());
+            result = petBetterDb.insert(MESSAGE_TABLE, null, cv);
+        }
+        System.out.println("2ND REAL NUM OF MESSAGES "+getMessageIds().size());
+
+        return result;
+    }
+
+    public long setMessageReps(ArrayList<MessageRep> messageRepList){
+        long result = 0;
+
+        petBetterDb.delete(MESSAGE_REP_TABLE, null, null);
+        System.out.println("REAL NUM OF MESSAGEREPS "+getMessageRepIds().size());
+
+        System.out.println("REAL NUM OF MESSAGEREPLIST "+messageRepList.size());
+        for(MessageRep messagerep:messageRepList){
+            ContentValues cv = new ContentValues();
+            cv.put("_id", messagerep.getId());
+            cv.put("user_id", messagerep.getUserId());
+            cv.put("message_id", messagerep.getMessageId());
+            cv.put("rep_content", messagerep.getRepContent());
+            cv.put("is_sent", messagerep.getIsSent());
+            result = petBetterDb.insert(MESSAGE_REP_TABLE, null, cv);
+        }
+        System.out.println("2ND REAL NUM OF MESSAGEREPS "+getMessageRepIds().size());
+
+        return result;
+    }
+
+    public long setMarkers(ArrayList<Marker> markerList){
+        long result = 0;
+
+        petBetterDb.delete(MARKER_TABLE, null, null);
+        System.out.println("REAL NUM OF MARKERS "+getMarkerIds().size());
+
+        for(Marker marker:markerList){
+            ContentValues cv = new ContentValues();
+            cv.put("_id", marker.getId());
+            cv.put("bldg_name", marker.getBldgName());
+            cv.put("longitude", marker.getLongitude());
+            cv.put("latitude", marker.getLatitude());
+            cv.put("location", marker.getLocation());
+            cv.put("user_id", marker.getUserId());
+            cv.put("type", marker.getType());
+            result = petBetterDb.insert(MARKER_TABLE, null, cv);
+        }
+        System.out.println("2ND REAL NUM OF MARKERS "+getMarkerIds().size());
 
         return result;
     }
