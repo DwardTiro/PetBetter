@@ -29,6 +29,15 @@ public class Topic {
     private String creatorName;
     private int followerCount;
 
+    public Topic(long id, long creatorId, String topicName, String topicDesc, String dateCreated, int isDeleted) {
+        this.id = id;
+        this.creatorId = creatorId;
+        this.topicName = topicName;
+        this.topicDesc = topicDesc;
+        this.dateCreated = dateCreated;
+        this.isDeleted = isDeleted;
+    }
+
     public Topic(long id, long creatorId, String topicName, String topicDesc, String dateCreated, int isDeleted, String firstName,
                  String lastName) {
         this.id = id;

@@ -41,6 +41,16 @@ public class Post {
         this.topicId = topicId;
     }
 
+    public Post(long id, long userId, String topicName, String topicContent, long topicId, String dateCreated, int isDeleted) {
+        this.id = id;
+        this.userId = userId;
+        this.topicName = topicName;
+        this.topicContent = topicContent;
+        this.topicId = topicId;
+        this.dateCreated = dateCreated;
+        this.isDeleted = isDeleted;
+    }
+
     public Post(long id, long userId, String topicName, String topicContent) {
         this.id = id;
         this.userId = userId;

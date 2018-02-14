@@ -597,6 +597,95 @@ public class DataAdapter {
         return results;
     }
 
+    public ArrayList<Post> getUnsyncedPosts(){
+        ArrayList<Post> results = new ArrayList<>();
+        int userId;
+        User user;
+
+        String sql = "SELECT * FROM "+POST_TABLE+" WHERE is_synced = 0";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            Post post= new Post(c.getInt(c.getColumnIndexOrThrow("_id")),
+                    c.getLong(c.getColumnIndexOrThrow("user_id")),
+                    c.getString(c.getColumnIndexOrThrow("topic_name")),
+                    c.getString(c.getColumnIndexOrThrow("topic_content")),
+                    c.getLong(c.getColumnIndexOrThrow("topic_id")),
+                    c.getString(c.getColumnIndexOrThrow("date_created")),
+                    c.getInt(c.getColumnIndexOrThrow("is_deleted")));
+            results.add(post);
+        }
+
+        c.close();
+        return results;
+    }
+
+    public ArrayList<Services> getUnsyncedServices(){
+        ArrayList<Services> results = new ArrayList<>();
+        int userId;
+        User user;
+
+        String sql = "SELECT * FROM "+SERVICE_TABLE+" WHERE is_synced = 0";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            Services services= new Services(c.getInt(c.getColumnIndexOrThrow("_id")),
+                    c.getLong(c.getColumnIndexOrThrow("faci_id")),
+                    c.getString(c.getColumnIndexOrThrow("service_name")),
+                    c.getFloat(c.getColumnIndexOrThrow("service_price")),
+                    c.getInt(c.getColumnIndexOrThrow("is_deleted")));
+            results.add(services);
+        }
+
+        c.close();
+        return results;
+    }
+
+    public ArrayList<PostRep> getUnsyncedPostReps(){
+        ArrayList<PostRep> results = new ArrayList<>();
+        int userId;
+        User user;
+
+        String sql = "SELECT * FROM "+POST_REP_TABLE+" WHERE is_synced = 0";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            PostRep postrep= new PostRep(c.getInt(c.getColumnIndexOrThrow("_id")),
+                    c.getLong(c.getColumnIndexOrThrow("user_id")),
+                    c.getInt(c.getColumnIndexOrThrow("post_id")),
+                    c.getInt(c.getColumnIndexOrThrow("parent_id")),
+                    c.getString(c.getColumnIndexOrThrow("rep_content")),
+                    c.getString(c.getColumnIndexOrThrow("date_performed")),
+                    c.getInt(c.getColumnIndexOrThrow("is_deleted")));
+            results.add(postrep);
+        }
+
+        c.close();
+        return results;
+    }
+
+    public ArrayList<Topic> getUnsyncedTopics(){
+        ArrayList<Topic> results = new ArrayList<>();
+        int userId;
+        User user;
+
+        String sql = "SELECT * FROM "+TOPIC_TABLE+" WHERE is_synced = 0";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            Topic topic = new Topic(c.getInt(c.getColumnIndexOrThrow("_id")),
+                    c.getLong(c.getColumnIndexOrThrow("creator_id")),
+                    c.getString(c.getColumnIndexOrThrow("topic_name")),
+                    c.getString(c.getColumnIndexOrThrow("topic_desc")),
+                    c.getString(c.getColumnIndexOrThrow("date_created")),
+                    c.getInt(c.getColumnIndexOrThrow("is_deleted")));
+            results.add(topic);
+        }
+
+        c.close();
+        return results;
+    }
+
     public ArrayList<MessageRep> getUnsyncedMessageReps(){
         ArrayList<MessageRep> results = new ArrayList<>();
         int userId;
@@ -680,6 +769,50 @@ public class DataAdapter {
         return results;
     }
 
+    public ArrayList<Notifications> getUnsyncedNotifications(){
+        ArrayList<Notifications> results = new ArrayList<>();
+        int userId;
+        User user;
+
+        String sql = "SELECT * FROM "+NOTIF_TABLE+" WHERE is_synced = 0";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            Notifications notifs = new Notifications(c.getInt(c.getColumnIndexOrThrow("_id")),
+                    c.getLong(c.getColumnIndexOrThrow("user_id")),
+                    c.getLong(c.getColumnIndexOrThrow("doer_id")),
+                    c.getInt(c.getColumnIndexOrThrow("is_read")),
+                    c.getInt(c.getColumnIndexOrThrow("type")),
+                    c.getString(c.getColumnIndexOrThrow("date_performed")),
+                    c.getLong(c.getColumnIndexOrThrow("source_id")));
+            results.add(notifs);
+        }
+        c.close();
+        return results;
+    }
+
+    public ArrayList<Pet> getUnsyncedPets(){
+        ArrayList<Pet> results = new ArrayList<>();
+        int userId;
+        User user;
+
+        String sql = "SELECT * FROM "+PET_TABLE+" WHERE is_synced = 0";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            Pet pet = new Pet(c.getInt(c.getColumnIndexOrThrow("_id")),
+                    c.getLong(c.getColumnIndexOrThrow("user_id")),
+                    c.getString(c.getColumnIndexOrThrow("name")),
+                    c.getString(c.getColumnIndexOrThrow("classification")),
+                    c.getString(c.getColumnIndexOrThrow("breed")),
+                    c.getFloat(c.getColumnIndexOrThrow("height")),
+                    c.getFloat(c.getColumnIndexOrThrow("weight")));
+            results.add(pet);
+        }
+        c.close();
+        return results;
+    }
+
     public ArrayList<Facility> getUnsyncedFacilities(){
         ArrayList<Facility> results = new ArrayList<>();
 
@@ -728,7 +861,21 @@ public class DataAdapter {
             cv2.put("is_sent", 1);
             petBetterDb.update(MESSAGE_REP_TABLE,cv2,"is_sent=?", whereArgs);
         }
-
+        if(n==7){
+            petBetterDb.update(NOTIF_TABLE,cv,"is_synced=?", whereArgs);
+        }
+        if(n==8){
+            petBetterDb.update(PET_TABLE,cv,"is_synced=?", whereArgs);
+        }
+        if(n==9){
+            petBetterDb.update(POST_TABLE,cv,"is_synced=?", whereArgs);
+        }
+        if(n==10){
+            petBetterDb.update(POST_REP_TABLE,cv,"is_synced=?", whereArgs);
+        }
+        if(n==11){
+            petBetterDb.update(SERVICE_TABLE,cv,"is_synced=?", whereArgs);
+        }
         petBetterDb.close();
     }
 
@@ -833,7 +980,8 @@ public class DataAdapter {
             Services services = new Services(c.getInt(c.getColumnIndexOrThrow("_id")),
                     c.getLong(c.getColumnIndexOrThrow("faci_id")),
                     c.getString(c.getColumnIndexOrThrow("service_name")),
-                    c.getFloat(c.getColumnIndexOrThrow("service_price")));
+                    c.getFloat(c.getColumnIndexOrThrow("service_price")),
+                    c.getInt(c.getColumnIndexOrThrow("is_deleted")));
             results.add(services);
         }
 
@@ -1714,6 +1862,99 @@ public class DataAdapter {
         return result;
     }
 
+    public long setPosts(ArrayList<Post> postList){
+        long result = 0;
+
+        petBetterDb.delete(POST_TABLE, null, null);
+        System.out.println("REAL NUM OF POSTS: "+getPosts().size());
+        System.out.println("POST LIST SIZE "+postList.size());
+
+
+        for(Post post:postList){
+            ContentValues cv = new ContentValues();
+            cv.put("_id", post.getId());
+            cv.put("user_id", post.getUserId());
+            cv.put("topic_name", post.getTopicName());
+            cv.put("topic_content", post.getTopicContent());
+            cv.put("topic_id", post.getTopicId());
+            cv.put("date_created", post.getDateCreated());
+            cv.put("is_deleted", post.getIsDeleted());
+            result = petBetterDb.insert(POST_TABLE, null, cv);
+        }
+        System.out.println("2ND REAL NUM OF POSTS: "+getPosts().size());
+
+        return result;
+    }
+
+    public long setTopics(ArrayList<Topic> topicList){
+        long result = 0;
+
+        petBetterDb.delete(TOPIC_TABLE, null, null);
+        System.out.println("REAL NUM OF TOPICS: "+getTopicIds().size());
+        System.out.println("TOPIC LIST SIZE "+topicList.size());
+
+
+        for(Topic topic:topicList){
+            ContentValues cv = new ContentValues();
+            cv.put("_id", topic.getId());
+            cv.put("creator_id", topic.getCreatorId());
+            cv.put("topic_name", topic.getTopicName());
+            cv.put("topic_desc", topic.getTopicDesc());
+            cv.put("date_created", topic.getDateCreated());
+            cv.put("is_deleted", topic.getIsDeleted());
+            result = petBetterDb.insert(TOPIC_TABLE, null, cv);
+        }
+        System.out.println("2ND REAL NUM OF TOPICS: "+getTopicIds().size());
+
+        return result;
+    }
+
+    public long setServices(ArrayList<Services> serviceList){
+        long result = 0;
+
+        petBetterDb.delete(SERVICE_TABLE, null, null);
+        System.out.println("REAL NUM OF SERVICES: "+getServices().size());
+        System.out.println("SERVICE LIST SIZE "+serviceList.size());
+
+
+        for(Services services:serviceList){
+            ContentValues cv = new ContentValues();
+            cv.put("_id", services.getId());
+            cv.put("faci_id", services.getFaciId());
+            cv.put("service_name", services.getServiceName());
+            cv.put("service_price", services.getServicePrice());
+            cv.put("is_deleted", services.getIsDeleted());
+            result = petBetterDb.insert(SERVICE_TABLE, null, cv);
+        }
+        System.out.println("2ND REAL NUM OF SERVICES: "+getServices().size());
+
+        return result;
+    }
+
+    public long setPostReps(ArrayList<PostRep> postRepList){
+        long result = 0;
+
+        petBetterDb.delete(POST_REP_TABLE, null, null);
+        System.out.println("REAL NUM OF POSTREPS: "+getPostRepIds().size());
+        System.out.println("POST REP LIST SIZE "+postRepList.size());
+
+
+        for(PostRep postrep:postRepList){
+            ContentValues cv = new ContentValues();
+            cv.put("_id", postrep.getId());
+            cv.put("user_id", postrep.getUserId());
+            cv.put("post_id", postrep.getPostId());
+            cv.put("parent_id", postrep.getParentId());
+            cv.put("rep_content", postrep.getRepContent());
+            cv.put("date_performed", postrep.getDatePerformed());
+            cv.put("is_deleted", postrep.getIsDeleted());
+            result = petBetterDb.insert(POST_REP_TABLE, null, cv);
+        }
+        System.out.println("2ND REAL NUM OF POSTREPS: "+getPostRepIds().size());
+
+        return result;
+    }
+
     public long setMessages(ArrayList<Message> messageList){
         long result = 0;
 
@@ -1729,6 +1970,49 @@ public class DataAdapter {
             result = petBetterDb.insert(MESSAGE_TABLE, null, cv);
         }
         System.out.println("2ND REAL NUM OF MESSAGES "+getMessageIds().size());
+
+        return result;
+    }
+
+    public long setNotifications(ArrayList<Notifications> notifList){
+        long result = 0;
+
+        petBetterDb.delete(NOTIF_TABLE, null, null);
+
+        for(Notifications notification:notifList){
+            ContentValues cv = new ContentValues();
+            cv.put("_id", notification.getId());
+            cv.put("user_id", notification.getUserId());
+            cv.put("doer_id", notification.getDoerId());
+            cv.put("is_read", notification.getIsRead());
+            cv.put("type", notification.getType());
+            cv.put("date_performed", notification.getDatePerformed());
+            cv.put("source_id", notification.getSourceId());
+            result = petBetterDb.insert(NOTIF_TABLE, null, cv);
+        }
+
+        return result;
+    }
+
+    public long setPets(ArrayList<Pet> petList){
+        long result = 0;
+
+        petBetterDb.delete(PET_TABLE, null, null);
+        System.out.println("REAL NUM OF PETS: "+getPets(petList.get(0).getUserId()).size());
+        System.out.println("PET LIST SIZE: "+petList.size());
+
+        for(Pet pet:petList){
+            ContentValues cv = new ContentValues();
+            cv.put("_id", pet.getId());
+            cv.put("user_id", pet.getUserId());
+            cv.put("name", pet.getName());
+            cv.put("classification", pet.getClassification());
+            cv.put("breed", pet.getBreed());
+            cv.put("height", pet.getHeight());
+            cv.put("weight", pet.getWeight());
+            result = petBetterDb.insert(PET_TABLE, null, cv);
+        }
+        System.out.println("2ND REAL NUM OF PETS: "+getPets(petList.get(0).getUserId()).size());
 
         return result;
     }

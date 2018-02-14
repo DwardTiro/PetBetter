@@ -31,6 +31,16 @@ public class Notifications {
 
     String doerName;
 
+    public Notifications(long id, long userId, long doerId, int isRead, int type, String datePerformed, long sourceId) {
+        this.id = id;
+        this.userId = userId;
+        this.doerId = doerId;
+        this.isRead = isRead;
+        this.type = type;
+        this.datePerformed = datePerformed;
+        this.sourceId = sourceId;
+    }
+
     public Notifications(long id, long userId, long doerId, int isRead, int type, String datePerformed, long sourceId, String first_name, String last_name) {
         this.id = id;
         this.userId = userId;

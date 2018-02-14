@@ -13,7 +13,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 
 	if($stmt = $mysqli->prepare("SELECT n._id AS _id, n.user_id AS user_id, n.doer_id AS doer_id, n.is_read AS is_read, 
 	n.type AS type, n.date_performed as date_performed, n.source_id as source_id, u.first_name AS first_name, u.last_name AS last_name 
-	FROM notifications AS n INNER JOIN users AS u ON n.doer_id = u._id WHERE n.user_id = ?")){
+	FROM notifications AS n INNER JOIN users AS u ON n.doer_id = u.user_id WHERE n.user_id = ?")){
 		$stmt->bind_param("s", $user_id);
 		$stmt->execute();
 		$stmt->bind_result($_id, $user_id, $doer_id, $is_read, $type, $date_performed, $source_id, $first_name,  $last_name);
@@ -35,7 +35,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 			
 			$stmt->close();
 			
-			echo json_encode(array('notifications'=>$response));
+			echo json_encode($response);
 			/*
 			echo json_encode(array('_id'=>$_id,
 			'user_id'=>$user_id,
@@ -49,7 +49,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 		else{
 			
 			$stmt->close();
-			echo 'No notifications';
+			//echo 'No notifications';
 		}
 		//echo json_encode($stmt);
 		//echo json_encode(array('user'=>$response));

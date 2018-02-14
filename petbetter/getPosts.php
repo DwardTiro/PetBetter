@@ -10,12 +10,10 @@ $response = array();
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
 
-	if($stmt = $mysqli->prepare("SELECT p._id AS _id, p.user_id, p.topic_name AS topic_name, p.topic_content AS topic_content, 
-	p.date_created AS date_created, u.first_name AS first_name, u.last_name AS last_name, p.is_deleted AS is_deleted 
-	FROM posts AS p INNER JOIN users u ON p.user_id = u._id WHERE p.is_deleted != 1")){
+	if($stmt = $mysqli->prepare("SELECT * FROM posts WHERE is_deleted = 0")){
 		
 		$stmt->execute();
-		$stmt->bind_result($_id, $user_id, $topic_name, $topic_content, $date_created, $first_name,  $last_name, $is_deleted);
+		$stmt->bind_result($_id, $user_id, $topic_name, $topic_content, $topic_id, $date_created, $is_deleted);
 		$stmt->store_result();
 	
 		if($stmt->fetch()){
@@ -25,15 +23,15 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 				'user_id'=>$user_id,
 				'topic_name'=>$topic_name,
 				'topic_content'=>$topic_content,
+				'topic_id'=>$topic_id,
 				'date_created'=>$date_created,
-				'first_name'=>$first_name,
 				'is_deleted'=>$is_deleted));
 			}while($stmt->fetch());
 			
 			
 			$stmt->close();
 			
-			echo json_encode(array('posts'=>$response));
+			echo json_encode($response);
 			/*
 			echo json_encode(array('_id'=>$_id,
 			'user_id'=>$user_id,

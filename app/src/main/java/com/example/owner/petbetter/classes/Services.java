@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
 public class Services {
 
     @SerializedName("_id")
-    long id;
+    int id;
 
     @SerializedName("faci_id")
     long faciId;
@@ -20,12 +20,32 @@ public class Services {
     @SerializedName("service_price")
     float servicePrice;
 
-    public Services(long id, long faciId, String serviceName, float servicePrice) {
+    @SerializedName("is_deleted")
+    int isDeleted;
+
+    public Services(int id, long faciId, String serviceName, float servicePrice, int isDeleted) {
         this.id = id;
         this.faciId = faciId;
         this.serviceName = serviceName;
         this.servicePrice = servicePrice;
+        this.isDeleted = isDeleted;
         //linked to facilities
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public long getFaciId() {
+        return faciId;
+    }
+
+    public void setFaciId(long faciId) {
+        this.faciId = faciId;
     }
 
     public String getServiceName() {
@@ -42,5 +62,13 @@ public class Services {
 
     public void setServicePrice(float servicePrice) {
         this.servicePrice = servicePrice;
+    }
+
+    public int getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(int isDeleted) {
+        this.isDeleted = isDeleted;
     }
 }

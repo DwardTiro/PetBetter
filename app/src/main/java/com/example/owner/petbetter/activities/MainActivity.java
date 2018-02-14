@@ -135,31 +135,30 @@ public class MainActivity extends AppCompatActivity {
                                 boolean result = true;
                                 User thisUser = user;
 
-                                ArrayList<Veterinarian> vetList = getVeterinarians();
-                                syncVetChanges(vetList);
 
-                                ArrayList<Facility> faciList = getClinics();
-                                syncClinicChanges(faciList);
+                                syncVetChanges();
 
-                                ArrayList<Follower> followerList = getFollowers();
-                                syncFollowerChanges(followerList);
+                                syncClinicChanges();
 
+                                syncFollowerChanges();
 
-                                ArrayList<Marker> markerList = loadMarkers(thisUser.getUserId());
-                                syncMarkerChanges(markerList);
+                                syncMarkerChanges(thisUser.getUserId());
 
-                                ArrayList<Message> messageList = getMessages(thisUser.getUserId());
-                                syncMessageChanges(messageList, thisUser.getUserId());
+                                syncMessageChanges(thisUser.getUserId());
 
-                                ArrayList<MessageRep> messagerepList = getAllMessageReps();
-                                syncMessageRepChanges(messagerepList);
+                                syncMessageRepChanges();
 
-                                ArrayList<Notifications> notifList = getNotifications(thisUser.getUserId());
-                                ArrayList<Pet> petList = getPets(thisUser.getUserId());
-                                ArrayList<Post> postList = getPosts();
-                                ArrayList<PostRep> postrepList = getAllPostReps();
-                                ArrayList<Services> serviceList = getServices();
-                                ArrayList<Topic> topicList = getTopics();
+                                syncNotifChanges(thisUser.getUserId());
+
+                                syncPetChanges(thisUser.getUserId());
+
+                                syncPostChanges();
+
+                                syncPostRepChanges();
+
+                                syncServiceChanges();
+
+                                syncTopicChanges();
 
 
 
@@ -254,7 +253,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void syncVetChanges(final ArrayList<Veterinarian> vets){
+
+
+    public void syncVetChanges(){
 
         final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
@@ -299,7 +300,187 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void syncMarkerChanges(final ArrayList<Marker> markers){
+    public void syncPostChanges(){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        System.out.println("WE HERE BOOIII");
+        ArrayList<Post> unsyncedPosts = getUnsyncedPosts();
+
+        Gson gson = new Gson();
+        String jsonArray = gson.toJson(unsyncedPosts);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.addPosts(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    System.out.println("POSTS ADDED YEY");
+                    dataSynced(9);
+
+                    final Call<ArrayList<Post>> call2 = service2.getPosts();
+                    call2.enqueue(new Callback<ArrayList<Post>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<Post>> call, Response<ArrayList<Post>> response) {
+                            if(response.isSuccessful()){
+                                setPosts(response.body());
+
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<Post>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
+    public void syncTopicChanges(){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        System.out.println("WE HERE BOOIII");
+        ArrayList<Topic> unsyncedTopics = getUnsyncedTopics();
+
+        Gson gson = new Gson();
+        String jsonArray = gson.toJson(unsyncedTopics);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.addTopics(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    System.out.println("TOPICS ADDED YEY");
+                    dataSynced(9);
+
+                    final Call<ArrayList<Topic>> call2 = service2.getTopics();
+                    call2.enqueue(new Callback<ArrayList<Topic>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<Topic>> call, Response<ArrayList<Topic>> response) {
+                            if(response.isSuccessful()){
+                                setTopics(response.body());
+
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<Topic>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
+    public void syncPostRepChanges(){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        System.out.println("WE HERE BOOIII");
+        ArrayList<PostRep> unsyncedPostReps = getUnsyncedPostReps();
+
+        Gson gson = new Gson();
+        String jsonArray = gson.toJson(unsyncedPostReps);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.addPostReps(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    System.out.println("POSTREPS ADDED YEY");
+                    dataSynced(10);
+
+                    final Call<ArrayList<PostRep>> call2 = service2.getAllPostReps();
+                    call2.enqueue(new Callback<ArrayList<PostRep>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<PostRep>> call, Response<ArrayList<PostRep>> response) {
+                            if(response.isSuccessful()){
+                                setPostReps(response.body());
+
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<PostRep>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
+    public void syncServiceChanges(){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        System.out.println("WE HERE BOOIII");
+        ArrayList<Services> unsyncedServices = getUnsyncedServices();
+
+        Gson gson = new Gson();
+        String jsonArray = gson.toJson(unsyncedServices);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.addServices(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    System.out.println("SERVICES ADDED YEY");
+                    dataSynced(11);
+
+                    final Call<ArrayList<Services>> call2 = service2.getServices();
+                    call2.enqueue(new Callback<ArrayList<Services>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<Services>> call, Response<ArrayList<Services>> response) {
+                            if(response.isSuccessful()){
+                                setServices(response.body());
+
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<Services>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
+    public void syncMarkerChanges(final long userId){
 
         final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
@@ -317,7 +498,7 @@ public class MainActivity extends AppCompatActivity {
                     System.out.println("MARKERS ADDED YEY");
                     dataSynced(4);
 
-                    final Call<ArrayList<Marker>> call2 = service2.loadMarkers(markers.get(0).getUserId());
+                    final Call<ArrayList<Marker>> call2 = service2.loadMarkers(userId);
                     call2.enqueue(new Callback<ArrayList<Marker>>() {
                         @Override
                         public void onResponse(Call<ArrayList<Marker>> call, Response<ArrayList<Marker>> response) {
@@ -345,7 +526,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void syncMessageChanges(final ArrayList<Message> messages, final long userId){
+    public void syncMessageChanges(final long userId){
 
         final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
@@ -391,7 +572,101 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void syncMessageRepChanges(final ArrayList<MessageRep> messagereps){
+    public void syncNotifChanges(final long userId){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+        ArrayList<Notifications> unsyncedNotifs = getUnsyncedNotifications();
+        System.out.println("UNSYNCED NOTIFS: "+unsyncedNotifs.size());
+        Gson gson = new Gson();
+        String jsonArray = gson.toJson(unsyncedNotifs);
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.addNotifications(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    System.out.println("NOTIFICATIONS ADDED YEY");
+                    dataSynced(7);
+
+                    final Call<ArrayList<Notifications>> call2 = service2.getNotifications(userId);
+                    call2.enqueue(new Callback<ArrayList<Notifications>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<Notifications>> call, Response<ArrayList<Notifications>> response) {
+                            if(response.isSuccessful()){
+                                System.out.println("notif response size "+response.body().size());
+                                setNotifications(response.body());
+                                //write this method. update dataSynced().
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<Notifications>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
+    public void syncPetChanges(final long userId){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+        ArrayList<Pet> unsyncedPets = getUnsyncedPets();
+        System.out.println("UNSYNCED PETS: "+unsyncedPets.size());
+        Gson gson = new Gson();
+        String jsonArray = gson.toJson(unsyncedPets);
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.addPets(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    System.out.println("PETS ADDED YEY");
+                    dataSynced(8);
+
+                    final Call<ArrayList<Pet>> call2 = service2.getPets(userId);
+                    call2.enqueue(new Callback<ArrayList<Pet>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<Pet>> call, Response<ArrayList<Pet>> response) {
+                            if(response.isSuccessful()){
+                                System.out.println("pets response size "+response.body().size());
+                                setPets(response.body());
+                                //write this method. update dataSynced().
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<Pet>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
+    public void syncMessageRepChanges(){
 
         final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
@@ -437,7 +712,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void syncFollowerChanges(final ArrayList<Follower> followers){
+    public void syncFollowerChanges(){
 
         final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
@@ -483,7 +758,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void syncClinicChanges(final ArrayList<Facility> faciList){
+    public void syncClinicChanges(){
 
         final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
@@ -749,6 +1024,76 @@ public class MainActivity extends AppCompatActivity {
         return result;
     }
 
+    private ArrayList<Post> getUnsyncedPosts(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Post> result = petBetterDb.getUnsyncedPosts();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<Topic> getUnsyncedTopics(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Topic> result = petBetterDb.getUnsyncedTopics();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<Services> getUnsyncedServices(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Services> result = petBetterDb.getUnsyncedServices();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<PostRep> getUnsyncedPostReps(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<PostRep> result = petBetterDb.getUnsyncedPostReps();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<Pet> getUnsyncedPets(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Pet> result = petBetterDb.getUnsyncedPets();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
     private ArrayList<MessageRep> getUnsyncedMessageReps(){
 
         try {
@@ -772,6 +1117,20 @@ public class MainActivity extends AppCompatActivity {
         }
 
         ArrayList<Message> result = petBetterDb.getUnsyncedMessages();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<Notifications> getUnsyncedNotifications(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Notifications> result = petBetterDb.getUnsyncedNotifications();
         petBetterDb.closeDatabase();
 
         return result;
@@ -858,6 +1217,66 @@ public class MainActivity extends AppCompatActivity {
         return result;
     }
 
+    public long setTopics(ArrayList<Topic> topicList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setTopics(topicList);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    public long setPosts(ArrayList<Post> postList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setPosts(postList);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    public long setServices(ArrayList<Services> serviceList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setServices(serviceList);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    public long setPostReps(ArrayList<PostRep> postRepList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setPostReps(postRepList);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    public long setPets(ArrayList<Pet> petList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setPets(petList);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
     public long setMessages(ArrayList<Message> messageList){
         try {
             petBetterDb.openDatabase();
@@ -865,6 +1284,18 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         long result = petBetterDb.setMessages(messageList);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    public long setNotifications(ArrayList<Notifications> notifList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setNotifications(notifList);
         petBetterDb.closeDatabase();
 
         return result;

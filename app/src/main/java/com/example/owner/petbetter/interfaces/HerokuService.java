@@ -8,8 +8,11 @@ import com.example.owner.petbetter.classes.Follower;
 import com.example.owner.petbetter.classes.Marker;
 import com.example.owner.petbetter.classes.Message;
 import com.example.owner.petbetter.classes.MessageRep;
+import com.example.owner.petbetter.classes.Notifications;
+import com.example.owner.petbetter.classes.Pet;
 import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.PostRep;
+import com.example.owner.petbetter.classes.Services;
 import com.example.owner.petbetter.classes.Topic;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
@@ -54,9 +57,12 @@ public interface HerokuService {
     @POST("getUserWithId.php")
     Call<User> getUserWithId(@Field("email") String email);
 
-    @FormUrlEncoded
+
     @POST("getPosts.php")
     Call<ArrayList<Post>> getPosts();
+
+    @POST("getServices.php")
+    Call<ArrayList<Services>> getServices();
 
     @FormUrlEncoded
     @POST("getMessages.php")
@@ -95,6 +101,9 @@ public interface HerokuService {
 
     @POST("getVeterinarians.php")
     Call<ArrayList<Veterinarian>> getVeterinarians();
+
+    @POST("getAllPostReps.php")
+    Call<ArrayList<PostRep>> getAllPostReps();
 
     @POST("getClinics.php")
     Call<ArrayList<Facility>> getClinics();
@@ -144,9 +153,12 @@ public interface HerokuService {
 
     @FormUrlEncoded
     @POST("getNotifications.php")
-    Call<ArrayList<PostRep>> getNotifications(@Field("user_id") long userId);
+    Call<ArrayList<Notifications>> getNotifications(@Field("user_id") long userId);
 
     @FormUrlEncoded
+    @POST("getPets.php")
+    Call<ArrayList<Pet>> getPets(@Field("user_id") long userId);
+
     @POST("getTopics.php")
     Call<ArrayList<Topic>> getTopics();
 
@@ -323,6 +335,18 @@ public interface HerokuService {
     @POST("addVets.php")
     Call<Void> addVets(@Body RequestBody vetList);
 
+    @POST("addPosts.php")
+    Call<Void> addPosts(@Body RequestBody postList);
+
+    @POST("addTopics.php")
+    Call<Void> addTopics(@Body RequestBody topicList);
+
+    @POST("addPostReps.php")
+    Call<Void> addPostReps(@Body RequestBody postRepList);
+
+    @POST("addServices.php")
+    Call<Void> addServices(@Body RequestBody serviceList);
+
     @POST("addMarkers.php")
     Call<Void> addMarkers(@Body RequestBody markerList);
 
@@ -334,6 +358,12 @@ public interface HerokuService {
 
     @POST("addMessages.php")
     Call<Void> addMessages(@Body RequestBody messageList);
+
+    @POST("addNotifications.php")
+    Call<Void> addNotifications(@Body RequestBody notifList);
+
+    @POST("addPets.php")
+    Call<Void> addPets(@Body RequestBody petList);
 
     @POST("addMessageReps.php")
     Call<Void> addMessageReps(@Body RequestBody messageRepList);
