@@ -117,8 +117,9 @@ public class MessageActivity extends AppCompatActivity {
                     sdf.setTimeZone(TimeZone.getTimeZone("GMT+8"));
                     timeStamp = sdf.format(new Date());
 
+                    //implement messagereps here too
                     addMessageRep(messageRepId, (int) user.getUserId(), (int) messageItem.getId(),
-                            messageText.getText().toString(), 1, timeStamp);
+                            messageText.getText().toString(), 1, timeStamp, "hi", 0);
 
 
 
@@ -200,7 +201,8 @@ public class MessageActivity extends AppCompatActivity {
         }
     }
 
-    private long addMessageRep(int messageRepId, int userId, int messageId, String repContent, int isSent, String datePerformed){
+    private long addMessageRep(int messageRepId, int userId, int messageId, String repContent, int isSent, String datePerformed,
+                               String image, int isSynced){
 
         try {
             petBetterDb.openDatabase();
@@ -208,7 +210,7 @@ public class MessageActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        long result = petBetterDb.addMessageRep(messageRepId, userId, messageId, repContent, isSent, datePerformed);
+        long result = petBetterDb.addMessageRep(messageRepId, userId, messageId, repContent, isSent, datePerformed, image, isSynced);
         petBetterDb.closeDatabase();
 
         return result;

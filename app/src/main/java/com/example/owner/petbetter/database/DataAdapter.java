@@ -1142,7 +1142,8 @@ public class DataAdapter {
         return results;
     }
 
-    public long addMessageRep(int messageRepId, int userId, int messageId, String repContent, int isSent, String datePerformed){
+    public long addMessageRep(int messageRepId, int userId, int messageId, String repContent, int isSent, String datePerformed,
+                              String image, int isSynced){
         long result;
 
         ContentValues cv = new ContentValues();
@@ -1152,6 +1153,8 @@ public class DataAdapter {
         cv.put("rep_content", repContent);
         cv.put("is_sent", isSent);
         cv.put("date_performed", datePerformed);
+        cv.put("message_photo", image);
+        cv.put("is_synced", isSynced);
 
         result = petBetterDb.insert(MESSAGE_REP_TABLE, null, cv);
 

@@ -10,6 +10,7 @@ $messagereplist = json_decode(file_get_contents('php://input'),true);
 
 //$result = mysqli_query($con, $sql);
 
+
 if($_SERVER['REQUEST_METHOD']=='POST'){
 	
 	$n = count($messagereplist);
@@ -18,7 +19,8 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 	echo $messagereplist[$i]['_id'];
 	
 	while($i<$n){
-		echo 'and here?';
+		$upload_path = "uploads/$messagereplist[$i]['message_photo'].jpg";
+		file_put_contents($upload_path, base64_decode($messagereplist[$i]['message_photo']));
 		if($stmt = $mysqli->prepare("INSERT INTO messagereps (user_id, message_id, rep_content, is_sent, date_performed, message_photo) VALUES (?,?,?,?,?,?)")){
 			$stmt->bind_param("ssssss", $messagereplist[$i]['user_id'], $messagereplist[$i]['message_id'], $messagereplist[$i]['rep_content'], $messagereplist[$i]['is_sent'], 
 				$messagereplist[$i]['date_performed'], $messagereplist[$i]['message_photo']);

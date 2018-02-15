@@ -124,7 +124,7 @@ public class CommActivity extends AppCompatActivity {
         btnProfile.setBackgroundResource(R.color.medTurquoise);
         btnProfile.setImageResource(R.mipmap.ic_account_circle_white_24dp);
         container.removeAllViews();
-        getSupportFragmentManager().beginTransaction().add(R.id.comm_container,fragment3).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.comm_container,fragment3).commitAllowingStateLoss();
     }
 
     public void viewPostBackButtonClicked(View view){
