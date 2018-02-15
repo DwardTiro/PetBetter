@@ -700,7 +700,8 @@ public class DataAdapter {
                     c.getInt(c.getColumnIndexOrThrow("message_id")),
                     c.getString(c.getColumnIndexOrThrow("rep_content")),
                     c.getInt(c.getColumnIndexOrThrow("is_sent")),
-                    c.getString(c.getColumnIndexOrThrow("date_performed")));
+                    c.getString(c.getColumnIndexOrThrow("date_performed")),
+                    c.getString(c.getColumnIndexOrThrow("message_photo")));
             results.add(messagerep);
         }
 
@@ -2031,6 +2032,8 @@ public class DataAdapter {
             cv.put("message_id", messagerep.getMessageId());
             cv.put("rep_content", messagerep.getRepContent());
             cv.put("is_sent", messagerep.getIsSent());
+            cv.put("date_performed", messagerep.getDatePerformed());
+            cv.put("message_photo", messagerep.getMessagePhoto());
             result = petBetterDb.insert(MESSAGE_REP_TABLE, null, cv);
         }
         System.out.println("2ND REAL NUM OF MESSAGEREPS "+getMessageRepIds().size());

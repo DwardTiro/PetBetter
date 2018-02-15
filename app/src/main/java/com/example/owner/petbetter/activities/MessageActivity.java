@@ -1,6 +1,9 @@
 package com.example.owner.petbetter.activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -9,6 +12,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.owner.petbetter.R;
@@ -19,6 +24,7 @@ import com.example.owner.petbetter.fragments.FragmentMessageReps;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -34,6 +40,10 @@ public class MessageActivity extends AppCompatActivity {
     private FrameLayout container;
     private Button replyButton;
     private EditText messageText;
+    private ImageButton addPhotoButton;
+    private static final int IMG_REQUEST = 777;
+    private Bitmap bitmap;
+    private ImageView imageView;
 
     private DataAdapter petBetterDb;
     private SystemSessionManager systemSessionManager;
@@ -62,6 +72,7 @@ public class MessageActivity extends AppCompatActivity {
         container = (FrameLayout) findViewById(R.id.message_container);
         replyButton = (Button) findViewById(R.id.replyButton);
         messageText = (EditText) findViewById(R.id.messageText);
+        addPhotoButton = (ImageButton) findViewById(R.id.addPhotoButton);
 
         systemSessionManager = new SystemSessionManager(this);
         if(systemSessionManager.checkLogin())
@@ -87,6 +98,13 @@ public class MessageActivity extends AppCompatActivity {
         FragmentMessageReps fragment1 = new FragmentMessageReps();
         fragment1.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().add(R.id.message_container, fragment1).commit();
+
+        addPhotoButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                selectImage();
+            }
+        });
 
         replyButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,6 +136,29 @@ public class MessageActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void selectImage(){
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, IMG_REQUEST);
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == IMG_REQUEST && resultCode == RESULT_OK && data!=null){
+            Uri path = data.getData();
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), path);
+                imageView.setImageBitmap(bitmap);
+                imageView.setVisibility(View.VISIBLE);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void viewPostBackButtonClicked(View view){

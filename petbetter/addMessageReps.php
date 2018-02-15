@@ -19,9 +19,9 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 	
 	while($i<$n){
 		echo 'and here?';
-		if($stmt = $mysqli->prepare("INSERT INTO messagereps (user_id, message_id, rep_content, is_sent, date_performed) VALUES (?,?,?,?,?)")){
-			$stmt->bind_param("sssss", $messagereplist[$i]['user_id'], $messagereplist[$i]['message_id'], $messagereplist[$i]['rep_content'], $messagereplist[$i]['is_sent'], 
-				$messagereplist[$i]['date_performed']);
+		if($stmt = $mysqli->prepare("INSERT INTO messagereps (user_id, message_id, rep_content, is_sent, date_performed, message_photo) VALUES (?,?,?,?,?,?)")){
+			$stmt->bind_param("ssssss", $messagereplist[$i]['user_id'], $messagereplist[$i]['message_id'], $messagereplist[$i]['rep_content'], $messagereplist[$i]['is_sent'], 
+				$messagereplist[$i]['date_performed'], $messagereplist[$i]['message_photo']);
 			$stmt->execute();
 			$stmt->close();
 			$i = $i + 1;

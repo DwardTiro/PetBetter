@@ -41,6 +41,16 @@ public class MessageRep {
         this.datePerformed = datePerformed;
     }
 
+    public MessageRep(long id, long userId, int messageId, String repContent, int isSent, String datePerformed, String messagePhoto) {
+        this.id = id;
+        this.userId = userId;
+        this.messageId = messageId;
+        this.repContent = repContent;
+        this.isSent = isSent;
+        this.datePerformed = datePerformed;
+        this.messagePhoto = messagePhoto;
+    }
+
     public MessageRep(long id, long userId, int messageId, String repContent, int isSent, String datePerformed,
                       String firstName, String lastName) {
         this.id = id;

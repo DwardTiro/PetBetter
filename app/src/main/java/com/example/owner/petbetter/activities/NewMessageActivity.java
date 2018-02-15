@@ -1,8 +1,11 @@
 package com.example.owner.petbetter.activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +13,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.owner.petbetter.R;
@@ -19,6 +24,7 @@ import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.fragments.FragmentMessages;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -37,6 +43,10 @@ public class NewMessageActivity extends AppCompatActivity {
     EditText newMsgSendTo;
     EditText newMsgContent;
     Button newMsgSendButton;
+    private ImageButton newMsgAddPhoto;
+    private static final int IMG_REQUEST = 777;
+    private Bitmap bitmap;
+    private ImageView imageView;
 
     private DataAdapter petBetterDb;
     private SystemSessionManager systemSessionManager;
@@ -74,6 +84,14 @@ public class NewMessageActivity extends AppCompatActivity {
         newMsgSendTo = (EditText) findViewById(R.id.newMsgSendTo);
         newMsgContent = (EditText) findViewById(R.id.newMsgContent);
         newMsgSendButton = (Button) findViewById(R.id.newMsgSendBtn);
+        newMsgAddPhoto = (ImageButton) findViewById(R.id.newMsgAddPhoto);
+
+        newMsgAddPhoto.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                selectImage();
+            }
+        });
 
         newMsgSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,6 +134,28 @@ public class NewMessageActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void selectImage(){
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, IMG_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == IMG_REQUEST && resultCode == RESULT_OK && data!=null){
+            Uri path = data.getData();
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), path);
+                imageView.setImageBitmap(bitmap);
+                imageView.setVisibility(View.VISIBLE);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void viewPostBackButtonClicked(View view){

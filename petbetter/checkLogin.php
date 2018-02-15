@@ -21,7 +21,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 	if($stmt = $mysqli->prepare("SELECT * FROM users WHERE email = ? AND password = ?")){
 		$stmt->bind_param("ss", $email , $password);
 		$stmt->execute();
-		$stmt->bind_result($user_id, $first_name, $last_name, $mobile_num, $phone_num, $email,  $password, $age, $user_type);
+		$stmt->bind_result($user_id, $first_name, $last_name, $mobile_num, $phone_num, $email,  $password, $age, $user_type, $user_photo);
 		$stmt->store_result();
 	
 		if($stmt->fetch()){
@@ -36,7 +36,8 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 			'email'=>$email,
 			'password'=>$password,
 			'age'=>$age,
-			'user_type'=>$user_type));
+			'user_type'=>$user_type,
+			'user_photo'=>$user_photo));
 		}
 		else{
 			
