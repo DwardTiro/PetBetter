@@ -26,6 +26,9 @@ public class MessageRep {
     @SerializedName("date_performed")
     private String datePerformed;
 
+    @SerializedName("message_photo")
+    private String messagePhoto;
+
 
     private String userName;
 
@@ -111,5 +114,13 @@ public class MessageRep {
 
     public void setSent(int sent) {
         isSent = sent;
+    }
+
+    public String getMessagePhoto() {
+        return messagePhoto;
+    }
+
+    public void setMessagePhoto(String messagePhoto) {
+        this.messagePhoto = messagePhoto;
     }
 }

@@ -37,6 +37,9 @@ public class User {
     @SerializedName("user_type")
     private int userType;
 
+    @SerializedName("user_photo")
+    private String userPhoto;
+
     private String userName;
 
     public User(long userId, String firstName, String lastName, String mobileNumber, String phoneNumber,
@@ -123,6 +126,14 @@ public class User {
 
     public String getName(){
         return this.firstName + " " + this.lastName;
+    }
+
+    public String getUserPhoto() {
+        return userPhoto;
+    }
+
+    public void setUserPhoto(String userPhoto) {
+        this.userPhoto = userPhoto;
     }
 
     public void sendMessage(String message){
