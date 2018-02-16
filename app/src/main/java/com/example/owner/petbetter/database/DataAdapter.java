@@ -1271,7 +1271,7 @@ public class DataAdapter {
         return ids;
     }
 
-    public long notifyUser(int notifId, long toId, long userId, int isRead, int type, String timeStamp, int sourceId){
+    public long notifyUser(int notifId, long toId, long userId, int isRead, int type, String timeStamp, int sourceId, int isSynced){
         long result;
 
         ContentValues cv = new ContentValues();
@@ -1282,6 +1282,7 @@ public class DataAdapter {
         cv.put("type", type);
         cv.put("date_performed", timeStamp);
         cv.put("source_id", sourceId);
+        cv.put("is_synced", isSynced);
 
         result = petBetterDb.insert(NOTIF_TABLE, null, cv);
 

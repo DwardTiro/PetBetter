@@ -28,6 +28,7 @@ import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.classes.Message;
 import com.example.owner.petbetter.classes.MessageRep;
+import com.example.owner.petbetter.classes.Notifications;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.fragments.FragmentMessages;
@@ -62,7 +63,6 @@ public class NewMessageActivity extends AppCompatActivity {
     private ImageButton newMsgAddPhoto;
     private static final int IMG_REQUEST = 777;
     private Bitmap bitmap;
-    private ImageView imageView;
 
     private DataAdapter petBetterDb;
     private SystemSessionManager systemSessionManager;
@@ -152,7 +152,9 @@ public class NewMessageActivity extends AppCompatActivity {
                     }
 
                     nId = generateNotifsId();
-                    notifyMessage(nId, usertwo.getUserId(), user.getUserId(), 0, 2, timeStamp, mId);
+                    notifyMessage(nId, usertwo.getUserId(), user.getUserId(), 0, 2, timeStamp, mId, 0);
+                    uploadNotifications(getUnsyncedNotifications());
+
                     finish();
                 }
             }
@@ -167,6 +169,29 @@ public class NewMessageActivity extends AppCompatActivity {
         return Base64.encodeToString(imgByte,Base64.DEFAULT);
     }
 
+
+    private void uploadNotifications(ArrayList<Notifications> notifications){
+        //herokuservice
+        service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        Gson gson = new Gson();
+        String jsonArray = gson.toJson(notifications);
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.addNotifications(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                dataSynced(7);
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+                Toast.makeText(NewMessageActivity.this, "Unable to upload notification on server", Toast.LENGTH_LONG);
+            }
+        });
+
+    }
 
     private void uploadMessage(ArrayList<Message> messages){
         //herokuservice
@@ -321,7 +346,7 @@ public class NewMessageActivity extends AppCompatActivity {
     }
 
     //nId, usertwo.getUserId(), user.getUserId(), 0, 2, timeStamp
-    private long notifyMessage(int notifId, long toId, long userId, int isRead, int type, String timeStamp, int mId){
+    private long notifyMessage(int notifId, long toId, long userId, int isRead, int type, String timeStamp, int mId, int isSynced){
         long  result;
 
         try {
@@ -331,7 +356,7 @@ public class NewMessageActivity extends AppCompatActivity {
         }
 
 
-        result = petBetterDb.notifyUser(notifId, toId, userId, isRead, type, timeStamp, mId);
+        result = petBetterDb.notifyUser(notifId, toId, userId, isRead, type, timeStamp, mId, isSynced);
         petBetterDb.closeDatabase();
 
 
@@ -347,6 +372,20 @@ public class NewMessageActivity extends AppCompatActivity {
         }
 
         ArrayList<MessageRep> result = petBetterDb.getUnsyncedMessageReps();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<Notifications> getUnsyncedNotifications(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Notifications> result = petBetterDb.getUnsyncedNotifications();
         petBetterDb.closeDatabase();
 
         return result;

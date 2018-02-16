@@ -124,7 +124,7 @@ public class PostRepActivity extends AppCompatActivity {
                         addPostRep(postrepid, (int) user.getUserId(), (int) postRepItem.getPostId(), (int) postRepItem.getParentId(),
                                 commentText.getText().toString(),timeStamp);
                     nId = generateNotifsId();
-                    notifyPostRep(nId, postItem.getUserId(), user.getUserId(), 0, 1, timeStamp, (int) postItem.getId());
+                    notifyPostRep(nId, postItem.getUserId(), user.getUserId(), 0, 1, timeStamp, (int) postItem.getId(), 0);
 
                     Intent intent = new Intent(PostRepActivity.this, com.example.owner.petbetter.activities.PostRepActivity.class);
                     intent.putExtra("thisParent", new Gson().toJson(postRepItem));
@@ -239,7 +239,7 @@ public class PostRepActivity extends AppCompatActivity {
         }
     }
 
-    public long notifyPostRep(int notifId, long toId, long userId, int isRead, int type, String timeStamp, int postId){
+    public long notifyPostRep(int notifId, long toId, long userId, int isRead, int type, String timeStamp, int postId, int isSynced){
 
         try {
             petBetterDb.openDatabase();
@@ -247,7 +247,7 @@ public class PostRepActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        long result = petBetterDb.notifyUser(notifId, toId, userId, isRead, type, timeStamp, postId);
+        long result = petBetterDb.notifyUser(notifId, toId, userId, isRead, type, timeStamp, postId, isSynced);
         petBetterDb.closeDatabase();
 
         return result;

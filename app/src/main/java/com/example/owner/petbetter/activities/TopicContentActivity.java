@@ -110,7 +110,7 @@ public class TopicContentActivity extends AppCompatActivity {
                     sdf.setTimeZone(TimeZone.getTimeZone("GMT+8"));
                     timeStamp = sdf.format(new Date());
                     nId = generateNotifsId();
-                    notifyFollower(nId, topicItem.getCreatorId(), user.getUserId(),0, 4, timeStamp, (int) topicItem.getId());
+                    notifyFollower(nId, topicItem.getCreatorId(), user.getUserId(),0, 4, timeStamp, (int) topicItem.getId(), 0);
                 }
 
             }
@@ -236,7 +236,7 @@ public class TopicContentActivity extends AppCompatActivity {
         }
     }
 
-    public long notifyFollower(int notifId, long toId, long userId, int isRead, int type, String timeStamp, int topicId){
+    public long notifyFollower(int notifId, long toId, long userId, int isRead, int type, String timeStamp, int topicId, int isSynced){
 
 
         try {
@@ -245,7 +245,7 @@ public class TopicContentActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        long result = petBetterDb.notifyUser(notifId, toId, userId, isRead, type, timeStamp, topicId);
+        long result = petBetterDb.notifyUser(notifId, toId, userId, isRead, type, timeStamp, topicId, isSynced);
         petBetterDb.closeDatabase();
 
         return result;
