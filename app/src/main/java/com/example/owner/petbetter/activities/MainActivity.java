@@ -69,6 +69,9 @@ public class MainActivity extends AppCompatActivity {
     private SystemSessionManager systemSessionManager;
     private TextView textInfo;
     HerokuService service;
+    ExecutorService executorService = Executors.newSingleThreadExecutor();
+    FutureTask<Boolean> futureTask;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,45 +130,37 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<User> call, Response<User> response) {
                     if(response.isSuccessful()){
-                        ExecutorService executorService = Executors.newSingleThreadExecutor();
                         final User user = response.body();
-                        FutureTask<Boolean> futureTask = (FutureTask<Boolean>) executorService.submit(new Callable<Boolean>(){
-                            @Override
-                            public Boolean call() throws Exception{
-                                boolean result = true;
-                                User thisUser = user;
+
+                        boolean result = true;
+                        User thisUser = user;
 
 
-                                syncVetChanges();
+                        syncVetChanges();
 
-                                syncClinicChanges();
+                        syncClinicChanges();
 
-                                syncFollowerChanges();
+                        syncFollowerChanges();
 
-                                syncMarkerChanges(thisUser.getUserId());
+                        syncMarkerChanges(thisUser.getUserId());
 
-                                syncMessageChanges(thisUser.getUserId());
+                        syncMessageChanges(thisUser.getUserId());
 
-                                syncMessageRepChanges();
+                        syncMessageRepChanges();
 
-                                syncNotifChanges(thisUser.getUserId());
+                        syncNotifChanges(thisUser.getUserId());
 
-                                syncPetChanges(thisUser.getUserId());
+                        syncPetChanges(thisUser.getUserId());
 
-                                syncPostChanges();
+                        syncPostChanges();
 
-                                syncPostRepChanges();
+                        syncPostRepChanges();
 
-                                syncServiceChanges();
+                        syncServiceChanges();
 
-                                syncTopicChanges();
+                        syncTopicChanges();
 
 
-
-                                return result;
-                            }
-                        });
-                        executorService.shutdown();
 
 
                         try {
@@ -180,8 +175,8 @@ public class MainActivity extends AppCompatActivity {
                                 startActivity(intent);
                                 finish();
                             }*/
-                            futureTask.get();
-                            if(futureTask.isDone()){
+
+                            if(futureTask.get()==true){
                                 System.out.println("From server wew: " + response.body().toString());
                                 systemSessionManager.createUserSession(user.getEmail());
                                 Intent intent = new Intent(MainActivity.this, com.example.owner.petbetter.activities.HomeActivity.class);
@@ -257,45 +252,52 @@ public class MainActivity extends AppCompatActivity {
 
     public void syncVetChanges(){
 
-        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
-        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
-        System.out.println("WE HERE BOOIII");
-        ArrayList<Veterinarian> unsyncedVets = getUnsyncedVets();
-
-        Gson gson = new Gson();
-        String jsonArray = gson.toJson(unsyncedVets);
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
-        final Call<Void> call = service.addVets(body);
-        call.enqueue(new Callback<Void>() {
+        futureTask = (FutureTask<Boolean>) executorService.submit(new Callable<Boolean>(){
             @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if(response.isSuccessful()){
-                    System.out.println("VETS ADDED YEY");
-                    dataSynced(1);
+            public Boolean call() throws Exception{
+                final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+                final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+                System.out.println("WE HERE BOOIII");
+                ArrayList<Veterinarian> unsyncedVets = getUnsyncedVets();
+                System.out.println("UNSYNCED VETS "+unsyncedVets.size());
 
-                    final Call<ArrayList<Veterinarian>> call2 = service2.getVeterinarians();
-                    call2.enqueue(new Callback<ArrayList<Veterinarian>>() {
-                        @Override
-                        public void onResponse(Call<ArrayList<Veterinarian>> call, Response<ArrayList<Veterinarian>> response) {
-                            if(response.isSuccessful()){
-                                setVeterinarians(response.body());
+                Gson gson = new Gson();
+                String jsonArray = gson.toJson(unsyncedVets);
+                RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+                final Call<Void> call = service.addVets(body);
+                call.enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if(response.isSuccessful()){
+                            System.out.println("VETS ADDED YEY");
+                            dataSynced(1);
 
-                            }
+                            final Call<ArrayList<Veterinarian>> call2 = service2.getVeterinarians();
+                            call2.enqueue(new Callback<ArrayList<Veterinarian>>() {
+                                @Override
+                                public void onResponse(Call<ArrayList<Veterinarian>> call, Response<ArrayList<Veterinarian>> response) {
+                                    if(response.isSuccessful()){
+                                        setVeterinarians(response.body());
+
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<ArrayList<Veterinarian>> call, Throwable t) {
+                                    Log.d("onFailure", t.getLocalizedMessage());
+
+                                }
+                            });
+
                         }
+                    }
 
-                        @Override
-                        public void onFailure(Call<ArrayList<Veterinarian>> call, Throwable t) {
-                            Log.d("onFailure", t.getLocalizedMessage());
-
-                        }
-                    });
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Log.d("onFailure", t.getLocalizedMessage());
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Log.d("onFailure", t.getLocalizedMessage());
+                    }
+                });
+                return true;
             }
         });
     }
@@ -550,7 +552,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(Call<ArrayList<Message>> call, Response<ArrayList<Message>> response) {
                             if(response.isSuccessful()){
-                                System.out.println("response size "+response.body().size());
+                                System.out.println("response size messages "+response.body().size());
                                 setMessages(response.body());
                             }
                         }
