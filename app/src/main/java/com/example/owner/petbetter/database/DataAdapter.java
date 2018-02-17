@@ -131,7 +131,8 @@ public class DataAdapter {
                 c.getString(c.getColumnIndexOrThrow("email")),
                 c.getString(c.getColumnIndexOrThrow("password")),
                 c.getInt(c.getColumnIndexOrThrow("age")),
-                c.getInt(c.getColumnIndexOrThrow("user_type")));
+                c.getInt(c.getColumnIndexOrThrow("user_type")),
+                c.getString(c.getColumnIndexOrThrow("user_photo")));
         c.close();
         return true;
     }
@@ -166,7 +167,8 @@ public class DataAdapter {
                 c.getString(c.getColumnIndexOrThrow("email")),
                 c.getString(c.getColumnIndexOrThrow("password")),
                 c.getInt(c.getColumnIndexOrThrow("age")),
-                c.getInt(c.getColumnIndexOrThrow("user_type")));
+                c.getInt(c.getColumnIndexOrThrow("user_type")),
+                c.getString(c.getColumnIndexOrThrow("user_photo")));
 
         c.close();
         return result;
@@ -219,7 +221,8 @@ public class DataAdapter {
                 c.getString(c.getColumnIndexOrThrow("email")),
                 c.getString(c.getColumnIndexOrThrow("password")),
                 c.getInt(c.getColumnIndexOrThrow("age")),
-                c.getInt(c.getColumnIndexOrThrow("user_type")));
+                c.getInt(c.getColumnIndexOrThrow("user_type")),
+                c.getString(c.getColumnIndexOrThrow("user_photo")));
 
         c.close();
         return result;
@@ -242,7 +245,8 @@ public class DataAdapter {
                 c.getString(c.getColumnIndexOrThrow("email")),
                 c.getString(c.getColumnIndexOrThrow("password")),
                 c.getInt(c.getColumnIndexOrThrow("age")),
-                c.getInt(c.getColumnIndexOrThrow("user_type")));
+                c.getInt(c.getColumnIndexOrThrow("user_type")),
+                c.getString(c.getColumnIndexOrThrow("user_photo")));
 
         c.close();
         return result;
@@ -534,6 +538,7 @@ public class DataAdapter {
                     user.getPassword(),
                     user.getAge(),
                     user.getUserType(),
+                    user.getUserPhoto(),
                     c.getString(c.getColumnIndexOrThrow("specialty")),
                     c.getFloat(c.getColumnIndexOrThrow("rating")));
             results.add(vet);
@@ -588,6 +593,7 @@ public class DataAdapter {
                     user.getPassword(),
                     user.getAge(),
                     user.getUserType(),
+                    user.getUserPhoto(),
                     c.getString(c.getColumnIndexOrThrow("specialty")),
                     c.getFloat(c.getColumnIndexOrThrow("rating")));
             results.add(vet);
@@ -876,6 +882,9 @@ public class DataAdapter {
         }
         if(n==11){
             petBetterDb.update(SERVICE_TABLE,cv,"is_synced=?", whereArgs);
+        }
+        if(n==12){
+            petBetterDb.update(USER_TABLE,cv,"is_synced=?", whereArgs);
         }
         petBetterDb.close();
     }
@@ -1708,6 +1717,8 @@ public class DataAdapter {
         return result;
     }
     public void editProfile(long _id, String firstName, String lastName, String emailAddress,String mobileNum, String landline){
+
+
         ContentValues cv = new ContentValues();
         cv.put("first_name",firstName);
         cv.put("last_name",lastName);
@@ -1718,6 +1729,7 @@ public class DataAdapter {
         String[] whereArgs= new String[]{String.valueOf(_id)};
         petBetterDb.update(USER_TABLE,cv,"_id=?", whereArgs);
         petBetterDb.close();
+
 
     }
 

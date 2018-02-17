@@ -20,14 +20,14 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 	if($stmt = $mysqli->prepare("SELECT * FROM users WHERE email = ?")){
 		$stmt->bind_param("s", $email);
 		$stmt->execute();
-		$stmt->bind_result($_id, $first_name, $last_name, $mobile_num, $phone_num, $email,  $password, $age, $user_type);
+		$stmt->bind_result($_id, $first_name, $last_name, $mobile_num, $phone_num, $email,  $password, $age, $user_type, $user_photo);
 		$stmt->store_result();
 	
 		if($stmt->fetch()){
 			
 			$stmt->close();
 			//echo json_encode($response);
-			echo json_encode(array('_id'=>$_id,
+			echo json_encode(array('user_id'=>$_id,
 			'first_name'=>$first_name,
 			'last_name'=>$last_name,
 			'mobile_num'=>$mobile_num,
@@ -35,7 +35,8 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 			'email'=>$email,
 			'password'=>$password,
 			'age'=>$age,
-			'user_type'=>$user_type));
+			'user_type'=>$user_type,
+			'user_photo'=>$user_photo));
 		}
 		else{
 			

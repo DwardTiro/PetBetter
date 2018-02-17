@@ -18,8 +18,8 @@ public class Veterinarian extends User {
     float rating;
 
     public Veterinarian(int id, long userId, String lastName, String firstName, String mobileNumber, String phoneNumber,
-                        String email, String password, int age, int userType, String specialty, float rating) {
-        super(userId, lastName, firstName, mobileNumber, phoneNumber, email, password, age, userType);
+                        String email, String password, int age, int userType, String userPhoto, String specialty, float rating) {
+        super(userId, lastName, firstName, mobileNumber, phoneNumber, email, password, age, userType, userPhoto);
         this.id = id;
         this.specialty = specialty;
         this.rating = rating;

@@ -2,12 +2,7 @@
 
 require 'init.php';
 
-$_id = $_POST['_id'];
-$first_name = $_POST['first_name'];
-$last_name = $_POST['last_name'];
-$mobile_num = $_POST['mobile_num'];
-$phone_num = $_POST['phone_num'];
-$email = $_POST['email'];
+$userlist = json_decode(file_get_contents('php://input'),true);
 
 $response = array(); 
 //$sql = "SELECT * FROM users WHERE email = ? AND password = ?";
@@ -17,22 +12,32 @@ $response = array();
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
 
-	if(!(isset($_POST['_id']) and isset($_POST['first_name']) and isset($_POST['last_name']) and isset($_POST['mobile_num']) and isset($_POST['phone_num']) and isset($_POST['email']))){
-		echo 'Details are lacking';
-		exit(0);
-	}
-
-	if($stmt = $mysqli->prepare("UPDATE users SET first_name = ?, last_name = ?, mobile_num = ?,  phone_num = ?, email = ? WHERE _id = ?")){
-		$stmt->bind_param("ssssss", $first_name, $last_name, $mobile_num, $phone_num, $email, $_id);
-		$stmt->execute();
-		$stmt->close();
-		echo 'Update successful';
-		//echo json_encode($stmt);
-		//echo json_encode(array('user'=>$response));
+	$i = 0;
+	echo $userlist['email'];
+	
+	$title = substr(md5(rand()), 0, 7);
+	$upload_path = "uploads/users/$title.jpg";
+		
+	if(!($userlist['user_photo']==null)){
+		file_put_contents($upload_path, base64_decode($userlist['user_photo']));
 	}
 	else{
-		echo 'Update unsuccessful';
+		$upload_path = null;
 	}
+	echo $upload_path;
+	if($stmt = $mysqli->prepare("UPDATE users SET first_name = ?, last_name = ?, mobile_num = ?,  phone_num = ?, email = ?, password = ?, age = ?, user_type = ?, user_photo = ? WHERE user_id = ?")){
+		$stmt->bind_param("ssssssssss", $userlist['first_name'], $userlist['last_name'], $userlist['mobile_num'], $userlist['phone_num'], $userlist['email'], $userlist['password'], 
+			$userlist['age'], $userlist['user_type'], $upload_path, $userlist['user_id']);
+		$stmt->execute();
+		$stmt->close();
+	}
+	else{
+		//echo 'and here?';
+		
+	}
+		
+	
+	
 }
 
 /*

@@ -20,7 +20,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 	
 	while($i<$n){
 		$title = substr(md5(rand()), 0, 7);
-		$upload_path = "uploads/$title.jpg";
+		$upload_path = "uploads/messagereps/$title.jpg";
 		file_put_contents($upload_path, base64_decode($messagereplist[$i]['message_photo']));
 		if($stmt = $mysqli->prepare("INSERT INTO messagereps (user_id, message_id, rep_content, is_sent, date_performed, message_photo) VALUES (?,?,?,?,?,?)")){
 			$stmt->bind_param("ssssss", $messagereplist[$i]['user_id'], $messagereplist[$i]['message_id'], $messagereplist[$i]['rep_content'], $messagereplist[$i]['is_sent'], 

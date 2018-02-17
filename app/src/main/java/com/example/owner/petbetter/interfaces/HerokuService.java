@@ -19,6 +19,7 @@ import com.example.owner.petbetter.classes.Veterinarian;
 
 import java.util.ArrayList;
 
+import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -292,11 +293,9 @@ public interface HerokuService {
     @POST("deleteTopic.php")
     Call<Integer> deleteTopic(@Field("_id") long topicId);
 
-    @FormUrlEncoded
+
     @POST("editProfile.php")
-    Call<Integer> editProfile(@Field("_id") long _id, @Field("first_name") String firstName, @Field("last_name") String lastName,
-                           @Field("email") String emailAddress, @Field("mobile_num") String mobileNum,
-                           @Field("phone_num") String phoneNum);
+    Call<Void> editProfile(@Body RequestBody userList);
 
     @FormUrlEncoded
     @POST("getMessageId.php")
