@@ -2,6 +2,7 @@ package com.example.owner.petbetter.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,14 +13,24 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
+import com.example.owner.petbetter.ServiceGenerator;
+import com.example.owner.petbetter.activities.EditProfileActivity;
 import com.example.owner.petbetter.classes.Marker;
 import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by owner on 2/10/2017.
@@ -38,6 +49,8 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
     private DataAdapter petBetterDb;
     private Context context;
     private PopupWindow popUpConfirmationWindow;
+
+    HerokuService service;
 
 
     public HomeAdapter(Context context, ArrayList<Post> postList, User user, OnItemClickListener listener) {
@@ -94,6 +107,26 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
 
                             initializeDatabase();
                             deletePost(thisPost.getId());
+
+                            service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+                            final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+                            final Call<Void> call = service.deletePost(thisPost.getUserId(), thisPost.getDateCreated());
+                            call.enqueue(new Callback<Void>() {
+                                @Override
+                                public void onResponse(Call<Void> call, Response<Void> response) {
+                                    //User thisUser = response.body();
+                                    if(response.isSuccessful()){
+                                        dataSynced(9);
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<Void> call, Throwable t) {
+                                    Log.d("onFailure", t.getLocalizedMessage());
+                                }
+                            });
+
                             update(position);
                             popUpConfirmationWindow.dismiss();
                         }
@@ -136,6 +169,17 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
         petBetterDb.closeDatabase();
 
         return result;
+    }
+
+    private void dataSynced(int n){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        petBetterDb.dataSynced(n);
+        petBetterDb.closeDatabase();
+
     }
 
     public void update(int position){

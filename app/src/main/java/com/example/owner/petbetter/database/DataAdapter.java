@@ -1372,7 +1372,7 @@ public class DataAdapter {
         return ids;
     }
 
-    public long createPost(int pId, long userId, String postTitle, String postDesc, long topicId, String timeStamp, int isDeleted){
+    public long createPost(int pId, long userId, String postTitle, String postDesc, long topicId, String timeStamp, int isDeleted, int isSynced){
         long result;
 
         ContentValues cv = new ContentValues();
@@ -1383,6 +1383,7 @@ public class DataAdapter {
         cv.put("topic_id", topicId);
         cv.put("date_created", timeStamp);
         cv.put("is_deleted", isDeleted);
+        cv.put("is_synced", isSynced);
 
         result = petBetterDb.insert(POST_TABLE, null, cv);
 

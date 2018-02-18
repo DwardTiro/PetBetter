@@ -4,17 +4,23 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
+import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.classes.Follower;
+import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.Topic;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -24,11 +30,17 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class NewPostActivity extends AppCompatActivity {
 
     EditText newPostTitle;
     EditText newPostDesc;
     Button newPostButton;
+    HerokuService service;
 
 
     private DataAdapter petBetterDb;
@@ -79,7 +91,9 @@ public class NewPostActivity extends AppCompatActivity {
                     timeStamp = sdf.format(new Date());
 
                     createPost(pId,user.getUserId(), newPostTitle.getText().toString(), newPostDesc.getText().toString(),
-                            topicId, timeStamp, 0);
+                            topicId, timeStamp, 0, 0);
+
+                    uploadPost(getUnsyncedPosts());
 
                     //notifyMessage(nId, messageItem.getFromId(), user.getUserId(), 0, 2, timeStamp, sourceId);
 
@@ -94,6 +108,30 @@ public class NewPostActivity extends AppCompatActivity {
 
                     finish();
                 }
+            }
+        });
+    }
+
+    private void uploadPost(ArrayList<Post> posts){
+        service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+        System.out.println("HOW MANY POSTS? "+posts.size());
+
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String jsonArray = gson.toJson(posts);
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.addPosts(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                dataSynced(9);
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+                Toast.makeText(NewPostActivity.this, "Unable to upload posts on server", Toast.LENGTH_LONG);
             }
         });
     }
@@ -120,6 +158,31 @@ public class NewPostActivity extends AppCompatActivity {
         }
 
         User result = petBetterDb.getUser(email);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private void dataSynced(int n) {
+
+        try {
+            petBetterDb.openDatabase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        petBetterDb.dataSynced(n);
+        petBetterDb.closeDatabase();
+    }
+
+    private ArrayList<Post> getUnsyncedPosts(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Post> result = petBetterDb.getUnsyncedPosts();
         petBetterDb.closeDatabase();
 
         return result;
@@ -154,7 +217,8 @@ public class NewPostActivity extends AppCompatActivity {
                             topicId, timeStamp, 0
     * */
 
-    private long createPost(int pId, long userId, String postTitle, String postDesc, long topicId, String timeStamp, int isDeleted){
+    private long createPost(int pId, long userId, String postTitle, String postDesc, long topicId, String timeStamp,
+                            int isDeleted, int isSynced){
         long  result;
 
         try {
@@ -163,7 +227,7 @@ public class NewPostActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        result = petBetterDb.createPost(pId, userId, postTitle, postDesc, topicId, timeStamp, isDeleted);
+        result = petBetterDb.createPost(pId, userId, postTitle, postDesc, topicId, timeStamp, isDeleted, isSynced);
         petBetterDb.closeDatabase();
 
 

@@ -283,7 +283,7 @@ public interface HerokuService {
 
     @FormUrlEncoded
     @POST("deletePost.php")
-    Call<Integer> deletePost(@Field("_id") long postId);
+    Call<Void> deletePost(@Field("user_id") long postId, @Field("date_created") String dateCreated);
 
     @FormUrlEncoded
     @POST("deletePostRep.php")
