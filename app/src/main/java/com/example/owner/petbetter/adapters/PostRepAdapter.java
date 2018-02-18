@@ -4,6 +4,7 @@ import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,13 +16,19 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.view.View.MeasureSpec;
 
+import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
+import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.classes.PostRep;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 /**
@@ -44,6 +51,7 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
     private int type;
     final private int VIEW_TYPE_EMPTYLIST_PLACEHOLDER = 0;
     final private int VIEW_TYPE_RECYCLERVIEW = 1;
+    HerokuService service;
 
     public PostRepAdapter(Context context, ArrayList<PostRep> postRepList, User user, OnItemClickListener listener) {
         inflater = LayoutInflater.from(context);
@@ -132,6 +140,25 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
                         public void onClick(View view) {
                             initializeDatabase();
                             deletePostRep(thisComment.getId());
+                            service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+                            final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+                            final Call<Void> call = service.deletePostRep(thisComment.getUserId(), thisComment.getDatePerformed());
+                            call.enqueue(new Callback<Void>() {
+                                @Override
+                                public void onResponse(Call<Void> call, Response<Void> response) {
+                                    //User thisUser = response.body();
+                                    if(response.isSuccessful()){
+                                        dataSynced(10);
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<Void> call, Throwable t) {
+                                    Log.d("onFailure", t.getLocalizedMessage());
+                                }
+                            });
+
                             popUpConfirmationWindow.dismiss();
                             updateData(position);
                         }
@@ -175,6 +202,16 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
         }
     }
 
+    private void dataSynced(int n){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        petBetterDb.dataSynced(n);
+        petBetterDb.closeDatabase();
+
+    }
 
     private long deletePostRep(long postRepId) {
         try {

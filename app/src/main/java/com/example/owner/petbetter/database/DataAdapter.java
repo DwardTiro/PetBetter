@@ -1100,6 +1100,7 @@ public class DataAdapter {
         cv.put("rep_content", repContent);
         cv.put("date_performed", datePerformed);
         cv.put("is_deleted", 0);
+        cv.put("is_synced", 0);
 
         result = petBetterDb.insert(POST_REP_TABLE, null, cv);
 

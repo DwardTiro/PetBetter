@@ -5,13 +5,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
+import com.example.owner.petbetter.ServiceGenerator;
+import com.example.owner.petbetter.classes.Notifications;
 import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.PostRep;
 import com.example.owner.petbetter.classes.User;
@@ -19,6 +24,7 @@ import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.fragments.FragmentCommentThread;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -27,6 +33,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.TimeZone;
+
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class PostRepActivity extends AppCompatActivity {
 
@@ -47,6 +58,7 @@ public class PostRepActivity extends AppCompatActivity {
     private EditText commentText;
     private String timeStamp;
     private int nId;
+    HerokuService service;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,8 +135,11 @@ public class PostRepActivity extends AppCompatActivity {
                     else
                         addPostRep(postrepid, (int) user.getUserId(), (int) postRepItem.getPostId(), (int) postRepItem.getParentId(),
                                 commentText.getText().toString(),timeStamp);
+
+                    uploadPostReps(getUnsyncedPostReps());
                     nId = generateNotifsId();
                     notifyPostRep(nId, postItem.getUserId(), user.getUserId(), 0, 1, timeStamp, (int) postItem.getId(), 0);
+                    uploadNotifications(getUnsyncedNotifications());
 
                     Intent intent = new Intent(PostRepActivity.this, com.example.owner.petbetter.activities.PostRepActivity.class);
                     intent.putExtra("thisParent", new Gson().toJson(postRepItem));
@@ -144,6 +159,54 @@ public class PostRepActivity extends AppCompatActivity {
         } catch(SQLException e ){
             e.printStackTrace();
         }
+    }
+
+    private void uploadPostReps(ArrayList<PostRep> postreps){
+        service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+        System.out.println("HOW MANY POSTREPS? "+postreps.size());
+
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String jsonArray = gson.toJson(postreps);
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.addPostReps(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                dataSynced(10);
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+                Toast.makeText(PostRepActivity.this, "Unable to upload postreps on server", Toast.LENGTH_LONG);
+            }
+        });
+    }
+
+    private void uploadNotifications(ArrayList<Notifications> notifs){
+        service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+        System.out.println("HOW MANY NOTIFICATIONS? "+notifs.size());
+
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String jsonArray = gson.toJson(notifs);
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.addNotifications(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                dataSynced(10);
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+                Toast.makeText(PostRepActivity.this, "Unable to upload notifications on server", Toast.LENGTH_LONG);
+            }
+        });
     }
 
     public int generatePostRepId(){
@@ -193,6 +256,46 @@ public class PostRepActivity extends AppCompatActivity {
         }
 
         User result = petBetterDb.getUser(email);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<PostRep> getUnsyncedPostReps(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<PostRep> result = petBetterDb.getUnsyncedPostReps();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private void dataSynced(int n){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        petBetterDb.dataSynced(n);
+        petBetterDb.closeDatabase();
+    }
+
+    private ArrayList<Notifications> getUnsyncedNotifications(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Notifications> result = petBetterDb.getUnsyncedNotifications();
         petBetterDb.closeDatabase();
 
         return result;

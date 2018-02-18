@@ -2,7 +2,9 @@
 
 require 'init.php';
 
-$_id = $_POST['_id'];
+$user_id = $_POST['user_id'];
+$date_performed = $_POST['date_performed'];
+
 
 $response = array(); 
 //$sql = "SELECT * FROM users WHERE email = ? AND password = ?";
@@ -12,13 +14,13 @@ $response = array();
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
 
-	if(!(isset($_POST['_id']))){
+	if(!(isset($_POST['user_id']))){
 		echo 'Details are lacking';
 		exit(0);
 	}
 
-	if($stmt = $mysqli->prepare("UPDATE postreps SET is_deleted = 1 WHERE _id = ?")){
-		$stmt->bind_param("s", $_id);
+	if($stmt = $mysqli->prepare("UPDATE postreps SET is_deleted = 1 WHERE user_id = ? AND date_performed = ?")){
+		$stmt->bind_param("ss", $user_id, $date_performed);
 		$stmt->execute();
 		$stmt->close();
 		echo 'Update successful';
