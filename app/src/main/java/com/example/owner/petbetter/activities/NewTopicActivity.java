@@ -4,16 +4,22 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
+import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.classes.Topic;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.fragments.FragmentCommunity;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -22,6 +28,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.TimeZone;
+
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class NewTopicActivity extends AppCompatActivity {
 
@@ -36,6 +47,7 @@ public class NewTopicActivity extends AppCompatActivity {
     private String timeStamp;
     private ArrayList<Topic> tList;
     private boolean alreadyExist= false;
+    HerokuService service;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +88,8 @@ public class NewTopicActivity extends AppCompatActivity {
                     timeStamp = sdf.format(new Date());
 
                     createTopic(tId,user.getUserId(), newTopicTitle.getText().toString(), newTopicDesc.getText().toString(),
-                            timeStamp, 0);
+                            timeStamp, 0, 0);
+                    uploadTopic(getUnsyncedTopics());
 
                     finish();
                     //Intent intent = new Intent(v.getContext(),com.example.owner.petbetter.activities.CommActivity.class);
@@ -99,6 +112,31 @@ public class NewTopicActivity extends AppCompatActivity {
 
     }
 
+    private void uploadTopic(ArrayList<Topic> topics){
+        service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+        System.out.println("HOW MANY TOPICS? "+topics.size());
+
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String jsonArray = gson.toJson(topics);
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.addTopics(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                dataSynced(9);
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+                Toast.makeText(NewTopicActivity.this, "Unable to upload topics on server", Toast.LENGTH_LONG);
+            }
+        });
+    }
+
+
     private User getUser(String email){
 
         try {
@@ -112,6 +150,32 @@ public class NewTopicActivity extends AppCompatActivity {
 
         return result;
     }
+
+    private ArrayList<Topic> getUnsyncedTopics(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Topic> result = petBetterDb.getUnsyncedTopics();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private void dataSynced(int n){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        petBetterDb.dataSynced(n);
+        petBetterDb.closeDatabase();
+    }
+
 
     public int generateTopicId(){
         ArrayList<Integer> storedIds;
@@ -143,7 +207,8 @@ public class NewTopicActivity extends AppCompatActivity {
     * tId,user.getUserId(), newTopicTitle.getText().toString(), newTopicDesc.getText().toString(),
                             timeStamp, 0
     * */
-    private long createTopic(int topicId, long userId, String topicTitle, String topicDesc, String timeStamp, int isDeleted){
+    private long createTopic(int topicId, long userId, String topicTitle, String topicDesc, String timeStamp, int isDeleted,
+                             int isSynced){
         long  result;
 
         try {
@@ -152,7 +217,7 @@ public class NewTopicActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        result = petBetterDb.createTopic(topicId, userId, topicTitle, topicDesc, timeStamp, isDeleted);
+        result = petBetterDb.createTopic(topicId, userId, topicTitle, topicDesc, timeStamp, isDeleted, isSynced);
         petBetterDb.closeDatabase();
 
 

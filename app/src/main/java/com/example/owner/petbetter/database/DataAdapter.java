@@ -886,6 +886,9 @@ public class DataAdapter {
         if(n==12){
             petBetterDb.update(USER_TABLE,cv,"is_synced=?", whereArgs);
         }
+        if(n==13){
+            petBetterDb.update(TOPIC_TABLE,cv,"is_synced=?", whereArgs);
+        }
         petBetterDb.close();
     }
 
@@ -1313,7 +1316,8 @@ public class DataAdapter {
         return ids;
     }
 
-    public long createTopic(int topicId, long userId, String topicTitle, String topicDesc, String timeStamp, int isDeleted){
+    public long createTopic(int topicId, long userId, String topicTitle, String topicDesc, String timeStamp, int isDeleted,
+                            int isSynced){
         long result;
 
         ContentValues cv = new ContentValues();
@@ -1323,6 +1327,7 @@ public class DataAdapter {
         cv.put("topic_desc", topicDesc);
         cv.put("date_created", timeStamp);
         cv.put("is_deleted", isDeleted);
+        cv.put("is_synced", isSynced);
 
         result = petBetterDb.insert(TOPIC_TABLE, null, cv);
 
