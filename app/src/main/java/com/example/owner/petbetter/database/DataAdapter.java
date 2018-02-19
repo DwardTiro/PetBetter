@@ -1533,6 +1533,17 @@ public class DataAdapter {
         petBetterDb.close();
     }
 
+    public void notifRead(long id){
+        ContentValues cv = new ContentValues();
+        //cv.put("specialty","Canine Behavior");
+        cv.put("is_read", 1);
+        cv.put("is_synced", 0);
+
+        String[] whereArgs = new String[]{String.valueOf(id)};
+        petBetterDb.update(NOTIF_TABLE,cv,"_id=?", whereArgs);
+        petBetterDb.close();
+    }
+
     public void setNewFacilityRating(float newRating, long facility_id){
         ContentValues cv = new ContentValues();
         //cv.put("specialty","Canine Behavior");
@@ -1560,13 +1571,14 @@ public class DataAdapter {
         return ids;
     }
 
-    public long addFollower(int followerId, int topicId, int userId){
+    public long addFollower(int followerId, int topicId, int userId, int isSynced){
         long result;
 
         ContentValues cv = new ContentValues();
         cv.put("_id", followerId);
         cv.put("topic_id", topicId);
         cv.put("user_id", userId);
+        cv.put("is_synced", isSynced);
 
         result = petBetterDb.insert(FOLLOWER_TABLE, null, cv);
 
@@ -1627,17 +1639,6 @@ public class DataAdapter {
 
         c.close();
         return results;
-    }
-
-    public long notifRead(long notifId){
-        ContentValues cv = new ContentValues();
-        cv.put("is_read",1);
-
-        String[] whereArgs = new String[]{String.valueOf(notifId)};
-        long result = petBetterDb.update(NOTIF_TABLE,cv,"_id=?", whereArgs);
-        petBetterDb.close();
-
-        return result;
     }
 
     public Message getMessage(long messageId){

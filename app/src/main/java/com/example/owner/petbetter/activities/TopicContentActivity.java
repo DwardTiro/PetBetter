@@ -4,11 +4,16 @@ import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
+import com.example.owner.petbetter.ServiceGenerator;
+import com.example.owner.petbetter.classes.Follower;
 import com.example.owner.petbetter.classes.Message;
 import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.Topic;
@@ -19,6 +24,7 @@ import com.example.owner.petbetter.fragments.FragmentPosts;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.google.android.gms.vision.text.Text;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -27,6 +33,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.TimeZone;
+
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class TopicContentActivity extends AppCompatActivity {
 
@@ -41,6 +52,7 @@ public class TopicContentActivity extends AppCompatActivity {
     private ImageButton followButton;
     private int nId;
     private String timeStamp;
+    HerokuService service;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,12 +111,32 @@ public class TopicContentActivity extends AppCompatActivity {
                     followButton.setBackgroundColor(Color.WHITE);
                     followButton.setImageResource(R.mipmap.ic_add_black_24dp);
                     deleteFollower((int)topicItem.getId(), (int) user.getUserId());
+
+                    service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+                    final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+                    final Call<Void> call = service.deleteFollower(topicItem.getId(), user.getUserId());
+                    call.enqueue(new Callback<Void>() {
+                        @Override
+                        public void onResponse(Call<Void> call, Response<Void> response) {
+                            //User thisUser = response.body();
+                            if(response.isSuccessful()){
+                                dataSynced(3);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Void> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+                        }
+                    });
                 }
                 else{
                     followButton.setBackgroundColor(Color.YELLOW);
                     followButton.setImageResource(R.mipmap.ic_check_black_24dp);
                     int fId = generateFollowerId();
-                    addFollower(fId, (int) topicItem.getId(), (int) user.getUserId());
+                    addFollower(fId, (int) topicItem.getId(), (int) user.getUserId(), 0);
+                    uploadFollower(getUnsyncedFollowers());
 
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
                     sdf.setTimeZone(TimeZone.getTimeZone("GMT+8"));
@@ -121,7 +153,7 @@ public class TopicContentActivity extends AppCompatActivity {
         finish();
     }
 
-    private long addFollower(int followerId, int topicId, int userId){
+    private long addFollower(int followerId, int topicId, int userId, int isSynced){
 
         try {
             petBetterDb.openDatabase();
@@ -129,10 +161,59 @@ public class TopicContentActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        long result = petBetterDb.addFollower(followerId, topicId, userId);
+        long result = petBetterDb.addFollower(followerId, topicId, userId, isSynced);
         petBetterDb.closeDatabase();
 
         return result;
+    }
+
+    private void uploadFollower(ArrayList<Follower> followers){
+        service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+        System.out.println("HOW MANY FOLLOWERS? "+followers.size());
+
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String jsonArray = gson.toJson(followers);
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.addFollowers(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                dataSynced(3);
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+                Toast.makeText(TopicContentActivity.this, "Unable to upload followers on server", Toast.LENGTH_LONG);
+            }
+        });
+    }
+
+    private ArrayList<Follower> getUnsyncedFollowers(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Follower> result = petBetterDb.getUnsyncedFollowers();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private void dataSynced(int n){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        petBetterDb.dataSynced(n);
+        petBetterDb.closeDatabase();
     }
 
     private boolean checkIfFollower(int topicId, int userId){

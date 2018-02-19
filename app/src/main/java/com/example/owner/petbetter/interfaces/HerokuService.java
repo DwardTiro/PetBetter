@@ -139,8 +139,8 @@ public interface HerokuService {
                           @Field("date_performed") String datePerformed);
 
     @FormUrlEncoded
-    @POST("getPost.php")
-    Call<Post> getPost(@Field("_id") long postId);
+    @POST("getPostServer.php")
+    Call<Post> getPostServer(@Field("user_id") long userId, @Field("date_created") String dateCreated);
 
     @FormUrlEncoded
     @POST("getPostReps.php")
@@ -267,15 +267,14 @@ public interface HerokuService {
 
     @FormUrlEncoded
     @POST("deleteFollower.php")
-    Call<Integer> deleteFollower(@Field("topic_id") int topicId, @Field("user_id") int userId);
+    Call<Void> deleteFollower(@Field("topic_id") long topicId, @Field("user_id") long userId);
 
     @FormUrlEncoded
     @POST("checkIfFollower.php")
     Call<ArrayList<Follower>> getTopicFollowers(@Field("topic_id") long topicId);
 
-    @FormUrlEncoded
-    @POST("notifRead.php")
-    Call<Integer> notifRead(@Field("topic_id") long notifId);
+    @POST("updateNotifications.php")
+    Call<Void> updateNotifications(@Body RequestBody notifArray);
 
     @FormUrlEncoded
     @POST("getMessage.php")

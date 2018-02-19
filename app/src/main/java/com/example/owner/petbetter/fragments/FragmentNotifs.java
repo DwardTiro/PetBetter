@@ -7,14 +7,18 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
+import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
+import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.adapters.NotificationsAdapter;
 import com.example.owner.petbetter.classes.Message;
 import com.example.owner.petbetter.classes.Notifications;
@@ -24,11 +28,17 @@ import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by owner on 7/10/2017.
@@ -48,6 +58,7 @@ public class FragmentNotifs extends Fragment {
     private Post postItem;
     private Message messageItem;
     private Topic topicItem;
+    HerokuService service;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -70,6 +81,7 @@ public class FragmentNotifs extends Fragment {
             @Override public void onItemClick(Notifications item) {
                 //Execute command here
                 notifRead(item.getId());
+                updateNotifications(getUnsyncedNotifications());
                 if(item.getType()==1){
                     Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.PostContentActivity.class);
                     postItem = getPost(item.getSourceId());
@@ -89,6 +101,8 @@ public class FragmentNotifs extends Fragment {
                     startActivity(intent);
                 }
 
+                //updateNotifications(getUnsyncedNotifications());
+
                 System.out.println("Yay you clicked a notif");
             }
         });
@@ -98,6 +112,29 @@ public class FragmentNotifs extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         return view;
+    }
+
+    private void updateNotifications(ArrayList<Notifications> notifs){
+        service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+        System.out.println("HOW MANY NOTIFS? "+notifs.size());
+
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String jsonArray = gson.toJson(notifs);
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.updateNotifications(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                dataSynced(7);
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
     }
 
     private void initializeDatabase() {
@@ -126,6 +163,32 @@ public class FragmentNotifs extends Fragment {
         return result;
     }
 
+    private void dataSynced(int n){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        petBetterDb.dataSynced(n);
+        petBetterDb.closeDatabase();
+
+    }
+
+    private ArrayList<Notifications> getUnsyncedNotifications(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Notifications> result = petBetterDb.getUnsyncedNotifications();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
 
     public ArrayList<Notifications> getNotifications(long userId){
 
@@ -141,7 +204,7 @@ public class FragmentNotifs extends Fragment {
         return result;
     }
 
-    public long notifRead(long notifId){
+    public void notifRead(long notifId){
 
         //modify this method in such a way that it only gets bookmarks tagged by user. Separate from facilities.
         try {
@@ -149,10 +212,8 @@ public class FragmentNotifs extends Fragment {
         }catch (SQLException e) {
             e.printStackTrace();
         }
-
-        long result = petBetterDb.notifRead(notifId);
+        petBetterDb.notifRead(notifId);
         petBetterDb.closeDatabase();
-        return result;
     }
 
     private Post getPost(long postId){
