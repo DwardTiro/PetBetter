@@ -160,6 +160,8 @@
             android:parentActivityName=".activities.SignUpUserTypeActivity"/>
         <activity android:name=".activities.AddFacilityActivity"
             />
+        <activity android:name=".activities.UserProfileActivity"
+            />
     </application>
 
 

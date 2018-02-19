@@ -44,7 +44,6 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
     private NavigationView navigationView;
     private SystemSessionManager systemSessionManager;
     private TextView textNavEmail, textNavUser;
-    private Toolbar menuBar;
     private User user;
 
     HerokuService service;
@@ -66,7 +65,6 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        menuBar = (Toolbar) findViewById(R.id.menu_bar);
         View headerView = navigationView.getHeaderView(0);
 
         systemSessionManager = new SystemSessionManager(this);
@@ -190,6 +188,10 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
             Intent intent = new Intent(this, com.example.owner.petbetter.activities.HomeActivity.class);
             startActivity(intent);
         }
+        else if(id == R.id.user_profile){
+            Intent intent = new Intent(this, com.example.owner.petbetter.activities.UserProfileActivity.class);
+            startActivity(intent);
+        }
         else if(id == R.id.bookmarks){
             Intent intent = new Intent(this, com.example.owner.petbetter.activities.BookmarksActivity.class);
             startActivity(intent);
@@ -202,10 +204,6 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
         }
         else if(id == R.id.log_out){
             Intent intent = new Intent(this, com.example.owner.petbetter.activities.MainActivity.class);
-            startActivity(intent);
-        }
-        else if(id == R.id.user_profile){
-            Intent intent = new Intent(this, com.example.owner.petbetter.activities.EditProfileActivity.class);
             startActivity(intent);
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
