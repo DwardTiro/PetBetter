@@ -1,5 +1,5 @@
-BEGIN TRANSACTION;
-CREATE TABLE "veterinarians" (
+BEGIN;
+CREATE TABLE `veterinarians` (
 	`_id`	INTEGER,
 	`user_id`	INTEGER,
 	`specialty`	TEXT,
@@ -9,7 +9,7 @@ CREATE TABLE "veterinarians" (
 );
 INSERT INTO `veterinarians` (_id,user_id,specialty,rating,phone_num) VALUES (1,3,'Animal Behaviour',0.0,'098654321'),
  (2,1,'Veterinary Specialist',0.0,'0987654321');
-CREATE TABLE "users" (
+CREATE TABLE users (
 	`_id`	INTEGER,
 	`first_name`	TEXT,
 	`last_name`	TEXT,
@@ -46,7 +46,7 @@ CREATE TABLE `ratings` (
 	`is_deleted`	INTEGER,
 	PRIMARY KEY(`_id`)
 );
-CREATE TABLE "posts" (
+CREATE TABLE posts (
 	`_id`	INTEGER,
 	`user_id`	INTEGER,
 	`topic_name`	TEXT,
@@ -59,7 +59,7 @@ CREATE TABLE "posts" (
 INSERT INTO `posts` (_id,user_id,topic_name,topic_content,topic_id,date_created,is_deleted) VALUES (1,3,'Come visit my clinic!','Hi guys! I''m John Ivanhoe. If you are a pet owner you may want to visit my clinic for regular check ups.',1,NULL,0),
  (2,1,'Hi guys! Looking for a doctor to treat my dog.','Could I get suggestions as to who I could contact or where to go?',1,NULL,0),
  (3,1,'I love dogs','Hi guys! I love dogs',2,NULL,0);
-CREATE TABLE "postreps" (
+CREATE TABLE postreps (
 	`_id`	INTEGER,
 	`user_id`	INTEGER,
 	`post_id`	INTEGER,
@@ -73,7 +73,7 @@ INSERT INTO `postreps` (_id,user_id,post_id,parent_id,rep_content,date_performed
  (2,3,2,0,'I''m a doctor! :)',NULL,0),
  (3,2,1,1,'We give free treats~',NULL,0),
  (4,1,1,1,'Loking forward to this. :D',NULL,0);
-CREATE TABLE "notifications" (
+CREATE TABLE notifications (
 	`_id`	INTEGER,
 	`user_id`	INTEGER,
 	`doer_id`	INTEGER,
@@ -92,7 +92,7 @@ CREATE TABLE `notification_type` (
 );
 INSERT INTO `notification_type` (_id,type) VALUES (1,'Post'),
  (2,'Message');
-CREATE TABLE "messages" (
+CREATE TABLE messages (
 	`_id`	INTEGER,
 	`user_one`	INTEGER,
 	`user_two`	INTEGER,
@@ -100,7 +100,7 @@ CREATE TABLE "messages" (
 );
 INSERT INTO `messages` (_id,user_one,user_two) VALUES (1,3,1),
  (2,1,2);
-CREATE TABLE "messagereps" (
+CREATE TABLE messagereps (
 	`_id`	INTEGER,
 	`user_id`	INTEGER,
 	`message_id`	INTEGER,
@@ -112,7 +112,7 @@ CREATE TABLE "messagereps" (
 INSERT INTO `messagereps` (_id,user_id,message_id,rep_content,is_sent,date_performed) VALUES (1,3,1,'Are you a pet owner?',1,NULL),
  (2,2,2,'Hi!',1,NULL),
  (3,1,2,'Yes? :D',1,NULL);
-CREATE TABLE "markers" (
+CREATE TABLE markers (
 	`_id`	INTEGER,
 	`bldg_name`	TEXT,
 	`longitude`	NUMERIC,
@@ -133,7 +133,7 @@ INSERT INTO `followers` (_id,topic_id,user_id) VALUES (1,1,3),
  (2,1,1),
  (3,2,1),
  (4,1,2);
-CREATE TABLE "facilities" (
+CREATE TABLE facilities (
 	`_id`	INTEGER,
 	`faci_name`	TEXT,
 	`location`	TEXT,
@@ -145,6 +145,6 @@ CREATE TABLE "facilities" (
 	PRIMARY KEY(`_id`)
 );
 INSERT INTO `facilities` (_id,faci_name,location,hours_open,hours_close,contact_info,vet_id,rating) VALUES (1,'Ivanhoe Veterinary Clinic','Solenad 1 Nuvali, Santa Rosa, Laguna ','8:00','17:00','8704421',1,0.0);
-CREATE TABLE "android_metadata" ("locale" TEXT DEFAULT 'en_US');
+CREATE TABLE android_metadata (locale TEXT DEFAULT 'en_US');
 INSERT INTO `android_metadata` (locale) VALUES ('en_US');
 COMMIT;

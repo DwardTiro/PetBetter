@@ -158,6 +158,8 @@
             android:parentActivityName=".activities.SignUpUserTypeActivity"/>
         <activity android:name=".activities.SignUpVeterinarianActivity"
             android:parentActivityName=".activities.SignUpUserTypeActivity"/>
+        <activity android:name=".activities.AddFacilityActivity"
+            />
     </application>
 
 

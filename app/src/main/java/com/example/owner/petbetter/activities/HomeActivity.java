@@ -60,7 +60,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         setContentView(R.layout.activity_home);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -101,7 +101,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         textNavEmail.setText(email);
 
         user = getUser(email);
-        hideItems();
 
         //userName = user.getName();
 
@@ -131,13 +130,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     protected void onRestart(){
         super.onRestart();
         recreate();
-    }
-
-
-    private void hideItems(){
-        Menu menu = navigationView.getMenu();
-        menu.findItem(R.id.settings).setVisible(false);
-        menu.findItem(R.id.profile).setVisible(false);
     }
 
     private void initializeDatabase() {
@@ -283,14 +275,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(MenuItem item){
         int id = item.getItemId();
 
-        if(id == R.id.profile){
-            System.out.println("CAMBODJA");
-        }
-        else if(id == R.id.settings){
-            System.out.println("NYEEAAAMM");
+        if(id == R.id.home){
+            Intent intent = new Intent(this, com.example.owner.petbetter.activities.CommActivity.class);
+            startActivity(intent);
         }
         else if(id == R.id.community){
-            Intent intent = new Intent(this, com.example.owner.petbetter.activities.CommActivity.class);
+            Intent intent = new Intent(this, com.example.owner.petbetter.activities.HomeActivity.class);
             startActivity(intent);
         }
         else if(id == R.id.bookmarks){
@@ -305,6 +295,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
         else if(id == R.id.log_out){
             Intent intent = new Intent(this, com.example.owner.petbetter.activities.MainActivity.class);
+            startActivity(intent);
+        }
+        else if(id == R.id.user_profile){
+            Intent intent = new Intent(this, com.example.owner.petbetter.activities.EditProfileActivity.class);
             startActivity(intent);
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

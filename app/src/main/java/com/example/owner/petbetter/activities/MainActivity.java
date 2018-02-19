@@ -179,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
                             if(futureTask.get()==true){
                                 System.out.println("From server wew: " + response.body().toString());
                                 systemSessionManager.createUserSession(user.getEmail());
-                                Intent intent = new Intent(MainActivity.this, com.example.owner.petbetter.activities.HomeActivity.class);
+                                Intent intent = new Intent(MainActivity.this, com.example.owner.petbetter.activities.CommActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);

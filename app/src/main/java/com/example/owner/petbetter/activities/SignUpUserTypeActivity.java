@@ -58,7 +58,7 @@ public class SignUpUserTypeActivity extends AppCompatActivity {
         Bundle extras = new Bundle();
         extras.putInt("USERTYPE", 1);
         Intent intent = new Intent(
-                this, com.example.owner.petbetter.activities.SignUpPetOwnerActivity.class
+                this, com.example.owner.petbetter.activities.AddFacilityActivity.class
         );
         intent.putExtras(extras);
         startActivity(intent);
