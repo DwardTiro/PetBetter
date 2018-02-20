@@ -12,6 +12,7 @@ import com.example.owner.petbetter.classes.Notifications;
 import com.example.owner.petbetter.classes.Pet;
 import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.PostRep;
+import com.example.owner.petbetter.classes.Rating;
 import com.example.owner.petbetter.classes.Services;
 import com.example.owner.petbetter.classes.Topic;
 import com.example.owner.petbetter.classes.User;
@@ -102,6 +103,9 @@ public interface HerokuService {
 
     @POST("getVeterinarians.php")
     Call<ArrayList<Veterinarian>> getVeterinarians();
+
+    @POST("getRatings.php")
+    Call<ArrayList<Rating>> getRatings();
 
     @POST("getAllPostReps.php")
     Call<ArrayList<PostRep>> getAllPostReps();
@@ -252,6 +256,9 @@ public interface HerokuService {
     @FormUrlEncoded
     @POST("addFollower.php")
     Call<Integer> addFollower(@Field("_id") int followerId, @Field("topic_id") int topicId, @Field("user_id") int userId);
+
+    @POST("addRatings.php")
+    Call<Void> addRatings(@Body RequestBody rateList);
 
     @FormUrlEncoded
     @POST("getFollowerCount.php")

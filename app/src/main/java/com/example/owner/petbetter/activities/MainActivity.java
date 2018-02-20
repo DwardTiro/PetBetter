@@ -28,6 +28,7 @@ import com.example.owner.petbetter.classes.Notifications;
 import com.example.owner.petbetter.classes.Pet;
 import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.PostRep;
+import com.example.owner.petbetter.classes.Rating;
 import com.example.owner.petbetter.classes.Services;
 import com.example.owner.petbetter.classes.Topic;
 import com.example.owner.petbetter.classes.User;
@@ -37,6 +38,7 @@ import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.example.owner.petbetter.activities.HomeActivity;
 import com.google.android.gms.gcm.Task;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.json.JSONObject;
 
@@ -159,6 +161,8 @@ public class MainActivity extends AppCompatActivity {
                         syncServiceChanges();
 
                         syncTopicChanges();
+
+                        syncRatingChanges();
 
 
 
@@ -377,6 +381,52 @@ public class MainActivity extends AppCompatActivity {
 
                         @Override
                         public void onFailure(Call<ArrayList<Topic>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
+    public void syncRatingChanges(){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        ArrayList<Rating> unsyncedRatings = getUnsyncedRatings();
+
+        System.out.println("how many ratings? "+unsyncedRatings.size());
+
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String jsonArray = gson.toJson(unsyncedRatings);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.addRatings(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    System.out.println("RATINGS ADDED YEY");
+                    dataSynced(14);
+
+                    final Call<ArrayList<Rating>> call2 = service2.getRatings();
+                    call2.enqueue(new Callback<ArrayList<Rating>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<Rating>> call, Response<ArrayList<Rating>> response) {
+                            if(response.isSuccessful()){
+                                setRatings(response.body());
+
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<Rating>> call, Throwable t) {
                             Log.d("onFailure", t.getLocalizedMessage());
 
                         }
@@ -1026,6 +1076,20 @@ public class MainActivity extends AppCompatActivity {
         return result;
     }
 
+    private ArrayList<Rating> getUnsyncedRatings(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Rating> result = petBetterDb.getUnsyncedRatings();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
     private ArrayList<Post> getUnsyncedPosts(){
 
         try {
@@ -1226,6 +1290,18 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         long result = petBetterDb.setTopics(topicList);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    public long setRatings(ArrayList<Rating> rateList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setRatings(rateList);
         petBetterDb.closeDatabase();
 
         return result;

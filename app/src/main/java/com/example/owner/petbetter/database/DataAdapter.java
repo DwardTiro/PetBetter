@@ -22,6 +22,7 @@ import com.example.owner.petbetter.classes.Notifications;
 import com.example.owner.petbetter.classes.Pet;
 import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.PostRep;
+import com.example.owner.petbetter.classes.Rating;
 import com.example.owner.petbetter.classes.Services;
 import com.example.owner.petbetter.classes.Topic;
 import com.example.owner.petbetter.classes.User;
@@ -626,6 +627,30 @@ public class DataAdapter {
         return results;
     }
 
+    public ArrayList<Rating> getUnsyncedRatings(){
+        ArrayList<Rating> results = new ArrayList<>();
+        int userId;
+        User user;
+
+        String sql = "SELECT * FROM "+RATE_TABLE+" WHERE is_synced = 0";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            Rating rating= new Rating(c.getInt(c.getColumnIndexOrThrow("_id")),
+                    c.getLong(c.getColumnIndexOrThrow("rater_id")),
+                    c.getLong(c.getColumnIndexOrThrow("rated_id")),
+                    c.getFloat(c.getColumnIndexOrThrow("rating")),
+                    c.getString(c.getColumnIndexOrThrow("comment")),
+                    c.getInt(c.getColumnIndexOrThrow("rating_type")),
+                    c.getString(c.getColumnIndexOrThrow("date_created")),
+                    c.getInt(c.getColumnIndexOrThrow("is_deleted")));
+            results.add(rating);
+        }
+
+        c.close();
+        return results;
+    }
+
     public ArrayList<Services> getUnsyncedServices(){
         ArrayList<Services> results = new ArrayList<>();
         int userId;
@@ -888,6 +913,9 @@ public class DataAdapter {
         }
         if(n==13){
             petBetterDb.update(TOPIC_TABLE,cv,"is_synced=?", whereArgs);
+        }
+        if(n==14){
+            petBetterDb.update(RATE_TABLE,cv,"is_synced=?", whereArgs);
         }
         petBetterDb.close();
     }
@@ -1436,6 +1464,7 @@ public class DataAdapter {
         cv.put("comment", comment);
         cv.put("date_created", timeStamp);
         cv.put("is_deleted", isDeleted);
+        cv.put("is_synced", 0);
 
         result = petBetterDb.insert(RATE_TABLE, null, cv);
 
@@ -1455,6 +1484,7 @@ public class DataAdapter {
         cv.put("comment", comment);
         cv.put("date_created", timeStamp);
         cv.put("is_deleted", isDeleted);
+        cv.put("is_synced", 0);
 
         result = petBetterDb.insert(RATE_TABLE, null, cv);
 
@@ -1884,6 +1914,31 @@ public class DataAdapter {
             result = petBetterDb.insert(VET_TABLE, null, cv);
         }
         System.out.println("2ND REAL NUM OF VETS "+getVeterinarians().size());
+        return result;
+    }
+
+    public long setRatings(ArrayList<Rating> rateList){
+        long result = 0;
+
+        petBetterDb.delete(RATE_TABLE, null, null);
+
+        System.out.println("REAL NUM OF RATINGS: "+getRatingIds().size());
+
+        for(Rating rating:rateList){
+            ContentValues cv = new ContentValues();
+            cv.put("_id", rating.getId());
+            cv.put("rated_id", rating.getRatedId());
+            cv.put("rater_id", rating.getRaterId());
+            cv.put("rating", rating.getRating());
+            cv.put("comment", rating.getComment());
+            cv.put("rating_type", rating.getRatingType());
+            cv.put("date_created", rating.getDateCreated());
+            cv.put("is_deleted", rating.getIsDeleted());
+
+            result = petBetterDb.insert(RATE_TABLE, null, cv);
+        }
+        System.out.println("2ND REAL NUM OF RATINGS: "+getRatingIds().size());
+
         return result;
     }
 
