@@ -291,12 +291,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             Intent intent = new Intent(this, com.example.owner.petbetter.activities.BookmarksActivity.class);
             startActivity(intent);
         }
-        else if(id==R.id.add_location){
-            //Toast.makeText(this,"Location",Toast.LENGTH_SHORT).show();
-
-            Intent intent = new Intent(this, com.example.owner.petbetter.activities.MapsActivity.class);
-            startActivity(intent);
-        }
         else if(id == R.id.log_out){
             Intent intent = new Intent(this, com.example.owner.petbetter.activities.MainActivity.class);
             startActivity(intent);

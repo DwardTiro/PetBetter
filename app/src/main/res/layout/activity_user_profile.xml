@@ -16,13 +16,16 @@
             android:id="@+id/userProfileToolbar"
             layout="@layout/app_bar_nav_bar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"/>
 
         <LinearLayout
+            android:id="@+id/profileUserInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/userProfileToolbar"
             android:layout_marginTop="20dp"
+
             android:orientation="vertical">
 
             <ImageView
@@ -56,6 +59,19 @@
             android:text="Edit Profile"
             android:textAllCaps="false"
             android:textColor="@color/colorWhite" />
+        <LinearLayout
+            android:layout_below="@+id/profileUserInfo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+             android:background="@color/lightGrayBG"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Hello"
+                />
+
+        </LinearLayout>
 
     </RelativeLayout>
 

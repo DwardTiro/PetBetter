@@ -44,6 +44,7 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
     @Override
     public void onCreate(Bundle savedInstance){
         super.onCreate(savedInstance);
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         setContentView(R.layout.activity_user_profile);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -134,12 +135,6 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
         }
         else if(id == R.id.bookmarks){
             Intent intent = new Intent(this, com.example.owner.petbetter.activities.BookmarksActivity.class);
-            startActivity(intent);
-        }
-        else if(id==R.id.add_location){
-            //Toast.makeText(this,"Location",Toast.LENGTH_SHORT).show();
-
-            Intent intent = new Intent(this, com.example.owner.petbetter.activities.MapsActivity.class);
             startActivity(intent);
         }
         else if(id == R.id.log_out){

@@ -11,27 +11,25 @@
         android:id="@+id/topicListing"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-
-        android:layout_alignParentStart="true">
-    </android.support.v7.widget.RecyclerView>
+        android:layout_marginBottom="10dp"
+        android:scrollbars="vertical"/>
 
     <FrameLayout
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:layout_below="@+id/chronometer"
-        android:layout_centerHorizontal="true"
+
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true">
+        android:layout_alignParentEnd="true"
+        android:layout_centerHorizontal="true">
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fabCom"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:backgroundTint="@color/medTurquoise"
             android:src="@mipmap/ic_add_white_24dp"
-            android:backgroundTint="@color/colorYellow"
-            app:backgroundTint="@color/colorYellow"
-            />
+            app:backgroundTint="@color/medTurquoise" />
     </FrameLayout>
 </RelativeLayout>
