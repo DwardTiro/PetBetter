@@ -59,4 +59,20 @@
         <item>22:00</item>
         <item>23:00</item>
     </string-array>
+    <string-array name="veterinarySpecialtySpinner">
+        <item>Anesthesia</item>
+        <item>Animal Behavior</item>
+        <item>Animal Cardiology</item>
+        <item>Animal Dentistry</item>
+        <item>Animal Dermatology</item>
+        <item>Animal Neurology</item>
+        <item>Animal Oncology</item>
+        <item>Animal Ophthalmology</item>
+        <item>Animal Orthopaedics</item>
+        <item>Animal Welfare</item>
+        <item>Emergency and Critical Care</item>
+        <item>Canine/Feline Practice</item>
+        <item>Nutrition</item>
+    </string-array>
+    <string name="veterinarySpecialtyPrompt">Select an Option</string>
 </resources>

@@ -6,14 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
-import com.example.owner.petbetter.activities.MainActivity;
 import com.example.owner.petbetter.R;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by Kristian on 8/5/2017.
@@ -48,7 +43,7 @@ public class SignUpUserTypeActivity extends AppCompatActivity {
         Bundle extras = new Bundle();
         extras.putInt("USERTYPE", 2);
         Intent intent = new Intent(
-                this, com.example.owner.petbetter.activities.SignUpPetOwnerActivity.class
+                this, SignUpUserActivity.class
         );
         intent.putExtras(extras);
         startActivity(intent);
@@ -58,7 +53,7 @@ public class SignUpUserTypeActivity extends AppCompatActivity {
         Bundle extras = new Bundle();
         extras.putInt("USERTYPE", 1);
         Intent intent = new Intent(
-                this, com.example.owner.petbetter.activities.AddFacilityActivity.class
+                this, SignUpUserActivity.class
         );
         intent.putExtras(extras);
         startActivity(intent);

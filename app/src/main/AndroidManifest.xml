@@ -154,10 +154,9 @@
         <activity android:name=".activities.PostRepActivity"/>
         <activity android:name=".activities.SignUpUserTypeActivity"
             android:parentActivityName=".activities.MainActivity"/>
-        <activity android:name=".activities.SignUpPetOwnerActivity"
+        <activity android:name=".activities.SignUpUserActivity"
             android:parentActivityName=".activities.SignUpUserTypeActivity"/>
-        <activity android:name=".activities.SignUpVeterinarianActivity"
-            android:parentActivityName=".activities.SignUpUserTypeActivity"/>
+        <activity android:name=".activities.VeterinarianAddInfoActivity"/>
         <activity android:name=".activities.AddFacilityActivity"
             />
         <activity android:name=".activities.UserProfileActivity"

@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/lightGrayBG"
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/toolbar_signup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/signUpTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="40dp"
+
+            android:text="Sign Up as Veterinarian"
+            android:textSize="28dp"
+            android:textStyle="bold"
+            android:typeface="sans" />
+
+        <LinearLayout
+            android:id="@+id/vetNameTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/signUpTextView"
+            android:layout_centerHorizontal="true"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="165dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="40dp"
+                android:paddingEnd="5dp"
+                android:paddingStart="5dp"
+                android:text="FIRST NAME"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="165dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="40dp"
+                android:paddingEnd="5dp"
+                android:paddingStart="5dp"
+                android:text="LAST NAME"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/vetNameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/vetNameTextView"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/signUpVetTextFirstName"
+                android:layout_width="165dp"
+                android:layout_height="42dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginTop="5dp"
+                android:background="#FFFFFF"
+
+                android:inputType="text"
+                android:paddingBottom="5dp"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:paddingTop="5dp"
+                android:textSize="16dp" />
+
+            <EditText
+                android:id="@+id/signUpVetTextLastName"
+                android:layout_width="165dp"
+                android:layout_height="42dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="0dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:background="#FFFFFF"
+
+                android:inputType="text"
+                android:paddingBottom="5dp"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:paddingTop="5dp"
+                android:textSize="16dp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/vetEmailTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/vetNameEditText"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:text="EMAIL ADDRESS"
+            android:textSize="14sp" />
+
+        <EditText
+            android:id="@+id/signUpVetTextEmailAddress"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_below="@id/vetEmailTextView"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+
+            android:background="#FFFFFF"
+            android:inputType="textEmailAddress"
+            android:paddingBottom="5dp"
+            android:paddingEnd="10dp"
+            android:paddingLeft="10dp"
+            android:paddingStart="10dp"
+            android:paddingTop="5dp" />
+
+        <TextView
+            android:id="@+id/vetPasswordTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/signUpVetTextEmailAddress"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:text="PASSWORD"
+            android:textSize="14sp" />
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/textInputLayoutSignUp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/vetPasswordTextView"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            app:passwordToggleDrawable="@drawable/toggle_password"
+            app:passwordToggleEnabled="true"
+            android:layout_marginBottom="10dp">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/textInputEditTextSignUpVet"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:background="#FFFFFF"
+                android:imeOptions="actionDone"
+                android:inputType="textPassword"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <TextView
+            android:id="@+id/vetSpecialtyTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textInputLayoutSignUp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:text="VETERINARY SPECIALTY:"
+            android:textSize="14sp" />
+
+        <Spinner
+            android:id="@+id/vetSpecialtySpinner"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_below="@id/vetSpecialtyTextView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/colorWhite"
+            android:entries="@array/veterinarySpecialtySpinner"
+            android:prompt="@string/veterinarySpecialtyPrompt" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/signUpVetButton"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="18dp"
+        android:background="#FFFFFF"
+
+
+        android:onClick="signUpVeterinarian"
+        android:text="Sign up"
+        android:textAllCaps="false"
+        android:textColor="@color/amazonite"
+        android:textSize="20dp" />
+</LinearLayout>

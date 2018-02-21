@@ -8,7 +8,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.owner.petbetter.HerokuService;
@@ -27,7 +26,7 @@ import retrofit2.Response;
  * Created by Kristian on 1/29/2018.
  */
 
-public class SignUpPetOwnerActivity extends AppCompatActivity {
+public class SignUpUserActivity extends AppCompatActivity {
 
     private Button nextButton;
 
@@ -42,7 +41,7 @@ public class SignUpPetOwnerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstance) {
 
         super.onCreate(savedInstance);
-        setContentView(R.layout.activity_sign_up_pet_owner);
+        setContentView(R.layout.activity_sign_up_user);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.signUpToolbar);
         setSupportActionBar(toolbar);
@@ -51,8 +50,6 @@ public class SignUpPetOwnerActivity extends AppCompatActivity {
         activityTitle.setText("Sign Up");
         //backButton = (ImageButton) findViewById(R.id.signUpPetOwnerBackButton);
 
-        Bundle extras = getIntent().getExtras();
-        String jsonMyObject;
         //jsonMyObject = extras.getString("thisSignUp");
 
         signupFirstName = (EditText) findViewById(R.id.signUpTextFirstName);
@@ -66,8 +63,10 @@ public class SignUpPetOwnerActivity extends AppCompatActivity {
     public void signUpNext(View v){
         service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
+        Bundle extras = getIntent().getExtras();
+        int userType = extras.getInt("USERTYPE");
         User user = new User(signupFirstName.getText().toString(), signupLastName.getText().toString(),
-                signupEmail.getText().toString(), signupPassword.getEditText().getText().toString(), 2);
+                signupEmail.getText().toString(), signupPassword.getEditText().getText().toString(), userType);
 
         Gson gson = new GsonBuilder().serializeNulls().create();
         String jsonArray = gson.toJson(user);
@@ -79,7 +78,7 @@ public class SignUpPetOwnerActivity extends AppCompatActivity {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 System.out.println("User added to server successfully");
                 Intent intent = new Intent(
-                        SignUpPetOwnerActivity.this,
+                        SignUpUserActivity.this,
                         com.example.owner.petbetter.activities.SignUpUserTypeActivity.class
                 );
                 startActivity(intent);
@@ -94,7 +93,7 @@ public class SignUpPetOwnerActivity extends AppCompatActivity {
 
     public void signUpBackButtonClicked(View view) {
         Intent intent = new Intent(
-                SignUpPetOwnerActivity.this,
+                SignUpUserActivity.this,
                 com.example.owner.petbetter.activities.SignUpUserTypeActivity.class
         );
 
