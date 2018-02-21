@@ -57,6 +57,14 @@ public class User {
         this.userPhoto = userPhoto;
     }
 
+    public User(String firstName, String lastName, String email, String password, int userType){
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.userType = userType;
+    }
+
     public long getUserId(){
         return userId;
     }

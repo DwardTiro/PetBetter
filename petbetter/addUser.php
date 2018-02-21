@@ -2,12 +2,8 @@
 
 require 'init.php';
 
-$_id = $_POST['_id'];
-$first_name = $_POST['first_name'];
-$last_name = $_POST['last_name'];
-$email = $_POST['email'];
-$password = $_POST['password'];
-$user_type = $_POST['user_type'];
+
+$user = json_decode(file_get_contents('php://input'),true);
 
 $response = array(); 
 //$sql = "SELECT * FROM users WHERE email = ? AND password = ?";
@@ -17,13 +13,8 @@ $response = array();
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
 
-	if(!(isset($_POST['email']) and isset($_POST['password']) and isset($_POST['_id']) and isset($_POST['first_name']) and isset($_POST['last_name']) and isset($_POST['user_type']))){
-		echo 'No username or password';
-		exit(0);
-	}
-
-	if($stmt = $mysqli->prepare("INSERT INTO users (_id, first_name, last_name, email, password, user_type) VALUES (?,?,?,?,?,?)")){
-		$stmt->bind_param("ssssss", $user_id, $first_name, $last_name, $email , $password, $user_type);
+	if($stmt = $mysqli->prepare("INSERT INTO users (first_name, last_name, email, password, user_type) VALUES (?,?,?,?,?)")){
+		$stmt->bind_param("sssss", $user['first_name'], $user['last_name'], $user['email'], $user['password'], $user['user_type']);
 		$stmt->execute();
 		$stmt->close();
 		echo 'User registered';

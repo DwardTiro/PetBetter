@@ -171,5 +171,6 @@
         android:text="Sign up"
         android:textAllCaps="false"
         android:textColor="@color/amazonite"
-        android:textSize="20dp" />
+        android:textSize="20dp"
+        android:onClick="signUpNext"/>
 </LinearLayout>

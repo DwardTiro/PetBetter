@@ -116,11 +116,9 @@ public interface HerokuService {
     @POST("getFollowers.php")
     Call<ArrayList<Follower>> getFollowers();
 
-    @FormUrlEncoded
+
     @POST("addUser.php")
-    Call<Integer> addUser(@Field("_id") int userId, @Field("first_name") String firstName, @Field("last_name") String lastName,
-                       @Field("mobile_num") String mobileNum, @Field("phone_num") String phoneNum, @Field("email") String email,
-                       @Field("password") String password, @Field("user_type") int userType);
+    Call<Void> addUser(@Body RequestBody user);
 
     @FormUrlEncoded
     @POST("touchMarker.php")
