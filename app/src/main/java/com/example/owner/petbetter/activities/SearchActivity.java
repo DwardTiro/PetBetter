@@ -91,6 +91,22 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
 
     }
 
+    public void vetSearchClicked(View v){
+        System.out.println("SEARCH RESULTS FOR VETS~");
+    }
+
+    public void petSearchClicked(View v){
+        System.out.println("SEARCH RESULTS FOR PETS~");
+    }
+
+    public void topicSearchClicked(View v){
+        System.out.println("SEARCH RESULTS FOR TOPICS~");
+    }
+
+    public void postSearchClicked(View v){
+        System.out.println("SEARCH RESULTS FOR POSTS~");
+    }
+
     private void initializeDatabase() {
 
         petBetterDb = new DataAdapter(this);
