@@ -1,55 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.Toolbar android:id="@+id/toolbarComm"
+<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toolbarComm"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
     android:background="@color/medTurquoise"
-    android:gravity="center_vertical|start"
-    app:popupTheme="@style/AppTheme.PopupOverlay"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" >
+
+    app:popupTheme="@style/AppTheme.PopupOverlay">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
 
-    <ImageButton
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:id="@+id/btnHome"
-        android:scaleType="fitCenter"
-        android:adjustViewBounds="true"
-        app:srcCompat="@drawable/app_icon"
-        android:background="@color/medTurquoise"/>
+        <ImageButton
+            android:id="@+id/btnHome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:background="@color/medTurquoise"
+            android:scaleType="fitCenter"
+            android:src="@drawable/app_icon_yellow" />
 
-    <ImageButton
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:id="@+id/btnCommunity"
-        android:scaleType="fitCenter"
-        android:adjustViewBounds="true"
-        app:srcCompat="@mipmap/ic_people_white_24dp"
-        android:background="@color/medTurquoise"/>
+        <ImageButton
+            android:id="@+id/btnCommunity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:background="@color/medTurquoise"
+            android:scaleType="fitCenter"
+            android:src="@mipmap/ic_people_white_24dp" />
 
-    <ImageButton
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:id="@+id/btnMessage"
-        android:scaleType="fitCenter"
-        android:adjustViewBounds="true"
-        app:srcCompat="@mipmap/ic_mail_outline_white_24dp"
-        android:background="@color/medTurquoise"/>
-
-    <ImageButton
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:id="@+id/btnProfile"
-        android:scaleType="fitCenter"
-        android:adjustViewBounds="true"
-        app:srcCompat="@mipmap/ic_account_circle_white_24dp"
-        android:background="@color/medTurquoise"/>
     </LinearLayout>
 </android.support.v7.widget.Toolbar>

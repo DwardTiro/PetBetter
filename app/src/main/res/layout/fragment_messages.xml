@@ -31,8 +31,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@mipmap/ic_mail_outline_white_24dp"
-            android:backgroundTint="@color/main_Color"
-            app:backgroundTint="@color/colorYellow"
+            android:backgroundTint="@color/myrtle_green"
+            app:backgroundTint="@color/amazonite"
             />
     </FrameLayout>
 

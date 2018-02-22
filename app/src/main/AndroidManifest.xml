@@ -161,6 +161,8 @@
             />
         <activity android:name=".activities.UserProfileActivity"
             />
+        <activity android:name=".activities.MessagesActivity"
+            />
     </application>
 
 

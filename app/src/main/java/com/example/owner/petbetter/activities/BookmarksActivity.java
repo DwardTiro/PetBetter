@@ -134,6 +134,10 @@ public class BookmarksActivity extends AppCompatActivity implements NavigationVi
             Intent intent = new Intent(this, com.example.owner.petbetter.activities.HomeActivity.class);
             startActivity(intent);
         }
+        else if(id == R.id.messages){
+            Intent intent = new Intent(this, com.example.owner.petbetter.activities.MessagesActivity.class);
+            startActivity(intent);
+        }
         else if(id == R.id.user_profile){
             Intent intent = new Intent(this, com.example.owner.petbetter.activities.UserProfileActivity.class);
             startActivity(intent);

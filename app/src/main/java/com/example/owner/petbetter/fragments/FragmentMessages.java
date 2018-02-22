@@ -42,8 +42,6 @@ public class FragmentMessages extends Fragment {
     private FloatingActionButton fab;
     private boolean allowRefresh = false;
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance){
         View view = inflater.inflate(R.layout.fragment_messages,container, false);

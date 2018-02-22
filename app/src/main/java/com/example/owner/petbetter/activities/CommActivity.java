@@ -38,8 +38,6 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
     private DataAdapter petBetterDb;
     private ImageButton btnHome;
     private ImageButton btnCommunity;
-    private ImageButton btnMessage;
-    private ImageButton btnProfile;
     private FrameLayout container;
     private NavigationView navigationView;
     private SystemSessionManager systemSessionManager;
@@ -88,8 +86,6 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
 
         btnHome = (ImageButton) findViewById(R.id.btnHome);
         btnCommunity = (ImageButton) findViewById(R.id.btnCommunity);
-        btnMessage = (ImageButton) findViewById(R.id.btnMessage);
-        btnProfile = (ImageButton) findViewById(R.id.btnProfile);
         container = (FrameLayout) findViewById(R.id.comm_container);
 
         FragmentHome fragment3 = new FragmentHome();
@@ -101,10 +97,6 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
                 btnHome.setBackgroundColor(Color.WHITE);
                 btnCommunity.setBackgroundResource(R.color.medTurquoise);
                 btnCommunity.setImageResource(R.mipmap.ic_people_white_24dp);
-                 btnMessage.setBackgroundResource(R.color.medTurquoise);
-                btnMessage.setImageResource(R.mipmap.ic_mail_outline_white_24dp);
-                btnProfile.setBackgroundResource(R.color.medTurquoise);
-                btnProfile.setImageResource(R.mipmap.ic_account_circle_white_24dp);
                 container.removeAllViews();
                 FragmentHome fragment3 = new FragmentHome();
                 getSupportFragmentManager().beginTransaction().add(R.id.comm_container,fragment3).commit();
@@ -117,48 +109,12 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
                 btnCommunity.setImageResource(R.mipmap.ic_people_black_24dp);
                 btnCommunity.setBackgroundColor(Color.WHITE);
                 btnHome.setBackgroundResource(R.color.medTurquoise);
-                btnMessage.setBackgroundResource(R.color.medTurquoise);
-                btnMessage.setImageResource(R.mipmap.ic_mail_outline_white_24dp);
-                btnProfile.setBackgroundResource(R.color.medTurquoise);
-                btnProfile.setImageResource(R.mipmap.ic_account_circle_white_24dp);
                 container.removeAllViews();
                 FragmentCommunity fragment2 = new FragmentCommunity();
                 getSupportFragmentManager().beginTransaction().add(R.id.comm_container,fragment2).commit();
             }
         });
-        btnMessage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                System.out.println("Fragment 3");
-                btnMessage.setImageResource(R.mipmap.ic_mail_outline_black_24dp);
-                btnMessage.setBackgroundColor(Color.WHITE);
-                btnHome.setBackgroundResource(R.color.medTurquoise);
-                btnCommunity.setBackgroundResource(R.color.medTurquoise);
-                btnCommunity.setImageResource(R.mipmap.ic_people_white_24dp);
-                btnProfile.setBackgroundResource(R.color.medTurquoise);
-                btnProfile.setImageResource(R.mipmap.ic_account_circle_white_24dp);
-                container.removeAllViews();
-                //attach new fragment here
-                FragmentMessagesHome fragment = new FragmentMessagesHome();
-                getSupportFragmentManager().beginTransaction().add(R.id.comm_container,fragment).commit();
-            }
-        });
-        btnProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                System.out.println("Fragment 4");
-                btnProfile.setImageResource(R.mipmap.ic_account_circle_black_24dp);
-                btnProfile.setBackgroundColor(Color.WHITE);
-                btnHome.setBackgroundResource(R.color.medTurquoise);
-                btnCommunity.setBackgroundResource(R.color.medTurquoise);
-                btnCommunity.setImageResource(R.mipmap.ic_people_white_24dp);
-                btnMessage.setBackgroundResource(R.color.medTurquoise);
-                btnMessage.setImageResource(R.mipmap.ic_mail_outline_white_24dp);
-                container.removeAllViews();
-                FragmentUserProfile fragment1 = new FragmentUserProfile();
-                getSupportFragmentManager().beginTransaction().add(R.id.comm_container,fragment1).commit();
-            }
-        });
+
     }
     @Override
     public void onRestart(){
@@ -168,10 +124,6 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
         btnHome.setBackgroundColor(Color.WHITE);
         btnCommunity.setBackgroundResource(R.color.medTurquoise);
         btnCommunity.setImageResource(R.mipmap.ic_people_white_24dp);
-        btnMessage.setBackgroundResource(R.color.medTurquoise);
-        btnMessage.setImageResource(R.mipmap.ic_mail_outline_white_24dp);
-        btnProfile.setBackgroundResource(R.color.medTurquoise);
-        btnProfile.setImageResource(R.mipmap.ic_account_circle_white_24dp);
         container.removeAllViews();
         getSupportFragmentManager().beginTransaction().add(R.id.comm_container,fragment3).commitAllowingStateLoss();
     }
@@ -186,6 +138,10 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
         }
         else if(id == R.id.community){
             Intent intent = new Intent(this, com.example.owner.petbetter.activities.HomeActivity.class);
+            startActivity(intent);
+        }
+        else if(id == R.id.messages){
+            Intent intent = new Intent(this, com.example.owner.petbetter.activities.MessagesActivity.class);
             startActivity(intent);
         }
         else if(id == R.id.user_profile){

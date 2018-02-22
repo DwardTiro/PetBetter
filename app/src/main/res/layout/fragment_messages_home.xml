@@ -7,8 +7,8 @@
 
 
     <include android:id="@+id/toolbarMessages"
-        layout="@layout/messages_toolbar">
-    </include>
+    layout="@layout/messages_toolbar">
+</include>
 
 
     <FrameLayout
