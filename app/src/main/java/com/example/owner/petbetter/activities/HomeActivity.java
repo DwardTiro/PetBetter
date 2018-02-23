@@ -45,7 +45,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private Toolbar menuBar;
     private Button vetButton;
     private Button petCareButton;
-    private Button commButton;
     private TextView textNavEmail, textNavUser;
 
     private String userName;
@@ -204,6 +203,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public void vetButtonClicked(View view){
 
 
+        vetButton.setBackgroundResource(R.color.myrtle_green);
+        petCareButton.setBackgroundResource(R.color.medTurquoise);
         //FragmentVetListing fragment = (FragmentVetListing) getSupportFragmentManager().findFragmentById(R.id.frame_container);
         vetList = getVeterinarians();
 
@@ -244,6 +245,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 */
     public void petCareButtonClicked(View view){
+        petCareButton.setBackgroundResource(R.color.myrtle_green);
+        vetButton.setBackgroundResource(R.color.medTurquoise);
         FragmentPetClinicListing fragment = new FragmentPetClinicListing();
 
         getSupportFragmentManager().beginTransaction().add(R.id.frame_container,fragment).commit();

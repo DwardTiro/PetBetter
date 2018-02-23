@@ -20,6 +20,8 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -66,6 +68,11 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
     private ArrayList<Facility> clinicList;
     private ArrayList<Post> postList;
 
+    private Button vetSearchButton;
+    private Button petSearchButton;
+    private Button topicSearchButton;
+    private Button postSearchButton;
+
 
     @Override
     public void onCreate(Bundle savedInstance) {
@@ -85,6 +92,13 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
         String email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
         user = getUser(email);
 
+        vetSearchButton = (Button) findViewById(R.id.vetSearchButton);
+        petSearchButton = (Button) findViewById(R.id.petSearchButton);
+        topicSearchButton = (Button) findViewById(R.id.topicSearchButton);
+        postSearchButton = (Button) findViewById(R.id.postSearchButton);
+
+        vetSearchClicked(this.findViewById(android.R.id.content));
+
         //  recyclerView = (RecyclerView) findViewById(R.id.recyclerViewSearch);
         // recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -92,19 +106,40 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
     }
 
     public void vetSearchClicked(View v){
+
         System.out.println("SEARCH RESULTS FOR VETS~");
+        vetSearchButton.setBackgroundResource(R.color.myrtle_green);
+        petSearchButton.setBackgroundResource(R.color.medTurquoise);
+        topicSearchButton.setBackgroundResource(R.color.medTurquoise);
+        postSearchButton.setBackgroundResource(R.color.medTurquoise);
+        /*
+        * PROCEDURE:
+        * 1. Find a way to be able to feed search suggestions via json (from server)
+        * 2. Modify get functions from server to display new data.
+        * */
     }
 
     public void petSearchClicked(View v){
-        System.out.println("SEARCH RESULTS FOR PETS~");
+
+        vetSearchButton.setBackgroundResource(R.color.medTurquoise);
+        petSearchButton.setBackgroundResource(R.color.myrtle_green);
+        topicSearchButton.setBackgroundResource(R.color.medTurquoise);
+        postSearchButton.setBackgroundResource(R.color.medTurquoise);
     }
 
     public void topicSearchClicked(View v){
-        System.out.println("SEARCH RESULTS FOR TOPICS~");
+
+        vetSearchButton.setBackgroundResource(R.color.medTurquoise);
+        petSearchButton.setBackgroundResource(R.color.medTurquoise);
+        topicSearchButton.setBackgroundResource(R.color.myrtle_green);
+        postSearchButton.setBackgroundResource(R.color.medTurquoise);
     }
 
     public void postSearchClicked(View v){
-        System.out.println("SEARCH RESULTS FOR POSTS~");
+        vetSearchButton.setBackgroundResource(R.color.medTurquoise);
+        petSearchButton.setBackgroundResource(R.color.medTurquoise);
+        topicSearchButton.setBackgroundResource(R.color.medTurquoise);
+        postSearchButton.setBackgroundResource(R.color.myrtle_green);
     }
 
     private void initializeDatabase() {
@@ -195,84 +230,10 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
         //inflate search action from menu folder
         inflater.inflate(R.menu.options_menu, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        AutoCompleteTextView actv = (AutoCompleteTextView) MenuItemCompat.getActionView(searchItem);
+
 
         //actions when making a query in search
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-
-                initializeDatabase();
-                vetList = getVeterinarians();
-                topicList = getTopics();
-                clinicList = getClinics();
-                List<Object> searchResults = new ArrayList<>();
-                //clinicList = getBookmarks();
-                for (int i = 0; i < vetList.size(); i++) {
-                    String name = vetList.get(i).getFirstName().toLowerCase() + " " + vetList.get(i).getLastName().toLowerCase();
-                    if (name.contains(query.toLowerCase()) || vetList.get(i).getSpecialty().toLowerCase().contains(query.toLowerCase())) {
-                        System.out.println("Found at" + vetList.get(i).getFirstName() + " " + vetList.get(i).getLastName());
-                        searchResults.add(vetList.get(i));
-
-                    }
-                }
-                for (int i = 0; i < clinicList.size(); i++) {
-                    if (clinicList.get(i).getFaciName().toLowerCase().contains(query.toLowerCase())) {
-                        System.out.println("Found at" + clinicList.get(i).getFaciName());
-                        searchResults.add(clinicList.get(i));
-                    }
-
-                }
-                for (int i = 0; i < topicList.size(); i++) {
-                    if (topicList.get(i).getTopicName().toLowerCase().contains(query.toLowerCase()) || topicList.get(i).getTopicDesc().toLowerCase().contains(query.toLowerCase())) {
-                        System.out.println("Found in " + topicList.get(i).getTopicName());
-                        searchResults.add(topicList.get(i));
-
-                    }
-                }
-                System.out.println("Results num: "+ searchResults.size());
-                recyclerView = (RecyclerView) findViewById(R.id.recyclerViewSearch);
-                searchListingAdapter = new SearchListingAdapter(SearchActivity.this, searchResults, new SearchListingAdapter.OnItemClickListener() {
-                    @Override
-                    public void OnItemClick(Object item) {
-                        if(item instanceof Veterinarian){
-                            Intent intent = new Intent(SearchActivity.this,com.example.owner.petbetter.activities.VetProfileActivity.class);
-                            intent.putExtra("thisVet",new Gson().toJson(item));
-                            startActivity(intent);
-                        }
-                        else if(item instanceof Facility){
-                            Intent intent = new Intent(SearchActivity.this,com.example.owner.petbetter.activities.PetClinicProfileActivity.class);
-                            intent.putExtra("thisClinic",new Gson().toJson(item));
-                            startActivity(intent);
-                        }
-                        else if(item instanceof Topic){
-                            Intent intent = new Intent(SearchActivity.this,com.example.owner.petbetter.activities.TopicContentActivity.class);
-                            intent.putExtra("thisTopic",new Gson().toJson( item));
-                            startActivity(intent);
-                        }
-
-                    }
-                });
-                searchListingAdapter.notifyItemRangeChanged(0,searchListingAdapter.getItemCount());
-                recyclerView.setAdapter(searchListingAdapter);
-
-                recyclerView.setItemAnimator(new DefaultItemAnimator());
-                recyclerView.setHasFixedSize(true);
-                recyclerView.setLayoutManager(new LinearLayoutManager(SearchActivity.this));
-
-
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
-
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        //get searchable info fro activity
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
         //
         // Associate searchable configuration with the SearchView
