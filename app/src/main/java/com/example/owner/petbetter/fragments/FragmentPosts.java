@@ -1,5 +1,6 @@
 package com.example.owner.petbetter.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -43,6 +44,15 @@ public class FragmentPosts extends Fragment {
     private long topicId;
     private FloatingActionButton fab;
     private boolean allowRefresh = false;
+
+    public FragmentPosts() {
+    }
+
+    @SuppressLint("ValidFragment")
+    public FragmentPosts(ArrayList<Post> postList) {
+        this.postList = postList;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_posts,container, false);
@@ -60,11 +70,16 @@ public class FragmentPosts extends Fragment {
         user = getUser(email);
 
         Bundle bundle = this.getArguments();
-        topicId = bundle.getLong("topicId");
+
+        if(postList==null){
+            topicId = bundle.getLong("topicId");
+            postList = getTopicPosts(topicId);
+        }
 
 
         recyclerView = (RecyclerView) view.findViewById(R.id.topicContentListing);
-        postList = getTopicPosts(topicId);
+
+
         System.out.println("Size of postList "+postList.size());
 
         homeAdapter = new HomeAdapter(getActivity(), postList, user, new HomeAdapter.OnItemClickListener() {

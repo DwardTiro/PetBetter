@@ -1,5 +1,6 @@
 package com.example.owner.petbetter.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,6 +16,7 @@ import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.adapters.ClinicListingAdapter;
 import com.example.owner.petbetter.classes.Facility;
 import com.example.owner.petbetter.classes.User;
+import com.example.owner.petbetter.classes.Veterinarian;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.google.gson.Gson;
@@ -37,13 +39,26 @@ public class FragmentPetClinicListing extends Fragment {
     private DataAdapter petBetterDb;
     private SystemSessionManager systemSessionManager;
     private User user;
+
+    public FragmentPetClinicListing() {
+    }
+
+    @SuppressLint("ValidFragment")
+    public FragmentPetClinicListing(ArrayList<Facility> faciList) {
+        this.faciList = faciList;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance){
         View view =  inflater.inflate(R.layout.fragment_petcare_listing,container, false);
 
         initializeDatabase();
         recyclerView = (RecyclerView) view.findViewById(R.id.petCareListing);
-        faciList = getClinics();
+
+        if(faciList==null){
+            faciList = getClinics();
+        }
+
 
 
 

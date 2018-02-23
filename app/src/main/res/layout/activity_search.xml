@@ -13,6 +13,7 @@
         layout="@layout/toolbar_search"/>
 
     <ScrollView
+        android:id="@+id/searchScrollView"
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -79,14 +80,14 @@
         </LinearLayout>
     </ScrollView>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerViewSearch"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scrollbars="vertical"
-        android:layout_alignParentBottom="true">
-
-    </android.support.v7.widget.RecyclerView>
+    <FrameLayout
+        android:id="@+id/frame_search"
+        android:layout_width="400dp"
+        android:layout_height="465dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        tools:layout_constraintTop_creator="1"/>
 
 
 </RelativeLayout>

@@ -1,5 +1,6 @@
 package com.example.owner.petbetter.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -41,6 +42,13 @@ public class FragmentCommunity extends Fragment {
     private FloatingActionButton fab;
     private boolean allowRefresh = false;
 
+    public FragmentCommunity() {
+    }
+
+    @SuppressLint("ValidFragment")
+    public FragmentCommunity(ArrayList<Topic> topicList) {
+        this.topicList = topicList;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance){
@@ -59,7 +67,11 @@ public class FragmentCommunity extends Fragment {
 
 
         recyclerView = (RecyclerView) view.findViewById(R.id.topicListing);
-        topicList = getTopics();
+
+        if(topicList==null){
+            topicList = getTopics();
+        }
+
         for(int i = 0;i<topicList.size();i++){
             topicList.get(i).setFollowerCount(getFollowerCount((int) topicList.get(i).getId()));
         }

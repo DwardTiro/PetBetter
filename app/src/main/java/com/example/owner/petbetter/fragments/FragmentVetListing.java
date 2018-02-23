@@ -1,5 +1,6 @@
 package com.example.owner.petbetter.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -44,6 +45,14 @@ public class FragmentVetListing extends Fragment {
 
     private VetProfileActivity vetProfileActivity;
 
+    public FragmentVetListing() {
+    }
+
+    @SuppressLint("ValidFragment")
+    public FragmentVetListing(ArrayList<Veterinarian> vetList) {
+        this.vetList = vetList;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance){
         View view = inflater.inflate(R.layout.fragment_vet_listings,container, false);
@@ -53,7 +62,9 @@ public class FragmentVetListing extends Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.vetListing);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        vetList = getVeterinarians();
+        if(vetList==null){
+            vetList = getVeterinarians();
+        }
         System.out.println("Rating is "+vetList.get(0).getRating());
 
         vetListingAdapter = new VetListingAdapter(getActivity(), vetList, new VetListingAdapter.OnItemClickListener() {

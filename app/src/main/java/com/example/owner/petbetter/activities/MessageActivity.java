@@ -32,6 +32,7 @@ import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.fragments.FragmentMessageReps;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -231,7 +232,7 @@ public class MessageActivity extends AppCompatActivity {
     private void uploadMessageRep(ArrayList<MessageRep> messageReps){
         service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().serializeNulls().create();
         String jsonArray = gson.toJson(messageReps);
 
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
