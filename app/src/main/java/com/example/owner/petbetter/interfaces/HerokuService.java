@@ -235,6 +235,18 @@ public interface HerokuService {
     @POST("getVeterinarianRatings.php")
     Call<ArrayList<Float>> getVeterinarianRatings(@Field("rated_id") int vet_id);
 
+    @POST("queryFacilities.php")
+    Call<ArrayList<Facility>> queryFacilities(@Body RequestBody query);
+
+    @POST("queryTopics.php")
+    Call<ArrayList<Topic>> queryTopics(@Body RequestBody query);
+
+    @POST("queryPosts.php")
+    Call<ArrayList<Post>> queryPosts(@Body RequestBody query);
+
+    @POST("queryVeterinarians.php")
+    Call<ArrayList<Veterinarian>> queryVeterinarians(@Body RequestBody query);
+
     @FormUrlEncoded
     @POST("getFacilityRatings.php")
     Call<ArrayList<Float>> getFacilityRatings(@Field("rated_id") int facility_id);
