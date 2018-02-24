@@ -265,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
                 ArrayList<Veterinarian> unsyncedVets = getUnsyncedVets();
                 System.out.println("UNSYNCED VETS "+unsyncedVets.size());
 
-                Gson gson = new Gson();
+                Gson gson = new GsonBuilder().serializeNulls().create();
                 String jsonArray = gson.toJson(unsyncedVets);
                 RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
                 final Call<Void> call = service.addVets(body);
@@ -313,7 +313,7 @@ public class MainActivity extends AppCompatActivity {
         System.out.println("WE HERE BOOIII");
         ArrayList<Post> unsyncedPosts = getUnsyncedPosts();
 
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().serializeNulls().create();
         String jsonArray = gson.toJson(unsyncedPosts);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
         final Call<Void> call = service.addPosts(body);
@@ -358,7 +358,7 @@ public class MainActivity extends AppCompatActivity {
         System.out.println("WE HERE BOOIII");
         ArrayList<Topic> unsyncedTopics = getUnsyncedTopics();
 
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().serializeNulls().create();
         String jsonArray = gson.toJson(unsyncedTopics);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
         final Call<Void> call = service.addTopics(body);
@@ -449,7 +449,7 @@ public class MainActivity extends AppCompatActivity {
         System.out.println("WE HERE BOOIII");
         ArrayList<PostRep> unsyncedPostReps = getUnsyncedPostReps();
 
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().serializeNulls().create();
         String jsonArray = gson.toJson(unsyncedPostReps);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
         final Call<Void> call = service.addPostReps(body);
@@ -494,7 +494,7 @@ public class MainActivity extends AppCompatActivity {
         System.out.println("WE HERE BOOIII");
         ArrayList<Services> unsyncedServices = getUnsyncedServices();
 
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().serializeNulls().create();
         String jsonArray = gson.toJson(unsyncedServices);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
         final Call<Void> call = service.addServices(body);
@@ -538,7 +538,7 @@ public class MainActivity extends AppCompatActivity {
         final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         System.out.println("WE HERE BOOIII");
         ArrayList<Marker> unsyncedMarkers = getUnsyncedMarkers();
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().serializeNulls().create();
         String jsonArray = gson.toJson(unsyncedMarkers);
 
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
@@ -585,7 +585,7 @@ public class MainActivity extends AppCompatActivity {
 
         ArrayList<Message> unsyncedMessages = getUnsyncedMessages();
         System.out.println("UNSYNCED MESSAGES: "+unsyncedMessages.size());
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().serializeNulls().create();
         String jsonArray = gson.toJson(unsyncedMessages);
 
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
@@ -631,7 +631,7 @@ public class MainActivity extends AppCompatActivity {
 
         ArrayList<Notifications> unsyncedNotifs = getUnsyncedNotifications();
         System.out.println("UNSYNCED NOTIFS: "+unsyncedNotifs.size());
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().serializeNulls().create();
         String jsonArray = gson.toJson(unsyncedNotifs);
 
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
@@ -678,7 +678,7 @@ public class MainActivity extends AppCompatActivity {
 
         ArrayList<Pet> unsyncedPets = getUnsyncedPets();
         System.out.println("UNSYNCED PETS: "+unsyncedPets.size());
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().serializeNulls().create();
         String jsonArray = gson.toJson(unsyncedPets);
 
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
@@ -725,7 +725,7 @@ public class MainActivity extends AppCompatActivity {
 
         ArrayList<MessageRep> unsyncedMessages = getUnsyncedMessageReps();
         System.out.println("UNSYNCED MESSAGEREPS: "+unsyncedMessages.size());
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().serializeNulls().create();
         String jsonArray = gson.toJson(unsyncedMessages);
 
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
@@ -770,7 +770,7 @@ public class MainActivity extends AppCompatActivity {
         final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         System.out.println("WE HERE BOO");
         ArrayList<Follower> unsyncedFollowers = getUnsyncedFollowers();
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().serializeNulls().create();
         String jsonArray = gson.toJson(unsyncedFollowers);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
 
@@ -816,7 +816,7 @@ public class MainActivity extends AppCompatActivity {
         final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         System.out.println("WE HERE BOOIII");
         ArrayList<Facility> unsyncedFacilities = getUnsyncedFacilities();
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().serializeNulls().create();
         String jsonArray = gson.toJson(unsyncedFacilities);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
         final Call<Void> call = service.addFacilities(body);
