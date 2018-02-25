@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
@@ -26,6 +27,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -90,7 +92,17 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
     private Button topicSearchButton;
     private Button postSearchButton;
     private AutoCompleteTextView actvSearch;
+    private RelativeLayout relativeLayout;
     HerokuService service;
+    HerokuService service2;
+    HerokuService service3;
+    HerokuService service4;
+
+
+    private String VET_TAG = "Veterinarians";
+    private String FACI_TAG = "Facilities";
+    private String TOPIC_TAG = "Topics";
+    private String POST_TAG = "Posts";
 
 
     @Override
@@ -116,6 +128,8 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
         topicSearchButton = (Button) findViewById(R.id.topicSearchButton);
         postSearchButton = (Button) findViewById(R.id.postSearchButton);
         actvSearch = (AutoCompleteTextView) findViewById(R.id.actvSearch);
+        relativeLayout = (RelativeLayout) findViewById(R.id.relativeSearch);
+        relativeLayout.setClickable(true);
 
         vetSearchClicked(this.findViewById(android.R.id.content));
 
@@ -142,7 +156,10 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
                 ArrayList<Veterinarian> vetList = response.body();
 
                 FragmentVetListing fragment1 = new FragmentVetListing(vetList);
-                getSupportFragmentManager().beginTransaction().add(R.id.frame_search,fragment1).commit();
+
+                getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment1).
+                        addToBackStack(null).commitAllowingStateLoss();
+                // getSupportFragmentManager().beginTransaction().add(R.id.frame_search,fragment1).commitAllowingStateLoss();
                 //ArrayAdapter<Veterinarian> adapter = new ArrayAdapter<Veterinarian>(this,R.layout.,vetList);
 
             }
@@ -180,7 +197,8 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
                         ArrayList<Veterinarian> vetList = response.body();
 
                         FragmentVetListing fragment1 = new FragmentVetListing(vetList);
-                        getSupportFragmentManager().beginTransaction().add(R.id.frame_search,fragment1).commit();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment1).
+                                addToBackStack(null).commitAllowingStateLoss();
                         //ArrayAdapter<Veterinarian> adapter = new ArrayAdapter<Veterinarian>(this,R.layout.,vetList);
 
                     }
@@ -215,17 +233,18 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
         topicSearchButton.setBackgroundResource(R.color.medTurquoise);
         postSearchButton.setBackgroundResource(R.color.medTurquoise);
 
-        service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
 
-        final Call<ArrayList<Facility>> call = service.getClinics();
+        final Call<ArrayList<Facility>> call = service2.getClinics();
         call.enqueue(new Callback<ArrayList<Facility>>() {
             @Override
             public void onResponse(Call<ArrayList<Facility>> call, Response<ArrayList<Facility>> response) {
                 ArrayList<Facility> faciList = response.body();
 
                 FragmentPetClinicListing fragment1 = new FragmentPetClinicListing(faciList);
-                getSupportFragmentManager().beginTransaction().add(R.id.frame_search,fragment1).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment1).
+                        addToBackStack(null).commitAllowingStateLoss();
                 //ArrayAdapter<Veterinarian> adapter = new ArrayAdapter<Veterinarian>(this,R.layout.,vetList);
 
             }
@@ -246,7 +265,7 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+                service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
                 //query the substring to server data
 
@@ -255,14 +274,15 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
 
                 RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
 
-                final Call<ArrayList<Facility>> call = service.queryFacilities(body);
+                final Call<ArrayList<Facility>> call = service2.queryFacilities(body);
                 call.enqueue(new Callback<ArrayList<Facility>>() {
                     @Override
                     public void onResponse(Call<ArrayList<Facility>> call, Response<ArrayList<Facility>> response) {
                         ArrayList<Facility> faciList = response.body();
 
                         FragmentPetClinicListing fragment1 = new FragmentPetClinicListing(faciList);
-                        getSupportFragmentManager().beginTransaction().add(R.id.frame_search,fragment1).commit();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment1).
+                                addToBackStack(null).commitAllowingStateLoss();
                         //ArrayAdapter<Veterinarian> adapter = new ArrayAdapter<Veterinarian>(this,R.layout.,vetList);
 
                     }
@@ -289,17 +309,18 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
         topicSearchButton.setBackgroundResource(R.color.myrtle_green);
         postSearchButton.setBackgroundResource(R.color.medTurquoise);
 
-        service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        service3 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
 
-        final Call<ArrayList<Topic>> call = service.getTopics();
+        final Call<ArrayList<Topic>> call = service3.getTopics();
         call.enqueue(new Callback<ArrayList<Topic>>() {
             @Override
             public void onResponse(Call<ArrayList<Topic>> call, Response<ArrayList<Topic>> response) {
                 ArrayList<Topic> topicList = response.body();
 
                 FragmentCommunity fragment1 = new FragmentCommunity(topicList);
-                getSupportFragmentManager().beginTransaction().add(R.id.frame_search,fragment1).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment1).
+                        addToBackStack(null).commitAllowingStateLoss();
                 //ArrayAdapter<Veterinarian> adapter = new ArrayAdapter<Veterinarian>(this,R.layout.,vetList);
 
             }
@@ -320,7 +341,7 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+                service3 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
                 //query the substring to server data
 
@@ -329,14 +350,15 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
 
                 RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
 
-                final Call<ArrayList<Topic>> call = service.queryTopics(body);
+                final Call<ArrayList<Topic>> call = service3.queryTopics(body);
                 call.enqueue(new Callback<ArrayList<Topic>>() {
                     @Override
                     public void onResponse(Call<ArrayList<Topic>> call, Response<ArrayList<Topic>> response) {
                         ArrayList<Topic> topicList = response.body();
 
                         FragmentCommunity fragment1 = new FragmentCommunity(topicList);
-                        getSupportFragmentManager().beginTransaction().add(R.id.frame_search,fragment1).commit();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment1).
+                                addToBackStack(null).commitAllowingStateLoss();
                         //ArrayAdapter<Veterinarian> adapter = new ArrayAdapter<Veterinarian>(this,R.layout.,vetList);
 
                     }
@@ -362,17 +384,18 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
         topicSearchButton.setBackgroundResource(R.color.medTurquoise);
         postSearchButton.setBackgroundResource(R.color.myrtle_green);
 
-        service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        service4 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
 
-        final Call<ArrayList<Post>> call = service.getPosts();
+        final Call<ArrayList<Post>> call = service4.getPosts();
         call.enqueue(new Callback<ArrayList<Post>>() {
             @Override
             public void onResponse(Call<ArrayList<Post>> call, Response<ArrayList<Post>> response) {
                 ArrayList<Post> postList = response.body();
 
                 FragmentPosts fragment1 = new FragmentPosts(postList);
-                getSupportFragmentManager().beginTransaction().add(R.id.frame_search,fragment1).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment1).
+                        addToBackStack(null).commitAllowingStateLoss();
                 //ArrayAdapter<Veterinarian> adapter = new ArrayAdapter<Veterinarian>(this,R.layout.,vetList);
 
             }
@@ -393,7 +416,7 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+                service4 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
                 //query the substring to server data
 
@@ -402,14 +425,15 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
 
                 RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
 
-                final Call<ArrayList<Post>> call = service.queryPosts(body);
+                final Call<ArrayList<Post>> call = service4.queryPosts(body);
                 call.enqueue(new Callback<ArrayList<Post>>() {
                     @Override
                     public void onResponse(Call<ArrayList<Post>> call, Response<ArrayList<Post>> response) {
                         ArrayList<Post> postList = response.body();
 
                         FragmentPosts fragment1 = new FragmentPosts(postList);
-                        getSupportFragmentManager().beginTransaction().add(R.id.frame_search,fragment1).commit();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment1).
+                                addToBackStack(null).commitAllowingStateLoss();
                         //ArrayAdapter<Veterinarian> adapter = new ArrayAdapter<Veterinarian>(this,R.layout.,vetList);
 
                     }
