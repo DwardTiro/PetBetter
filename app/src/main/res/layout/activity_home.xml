@@ -1,79 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/drawer_layout"
+<android.support.v4.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/refreshHome"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:openDrawer="start">
+    android:layout_height="match_parent">
 
-    <RelativeLayout
+    <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <include
-            android:id="@+id/homeToolbar"
-            layout="@layout/app_bar_nav_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-
-        <LinearLayout
-            android:id="@+id/servicesButtonBar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/homeToolbar"
-            android:orientation="horizontal"
-            tools:layout_constraintTop_creator="1">
-
-            <Button
-                android:id="@+id/vetButton"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:adjustViewBounds="true"
-                android:background="@color/myrtle_green"
-                android:onClick="vetButtonClicked"
-                android:scaleType="fitCenter"
-                android:text="Veterinarians"
-                android:textColor="@color/colorWhite" />
-
-            <Button
-                android:id="@+id/petCareButton"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:adjustViewBounds="true"
-                android:background="@color/myrtle_green"
-                android:onClick="petCareButtonClicked"
-                android:scaleType="fitCenter"
-                android:text="Pet Care"
-                android:textColor="@color/colorWhite" />
-
-        </LinearLayout>
-
-        <FrameLayout
-            android:id="@+id/frame_container"
-            android:layout_width="400dp"
-            android:layout_height="510dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@id/servicesButtonBar"
-            tools:layout_constraintTop_creator="1"/>
-
-    </RelativeLayout>
-
-    <android.support.design.widget.NavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        app:headerLayout="@layout/nav_header_nav_bar"
-        app:menu="@menu/navigation_menu" />
+        tools:openDrawer="start">
 
-</android.support.v4.widget.DrawerLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <include
+                android:id="@+id/homeToolbar"
+                layout="@layout/app_bar_nav_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+            <LinearLayout
+                android:id="@+id/servicesButtonBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/homeToolbar"
+                android:orientation="horizontal"
+                tools:layout_constraintTop_creator="1">
+
+                <Button
+                    android:id="@+id/vetButton"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:adjustViewBounds="true"
+                    android:background="@color/myrtle_green"
+                    android:onClick="vetButtonClicked"
+                    android:scaleType="fitCenter"
+                    android:text="Veterinarians"
+                    android:textColor="@color/colorWhite" />
+
+                <Button
+                    android:id="@+id/petCareButton"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:adjustViewBounds="true"
+                    android:background="@color/myrtle_green"
+                    android:onClick="petCareButtonClicked"
+                    android:scaleType="fitCenter"
+                    android:text="Pet Care"
+                    android:textColor="@color/colorWhite" />
+
+            </LinearLayout>
+
+            <FrameLayout
+                android:id="@+id/frame_container"
+                android:layout_width="400dp"
+                android:layout_height="510dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/servicesButtonBar"
+                tools:layout_constraintTop_creator="1"/>
+
+        </RelativeLayout>
+
+        <android.support.design.widget.NavigationView
+            android:id="@+id/nav_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:fitsSystemWindows="true"
+            app:headerLayout="@layout/nav_header_nav_bar"
+            app:menu="@menu/navigation_menu" />
+
+    </android.support.v4.widget.DrawerLayout>
+</android.support.v4.widget.SwipeRefreshLayout>

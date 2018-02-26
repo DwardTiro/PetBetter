@@ -6,10 +6,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -25,6 +27,8 @@ import com.example.owner.petbetter.fragments.FragmentPetClinicListing;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 
 import com.example.owner.petbetter.fragments.FragmentVetListing;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import android.view.View;
 import android.widget.Button;
@@ -33,9 +37,15 @@ import android.widget.TextView;
 
 import android.widget.Toast;
 
+import java.lang.reflect.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
@@ -52,6 +62,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private SystemSessionManager systemSessionManager;
     private User user;
     private NavigationView navigationView;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private int currFragment;
 
     private ArrayList<Veterinarian> vetList;
     HerokuService service;
@@ -79,6 +91,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         menuBar = (Toolbar) findViewById(R.id.menu_bar);
         vetButton = (Button) findViewById(R.id.vetButton);
         petCareButton = (Button) findViewById(R.id.petCareButton);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refreshHome);
 
         View headerView = navigationView.getHeaderView(0);
 
@@ -113,6 +126,16 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         vetButtonClicked(this.findViewById(android.R.id.content));
 
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swipeRefreshLayout.setRefreshing(true);
+                syncVetChanges();
+                syncClinicChanges();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
     }
     @Override
     protected void onResume(){
@@ -132,6 +155,60 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         recreate();
     }
 
+    public void syncClinicChanges(){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        System.out.println("WE HERE BOOIII");
+
+        final Call<ArrayList<Facility>> call = service.getClinics();
+        call.enqueue(new Callback<ArrayList<Facility>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Facility>> call, Response<ArrayList<Facility>> response) {
+                if(response.isSuccessful()){
+                    setFacilities(response.body());
+
+                    if(currFragment==1)
+                        vetButtonClicked(findViewById(android.R.id.content));
+                    else
+                        petCareButtonClicked(findViewById(android.R.id.content));
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Facility>> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
+    public void syncVetChanges(){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        System.out.println("WE HERE BOOIII");
+
+        final Call<ArrayList<Veterinarian>> call = service.getVeterinarians();
+        call.enqueue(new Callback<ArrayList<Veterinarian>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Veterinarian>> call, Response<ArrayList<Veterinarian>> response) {
+                if(response.isSuccessful()){
+                    setVeterinarians(response.body());
+
+                    if(currFragment==1)
+                        vetButtonClicked(findViewById(android.R.id.content));
+                    else
+                        petCareButtonClicked(findViewById(android.R.id.content));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Veterinarian>> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
     private void initializeDatabase() {
 
         petBetterDb = new DataAdapter(this);
@@ -142,6 +219,68 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             e.printStackTrace();
         }
 
+    }
+
+    public long setVeterinarians(ArrayList<Veterinarian> vetList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setVeterinarians(vetList);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    public long setFacilities(ArrayList<Facility> faciList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setFacilities(faciList);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<Facility> getUnsyncedFacilities(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        ArrayList<Facility> result = petBetterDb.getUnsyncedFacilities();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private void dataSynced(int n){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        petBetterDb.dataSynced(n);
+        petBetterDb.closeDatabase();
+
+    }
+
+    private ArrayList<Veterinarian> getUnsyncedVets(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        ArrayList<Veterinarian> result = petBetterDb.getUnsyncedVets();
+        petBetterDb.closeDatabase();
+
+        return result;
     }
 
     private User getUser(String email){
@@ -203,7 +342,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     public void vetButtonClicked(View view){
 
-
+        currFragment = 1;
         vetButton.setBackgroundResource(R.color.myrtle_green);
         petCareButton.setBackgroundResource(R.color.medTurquoise);
         //FragmentVetListing fragment = (FragmentVetListing) getSupportFragmentManager().findFragmentById(R.id.frame_container);
@@ -246,6 +385,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 */
     public void petCareButtonClicked(View view){
+        currFragment = 2;
         petCareButton.setBackgroundResource(R.color.myrtle_green);
         vetButton.setBackgroundResource(R.color.medTurquoise);
         FragmentPetClinicListing fragment = new FragmentPetClinicListing();
