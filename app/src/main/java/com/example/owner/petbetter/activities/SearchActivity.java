@@ -93,6 +93,7 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
     private Button postSearchButton;
     private AutoCompleteTextView actvSearch;
     private RelativeLayout relativeLayout;
+    private int currFragment;
     HerokuService service;
     HerokuService service2;
     HerokuService service3;
@@ -141,6 +142,7 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
 
     public void vetSearchClicked(View v){
 
+        currFragment = 1;
         vetSearchButton.setBackgroundResource(R.color.myrtle_green);
         petSearchButton.setBackgroundResource(R.color.medTurquoise);
         topicSearchButton.setBackgroundResource(R.color.medTurquoise);
@@ -180,35 +182,37 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(currFragment==1){
+                    service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
-                service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+                    //query the substring to server data
 
-                //query the substring to server data
+                    Gson gson = new GsonBuilder().serializeNulls().create();
+                    String jsonArray = gson.toJson(actvSearch.getText().toString());
 
-                Gson gson = new GsonBuilder().serializeNulls().create();
-                String jsonArray = gson.toJson(actvSearch.getText().toString());
+                    RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
 
-                RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+                    final Call<ArrayList<Veterinarian>> call = service.queryVeterinarians(body);
+                    call.enqueue(new Callback<ArrayList<Veterinarian>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<Veterinarian>> call, Response<ArrayList<Veterinarian>> response) {
+                            ArrayList<Veterinarian> vetList = response.body();
 
-                final Call<ArrayList<Veterinarian>> call = service.queryVeterinarians(body);
-                call.enqueue(new Callback<ArrayList<Veterinarian>>() {
-                    @Override
-                    public void onResponse(Call<ArrayList<Veterinarian>> call, Response<ArrayList<Veterinarian>> response) {
-                        ArrayList<Veterinarian> vetList = response.body();
+                            FragmentVetListing fragment1 = new FragmentVetListing(vetList);
+                            getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment1).
+                                    addToBackStack(null).commitAllowingStateLoss();
+                            //ArrayAdapter<Veterinarian> adapter = new ArrayAdapter<Veterinarian>(this,R.layout.,vetList);
 
-                        FragmentVetListing fragment1 = new FragmentVetListing(vetList);
-                        getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment1).
-                                addToBackStack(null).commitAllowingStateLoss();
-                        //ArrayAdapter<Veterinarian> adapter = new ArrayAdapter<Veterinarian>(this,R.layout.,vetList);
+                        }
 
-                    }
+                        @Override
+                        public void onFailure(Call<ArrayList<Veterinarian>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+                            Toast.makeText(SearchActivity.this, "Unable to get vets from server", Toast.LENGTH_LONG);
+                        }
+                    });
+                }
 
-                    @Override
-                    public void onFailure(Call<ArrayList<Veterinarian>> call, Throwable t) {
-                        Log.d("onFailure", t.getLocalizedMessage());
-                        Toast.makeText(SearchActivity.this, "Unable to get vets from server", Toast.LENGTH_LONG);
-                    }
-                });
             }
 
             @Override
@@ -227,7 +231,7 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
     }
 
     public void petSearchClicked(View v){
-
+        currFragment = 2;
         vetSearchButton.setBackgroundResource(R.color.medTurquoise);
         petSearchButton.setBackgroundResource(R.color.myrtle_green);
         topicSearchButton.setBackgroundResource(R.color.medTurquoise);
@@ -264,35 +268,37 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(currFragment==2){
+                    service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
-                service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+                    //query the substring to server data
 
-                //query the substring to server data
+                    Gson gson = new GsonBuilder().serializeNulls().create();
+                    String jsonArray = gson.toJson(actvSearch.getText().toString());
 
-                Gson gson = new GsonBuilder().serializeNulls().create();
-                String jsonArray = gson.toJson(actvSearch.getText().toString());
+                    RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
 
-                RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+                    final Call<ArrayList<Facility>> call = service2.queryFacilities(body);
+                    call.enqueue(new Callback<ArrayList<Facility>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<Facility>> call, Response<ArrayList<Facility>> response) {
+                            ArrayList<Facility> faciList = response.body();
 
-                final Call<ArrayList<Facility>> call = service2.queryFacilities(body);
-                call.enqueue(new Callback<ArrayList<Facility>>() {
-                    @Override
-                    public void onResponse(Call<ArrayList<Facility>> call, Response<ArrayList<Facility>> response) {
-                        ArrayList<Facility> faciList = response.body();
+                            FragmentPetClinicListing fragment1 = new FragmentPetClinicListing(faciList);
+                            getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment1).
+                                    addToBackStack(null).commitAllowingStateLoss();
+                            //ArrayAdapter<Veterinarian> adapter = new ArrayAdapter<Veterinarian>(this,R.layout.,vetList);
 
-                        FragmentPetClinicListing fragment1 = new FragmentPetClinicListing(faciList);
-                        getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment1).
-                                addToBackStack(null).commitAllowingStateLoss();
-                        //ArrayAdapter<Veterinarian> adapter = new ArrayAdapter<Veterinarian>(this,R.layout.,vetList);
+                        }
 
-                    }
+                        @Override
+                        public void onFailure(Call<ArrayList<Facility>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+                            Toast.makeText(SearchActivity.this, "Unable to get vets from server", Toast.LENGTH_LONG);
+                        }
+                    });
+                }
 
-                    @Override
-                    public void onFailure(Call<ArrayList<Facility>> call, Throwable t) {
-                        Log.d("onFailure", t.getLocalizedMessage());
-                        Toast.makeText(SearchActivity.this, "Unable to get vets from server", Toast.LENGTH_LONG);
-                    }
-                });
             }
 
             @Override
@@ -303,7 +309,7 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
     }
 
     public void topicSearchClicked(View v){
-
+        currFragment = 3;
         vetSearchButton.setBackgroundResource(R.color.medTurquoise);
         petSearchButton.setBackgroundResource(R.color.medTurquoise);
         topicSearchButton.setBackgroundResource(R.color.myrtle_green);
@@ -340,35 +346,37 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(currFragment==3){
+                    service3 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
-                service3 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+                    //query the substring to server data
 
-                //query the substring to server data
+                    Gson gson = new GsonBuilder().serializeNulls().create();
+                    String jsonArray = gson.toJson(actvSearch.getText().toString());
 
-                Gson gson = new GsonBuilder().serializeNulls().create();
-                String jsonArray = gson.toJson(actvSearch.getText().toString());
+                    RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
 
-                RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+                    final Call<ArrayList<Topic>> call = service3.queryTopics(body);
+                    call.enqueue(new Callback<ArrayList<Topic>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<Topic>> call, Response<ArrayList<Topic>> response) {
+                            ArrayList<Topic> topicList = response.body();
 
-                final Call<ArrayList<Topic>> call = service3.queryTopics(body);
-                call.enqueue(new Callback<ArrayList<Topic>>() {
-                    @Override
-                    public void onResponse(Call<ArrayList<Topic>> call, Response<ArrayList<Topic>> response) {
-                        ArrayList<Topic> topicList = response.body();
+                            FragmentCommunity fragment1 = new FragmentCommunity(topicList);
+                            getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment1).
+                                    addToBackStack(null).commitAllowingStateLoss();
+                            //ArrayAdapter<Veterinarian> adapter = new ArrayAdapter<Veterinarian>(this,R.layout.,vetList);
 
-                        FragmentCommunity fragment1 = new FragmentCommunity(topicList);
-                        getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment1).
-                                addToBackStack(null).commitAllowingStateLoss();
-                        //ArrayAdapter<Veterinarian> adapter = new ArrayAdapter<Veterinarian>(this,R.layout.,vetList);
+                        }
 
-                    }
+                        @Override
+                        public void onFailure(Call<ArrayList<Topic>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+                            Toast.makeText(SearchActivity.this, "Unable to get vets from server", Toast.LENGTH_LONG);
+                        }
+                    });
+                }
 
-                    @Override
-                    public void onFailure(Call<ArrayList<Topic>> call, Throwable t) {
-                        Log.d("onFailure", t.getLocalizedMessage());
-                        Toast.makeText(SearchActivity.this, "Unable to get vets from server", Toast.LENGTH_LONG);
-                    }
-                });
             }
 
             @Override
@@ -379,6 +387,7 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
     }
 
     public void postSearchClicked(View v){
+        currFragment = 4;
         vetSearchButton.setBackgroundResource(R.color.medTurquoise);
         petSearchButton.setBackgroundResource(R.color.medTurquoise);
         topicSearchButton.setBackgroundResource(R.color.medTurquoise);
@@ -415,35 +424,36 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(currFragment==4){
+                    service4 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
-                service4 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+                    //query the substring to server data
 
-                //query the substring to server data
+                    Gson gson = new GsonBuilder().serializeNulls().create();
+                    String jsonArray = gson.toJson(actvSearch.getText().toString());
 
-                Gson gson = new GsonBuilder().serializeNulls().create();
-                String jsonArray = gson.toJson(actvSearch.getText().toString());
+                    RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
 
-                RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+                    final Call<ArrayList<Post>> call = service4.queryPosts(body);
+                    call.enqueue(new Callback<ArrayList<Post>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<Post>> call, Response<ArrayList<Post>> response) {
+                            ArrayList<Post> postList = response.body();
 
-                final Call<ArrayList<Post>> call = service4.queryPosts(body);
-                call.enqueue(new Callback<ArrayList<Post>>() {
-                    @Override
-                    public void onResponse(Call<ArrayList<Post>> call, Response<ArrayList<Post>> response) {
-                        ArrayList<Post> postList = response.body();
+                            FragmentPosts fragment1 = new FragmentPosts(postList);
+                            getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment1).
+                                    addToBackStack(null).commitAllowingStateLoss();
+                            //ArrayAdapter<Veterinarian> adapter = new ArrayAdapter<Veterinarian>(this,R.layout.,vetList);
 
-                        FragmentPosts fragment1 = new FragmentPosts(postList);
-                        getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment1).
-                                addToBackStack(null).commitAllowingStateLoss();
-                        //ArrayAdapter<Veterinarian> adapter = new ArrayAdapter<Veterinarian>(this,R.layout.,vetList);
+                        }
 
-                    }
-
-                    @Override
-                    public void onFailure(Call<ArrayList<Post>> call, Throwable t) {
-                        Log.d("onFailure", t.getLocalizedMessage());
-                        Toast.makeText(SearchActivity.this, "Unable to get vets from server", Toast.LENGTH_LONG);
-                    }
-                });
+                        @Override
+                        public void onFailure(Call<ArrayList<Post>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+                            Toast.makeText(SearchActivity.this, "Unable to get vets from server", Toast.LENGTH_LONG);
+                        }
+                    });
+                }
             }
 
             @Override

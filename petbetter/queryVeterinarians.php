@@ -15,55 +15,114 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 	//echo $queryjson;
 	
 	//$query = "%{$_POST['query']}%";
-	$query = "%{$queryjson}%";
-
-	if($stmt = $mysqli->prepare("SELECT v._id AS _id, v.user_id, u.first_name AS first_name, u.last_name AS last_name, 
-	u.mobile_num AS mobile_num, u.phone_num AS phone_num, u.email AS email, u.password AS password, u.age AS age, u.user_type AS user_type, 
-	v.specialty AS specialty, v.rating AS rating FROM veterinarians AS v INNER JOIN users u ON v.user_id = u.user_id WHERE u.first_name LIKE ? OR u.last_name LIKE ?")){
-		$stmt->bind_param("ss", $query, $query);
-		$stmt->execute();
-		$stmt->bind_result($_id, $user_id, $first_name, $last_name, $mobile_num, $phone_num, $email, $password, $age, $user_type, $specialty, $rating);
-		$stmt->store_result();
+	//"%{$queryjson}%"
 	
-		if($stmt->fetch()){
-			
-			do{
-				array_push($response, array('_id'=>$_id,
+	
+	$pieces = explode(" ", $queryjson);
+	
+	if(count($pieces)==1){
+		$query = "%{$pieces[0]}%";
+		$query2 = "%{$pieces[0]}%";
+		if($stmt = $mysqli->prepare("SELECT v._id AS _id, v.user_id, u.first_name AS first_name, u.last_name AS last_name, 
+			u.mobile_num AS mobile_num, u.phone_num AS phone_num, u.email AS email, u.password AS password, u.age AS age, u.user_type AS user_type, 
+			v.specialty AS specialty, v.rating AS rating FROM veterinarians AS v INNER JOIN users u ON v.user_id = u.user_id WHERE u.first_name LIKE ? OR u.last_name LIKE ?")){
+			$stmt->bind_param("ss", $query, $query2);
+			$stmt->execute();
+			$stmt->bind_result($_id, $user_id, $first_name, $last_name, $mobile_num, $phone_num, $email, $password, $age, $user_type, $specialty, $rating);
+			$stmt->store_result();
+		
+			if($stmt->fetch()){
+				
+				do{
+					array_push($response, array('_id'=>$_id,
+					'user_id'=>$user_id,
+					'first_name'=>$first_name,
+					'last_name'=>$last_name,
+					'mobile_num'=>$mobile_num,
+					'phone_num'=>$phone_num,
+					'email'=>$email,
+					'password'=>$password,
+					'age'=>$age,
+					'user_type'=>$user_type,
+					'specialty'=>$specialty,
+					'rating'=>$rating));
+				}while($stmt->fetch());
+				
+				
+				$stmt->close();
+				
+				echo json_encode($response);
+				/*
+				echo json_encode(array('_id'=>$_id,
 				'user_id'=>$user_id,
+				'topic_name'=>$topic_name,
+				'topic_content'=>$topic_content,
+				'date_created'=>$date_created,
 				'first_name'=>$first_name,
-				'last_name'=>$last_name,
-				'mobile_num'=>$mobile_num,
-				'phone_num'=>$phone_num,
-				'email'=>$email,
-				'password'=>$password,
-				'age'=>$age,
-				'user_type'=>$user_type,
-				'specialty'=>$specialty,
-				'rating'=>$rating));
-			}while($stmt->fetch());
-			
-			
-			$stmt->close();
-			
-			echo json_encode($response);
-			/*
-			echo json_encode(array('_id'=>$_id,
-			'user_id'=>$user_id,
-			'topic_name'=>$topic_name,
-			'topic_content'=>$topic_content,
-			'date_created'=>$date_created,
-			'first_name'=>$first_name,
-			'is_deleted'=>$is_deleted));
-			*/
+				'is_deleted'=>$is_deleted));
+				*/
+			}
+			else{
+				
+				$stmt->close();
+				echo 'SQL Query Error';
+			}
+			//echo json_encode($stmt);
+			//echo json_encode(array('user'=>$response));
 		}
-		else{
-			
-			$stmt->close();
-			echo 'SQL Query Error';
-		}
-		//echo json_encode($stmt);
-		//echo json_encode(array('user'=>$response));
 	}
+	if(count($pieces)==2){
+		$query = "%{$pieces[0]}%";
+		$query2 = "%{$pieces[1]}%";
+		if($stmt = $mysqli->prepare("SELECT v._id AS _id, v.user_id, u.first_name AS first_name, u.last_name AS last_name, 
+			u.mobile_num AS mobile_num, u.phone_num AS phone_num, u.email AS email, u.password AS password, u.age AS age, u.user_type AS user_type, 
+			v.specialty AS specialty, v.rating AS rating FROM veterinarians AS v INNER JOIN users u ON v.user_id = u.user_id WHERE u.first_name LIKE ? AND u.last_name LIKE ?")){
+			$stmt->bind_param("ss", $query, $query2);
+			$stmt->execute();
+			$stmt->bind_result($_id, $user_id, $first_name, $last_name, $mobile_num, $phone_num, $email, $password, $age, $user_type, $specialty, $rating);
+			$stmt->store_result();
+		
+			if($stmt->fetch()){
+				
+				do{
+					array_push($response, array('_id'=>$_id,
+					'user_id'=>$user_id,
+					'first_name'=>$first_name,
+					'last_name'=>$last_name,
+					'mobile_num'=>$mobile_num,
+					'phone_num'=>$phone_num,
+					'email'=>$email,
+					'password'=>$password,
+					'age'=>$age,
+					'user_type'=>$user_type,
+					'specialty'=>$specialty,
+					'rating'=>$rating));
+				}while($stmt->fetch());
+				
+				
+				$stmt->close();
+				
+				echo json_encode($response);
+				/*
+				echo json_encode(array('_id'=>$_id,
+				'user_id'=>$user_id,
+				'topic_name'=>$topic_name,
+				'topic_content'=>$topic_content,
+				'date_created'=>$date_created,
+				'first_name'=>$first_name,
+				'is_deleted'=>$is_deleted));
+				*/
+			}
+			else{
+				
+				$stmt->close();
+				echo 'SQL Query Error';
+			}
+			//echo json_encode($stmt);
+			//echo json_encode(array('user'=>$response));
+		}
+	}
+	
 }
 
 /*
