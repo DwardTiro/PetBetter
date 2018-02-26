@@ -70,6 +70,7 @@ public class SignUpUserActivity extends AppCompatActivity {
 
         Gson gson = new GsonBuilder().serializeNulls().create();
         String jsonArray = gson.toJson(user);
+        System.out.println(jsonArray);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
 
         Call<Void> call = service.addUser(body);

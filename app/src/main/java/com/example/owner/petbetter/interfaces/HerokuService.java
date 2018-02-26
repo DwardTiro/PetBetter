@@ -344,8 +344,13 @@ public interface HerokuService {
 
     @FormUrlEncoded
     @POST("addVet.php")
-    Call<Integer> addVet(@Field("_id") int vetId, @Field("user_id") int userId,
-                                     @Field("rating") int rating);
+    Call<Integer> addVet(
+            @Field("_id") int vetId,
+            @Field("user_id") int userId,
+            @Field("rating") int rating,
+            @Field("specialty") String specialty,
+            @Field("phone_num") String phone_num
+    );
 
     @POST("addVets.php")
     Call<Void> addVets(@Body RequestBody vetList);
@@ -364,6 +369,9 @@ public interface HerokuService {
 
     @POST("addMarkers.php")
     Call<Void> addMarkers(@Body RequestBody markerList);
+
+    @POST("addFacility.php")
+    Call<Void> addFacility(@Body RequestBody facility);
 
     @POST("addFacilities.php")
     Call<Void> addFacilities(@Body RequestBody faciList);

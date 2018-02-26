@@ -46,11 +46,6 @@ public class VeterinarianAddInfoActivity extends AppCompatActivity {
         final TextView activityTitle = (TextView) findViewById(R.id.activity_title);
         activityTitle.setText("Sign Up");
 
-        signUpButton = (Button) findViewById(R.id.signUpVetButton);
-        editTextFirstName = (EditText) findViewById(R.id.signUpVetTextFirstName);
-        editTextLastName = (EditText) findViewById(R.id.signUpVetTextLastName);
-        editTextEmail = (EditText) findViewById(R.id.signUpVetTextEmailAddress);
-        editTextPassword = (TextInputEditText) findViewById(R.id.textInputEditTextSignUpVet);
         vetSpecialtySpinner = (Spinner) findViewById(R.id.vetSpecialtySpinner);
     }
 
@@ -74,24 +69,7 @@ public class VeterinarianAddInfoActivity extends AppCompatActivity {
         String jsonArray = gson.toJson(user);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
 
-        /*
-        Call<Void> call = service.addUser(body);
-        call.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                System.out.println("User added to server successfully");
-                Intent intent = new Intent(
-                        VeterinarianAddInfoActivity.this,
-                        com.example.owner.petbetter.activities.SignUpUserTypeActivity.class
-                );
-                startActivity(intent);
-            }
 
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                System.out.println("FAILED TO ADD USER TO SERVER");
-            }
-        });*/
         Toast.makeText(VeterinarianAddInfoActivity.this, vetSpecialtySpinner.getSelectedItem().toString(),
                 Toast.LENGTH_SHORT);
         Bundle extras = getIntent().getExtras();

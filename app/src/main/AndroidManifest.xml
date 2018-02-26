@@ -163,6 +163,7 @@
             />
         <activity android:name=".activities.MessagesActivity"
             />
+        <activity android:name=".activities.VeterinarianHomeActivity"/>
     </application>
 
 

@@ -183,7 +183,11 @@ public class MainActivity extends AppCompatActivity {
                             if(futureTask.get()==true){
                                 System.out.println("From server wew: " + response.body().toString());
                                 systemSessionManager.createUserSession(user.getEmail());
-                                Intent intent = new Intent(MainActivity.this, com.example.owner.petbetter.activities.CommActivity.class);
+                                Intent intent;
+                                if(user.getUserType() == 2)
+                                    intent = new Intent(MainActivity.this, com.example.owner.petbetter.activities.CommActivity.class);
+                                else
+                                    intent = new Intent(MainActivity.this, com.example.owner.petbetter.activities.VeterinarianHomeActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
@@ -207,35 +211,6 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("onFailure", t.getLocalizedMessage());
                 }
             });
-/*
-            if (!checkEmailValidity(email)||email.equals("")) {
-  //System.out.println("Invalid email");
-                textInfo.setText("Invalid email or password");
-                textInfo.setVisibility(View.VISIBLE);
-            } else {
-
-                try{
-                    if (checkLogin(email, password)) {
-                        systemSessionManager.createUserSession(email);
-                        Intent intent = new Intent(MainActivity.this, com.example.owner.petbetter.activities.HomeActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-
-                        finish();
-                    } else {
-                        //System.out.println("Invalid email or password");
-                        textInfo.setText("Invalid Email or Password");
-                        textInfo.setVisibility(View.VISIBLE);
-                    }
-                } catch (Exception e){
-                    textInfo.setText("Invalid Email or Password");
-                    textInfo.setVisibility(View.VISIBLE);
-                }
-
-
-            }
-*/
         } else {
 
             if (email.trim().length() == 0) {

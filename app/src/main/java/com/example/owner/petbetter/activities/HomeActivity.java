@@ -105,6 +105,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         System.out.println(user.getName());
         System.out.println(email);
+        System.out.println(user.getUserId());
         textNavUser = (TextView) headerView.findViewById(R.id.textNavUser);
         textNavUser.setText(user.getName());
 

@@ -19,7 +19,14 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 	
 	while($i<$n){
 		if($stmt = $mysqli->prepare("INSERT INTO facilities (faci_name, location, hours_open, hours_close, contact_info, vet_id, rating) VALUES (?,?,?,?,?,?,?)")){
-			$stmt->bind_param("sssssss", $facilist[$i]['faci_name'], $facilist[$i]['location'], $facilist[$i]['hours_open'], $facilist[$i]['hours_close'], $facilist[$i]['contact_info'], $facilist[$i]['vet_id'], 
+			$stmt->bind_param(
+				"sssssss",
+				$facilist[$i]['faci_name'],
+				$facilist[$i]['location'],
+				$facilist[$i]['hours_open'],
+				$facilist[$i]['hours_close'],
+				$facilist[$i]['contact_info'],
+				$facilist[$i]['vet_id'], 
 				$facilist[$i]['rating']);
 			$stmt->execute();
 			$stmt->close();
