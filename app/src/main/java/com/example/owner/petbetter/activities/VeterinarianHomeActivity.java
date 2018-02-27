@@ -1,7 +1,11 @@
 package com.example.owner.petbetter.activities;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -20,6 +24,8 @@ import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
+import com.example.owner.petbetter.services.MyService;
+import com.example.owner.petbetter.services.NotificationReceiver;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 
 import java.sql.SQLException;
@@ -37,7 +43,7 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
     private SystemSessionManager systemSessionManager;
     private TextView textNavEmail, textNavUser;
     private User user;
-
+    private MyService notifService;
 
     HerokuService service;
 
@@ -77,7 +83,14 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
         textNavUser = (TextView) headerView.findViewById(R.id.textNavUser);
         textNavUser.setText(user.getName());
 
-
+        Intent notifAlarm = new Intent(VeterinarianHomeActivity.this, NotificationReceiver.class);
+        boolean alarmRunning = (PendingIntent.getBroadcast(VeterinarianHomeActivity.this,0,notifAlarm, PendingIntent.FLAG_NO_CREATE)!=null);
+        if(alarmRunning==false){
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(VeterinarianHomeActivity.this, 0, notifAlarm, 0);
+            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), 10000, pendingIntent);
+            //1800000
+        }
     }
 
     @Override

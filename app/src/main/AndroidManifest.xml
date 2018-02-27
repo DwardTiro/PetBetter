@@ -164,7 +164,15 @@
         <activity android:name=".activities.MessagesActivity"
             />
         <activity android:name=".activities.VeterinarianHomeActivity"/>
+
+        <service android:name="com.example.owner.petbetter.services.MyService">
+        </service>
+
+        <receiver android:name="com.example.owner.petbetter.services.NotificationReceiver">
+        </receiver>
     </application>
+
+
 
 
 

@@ -1,6 +1,8 @@
 package com.example.owner.petbetter.activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
@@ -73,6 +75,12 @@ public class MainActivity extends AppCompatActivity {
     HerokuService service;
     ExecutorService executorService = Executors.newSingleThreadExecutor();
     FutureTask<Boolean> futureTask;
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
+    private static final String PREF_NAME = "prefs";
+    private static final String KEY_USERNAME = "username";
+    private static final String KEY_EMAIL = "email";
+    private static final String KEY_PASS = "password";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +102,16 @@ public class MainActivity extends AppCompatActivity {
         editPassword.setTransformationMethod(new PasswordTransformationMethod());
 
         service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+        sharedPreferences = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+
+        if(sharedPreferences.getString(KEY_EMAIL,"")!=null&&sharedPreferences.getString(KEY_PASS,"")!=null){
+
+            editEmail.setText(sharedPreferences.getString(KEY_EMAIL,""));
+            editPassword.setText(sharedPreferences.getString(KEY_PASS,""));
+            userLogin(findViewById(R.id.main_content));
+        }
 
 
     }
@@ -191,6 +209,12 @@ public class MainActivity extends AppCompatActivity {
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
+                                editor.putString(KEY_USERNAME, user.getName());
+                                editor.putString(KEY_EMAIL, user.getEmail());
+                                editor.putString(KEY_PASS, user.getPassword());
+                                editor.putBoolean("remember", true);
+                                editor.apply();
+
                                 finish();
                             }
                         }catch(Exception e){
