@@ -1,6 +1,8 @@
 package com.example.owner.petbetter.activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.support.annotation.NonNull;
@@ -190,6 +192,10 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
         }
         else if(id == R.id.log_out){
             Intent intent = new Intent(this, com.example.owner.petbetter.activities.MainActivity.class);
+            SharedPreferences preferences =getSharedPreferences("prefs", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.clear();
+            editor.commit();
             startActivity(intent);
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

@@ -81,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String KEY_USERNAME = "username";
     private static final String KEY_EMAIL = "email";
     private static final String KEY_PASS = "password";
+    private static final String KEY_ID = "user_id";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +108,6 @@ public class MainActivity extends AppCompatActivity {
         editor = sharedPreferences.edit();
 
         if(sharedPreferences.getString(KEY_EMAIL,"")!=null&&sharedPreferences.getString(KEY_PASS,"")!=null){
-
             editEmail.setText(sharedPreferences.getString(KEY_EMAIL,""));
             editPassword.setText(sharedPreferences.getString(KEY_PASS,""));
             userLogin(findViewById(R.id.main_content));
@@ -208,13 +208,14 @@ public class MainActivity extends AppCompatActivity {
                                     intent = new Intent(MainActivity.this, com.example.owner.petbetter.activities.VeterinarianHomeActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
+
+                                editor.putLong(KEY_ID, user.getUserId());
                                 editor.putString(KEY_USERNAME, user.getName());
                                 editor.putString(KEY_EMAIL, user.getEmail());
                                 editor.putString(KEY_PASS, user.getPassword());
                                 editor.putBoolean("remember", true);
                                 editor.apply();
-
+                                startActivity(intent);
                                 finish();
                             }
                         }catch(Exception e){

@@ -229,6 +229,23 @@ public class DataAdapter {
         return result;
     }
 
+    public Follower getFollowerWithId(long id){
+
+        String sql = "SELECT * FROM "+FOLLOWER_TABLE+" WHERE _id = '" + id + "'";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        Log.e("cursor", c.getCount() + "");
+
+        c.moveToFirst();
+
+        Follower result = new Follower(c.getLong(c.getColumnIndexOrThrow("_id")),
+                c.getLong(c.getColumnIndexOrThrow("topic_id")),
+                c.getLong(c.getColumnIndexOrThrow("user_id")));
+
+        c.close();
+        return result;
+    }
+
     public User getUserWithId(int id){
 
         String sql = "SELECT * FROM " + USER_TABLE + " WHERE _id = '" + id + "'";
@@ -816,7 +833,9 @@ public class DataAdapter {
                     c.getInt(c.getColumnIndexOrThrow("is_read")),
                     c.getInt(c.getColumnIndexOrThrow("type")),
                     c.getString(c.getColumnIndexOrThrow("date_performed")),
-                    c.getLong(c.getColumnIndexOrThrow("source_id")));
+                    c.getLong(c.getColumnIndexOrThrow("source_id")),
+                    c.getString(c.getColumnIndexOrThrow("first_name")),
+                    c.getString(c.getColumnIndexOrThrow("last_name")));
             results.add(notifs);
         }
         c.close();

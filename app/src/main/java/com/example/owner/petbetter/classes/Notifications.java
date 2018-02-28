@@ -29,8 +29,13 @@ public class Notifications {
     @SerializedName("date_performed")
     String datePerformed;
 
-    String doerName;
+    @SerializedName("first_name")
+    String firstName;
 
+    @SerializedName("last_name")
+    String lastName;
+
+    /*
     public Notifications(long id, long userId, long doerId, int isRead, int type, String datePerformed, long sourceId) {
         this.id = id;
         this.userId = userId;
@@ -39,9 +44,9 @@ public class Notifications {
         this.type = type;
         this.datePerformed = datePerformed;
         this.sourceId = sourceId;
-    }
+    }*/
 
-    public Notifications(long id, long userId, long doerId, int isRead, int type, String datePerformed, long sourceId, String first_name, String last_name) {
+    public Notifications(long id, long userId, long doerId, int isRead, int type, String datePerformed, long sourceId, String firstName, String lastName) {
         this.id = id;
         this.userId = userId;
         this.doerId = doerId;
@@ -49,7 +54,8 @@ public class Notifications {
         this.type = type;
         this.datePerformed = datePerformed;
         this.sourceId = sourceId;
-        this.doerName= first_name+" "+last_name;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
     public long getSourceId() {
@@ -61,12 +67,9 @@ public class Notifications {
     }
 
     public String getDoerName() {
-        return doerName;
+        return this.firstName+" "+this.lastName;
     }
 
-    public void setDoerName(String doerName) {
-        this.doerName = doerName;
-    }
 
     public long getId() {
         return id;
