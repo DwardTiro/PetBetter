@@ -57,7 +57,7 @@ public interface HerokuService {
 
     @FormUrlEncoded
     @POST("getUserWithId.php")
-    Call<User> getUserWithId(@Field("email") String email);
+    Call<User> getUserWithId(@Field("user_id") long userId);
 
 
     @POST("getPosts.php")

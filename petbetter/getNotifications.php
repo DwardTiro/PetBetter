@@ -27,6 +27,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 				'doer_id'=>$doer_id,
 				'is_read'=>$is_read,
 				'type'=>$type,
+				'source_id'=>$source_id,
 				'date_performed'=>$date_performed,
 				'first_name'=>$first_name,
 				'last_name'=>$last_name));

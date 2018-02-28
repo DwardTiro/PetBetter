@@ -1,6 +1,8 @@
 package com.example.owner.petbetter.activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -136,6 +138,10 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
             startActivity(intent);
         } else if (id == R.id.log_out) {
             Intent intent = new Intent(this, com.example.owner.petbetter.activities.MainActivity.class);
+            SharedPreferences preferences =getSharedPreferences("prefs", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.clear();
+            editor.commit();
             startActivity(intent);
         }
 

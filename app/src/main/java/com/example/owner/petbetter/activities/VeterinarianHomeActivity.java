@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.provider.ContactsContract;
@@ -111,6 +112,10 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
             startActivity(intent);
         } else if (id == R.id.log_out) {
             Intent intent = new Intent(this, com.example.owner.petbetter.activities.MainActivity.class);
+            SharedPreferences preferences =getSharedPreferences("prefs", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.clear();
+            editor.commit();
             startActivity(intent);
         }
 
