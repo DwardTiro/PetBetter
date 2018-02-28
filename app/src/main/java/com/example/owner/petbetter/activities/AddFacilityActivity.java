@@ -50,6 +50,7 @@ public class AddFacilityActivity extends AppCompatActivity {
     public void addFacility(View view){
         service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
+        /*
         Facility facility = new Facility(
                 4,
                 facilityName.getText().toString(),
@@ -83,6 +84,12 @@ public class AddFacilityActivity extends AppCompatActivity {
             public void onFailure(Call<Void> call, Throwable t) {
                 System.out.println("FAILED TO ADD FACILITY TO SERVER");
             }
-        });
+        });*/
+        Intent intent = new Intent(
+                AddFacilityActivity.this,
+                com.example.owner.petbetter.activities.MapsActivity.class
+        );
+        startActivity(intent);
+
     }
 }
