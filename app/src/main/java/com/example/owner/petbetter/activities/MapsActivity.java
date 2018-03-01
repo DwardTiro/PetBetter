@@ -1,6 +1,7 @@
 package com.example.owner.petbetter.activities;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
@@ -48,21 +49,30 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.location.LocationListener;
 
+import java.security.Permission;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+public class MapsActivity extends FragmentActivity
+        implements
+        OnMapReadyCallback,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        LocationListener,
+        GoogleMap.OnMyLocationButtonClickListener {
 
     private GoogleMap mMap;
     private GoogleApiClient client;
     private FusedLocationProviderClient mFusedLocationClient;
     private Geocoder geocoder;
     private String strAdd;
+    private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
+    private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 10;
+    private boolean hasLocationPermission = false;
 
     private DataAdapter petBetterDb;
     private SystemSessionManager systemSessionManager;
@@ -80,133 +90,46 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     HerokuService service;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-            checkLocationPermission();
-
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-
-        systemSessionManager = new SystemSessionManager(this);
-        if (systemSessionManager.checkLogin())
-            finish();
-        HashMap<String, String> userIn = systemSessionManager.getUserDetails();
-
-        initializeDatabase();
-        email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
-        user = getUser(email);
-        System.out.println("What's the problem?");
-    }
-
-
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_LOCATION_CODE: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    System.out.println("Success permission granted");
-                    if (
-                            ContextCompat.checkSelfPermission(
-                                    this,
-                                    Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        if (client == null) {
-                            buildGoogleApiClient();
-                        }
-                        mMap.setMyLocationEnabled(true);
-                    }
-                }
-                else{
-                    System.out.println("Yo permission was denied zzz");
-                }
-            }
-        }
-
-    }
-
-    @Override
     public void onMapReady(GoogleMap googleMap) {
 
         mMap = googleMap;
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            buildGoogleApiClient();
+        System.out.println("went here");
+        /*
+        LatLng php = new LatLng(12.8797, 121.7740);
+
+        if (ContextCompat.checkSelfPermission(
+                this.getApplicationContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
-
+            mMap.setOnMyLocationButtonClickListener(this);
+        } else {
+            System.out.println("Error in permission bruh");
         }
-
-        //LatLng location = new LatLng();
-        //geocoder = new Geocoder(this, Locale.getDefault());
-        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-
-            @Override
-            public void onMapClick(LatLng point) {
-
-                // Creating MarkerOptions
-                MarkerOptions options = new MarkerOptions();
-
-                // Setting the position of the marker
-                options.position(point);
-                pointTemp = point;
-                //Get LatLng from touched point;
-
-                ///here is reverse GeoCoding which helps in getting address from latlng
-                //Toast.makeText(MapsActivity.this, pointTemp.longitude+" "+pointTemp.latitude, Toast.LENGTH_LONG).show();
-                try {
-                    Geocoder geo = new Geocoder(MapsActivity.this.getApplicationContext(), Locale.getDefault());
-                    //List<Address> addresses = geo.getFromLocation(touchLat,touchLong, 1);
-
-                    List<Address> addresses = geo.getFromLocation(pointTemp.latitude, pointTemp.longitude, 1);
-
-                    for (int i = 0; i < addresses.get(0).getMaxAddressLineIndex(); i++) {
-                        location += " " + addresses.get(0).getAddressLine(i);
-                    }
-
-                    // draws the marker at the currently touched location
-                    //touchMarker(pointTemp.longitude, pointTemp.latitude);
-                    Intent myIntent = new Intent(MapsActivity.this, com.example.owner.petbetter.activities.AddMarkerActivity.class);
-                    Bundle extras = new Bundle();
-                    markerId = generateMarkerId();
-                    extras.putInt("MARKERID", markerId);
-                    extras.putString("LOCATION", location);
-                    extras.putDouble("LONGITUDE", pointTemp.longitude);
-                    extras.putDouble("LATITUDE", pointTemp.latitude);
-                    myIntent.putExtras(extras);
-                    startActivity(myIntent);
-                    location = "";
-                    System.out.println("INTENT SUCCESSFULLY DONE");
-
-                } catch (Exception e) {
-                    e.printStackTrace(); // getFromLocation() may sometimes fail
-                    //Toast.makeText(MapsActivity.this, "Service is not available. Google Play Services not up to date", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
-        loadMarkers(user.getUserId());
-        System.out.println("WHY ARE YOU SO LAGGY?");
+        //goToLocationZoom();
+*/
     }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_maps);
+
+        /*
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(MapsActivity.this);
+        */
+        getLocationPermissions();
+    }
+
+    private void initMap(){
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(MapsActivity.this);
+    }
+
 
     protected synchronized void buildGoogleApiClient() {
         client = new GoogleApiClient.Builder(this).addConnectionCallbacks(this).addOnConnectionFailedListener(this).addApi(LocationServices.API).build();
@@ -292,7 +215,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void mapBackButtonClicked(View view) {
         finish();
-        Intent intent = new Intent(view.getContext(), com.example.owner.petbetter.activities.HomeActivity.class);
+        Intent intent = new Intent(view.getContext(), com.example.owner.petbetter.activities.AddFacilityActivity.class);
         startActivity(intent);
     }
 
@@ -340,4 +263,63 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return true;
     }
 
+    @Override
+    public boolean onMyLocationButtonClick() {
+        Toast.makeText(MapsActivity.this, "Checked your location", Toast.LENGTH_SHORT).show();
+        return false;
+    }
+
+
+    private void getLocationPermissions() {
+        String[] locationPermissions = {Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION};
+
+        if(ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            System.out.println("Fine location permission okay");
+            if(ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                    COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+                System.out.println("Coarse location permission okay");
+                hasLocationPermission = true;
+            }else{
+                System.out.println("Coarse location permission not okay");
+                ActivityCompat.requestPermissions(
+                        this,
+                        locationPermissions,
+                        LOCATION_PERMISSION_REQUEST_CODE);
+            }
+        }else{
+            System.out.println("Fine location permission not okay");
+            ActivityCompat.requestPermissions(
+                    this,
+                    locationPermissions,
+                    LOCATION_PERMISSION_REQUEST_CODE);
+        }
+
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        hasLocationPermission = false;
+        Boolean foundGrant = false;
+        int resultsLength = grantResults.length;
+
+
+        switch(requestCode){
+            case LOCATION_PERMISSION_REQUEST_CODE:{
+                if(grantResults.length > 0){
+                    for(int i = 0; i < grantResults.length; i++){
+                        if(grantResults[i] != PackageManager.PERMISSION_GRANTED){
+                            hasLocationPermission = false;
+                            return;
+                        }
+                    }
+                    hasLocationPermission = true;
+                    initMap();
+                }
+            }
+        }
+
+    }
 }

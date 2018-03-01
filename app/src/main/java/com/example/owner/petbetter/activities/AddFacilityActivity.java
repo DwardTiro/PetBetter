@@ -3,10 +3,12 @@ package com.example.owner.petbetter.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
@@ -39,6 +41,12 @@ public class AddFacilityActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstance){
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_add_new_facility);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.viewPostToolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        final TextView activityTitle = (TextView) findViewById(R.id.activity_title);
+        activityTitle.setText("Add Facility");
 
         addFacilityButton = (Button) findViewById(R.id.addFacilityButton);
         facilityName = (EditText) findViewById(R.id.addFacilityName);
@@ -85,11 +93,19 @@ public class AddFacilityActivity extends AppCompatActivity {
                 System.out.println("FAILED TO ADD FACILITY TO SERVER");
             }
         });*/
+
         Intent intent = new Intent(
                 AddFacilityActivity.this,
                 com.example.owner.petbetter.activities.MapsActivity.class
         );
         startActivity(intent);
 
+    }
+    public void viewPostBackButtonClicked(View view){
+        Intent intent = new Intent(
+                AddFacilityActivity.this,
+                com.example.owner.petbetter.activities.VeterinarianHomeActivity.class
+        );
+        startActivity(intent);
     }
 }

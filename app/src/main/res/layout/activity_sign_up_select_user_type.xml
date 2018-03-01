@@ -8,12 +8,12 @@
     <include
         android:id="@+id/toolbar_signup"
         layout="@layout/toolbar_signup"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"/>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@+id/toolbar_signup"
         android:background="@color/medTurquoise"
         android:orientation="vertical">
@@ -41,6 +41,15 @@
             android:textStyle="bold"
             android:typeface="sans" />
 
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
         <Button
             android:id="@+id/petOwnerTypeButton"
             style="?android:attr/borderlessButtonStyle"
@@ -66,6 +75,5 @@
             android:textAllCaps="false"
             android:textColor="@color/main_White"
             android:textSize="28sp" />
-
     </LinearLayout>
 </RelativeLayout>
