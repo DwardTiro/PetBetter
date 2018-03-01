@@ -16,16 +16,23 @@ import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.activities.MainActivity;
+import com.example.owner.petbetter.adapters.MessageAdapter;
+import com.example.owner.petbetter.adapters.MessageRepAdapter;
 import com.example.owner.petbetter.classes.Follower;
+import com.example.owner.petbetter.classes.Message;
+import com.example.owner.petbetter.classes.MessageRep;
 import com.example.owner.petbetter.classes.Notifications;
 import com.example.owner.petbetter.classes.Topic;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -93,6 +100,7 @@ public class MyService extends Service {
     private Runnable myTask = new Runnable() {
         public void run() {
             // This is where you try to pull data from remotedb periodically and do notifs and messages
+
             final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
             final Call<ArrayList<Notifications>> call = service.getNotifications(userId);
 
@@ -118,6 +126,28 @@ public class MyService extends Service {
                                                 .setTicker(notifArray.get(val).getDoerName()+" has messaged you")
                                                 .setWhen(System.currentTimeMillis()).setContentTitle(notifArray.get(val).getDoerName())
                                                 .setContentText("has messaged you");
+                                        syncMessageChanges(userId);
+                                        syncMessageRepChanges();
+                                        ArrayList<Message> mArray = getMessages(userId);
+                                        MessageAdapter messageAdapter = new MessageAdapter(getApplicationContext(), mArray,new MessageAdapter.OnItemClickListener() {
+                                            @Override public void onItemClick(Message item) {
+                                                //Execute command here
+                                                Intent intent = new Intent(getApplicationContext(), com.example.owner.petbetter.activities.MessageActivity.class);
+                                                System.out.println("Item: "+item.getMessageContent());
+                                                intent.putExtra("thisMessage", new Gson().toJson(item));
+                                                startActivity(intent);
+                                            }
+                                        });
+                                        messageAdapter.notifyDataSetChanged();
+
+
+                                        ArrayList<MessageRep> mrArray = getMessageRepsFromUser(userId);
+                                        MessageRepAdapter messageRepAdapter = new MessageRepAdapter(getApplicationContext(), mrArray,new MessageRepAdapter.OnItemClickListener() {
+                                            @Override public void onItemClick(MessageRep item) {
+                                                //Execute command here
+                                            }
+                                        });
+                                        messageRepAdapter.notifyDataSetChanged();
                                     }
                                     if(notifArray.get(val).getType()==3){
                                         Topic topic = getTopic(notifArray.get(val).getSourceId());
@@ -166,10 +196,160 @@ public class MyService extends Service {
                 }
             });
 
+            //might need a separate call and service variable for this one
+
             System.out.println("THE BACKGROUND SERVICE IS RUNNING");
             stopSelf();
         }
     };
+
+    public void syncMessageChanges(final long userId){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+        ArrayList<Message> unsyncedMessages = getUnsyncedMessages();
+        System.out.println("UNSYNCED MESSAGES: "+unsyncedMessages.size());
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String jsonArray = gson.toJson(unsyncedMessages);
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.addMessages(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    System.out.println("MESSAGES ADDED YEY");
+                    dataSynced(5);
+
+                    final Call<ArrayList<Message>> call2 = service2.getMessages(userId);
+                    call2.enqueue(new Callback<ArrayList<Message>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<Message>> call, Response<ArrayList<Message>> response) {
+                            if(response.isSuccessful()){
+                                System.out.println("response size messages "+response.body().size());
+                                setMessages(response.body());
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<Message>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
+    public void syncMessageRepChanges(){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+        ArrayList<MessageRep> unsyncedMessages = getUnsyncedMessageReps();
+        System.out.println("UNSYNCED MESSAGEREPS: "+unsyncedMessages.size());
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String jsonArray = gson.toJson(unsyncedMessages);
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.addMessageReps(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    System.out.println("MESSAGEREPS ADDED YEY");
+                    dataSynced(6);
+
+                    final Call<ArrayList<MessageRep>> call2 = service2.getMessageReps();
+                    call2.enqueue(new Callback<ArrayList<MessageRep>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<MessageRep>> call, Response<ArrayList<MessageRep>> response) {
+                            if(response.isSuccessful()){
+                                System.out.println("response size messagereps "+response.body().size());
+                                setMessageReps(response.body());
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<MessageRep>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
+    private ArrayList<MessageRep> getUnsyncedMessageReps(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<MessageRep> result = petBetterDb.getUnsyncedMessageReps();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<Message> getMessages(long userId){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Message> result = petBetterDb.getMessages(userId);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<MessageRep> getMessageRepsFromUser(long userId){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<MessageRep> result = petBetterDb.getMessageRepsFromUser(userId);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<Message> getUnsyncedMessages(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Message> result = petBetterDb.getUnsyncedMessages();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
 
     @Override
     public void onDestroy() {
@@ -218,6 +398,30 @@ public class MyService extends Service {
             e.printStackTrace();
         }
         long result = petBetterDb.setNotifications(notifList);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    public long setMessages(ArrayList<Message> messageList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setMessages(messageList);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    public long setMessageReps(ArrayList<MessageRep> messagerepList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setMessageReps(messagerepList);
         petBetterDb.closeDatabase();
 
         return result;

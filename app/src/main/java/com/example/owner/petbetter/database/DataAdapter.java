@@ -833,9 +833,7 @@ public class DataAdapter {
                     c.getInt(c.getColumnIndexOrThrow("is_read")),
                     c.getInt(c.getColumnIndexOrThrow("type")),
                     c.getString(c.getColumnIndexOrThrow("date_performed")),
-                    c.getLong(c.getColumnIndexOrThrow("source_id")),
-                    c.getString(c.getColumnIndexOrThrow("first_name")),
-                    c.getString(c.getColumnIndexOrThrow("last_name")));
+                    c.getLong(c.getColumnIndexOrThrow("source_id")));
             results.add(notifs);
         }
         c.close();
@@ -1280,6 +1278,7 @@ public class DataAdapter {
         cv.put("_id", messageId);
         cv.put("user_one", userId);
         cv.put("user_two", toId);
+        cv.put("is_synced", 0);
 
         result = petBetterDb.insert(MESSAGE_TABLE, null, cv);
 

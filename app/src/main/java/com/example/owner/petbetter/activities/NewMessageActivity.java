@@ -34,6 +34,7 @@ import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.fragments.FragmentMessages;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -72,6 +73,7 @@ public class NewMessageActivity extends AppCompatActivity {
     private ArrayList<Message> mList;
     private boolean alreadyExist= false;
     HerokuService service;
+    HerokuService service2;
 
     @Override
     public void onCreate(Bundle savedInstance){
@@ -122,58 +124,92 @@ public class NewMessageActivity extends AppCompatActivity {
                     timeStamp = sdf.format(new Date());
 
                     //check first if message exists before creating
-                    mList = getMessages(user.getUserId());
-                    for(int i=0;i<mList.size();i++){
-                        if(mList.get(i).getUserId()==user.getUserId()||mList.get(i).getFromId()==user.getUserId()){
-                            alreadyExist= true;
-                            mId = (int) mList.get(i).getId();
+                    service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+                    final Call<ArrayList<Message>> call2 = service2.getMessages(user.getUserId());
+                    call2.enqueue(new Callback<ArrayList<Message>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<Message>> call, Response<ArrayList<Message>> response) {
+                            if(response.isSuccessful()){
+                                System.out.println("response size messages "+response.body().size());
+                                mList = response.body();
+                                for(int i=0;i<mList.size();i++){
+                                    if(mList.get(i).getUserId()==user.getUserId()||mList.get(i).getFromId()==user.getUserId()){
+                                        alreadyExist= true;
+                                        mId = (int) mList.get(i).getId();
+                                    }
+                                }
+                                setMessages(response.body());
+
+                                String image = imageToString();
+
+                                if(alreadyExist==false){
+                                    mrId = generateMessageRepId();
+                                    addMessageRep(mrId, (int) user.getUserId(), mId,
+                                            newMsgContent.getText().toString(), 1, timeStamp, image, 0);
+                                    uploadMessageRep(getUnsyncedMessageReps());
+
+
+
+                                }
+                                else{
+                                    createMessage(mId, user.getUserId(), usertwo.getUserId());
+                                    uploadMessage(getUnsyncedMessages());
+                                    mrId = generateMessageRepId();
+                                    addMessageRep(mrId, (int) user.getUserId(), mId,
+                                            newMsgContent.getText().toString(), 1, timeStamp, image, 0);
+                                    uploadMessageRep(getUnsyncedMessageReps());
+
+                                }
+
+                                nId = generateNotifsId();
+                                notifyMessage(nId, usertwo.getUserId(), user.getUserId(), 0, 2, timeStamp, mId, 0);
+                                uploadNotifications(getUnsyncedNotifications());
+
+                                finish();
+                            }
                         }
-                    }
 
-                    String image = imageToString();
+                        @Override
+                        public void onFailure(Call<ArrayList<Message>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
 
-                    if(alreadyExist==true){
-                        mrId = generateMessageRepId();
-                        addMessageRep(mrId, (int) user.getUserId(), mId,
-                                newMsgContent.getText().toString(), 1, timeStamp, image, 0);
-                        uploadMessageRep(getUnsyncedMessageReps());
-
-
-
-                    }
-                    else{
-                        createMessage(mId, user.getUserId(), usertwo.getUserId());
-                        uploadMessage(getUnsyncedMessages());
-                        mrId = generateMessageRepId();
-                        addMessageRep(mrId, (int) user.getUserId(), mId,
-                                newMsgContent.getText().toString(), 1, timeStamp, image, 0);
-                        uploadMessageRep(getUnsyncedMessageReps());
-
-                    }
-
-                    nId = generateNotifsId();
-                    notifyMessage(nId, usertwo.getUserId(), user.getUserId(), 0, 2, timeStamp, mId, 0);
-                    uploadNotifications(getUnsyncedNotifications());
-
-                    finish();
+                        }
+                    });
                 }
             }
         });
 
     }
 
+    public long setMessages(ArrayList<Message> messageList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setMessages(messageList);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
     private String imageToString(){
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG,100,byteArrayOutputStream);
-        byte[] imgByte = byteArrayOutputStream.toByteArray();
-        return Base64.encodeToString(imgByte,Base64.DEFAULT);
+        try{
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG,100,byteArrayOutputStream);
+            byte[] imgByte = byteArrayOutputStream.toByteArray();
+            return Base64.encodeToString(imgByte,Base64.DEFAULT);
+        }catch(NullPointerException npe){
+            return null;
+        }
+
     }
 
 
     private void uploadNotifications(ArrayList<Notifications> notifications){
         //herokuservice
         service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().serializeNulls().create();
         String jsonArray = gson.toJson(notifications);
 
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());

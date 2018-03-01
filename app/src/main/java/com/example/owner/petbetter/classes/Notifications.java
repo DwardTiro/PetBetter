@@ -35,7 +35,7 @@ public class Notifications {
     @SerializedName("last_name")
     String lastName;
 
-    /*
+
     public Notifications(long id, long userId, long doerId, int isRead, int type, String datePerformed, long sourceId) {
         this.id = id;
         this.userId = userId;
@@ -44,7 +44,7 @@ public class Notifications {
         this.type = type;
         this.datePerformed = datePerformed;
         this.sourceId = sourceId;
-    }*/
+    }
 
     public Notifications(long id, long userId, long doerId, int isRead, int type, String datePerformed, long sourceId, String firstName, String lastName) {
         this.id = id;

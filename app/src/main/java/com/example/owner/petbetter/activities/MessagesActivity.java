@@ -100,7 +100,7 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
 
         messagesRecyclerView = (RecyclerView) findViewById(R.id.messagesRecyclerView);
         messageList = getMessages(user.getUserId());
-        System.out.println("Size of list "+messageList.size());
+        System.out.println("Size of message list in this thing "+messageList.size());
         messageAdapter = new MessageAdapter(this, messageList,new MessageAdapter.OnItemClickListener() {
             @Override public void onItemClick(Message item) {
                 Intent intent = new Intent(MessagesActivity.this, com.example.owner.petbetter.activities.MessageActivity.class);

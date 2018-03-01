@@ -79,10 +79,13 @@ public class MessageActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 
+
         String jsonMyObject;
         Bundle extras = getIntent().getExtras();
         jsonMyObject = extras.getString("thisMessage");
         messageItem = new Gson().fromJson(jsonMyObject, Message.class);
+
+
 
         fromText = (TextView) findViewById(R.id.fromTextView);
         container = (FrameLayout) findViewById(R.id.message_container);
@@ -172,10 +175,14 @@ public class MessageActivity extends AppCompatActivity {
     }
 
     private String imageToString(){
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG,100,byteArrayOutputStream);
-        byte[] imgByte = byteArrayOutputStream.toByteArray();
-        return Base64.encodeToString(imgByte,Base64.DEFAULT);
+        try{
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG,100,byteArrayOutputStream);
+            byte[] imgByte = byteArrayOutputStream.toByteArray();
+            return Base64.encodeToString(imgByte,Base64.DEFAULT);
+        }catch(NullPointerException npe){
+            return null;
+        }
     }
 
     private ArrayList<MessageRep> getUnsyncedMessageReps(){

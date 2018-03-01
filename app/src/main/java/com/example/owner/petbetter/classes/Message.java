@@ -14,10 +14,10 @@ public class Message {
     @SerializedName("_id")
     private long id;
 
-    @SerializedName("user_id")
+    @SerializedName("user_one")
     private long userId;
 
-    @SerializedName("from_id")
+    @SerializedName("user_two")
     private long fromId;
 
 
