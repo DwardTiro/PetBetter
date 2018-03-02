@@ -1,6 +1,7 @@
 package com.example.owner.petbetter.fragments;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -21,6 +22,8 @@ import com.example.owner.petbetter.classes.Marker;
 import com.example.owner.petbetter.classes.Message;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
+import com.example.owner.petbetter.interfaces.CheckUpdates;
+import com.example.owner.petbetter.services.NotificationReceiver;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.google.gson.Gson;
 
@@ -28,7 +31,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class FragmentMessages extends Fragment {
+public class FragmentMessages extends Fragment implements CheckUpdates {
 
     private MessageAdapter messageAdapter;
     private RecyclerView recyclerView;
@@ -41,6 +44,13 @@ public class FragmentMessages extends Fragment {
     private String email;
     private FloatingActionButton fab;
     private boolean allowRefresh = false;
+    private NotificationReceiver notifReceiver = new NotificationReceiver(this);
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivity().unregisterReceiver(notifReceiver);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance){
@@ -53,6 +63,7 @@ public class FragmentMessages extends Fragment {
         HashMap<String, String> userIn = systemSessionManager.getUserDetails();
 
         initializeDatabase();
+        getActivity().registerReceiver(this.notifReceiver, new IntentFilter(Intent.ACTION_ATTACH_DATA));
 
         email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
         user = getUser(email);
@@ -93,12 +104,15 @@ public class FragmentMessages extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        getActivity().registerReceiver(this.notifReceiver, new IntentFilter(Intent.ACTION_ATTACH_DATA));
+        onResult();
+        /*
         if(allowRefresh){
             System.out.println("WHEN DO WE ENTER THIS?");
             allowRefresh = false;
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.detach(this).attach(this).commit();
-        }
+        }*/
     }
 
     private void initializeDatabase() {
@@ -169,4 +183,11 @@ public class FragmentMessages extends Fragment {
         return result;
     }
 
+    @Override
+    public void onResult() {
+        messageList = getMessages(user.getUserId());
+        //messageAdapter.notifyDataSetChanged();
+        messageAdapter.notifyItemRangeChanged(0, messageAdapter.getItemCount());
+        System.out.println("ONRESULT MESSAGES");
+    }
 }

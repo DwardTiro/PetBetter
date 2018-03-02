@@ -1,6 +1,7 @@
 package com.example.owner.petbetter.fragments;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -18,6 +19,8 @@ import com.example.owner.petbetter.classes.Marker;
 import com.example.owner.petbetter.classes.MessageRep;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
+import com.example.owner.petbetter.interfaces.CheckUpdates;
+import com.example.owner.petbetter.services.NotificationReceiver;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.google.gson.Gson;
 
@@ -29,7 +32,7 @@ import java.util.HashMap;
  * Created by owner on 15/10/2017.
  */
 
-public class FragmentMessageReps extends Fragment {
+public class FragmentMessageReps extends Fragment implements CheckUpdates {
 
     private MessageRepAdapter messageRepAdapter;
     private RecyclerView recyclerView;
@@ -40,6 +43,21 @@ public class FragmentMessageReps extends Fragment {
     private SystemSessionManager systemSessionManager;
     private User user;
     private String email;
+    private NotificationReceiver notifReceiver = new NotificationReceiver(this);
+    private long messageId;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().registerReceiver(this.notifReceiver, new IntentFilter(Intent.ACTION_ATTACH_DATA));
+        onResult();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivity().unregisterReceiver(notifReceiver);
+    }
 
 
     @Override
@@ -58,7 +76,7 @@ public class FragmentMessageReps extends Fragment {
         user = getUser(email);
 
         Bundle bundle = this.getArguments();
-        long messageId = bundle.getLong("messageId");
+        messageId = bundle.getLong("messageId");
 
         recyclerView = (RecyclerView) view.findViewById(R.id.messageRepListing);
         messageRepList = getMessageReps(messageId);
@@ -118,4 +136,14 @@ public class FragmentMessageReps extends Fragment {
         petBetterDb.closeDatabase();
         return result;
     }
+
+    @Override
+    public void onResult() {
+        messageRepList = getMessageReps(messageId);
+       // messageRepAdapter.notifyDataSetChanged();
+        messageRepAdapter.notifyItemRangeChanged(0, messageRepAdapter.getItemCount());
+        System.out.println("ONRESULT MESSAGEREPS");
+    }
+
+
 }

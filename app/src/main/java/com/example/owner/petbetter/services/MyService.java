@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -25,6 +26,7 @@ import com.example.owner.petbetter.classes.Notifications;
 import com.example.owner.petbetter.classes.Topic;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
+import com.example.owner.petbetter.interfaces.CheckUpdates;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -52,6 +54,7 @@ public class MyService extends Service {
     private static final String KEY_ID = "user_id";
     private DataAdapter petBetterDb;
     private long userId;
+    private NotificationReceiver notifReceiver = new NotificationReceiver();
 
     NotificationCompat.Builder appNotif;
     private static final AtomicInteger uniqueId = new AtomicInteger(0);
@@ -128,26 +131,11 @@ public class MyService extends Service {
                                                 .setContentText("has messaged you");
                                         syncMessageChanges(userId);
                                         syncMessageRepChanges();
-                                        ArrayList<Message> mArray = getMessages(userId);
-                                        MessageAdapter messageAdapter = new MessageAdapter(getApplicationContext(), mArray,new MessageAdapter.OnItemClickListener() {
-                                            @Override public void onItemClick(Message item) {
-                                                //Execute command here
-                                                Intent intent = new Intent(getApplicationContext(), com.example.owner.petbetter.activities.MessageActivity.class);
-                                                System.out.println("Item: "+item.getMessageContent());
-                                                intent.putExtra("thisMessage", new Gson().toJson(item));
-                                                startActivity(intent);
-                                            }
-                                        });
-                                        messageAdapter.notifyDataSetChanged();
 
-
-                                        ArrayList<MessageRep> mrArray = getMessageRepsFromUser(userId);
-                                        MessageRepAdapter messageRepAdapter = new MessageRepAdapter(getApplicationContext(), mrArray,new MessageRepAdapter.OnItemClickListener() {
-                                            @Override public void onItemClick(MessageRep item) {
-                                                //Execute command here
-                                            }
-                                        });
-                                        messageRepAdapter.notifyDataSetChanged();
+                                        Intent intent = new Intent().setAction(Intent.ACTION_ATTACH_DATA);
+                                        notifReceiver.onReceive(context, intent);
+                                        context.sendBroadcast(intent);
+                                        getApplicationContext().registerReceiver(notifReceiver, new IntentFilter(Intent.ACTION_ATTACH_DATA));
                                     }
                                     if(notifArray.get(val).getType()==3){
                                         Topic topic = getTopic(notifArray.get(val).getSourceId());
@@ -177,6 +165,7 @@ public class MyService extends Service {
                                     nManager.notify(getUniqueId(), appNotif.build());
                                     setNotifications(response.body());
                                     dataSynced(7);
+                                    getApplicationContext().unregisterReceiver(notifReceiver);
                                     val++;
                                 }
                             }

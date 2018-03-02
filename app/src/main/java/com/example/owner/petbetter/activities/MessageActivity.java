@@ -30,6 +30,8 @@ import com.example.owner.petbetter.classes.Notifications;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.fragments.FragmentMessageReps;
+import com.example.owner.petbetter.interfaces.CheckUpdates;
+import com.example.owner.petbetter.services.NotificationReceiver;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
