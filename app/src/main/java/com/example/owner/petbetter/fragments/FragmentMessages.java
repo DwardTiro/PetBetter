@@ -49,6 +49,7 @@ public class FragmentMessages extends Fragment implements CheckUpdates {
     @Override
     public void onPause() {
         super.onPause();
+        System.out.println("Do we pause??");
         getActivity().unregisterReceiver(notifReceiver);
     }
 
@@ -63,6 +64,8 @@ public class FragmentMessages extends Fragment implements CheckUpdates {
         HashMap<String, String> userIn = systemSessionManager.getUserDetails();
 
         initializeDatabase();
+
+        //receiver
         getActivity().registerReceiver(this.notifReceiver, new IntentFilter(Intent.ACTION_ATTACH_DATA));
 
         email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
@@ -107,6 +110,7 @@ public class FragmentMessages extends Fragment implements CheckUpdates {
     public void onResume() {
         super.onResume();
         getActivity().registerReceiver(this.notifReceiver, new IntentFilter(Intent.ACTION_ATTACH_DATA));
+        System.out.println("Do we resume??");
         onResult();
         /*
         if(allowRefresh){

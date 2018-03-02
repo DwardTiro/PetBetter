@@ -142,6 +142,7 @@ public class FragmentMessageReps extends Fragment implements CheckUpdates {
         if(messageRepList.size()!=getMessageReps(messageId).size()){
             messageRepList = getMessageReps(messageId);
             messageRepAdapter.updateList(messageRepList);
+
             //messageRepAdapter.notifyDataSetChanged();
             //recyclerView.setAdapter(messageRepAdapter);
             //messageRepAdapter.notifyItemRangeChanged(0, messageRepAdapter.getItemCount());

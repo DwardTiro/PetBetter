@@ -11,12 +11,12 @@ $response = array();
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
 
-	if($stmt = $mysqli->prepare("SELECT n._id AS _id, n.user_id AS user_id, n.doer_id AS doer_id, n.is_read AS is_read, 
+	if($stmt = $mysqli->prepare("SELECT n._id AS _id, n.user_id AS user_id, n.doer_id AS doer_id, 
 	n.type AS type, n.date_performed as date_performed, n.source_id as source_id, u.first_name AS first_name, u.last_name AS last_name 
 	FROM notifications AS n INNER JOIN users AS u ON n.doer_id = u.user_id WHERE n.user_id = ?")){
 		$stmt->bind_param("s", $user_id);
 		$stmt->execute();
-		$stmt->bind_result($_id, $user_id, $doer_id, $is_read, $type, $date_performed, $source_id, $first_name,  $last_name);
+		$stmt->bind_result($_id, $user_id, $doer_id, $type, $date_performed, $source_id, $first_name,  $last_name);
 		$stmt->store_result();
 	
 		if($stmt->fetch()){
@@ -25,7 +25,6 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 				array_push($response, array('_id'=>$_id,
 				'user_id'=>$user_id,
 				'doer_id'=>$doer_id,
-				'is_read'=>$is_read,
 				'type'=>$type,
 				'source_id'=>$source_id,
 				'date_performed'=>$date_performed,

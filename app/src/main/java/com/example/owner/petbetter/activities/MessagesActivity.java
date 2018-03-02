@@ -2,6 +2,7 @@ package com.example.owner.petbetter.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -26,6 +27,8 @@ import com.example.owner.petbetter.adapters.MessageAdapter;
 import com.example.owner.petbetter.classes.Message;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
+import com.example.owner.petbetter.interfaces.CheckUpdates;
+import com.example.owner.petbetter.services.NotificationReceiver;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.google.gson.Gson;
 
@@ -38,7 +41,7 @@ import java.util.HashMap;
  */
 
 
-public class MessagesActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MessagesActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, CheckUpdates {
 
     private ArrayList<Message> messageList;
     private DataAdapter petBetterDb;
@@ -50,8 +53,24 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
     private TextView textNavEmail, textNavUser;
     private Toolbar menuBar;
     private User user;
+    private NotificationReceiver notifReceiver = new NotificationReceiver(this);
 
     HerokuService service;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MessagesActivity.this.registerReceiver(this.notifReceiver, new IntentFilter(Intent.ACTION_ATTACH_DATA));
+        System.out.println("Do we resume??");
+        onResult();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        System.out.println("Do we pause??");
+        MessagesActivity.this.unregisterReceiver(notifReceiver);
+    }
 
     @Override
     public void onCreate(Bundle savedInstance) {
@@ -217,4 +236,11 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
         return result;
     }
 
+    @Override
+    public void onResult() {
+        messageList = getMessages(user.getUserId());
+        messageAdapter.updateList(messageList);
+        //messageAdapter.notifyDataSetChanged();
+        System.out.println("ONRESULT MESSAGES");
+    }
 }
