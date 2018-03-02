@@ -89,6 +89,8 @@ public class FragmentMessages extends Fragment implements CheckUpdates {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        getActivity().registerReceiver(this.notifReceiver, new IntentFilter(Intent.ACTION_ATTACH_DATA));
+
         fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -186,8 +188,8 @@ public class FragmentMessages extends Fragment implements CheckUpdates {
     @Override
     public void onResult() {
         messageList = getMessages(user.getUserId());
+        messageAdapter.updateList(messageList);
         //messageAdapter.notifyDataSetChanged();
-        messageAdapter.notifyItemRangeChanged(0, messageAdapter.getItemCount());
         System.out.println("ONRESULT MESSAGES");
     }
 }

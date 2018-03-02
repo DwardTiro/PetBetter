@@ -28,7 +28,6 @@ public class NotificationReceiver extends BroadcastReceiver {
         try{
             if(intent.getAction().equals(Intent.ACTION_ATTACH_DATA)){
                 checkUpdates.onResult();
-                System.out.println("Do we get here server boi?");
             }
         }catch(NullPointerException npe){
             Intent background = new Intent(context, MyService.class);

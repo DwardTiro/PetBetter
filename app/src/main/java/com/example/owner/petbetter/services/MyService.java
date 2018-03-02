@@ -17,6 +17,8 @@ import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.activities.MainActivity;
+import com.example.owner.petbetter.activities.MessageActivity;
+import com.example.owner.petbetter.activities.MessagesActivity;
 import com.example.owner.petbetter.adapters.MessageAdapter;
 import com.example.owner.petbetter.adapters.MessageRepAdapter;
 import com.example.owner.petbetter.classes.Follower;
@@ -27,6 +29,7 @@ import com.example.owner.petbetter.classes.Topic;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.interfaces.CheckUpdates;
+import com.google.android.gms.nearby.messages.Messages;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -125,17 +128,18 @@ public class MyService extends Service {
                                                 .setContentText("has replied to your post");
                                     }
                                     if(notifArray.get(val).getType()==2){
+                                        syncMessageChanges(userId);
+                                        syncMessageRepChanges();
                                         appNotif.setSmallIcon(R.drawable.app_icon)
                                                 .setTicker(notifArray.get(val).getDoerName()+" has messaged you")
                                                 .setWhen(System.currentTimeMillis()).setContentTitle(notifArray.get(val).getDoerName())
                                                 .setContentText("has messaged you");
-                                        syncMessageChanges(userId);
-                                        syncMessageRepChanges();
 
-                                        Intent intent = new Intent().setAction(Intent.ACTION_ATTACH_DATA);
-                                        notifReceiver.onReceive(context, intent);
-                                        context.sendBroadcast(intent);
-                                        getApplicationContext().registerReceiver(notifReceiver, new IntentFilter(Intent.ACTION_ATTACH_DATA));
+                                        Intent intentNotif = new Intent(MyService.this, MessagesActivity.class);
+                                        PendingIntent pendingIntent = PendingIntent.getActivity(MyService.this, 0, intentNotif, PendingIntent.FLAG_UPDATE_CURRENT);
+                                        appNotif.setContentIntent(pendingIntent);
+
+                                        //getApplicationContext().registerReceiver(notifReceiver, new IntentFilter(Intent.ACTION_ATTACH_DATA));
                                     }
                                     if(notifArray.get(val).getType()==3){
                                         Topic topic = getTopic(notifArray.get(val).getSourceId());
@@ -156,16 +160,17 @@ public class MyService extends Service {
 
 
                                     //change MainActivity to which activity you really wanna go
+                                    /*
                                     Intent intent = new Intent(MyService.this, MainActivity.class);
                                     PendingIntent pendingIntent = PendingIntent.getActivity(MyService.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                                    appNotif.setContentIntent(pendingIntent);
+                                    appNotif.setContentIntent(pendingIntent);*/
 
                                     //this builds the notification and issues it.
                                     NotificationManager nManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                                     nManager.notify(getUniqueId(), appNotif.build());
                                     setNotifications(response.body());
                                     dataSynced(7);
-                                    getApplicationContext().unregisterReceiver(notifReceiver);
+                                    //getApplicationContext().unregisterReceiver(notifReceiver);
                                     val++;
                                 }
                             }
@@ -264,6 +269,10 @@ public class MyService extends Service {
                             if(response.isSuccessful()){
                                 System.out.println("response size messagereps "+response.body().size());
                                 setMessageReps(response.body());
+
+                                Intent intent = new Intent().setAction(Intent.ACTION_ATTACH_DATA);
+                                notifReceiver.onReceive(context, intent);
+                                context.sendBroadcast(intent);
                             }
                         }
 

@@ -59,10 +59,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         */
     }
 
-    public void update(ArrayList<Message> list){
+    public void updateList(ArrayList<Message> list){
         messageList.clear();
         messageList.addAll(list);
-        notifyDataSetChanged();
+        this.notifyDataSetChanged();
     }
 
     @Override

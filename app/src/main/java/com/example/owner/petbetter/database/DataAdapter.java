@@ -352,15 +352,16 @@ public class DataAdapter {
 
         ArrayList<MessageRep> results = new ArrayList<>();
 
-        String sql = "SELECT mr._id AS _id, mr.user_id AS user_id, mr.message_id AS message_id, " +
+        String sql = "SELECT mr._id AS _id, mr.user_id AS user_id, mr.sender_id AS sender_id, mr.message_id AS message_id, " +
                 "mr.rep_content AS rep_content, mr.is_sent AS is_sent, mr.date_performed AS date_performed, " +
                 "u.first_name AS first_name, u.last_name AS last_name FROM messagereps AS mr INNER JOIN users AS u " +
-                "ON mr.user_id = u._id WHERE mr.message_id = '" + messageId + "'";
+                "ON mr.sender_id = u._id WHERE mr.message_id = '" + messageId + "'";
         Cursor c = petBetterDb.rawQuery(sql, null);
 
         while(c.moveToNext()) {
             MessageRep messagerep = new MessageRep(c.getInt(c.getColumnIndexOrThrow("_id")),
                     c.getLong(c.getColumnIndexOrThrow("user_id")),
+                    c.getLong(c.getColumnIndexOrThrow("sender_id")),
                     c.getInt(c.getColumnIndexOrThrow("message_id")),
                     c.getString(c.getColumnIndexOrThrow("rep_content")),
                     c.getInt(c.getColumnIndexOrThrow("is_sent")),
@@ -383,8 +384,9 @@ public class DataAdapter {
         Cursor c = petBetterDb.rawQuery(sql, null);
 
         while(c.moveToNext()) {
-            MessageRep messagerep = new MessageRep(c.getInt(c.getColumnIndexOrThrow("_id")),
+            MessageRep messagerep = new MessageRep(c.getLong(c.getColumnIndexOrThrow("_id")),
                     c.getLong(c.getColumnIndexOrThrow("user_id")),
+                    c.getLong(c.getColumnIndexOrThrow("sender_id")),
                     c.getInt(c.getColumnIndexOrThrow("message_id")),
                     c.getString(c.getColumnIndexOrThrow("rep_content")),
                     c.getInt(c.getColumnIndexOrThrow("is_sent")),
@@ -401,15 +403,16 @@ public class DataAdapter {
 
         ArrayList<MessageRep> results = new ArrayList<>();
 
-        String sql = "SELECT mr._id AS _id, mr.user_id AS user_id, mr.message_id AS message_id, " +
+        String sql = "SELECT mr._id AS _id, mr.user_id AS user_id, mr.sender_id AS sender_id, mr.message_id AS message_id, " +
                 "mr.rep_content AS rep_content, mr.is_sent AS is_sent, mr.date_performed AS date_performed, " +
                 "u.first_name AS first_name, u.last_name AS last_name FROM messagereps AS mr INNER JOIN users AS u " +
-                "ON mr.user_id = u._id WHERE mr.user_id = '" + userId + "'";
+                "ON mr.sender_id = u._id WHERE mr.user_id = '" + userId + "'";
         Cursor c = petBetterDb.rawQuery(sql, null);
 
         while(c.moveToNext()) {
             MessageRep messagerep = new MessageRep(c.getInt(c.getColumnIndexOrThrow("_id")),
                     c.getLong(c.getColumnIndexOrThrow("user_id")),
+                    c.getLong(c.getColumnIndexOrThrow("sender_id")),
                     c.getInt(c.getColumnIndexOrThrow("message_id")),
                     c.getString(c.getColumnIndexOrThrow("rep_content")),
                     c.getInt(c.getColumnIndexOrThrow("is_sent")),
@@ -745,6 +748,7 @@ public class DataAdapter {
         while(c.moveToNext()) {
             MessageRep messagerep = new MessageRep(c.getInt(c.getColumnIndexOrThrow("_id")),
                     c.getLong(c.getColumnIndexOrThrow("user_id")),
+                    c.getLong(c.getColumnIndexOrThrow("sender_id")),
                     c.getInt(c.getColumnIndexOrThrow("message_id")),
                     c.getString(c.getColumnIndexOrThrow("rep_content")),
                     c.getInt(c.getColumnIndexOrThrow("is_sent")),
@@ -1200,13 +1204,14 @@ public class DataAdapter {
         return results;
     }
 
-    public long addMessageRep(int messageRepId, int userId, int messageId, String repContent, int isSent, String datePerformed,
+    public long addMessageRep(int messageRepId, int userId, int senderId, int messageId, String repContent, int isSent, String datePerformed,
                               String image, int isSynced){
         long result;
 
         ContentValues cv = new ContentValues();
         cv.put("_id", messageRepId);
         cv.put("user_id", userId);
+        cv.put("sender_id", senderId);
         cv.put("message_id", messageId);
         cv.put("rep_content", repContent);
         cv.put("is_sent", isSent);
@@ -2126,6 +2131,7 @@ public class DataAdapter {
             ContentValues cv = new ContentValues();
             cv.put("_id", messagerep.getId());
             cv.put("user_id", messagerep.getUserId());
+            cv.put("sender_id", messagerep.getSenderId());
             cv.put("message_id", messagerep.getMessageId());
             cv.put("rep_content", messagerep.getRepContent());
             cv.put("is_sent", messagerep.getIsSent());

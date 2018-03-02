@@ -16,7 +16,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 	if($stmt = $mysqli->prepare("SELECT * FROM messagereps")){
 		//$stmt->bind_param("ss", $user_id, $user_id);
 		$stmt->execute();
-		$stmt->bind_result($_id, $user_id, $message_id, $rep_content, $is_sent, $date_performed, $message_photo);
+		$stmt->bind_result($_id, $user_id, $sender_id, $message_id, $rep_content, $is_sent, $date_performed, $message_photo);
 		$stmt->store_result();
 	
 		if($stmt->fetch()){
@@ -24,6 +24,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 			do{
 				array_push($response, array('_id'=>$_id,
 				'user_id'=>$user_id,
+				'sender_id'=>$sender_id,
 				'message_id'=>$message_id,
 				'rep_content'=>$rep_content,
 				'is_sent'=>$is_sent,

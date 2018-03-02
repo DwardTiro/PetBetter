@@ -139,20 +139,27 @@ public class MessageActivity extends AppCompatActivity {
                     timeStamp = sdf.format(new Date());
 
                     //implement messagereps here too
+                    //get back here if error
                     String image = imageToString();
-                    addMessageRep(messageRepId, (int) user.getUserId(), (int) messageItem.getId(),
-                            messageText.getText().toString(), 1, timeStamp, image, 0);
-
-                    uploadMessageRep(getUnsyncedMessageReps());
 
 
                     nId = generateNotifsId();
 
                     if(messageItem.getUserId()==user.getUserId()){
+                        addMessageRep(messageRepId, (int) messageItem.getFromId(), (int) user.getUserId(), (int) messageItem.getId(),
+                                messageText.getText().toString(), 1, timeStamp, image, 0);
+
+                        uploadMessageRep(getUnsyncedMessageReps());
+
                         notifyMessage(nId, messageItem.getFromId(), user.getUserId(), 0, 2, timeStamp, (int) messageItem.getId(), 0);
                         uploadNotifications(getUnsyncedNotifications());
                     }
                     else{
+                        addMessageRep(messageRepId, (int) messageItem.getUserId(), (int) user.getUserId(), (int) messageItem.getId(),
+                                messageText.getText().toString(), 1, timeStamp, image, 0);
+
+                        uploadMessageRep(getUnsyncedMessageReps());
+
                         notifyMessage(nId, messageItem.getUserId(), user.getUserId(), 0, 2, timeStamp, (int) messageItem.getId(), 0);
                         uploadNotifications(getUnsyncedNotifications());
                     }
@@ -328,7 +335,7 @@ public class MessageActivity extends AppCompatActivity {
         }
     }
 
-    private long addMessageRep(int messageRepId, int userId, int messageId, String repContent, int isSent, String datePerformed,
+    private long addMessageRep(int messageRepId, int userId, int senderId, int messageId, String repContent, int isSent, String datePerformed,
                                String image, int isSynced){
 
         try {
@@ -337,7 +344,7 @@ public class MessageActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        long result = petBetterDb.addMessageRep(messageRepId, userId, messageId, repContent, isSent, datePerformed, image, isSynced);
+        long result = petBetterDb.addMessageRep(messageRepId, userId, senderId, messageId, repContent, isSent, datePerformed, image, isSynced);
         petBetterDb.closeDatabase();
 
         return result;

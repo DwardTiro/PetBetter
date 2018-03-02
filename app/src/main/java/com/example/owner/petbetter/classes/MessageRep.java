@@ -14,6 +14,9 @@ public class MessageRep {
     @SerializedName("user_id")
     private long userId;
 
+    @SerializedName("sender_id")
+    private long senderId;
+
     @SerializedName("message_id")
     private int messageId;
 
@@ -32,18 +35,20 @@ public class MessageRep {
 
     private String userName;
 
-    public MessageRep(long id, long userId, int messageId, String repContent, int isSent, String datePerformed) {
+    public MessageRep(long id, long userId, long senderId, int messageId, String repContent, int isSent, String datePerformed) {
         this.id = id;
         this.userId = userId;
+        this.senderId = senderId;
         this.messageId = messageId;
         this.repContent = repContent;
         this.isSent = isSent;
         this.datePerformed = datePerformed;
     }
 
-    public MessageRep(long id, long userId, int messageId, String repContent, int isSent, String datePerformed, String messagePhoto) {
+    public MessageRep(long id, long userId, long senderId, int messageId, String repContent, int isSent, String datePerformed, String messagePhoto) {
         this.id = id;
         this.userId = userId;
+        this.senderId = senderId;
         this.messageId = messageId;
         this.repContent = repContent;
         this.isSent = isSent;
@@ -51,15 +56,24 @@ public class MessageRep {
         this.messagePhoto = messagePhoto;
     }
 
-    public MessageRep(long id, long userId, int messageId, String repContent, int isSent, String datePerformed,
+    public MessageRep(long id, long userId, long senderId, int messageId, String repContent, int isSent, String datePerformed,
                       String firstName, String lastName) {
         this.id = id;
         this.userId = userId;
+        this.senderId = senderId;
         this.messageId = messageId;
         this.repContent = repContent;
         this.isSent = isSent;
         this.datePerformed = datePerformed;
         this.userName = firstName+" "+lastName;
+    }
+
+    public long getSenderId() {
+        return senderId;
+    }
+
+    public void setSenderId(long senderId) {
+        this.senderId = senderId;
     }
 
     public String getUserName() {

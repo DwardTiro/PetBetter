@@ -139,10 +139,14 @@ public class FragmentMessageReps extends Fragment implements CheckUpdates {
 
     @Override
     public void onResult() {
-        messageRepList = getMessageReps(messageId);
-       // messageRepAdapter.notifyDataSetChanged();
-        messageRepAdapter.notifyItemRangeChanged(0, messageRepAdapter.getItemCount());
-        System.out.println("ONRESULT MESSAGEREPS");
+        if(messageRepList.size()!=getMessageReps(messageId).size()){
+            messageRepList = getMessageReps(messageId);
+            messageRepAdapter.updateList(messageRepList);
+            //messageRepAdapter.notifyDataSetChanged();
+            //recyclerView.setAdapter(messageRepAdapter);
+            //messageRepAdapter.notifyItemRangeChanged(0, messageRepAdapter.getItemCount());
+            System.out.println("ONRESULT BOIS");
+        }
     }
 
 

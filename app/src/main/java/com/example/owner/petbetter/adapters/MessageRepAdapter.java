@@ -12,7 +12,10 @@ import android.widget.TextView;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.classes.Marker;
 import com.example.owner.petbetter.classes.MessageRep;
+import com.example.owner.petbetter.classes.User;
+import com.example.owner.petbetter.database.DataAdapter;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -27,6 +30,7 @@ public class MessageRepAdapter extends RecyclerView.Adapter<MessageRepAdapter.Me
     private LayoutInflater inflater;
     private ArrayList<MessageRep> messageRepList;
     private final OnItemClickListener listener;
+    private RecyclerView recyclerView;
 
     public MessageRepAdapter(Context context, ArrayList<MessageRep> messageRepList, OnItemClickListener listener) {
         inflater = LayoutInflater.from(context);
@@ -45,12 +49,20 @@ public class MessageRepAdapter extends RecyclerView.Adapter<MessageRepAdapter.Me
 
     @Override
     public void onBindViewHolder(MessageRepViewHolder holder, int position) {
+        //User user = getUserWithId(thisMessageRep.getSenderId());
         MessageRep thisMessageRep = messageRepList.get(position);
         holder.messageRepName.setText(thisMessageRep.getUserName());
         holder.messageRepTime.setText(thisMessageRep.getDatePerformed());
         holder.messageRepContent.setText(thisMessageRep.getRepContent());
         holder.bind(thisMessageRep, listener);
 
+    }
+
+    public void updateList(ArrayList<MessageRep> newList){
+        messageRepList.clear();
+        messageRepList.addAll(newList);
+        this.notifyDataSetChanged();
+        //recyclerView.setAdapter(this);
     }
 
     @Override
@@ -61,6 +73,7 @@ public class MessageRepAdapter extends RecyclerView.Adapter<MessageRepAdapter.Me
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView){
         super.onAttachedToRecyclerView(recyclerView);
+        this.recyclerView = recyclerView;
     }
 
 
@@ -80,6 +93,7 @@ public class MessageRepAdapter extends RecyclerView.Adapter<MessageRepAdapter.Me
             messageRepName = (TextView) itemView.findViewById(R.id.commentUserProfileName);
             messageRepContent = (TextView) itemView.findViewById(R.id.commentContent);
             messageRepTime = (TextView) itemView.findViewById(R.id.commentTimeStamp);
+
         }
 
         public void bind(final MessageRep item, final MessageRepAdapter.OnItemClickListener listener) {

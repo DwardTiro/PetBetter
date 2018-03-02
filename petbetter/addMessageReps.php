@@ -29,8 +29,8 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 			$upload_path = null;
 		}
 		file_put_contents($upload_path, base64_decode($messagereplist[$i]['message_photo']));
-		if($stmt = $mysqli->prepare("INSERT INTO messagereps (user_id, message_id, rep_content, is_sent, date_performed, message_photo) VALUES (?,?,?,?,?,?)")){
-			$stmt->bind_param("ssssss", $messagereplist[$i]['user_id'], $messagereplist[$i]['message_id'], $messagereplist[$i]['rep_content'], $messagereplist[$i]['is_sent'], 
+		if($stmt = $mysqli->prepare("INSERT INTO messagereps (user_id, sender_id, message_id, rep_content, is_sent, date_performed, message_photo) VALUES (?,?,?,?,?,?,?)")){
+			$stmt->bind_param("sssssss", $messagereplist[$i]['user_id'], $messagereplist[$i]['sender_id'], $messagereplist[$i]['message_id'], $messagereplist[$i]['rep_content'], $messagereplist[$i]['is_sent'], 
 				$messagereplist[$i]['date_performed'], $upload_path);
 			$stmt->execute();
 			$stmt->close();
