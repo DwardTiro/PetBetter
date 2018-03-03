@@ -18,8 +18,8 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 	//echo $notiflist[$i]['_id'];
 	
 	while($i<$n){
-		if($stmt = $mysqli->prepare("INSERT INTO notifications (user_id, doer_id, type, date_performed, source_id) VALUES (?,?,?,?,?)")){
-			$stmt->bind_param("sssss", $notiflist[$i]['user_id'], $notiflist[$i]['doer_id'], $notiflist[$i]['type'], $notiflist[$i]['date_performed'], $notiflist[$i]['source_id']);
+		if($stmt = $mysqli->prepare("INSERT INTO notifications (user_id, doer_id, is_read, type, date_performed, source_id) VALUES (?,?,?,?,?,?)")){
+			$stmt->bind_param("ssssss", $notiflist[$i]['user_id'], $notiflist[$i]['doer_id'], $notiflist[$i]['is_read'], $notiflist[$i]['type'], $notiflist[$i]['date_performed'], $notiflist[$i]['source_id']);
 			$stmt->execute();
 			$stmt->close();
 			$i = $i + 1;

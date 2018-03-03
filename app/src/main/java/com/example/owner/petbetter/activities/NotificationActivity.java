@@ -75,9 +75,11 @@ public class NotificationActivity extends AppCompatActivity implements Navigatio
 
         String email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
         textNavEmail = (TextView) headerView.findViewById(R.id.textNavEmail);
+        textNavUser = (TextView) headerView.findViewById(R.id.textNavUser);
         textNavEmail.setText(email);
-
         user = getUser(email);
+        textNavUser.setText(user.getName());
+
         container = (FrameLayout) findViewById(R.id.notification_container);
         notifButton = (ImageView) findViewById(R.id.imageview_notifs);
 
@@ -87,6 +89,13 @@ public class NotificationActivity extends AppCompatActivity implements Navigatio
         FragmentNotifs fragment = new FragmentNotifs();
         getSupportFragmentManager().beginTransaction().add(R.id.notification_container,fragment).commitAllowingStateLoss();
 
+        notifButton.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
     }
 

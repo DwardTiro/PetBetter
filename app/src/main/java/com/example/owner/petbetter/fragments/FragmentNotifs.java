@@ -1,6 +1,7 @@
 package com.example.owner.petbetter.fragments;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
+import com.example.owner.petbetter.activities.MessagesActivity;
 import com.example.owner.petbetter.adapters.NotificationsAdapter;
 import com.example.owner.petbetter.classes.Message;
 import com.example.owner.petbetter.classes.Notifications;
@@ -26,6 +28,8 @@ import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.Topic;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
+import com.example.owner.petbetter.interfaces.CheckUpdates;
+import com.example.owner.petbetter.services.NotificationReceiver;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -44,13 +48,14 @@ import retrofit2.Response;
  * Created by owner on 7/10/2017.
  */
 
-public class FragmentNotifs extends Fragment {
+public class FragmentNotifs extends Fragment implements CheckUpdates {
 
     private RecyclerView recyclerView;
     private NotificationsAdapter notifAdapter;
     private ArrayList<Notifications> notifList;
 
 
+    private NotificationReceiver notifReceiver = new NotificationReceiver(this);
     private DataAdapter petBetterDb;
     private SystemSessionManager systemSessionManager;
     private User user;
@@ -59,6 +64,21 @@ public class FragmentNotifs extends Fragment {
     private Message messageItem;
     private Topic topicItem;
     HerokuService service;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().registerReceiver(this.notifReceiver, new IntentFilter(Intent.ACTION_ATTACH_DATA));
+        System.out.println("Hi");
+        onResult();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivity().unregisterReceiver(notifReceiver);
+        System.out.println("Hello");
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -103,6 +123,7 @@ public class FragmentNotifs extends Fragment {
 
                 //updateNotifications(getUnsyncedNotifications());
 
+                item.setIsRead(1);
                 System.out.println("Yay you clicked a notif");
             }
         });
@@ -111,6 +132,8 @@ public class FragmentNotifs extends Fragment {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+
         return view;
     }
 
@@ -256,5 +279,18 @@ public class FragmentNotifs extends Fragment {
         petBetterDb.closeDatabase();
 
         return result;
+    }
+
+    @Override
+    public void onResult() {
+        if(notifList.size()!=getNotifications(user.getUserId()).size()){
+
+            notifList = getNotifications(user.getUserId());
+            notifAdapter.updateList(notifList);
+
+            //messageRepAdapter.notifyDataSetChanged();
+            //recyclerView.setAdapter(messageRepAdapter);
+            //messageRepAdapter.notifyItemRangeChanged(0, messageRepAdapter.getItemCount());
+        }
     }
 }

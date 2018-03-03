@@ -150,7 +150,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View v) {
                 //Redirect to notifications
-                notifButton.setImageResource(R.mipmap.ic_notifications_none_black_24dp);
+                Intent intent = new Intent(HomeActivity.this, com.example.owner.petbetter.activities.NotificationActivity.class);
+                startActivity(intent);
             }
         });
 

@@ -16,6 +16,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -64,15 +65,29 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
     protected void onResume() {
         super.onResume();
         MessagesActivity.this.registerReceiver(this.notifReceiver, new IntentFilter(Intent.ACTION_ATTACH_DATA));
-        System.out.println("Do we resume??");
         onResult();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        System.out.println("Do we pause??");
         MessagesActivity.this.unregisterReceiver(notifReceiver);
+    }
+
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        try {
+            //on click notification
+            Bundle extras = getIntent().getExtras();
+            String jsonMyObject;
+            jsonMyObject = extras.getString("notifMessage");
+
+            Notifications notifItem = new Gson().fromJson(jsonMyObject, Notifications.class);
+            notifRead(notifItem.getId());
+        } catch (Exception e) {
+            Log.e("onclick", "Exception onclick" + e);
+        }
     }
 
     @Override
@@ -145,7 +160,8 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
             @Override
             public void onClick(View v) {
                 //Redirect to notifications
-                notifButton.setImageResource(R.mipmap.ic_notifications_none_black_24dp);
+                Intent intent = new Intent(MessagesActivity.this, com.example.owner.petbetter.activities.NotificationActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -194,6 +210,18 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
             e.printStackTrace();
         }
 
+    }
+
+    public void notifRead(long notifId){
+
+        //modify this method in such a way that it only gets bookmarks tagged by user. Separate from facilities.
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        petBetterDb.notifRead(notifId);
+        petBetterDb.closeDatabase();
     }
 
     private User getUser(String email) {

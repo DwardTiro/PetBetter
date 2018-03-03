@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.owner.petbetter.R;
+import com.example.owner.petbetter.classes.MessageRep;
 import com.example.owner.petbetter.classes.Notifications;
 
 import org.w3c.dom.Text;
@@ -71,6 +72,13 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         holder.notifTimeStamp.setText("");
         holder.bind(notif, listener);
 
+    }
+
+    public void updateList(ArrayList<Notifications> newList){
+        notifs.clear();
+        notifs.addAll(newList);
+        this.notifyDataSetChanged();
+        //recyclerView.setAdapter(this);
     }
 
     @Override

@@ -109,7 +109,6 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
             @Override
             public void onClick(View v) {
                 //Redirect to notifications
-                notifButton.setImageResource(R.mipmap.ic_notifications_none_black_24dp);
                 Intent intent = new Intent(VeterinarianHomeActivity.this, com.example.owner.petbetter.activities.NotificationActivity.class);
                 startActivity(intent);
 

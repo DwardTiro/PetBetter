@@ -136,6 +136,7 @@ public class MyService extends Service {
                                                 .setContentText("has messaged you");
 
                                         Intent intentNotif = new Intent(MyService.this, MessagesActivity.class);
+                                        intentNotif.putExtra("notifMessage", new Gson().toJson(notifArray.get(val)));
                                         PendingIntent pendingIntent = PendingIntent.getActivity(MyService.this, 0, intentNotif, PendingIntent.FLAG_UPDATE_CURRENT);
                                         appNotif.setContentIntent(pendingIntent);
 
