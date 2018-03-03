@@ -20,11 +20,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
+import com.example.owner.petbetter.classes.Notifications;
 import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.Topic;
 import com.example.owner.petbetter.classes.User;
@@ -60,6 +62,7 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
     private User user;
     private SwipeRefreshLayout refreshCommunity;
     private int currFragment;
+    private ImageView notifButton;
 
     HerokuService service;
 
@@ -96,6 +99,10 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
         textNavEmail.setText(email);
 
         user = getUser(email);
+        notifButton = (ImageView) findViewById(R.id.imageview_notifs);
+
+        if(!getUnsyncedNotifications().isEmpty())
+            notifButton.setImageResource(R.mipmap.ic_notifications_active_black_24dp);
 
 
         textNavUser = (TextView) headerView.findViewById(R.id.textNavUser);
@@ -150,6 +157,14 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
                 FragmentCommunity fragment2 = new FragmentCommunity();
                 getSupportFragmentManager().beginTransaction().add(R.id.comm_container,fragment2).commit();
                 currFragment = 1;
+            }
+        });
+
+        notifButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Redirect to notifications
+                notifButton.setImageResource(R.mipmap.ic_notifications_none_black_24dp);
             }
         });
 
@@ -324,6 +339,20 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
         }
 
         User result = petBetterDb.getUser(email);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<Notifications> getUnsyncedNotifications(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Notifications> result = petBetterDb.getUnsyncedNotifications();
         petBetterDb.closeDatabase();
 
         return result;

@@ -22,6 +22,7 @@ import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.activities.VetProfileActivity;
 import com.example.owner.petbetter.classes.Facility;
+import com.example.owner.petbetter.classes.Notifications;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
 import com.example.owner.petbetter.database.DataAdapter;
@@ -35,6 +36,7 @@ import com.google.gson.GsonBuilder;
 import android.view.View;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import android.widget.Toast;
@@ -66,6 +68,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private NavigationView navigationView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private int currFragment;
+    private ImageView notifButton;
 
     private ArrayList<Veterinarian> vetList;
     HerokuService service;
@@ -94,6 +97,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         vetButton = (Button) findViewById(R.id.vetButton);
         petCareButton = (Button) findViewById(R.id.petCareButton);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refreshHome);
+        notifButton = (ImageView) findViewById(R.id.imageview_notifs);
+
 
         View headerView = navigationView.getHeaderView(0);
 
@@ -135,6 +140,17 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 syncVetChanges();
                 syncClinicChanges();
                 swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
+        if(!getUnsyncedNotifications().isEmpty())
+            notifButton.setImageResource(R.mipmap.ic_notifications_active_black_24dp);
+
+        notifButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Redirect to notifications
+                notifButton.setImageResource(R.mipmap.ic_notifications_none_black_24dp);
             }
         });
 
@@ -452,5 +468,18 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+    private ArrayList<Notifications> getUnsyncedNotifications(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Notifications> result = petBetterDb.getUnsyncedNotifications();
+        petBetterDb.closeDatabase();
+
+        return result;
     }
 }

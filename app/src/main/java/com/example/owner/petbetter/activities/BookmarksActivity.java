@@ -16,11 +16,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
+import com.example.owner.petbetter.classes.Notifications;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.fragments.FragmentBookmarkListing;
@@ -29,6 +31,7 @@ import com.example.owner.petbetter.fragments.FragmentPetClinicListing;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class BookmarksActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -41,6 +44,7 @@ public class BookmarksActivity extends AppCompatActivity implements NavigationVi
     private SystemSessionManager systemSessionManager;
     private TextView textNavEmail, textNavUser;
     private User user;
+    private ImageView notifButton;
 
     HerokuService service;
 
@@ -79,6 +83,11 @@ public class BookmarksActivity extends AppCompatActivity implements NavigationVi
 
         user = getUser(email);
 
+        notifButton = (ImageView) findViewById(R.id.imageview_notifs);
+
+        if(!getUnsyncedNotifications().isEmpty())
+            notifButton.setImageResource(R.mipmap.ic_notifications_active_black_24dp);
+
         textNavUser = (TextView) headerView.findViewById(R.id.textNavUser);
         textNavUser.setText(user.getName());
         btnBookmarks = (ImageButton) findViewById(R.id.bookmarkMapsButton);
@@ -90,7 +99,7 @@ public class BookmarksActivity extends AppCompatActivity implements NavigationVi
         btnFaci.setBackgroundResource(R.color.medTurquoise);
         btnFaci.setImageResource(R.mipmap.ic_pets_white_24dp);
         FragmentBookmarkListing fragment = new FragmentBookmarkListing();
-        getSupportFragmentManager().beginTransaction().add(R.id.bookmark_container,fragment).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.bookmark_container,fragment).commitAllowingStateLoss();
 
         btnBookmarks.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,7 +111,7 @@ public class BookmarksActivity extends AppCompatActivity implements NavigationVi
                 btnFaci.setImageResource(R.mipmap.ic_pets_white_24dp);
                 container.removeAllViews();
                 FragmentBookmarkListing fragment1 = new FragmentBookmarkListing();
-                getSupportFragmentManager().beginTransaction().add(R.id.bookmark_container,fragment1).commit();
+                getSupportFragmentManager().beginTransaction().add(R.id.bookmark_container,fragment1).commitAllowingStateLoss();
             }
         });
         btnFaci.setOnClickListener(new View.OnClickListener() {
@@ -115,7 +124,15 @@ public class BookmarksActivity extends AppCompatActivity implements NavigationVi
                 btnBookmarks.setImageResource(R.mipmap.ic_bookmark_border_white_24dp);
                 container.removeAllViews();
                 FragmentFacilityListing fragment = new FragmentFacilityListing();
-                getSupportFragmentManager().beginTransaction().add(R.id.bookmark_container,fragment).commit();
+                getSupportFragmentManager().beginTransaction().add(R.id.bookmark_container,fragment).commitAllowingStateLoss();
+            }
+        });
+
+        notifButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Redirect to notifications
+                notifButton.setImageResource(R.mipmap.ic_notifications_none_black_24dp);
             }
         });
     }
@@ -181,6 +198,20 @@ public class BookmarksActivity extends AppCompatActivity implements NavigationVi
         }
 
         User result = petBetterDb.getUser(email);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<Notifications> getUnsyncedNotifications(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Notifications> result = petBetterDb.getUnsyncedNotifications();
         petBetterDb.closeDatabase();
 
         return result;

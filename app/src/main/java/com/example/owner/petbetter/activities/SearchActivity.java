@@ -550,8 +550,8 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
         MenuInflater inflater = getMenuInflater();
 
         //inflate search action from menu folder
-        inflater.inflate(R.menu.options_menu, menu);
-        MenuItem searchItem = menu.findItem(R.id.action_search);
+        //inflater.inflate(R.menu.options_menu, menu);
+        //MenuItem searchItem = menu.findItem(R.id.action_search);
         //AutoCompleteTextView actv = (AutoCompleteTextView) MenuItemCompat.getActionView(searchItem);
 
 
@@ -598,12 +598,6 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
         finish();
     }
 
-    private void handleIntent(Intent intent) {
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-
-        }
-    }
 
     private void filterData(String query) {
 

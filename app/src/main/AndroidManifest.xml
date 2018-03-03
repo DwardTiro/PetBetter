@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.owner.petbetter">
 
+    <uses-sdk
+        android:minSdkVersion="19"
+        android:targetSdkVersion="25" />
+
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -14,12 +18,10 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-
-    <uses-permission android:name="android.permission.MEDIA_CONTENT_CONTROL"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-
-    <uses-sdk android:minSdkVersion="19" android:targetSdkVersion="25"/>
+    <uses-permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:name=".Multi_Dex"
@@ -52,11 +54,9 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version"
-            />
+            android:value="@integer/google_play_services_version" />
 
         <activity
             android:name=".activities.MapsActivity"
@@ -156,29 +156,24 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <category android:name="android.intent.category.ALTERNATIVE" />
         </activity>
-        <activity android:name=".activities.PostRepActivity"/>
-        <activity android:name=".activities.SignUpUserTypeActivity"
-            android:parentActivityName=".activities.MainActivity"/>
-        <activity android:name=".activities.SignUpUserActivity"
-            android:parentActivityName=".activities.SignUpUserTypeActivity"/>
-        <activity android:name=".activities.VeterinarianAddInfoActivity"/>
-        <activity android:name=".activities.AddFacilityActivity"
-            />
-        <activity android:name=".activities.UserProfileActivity"
-            />
-        <activity android:name=".activities.MessagesActivity"
-            />
-        <activity android:name=".activities.VeterinarianHomeActivity"/>
+        <activity android:name=".activities.PostRepActivity" />
+        <activity
+            android:name=".activities.SignUpUserTypeActivity"
+            android:parentActivityName=".activities.MainActivity" />
+        <activity
+            android:name=".activities.SignUpUserActivity"
+            android:parentActivityName=".activities.SignUpUserTypeActivity" />
+        <activity android:name=".activities.VeterinarianAddInfoActivity" />
+        <activity android:name=".activities.AddFacilityActivity" />
+        <activity android:name=".activities.UserProfileActivity" />
+        <activity android:name=".activities.MessagesActivity" />
+        <activity android:name=".activities.VeterinarianHomeActivity" />
 
-        <service android:name="com.example.owner.petbetter.services.MyService">
-        </service>
+        <service android:name=".services.MyService"></service>
 
-        <receiver android:name="com.example.owner.petbetter.services.NotificationReceiver">
-        </receiver>
+        <receiver android:name=".services.NotificationReceiver"></receiver>
+
+        <activity android:name=".activities.NotificationActivity"></activity>
     </application>
-
-
-
-
 
 </manifest>

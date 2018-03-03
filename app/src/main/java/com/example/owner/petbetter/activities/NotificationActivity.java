@@ -1,17 +1,20 @@
 package com.example.owner.petbetter.activities;
 
+import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,35 +24,32 @@ import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.classes.Notifications;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
+import com.example.owner.petbetter.fragments.FragmentNotifs;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- * Created by Kristian on 2/20/2018.
- */
+public class NotificationActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-
-public class UserProfileActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
-
-    private TextView userProfileName;
-    private Button editProfileButton;
     private DataAdapter petBetterDb;
+    private ImageButton btnBookmarks;
+    private ImageButton btnFaci;
+    private FrameLayout container;
     private NavigationView navigationView;
     private SystemSessionManager systemSessionManager;
     private TextView textNavEmail, textNavUser;
-    private Toolbar menuBar;
     private User user;
     private ImageView notifButton;
 
     HerokuService service;
+
     @Override
-    public void onCreate(Bundle savedInstance){
-        super.onCreate(savedInstance);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
-        setContentView(R.layout.activity_user_profile);
+        setContentView(R.layout.activity_notification);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -64,14 +64,6 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
 
         View headerView = navigationView.getHeaderView(0);
 
-        editProfileButton = (Button) findViewById(R.id.editProfileButton);
-        editProfileButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getBaseContext(), com.example.owner.petbetter.activities.EditProfileActivity.class);
-                startActivity(intent);
-            }
-        });
         systemSessionManager = new SystemSessionManager(this);
         if(systemSessionManager.checkLogin())
             finish();
@@ -84,55 +76,20 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
         String email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
         textNavEmail = (TextView) headerView.findViewById(R.id.textNavEmail);
         textNavEmail.setText(email);
+
+        user = getUser(email);
+        container = (FrameLayout) findViewById(R.id.notification_container);
         notifButton = (ImageView) findViewById(R.id.imageview_notifs);
 
         if(!getUnsyncedNotifications().isEmpty())
             notifButton.setImageResource(R.mipmap.ic_notifications_active_black_24dp);
 
-        user = getUser(email);
+        FragmentNotifs fragment = new FragmentNotifs();
+        getSupportFragmentManager().beginTransaction().add(R.id.notification_container,fragment).commitAllowingStateLoss();
 
-        textNavUser = (TextView) headerView.findViewById(R.id.textNavUser);
-        textNavUser.setText(user.getName());
-
-        userProfileName = (TextView) findViewById(R.id.userProfileName);
-        String userName = user.getFirstName() + " " +user.getLastName();
-        userProfileName.setText(userName);
-
-        notifButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Redirect to notifications
-                notifButton.setImageResource(R.mipmap.ic_notifications_none_black_24dp);
-            }
-        });
 
     }
 
-
-    @Override
-    public void onResume(){
-        super.onResume();
-        systemSessionManager = new SystemSessionManager(this);
-        if(systemSessionManager.checkLogin())
-            finish();
-        HashMap<String, String> userIn = systemSessionManager.getUserDetails();
-
-        initializeDatabase();
-        View headerView = navigationView.getHeaderView(0);
-
-        String email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
-        textNavEmail = (TextView) headerView.findViewById(R.id.textNavEmail);
-        textNavEmail.setText(email);
-
-        user = getUser(email);
-
-        textNavUser = (TextView) headerView.findViewById(R.id.textNavUser);
-        textNavUser.setText(user.getName());
-
-        userProfileName = (TextView) findViewById(R.id.userProfileName);
-        String userName = user.getFirstName() + " " +user.getLastName();
-        userProfileName.setText(userName);
-    }
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -159,14 +116,16 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
         }
         else if(id == R.id.log_out){
             Intent intent = new Intent(this, com.example.owner.petbetter.activities.MainActivity.class);
+            SharedPreferences preferences =getSharedPreferences("prefs", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.clear();
+            editor.commit();
             startActivity(intent);
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
     private void initializeDatabase() {
 
         petBetterDb = new DataAdapter(this);
@@ -206,4 +165,6 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
 
         return result;
     }
+
+
 }

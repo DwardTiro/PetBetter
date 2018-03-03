@@ -18,6 +18,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.owner.petbetter.HerokuService;
@@ -25,6 +26,7 @@ import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.adapters.MessageAdapter;
 import com.example.owner.petbetter.classes.Message;
+import com.example.owner.petbetter.classes.Notifications;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.interfaces.CheckUpdates;
@@ -54,6 +56,7 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
     private Toolbar menuBar;
     private User user;
     private NotificationReceiver notifReceiver = new NotificationReceiver(this);
+    private ImageView notifButton;
 
     HerokuService service;
 
@@ -99,6 +102,10 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
 
         initializeDatabase();
         service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        notifButton = (ImageView) findViewById(R.id.imageview_notifs);
+
+        if(!getUnsyncedNotifications().isEmpty())
+            notifButton.setImageResource(R.mipmap.ic_notifications_active_black_24dp);
 
         String email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
         textNavEmail = (TextView) headerView.findViewById(R.id.textNavEmail);
@@ -133,6 +140,14 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
         messagesRecyclerView.setItemAnimator(new DefaultItemAnimator());
         messagesRecyclerView.setHasFixedSize(true);
         messagesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        notifButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Redirect to notifications
+                notifButton.setImageResource(R.mipmap.ic_notifications_none_black_24dp);
+            }
+        });
 
     }
 
@@ -242,5 +257,19 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
         messageAdapter.updateList(messageList);
         //messageAdapter.notifyDataSetChanged();
         System.out.println("ONRESULT MESSAGES");
+    }
+
+    private ArrayList<Notifications> getUnsyncedNotifications(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Notifications> result = petBetterDb.getUnsyncedNotifications();
+        petBetterDb.closeDatabase();
+
+        return result;
     }
 }

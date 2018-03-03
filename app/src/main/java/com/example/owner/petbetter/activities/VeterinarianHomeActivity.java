@@ -16,20 +16,26 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
+import com.example.owner.petbetter.classes.Notifications;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
+import com.example.owner.petbetter.fragments.FragmentNotifs;
 import com.example.owner.petbetter.services.MyService;
 import com.example.owner.petbetter.services.NotificationReceiver;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -45,6 +51,7 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
     private TextView textNavEmail, textNavUser;
     private User user;
     private MyService notifService;
+    private ImageView notifButton;
 
     HerokuService service;
 
@@ -80,6 +87,11 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
         textNavEmail.setText(email);
 
         user = getUser(email);
+        notifButton = (ImageView) findViewById(R.id.imageview_notifs);
+
+        if(!getUnsyncedNotifications().isEmpty())
+            notifButton.setImageResource(R.mipmap.ic_notifications_active_black_24dp);
+
 
         textNavUser = (TextView) headerView.findViewById(R.id.textNavUser);
         textNavUser.setText(user.getName());
@@ -92,7 +104,21 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
             alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), 10000, pendingIntent);
             //1800000
         }
+
+        notifButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Redirect to notifications
+                notifButton.setImageResource(R.mipmap.ic_notifications_none_black_24dp);
+                Intent intent = new Intent(VeterinarianHomeActivity.this, com.example.owner.petbetter.activities.NotificationActivity.class);
+                startActivity(intent);
+
+            }
+        });
     }
+
+
+
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -155,5 +181,19 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
                 com.example.owner.petbetter.activities.AddFacilityActivity.class
                 );
         startActivity(intent);
+    }
+
+    private ArrayList<Notifications> getUnsyncedNotifications(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Notifications> result = petBetterDb.getUnsyncedNotifications();
+        petBetterDb.closeDatabase();
+
+        return result;
     }
 }
