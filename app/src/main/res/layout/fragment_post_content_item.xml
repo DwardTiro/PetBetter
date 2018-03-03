@@ -71,7 +71,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="13dp"
             android:src="@mipmap/ic_delete_black_24dp"
-            android:background="@color/main_White"/>
+            android:background="@color/colorWhite"/>
     </LinearLayout>
 
     <LinearLayout
@@ -89,10 +89,10 @@
             android:layout_width="50dp"
             android:layout_height="30dp"
             android:layout_marginLeft="300dp"
-            android:background="@color/main_White"
+            android:background="@color/colorWhite"
             android:text="Edit"
             android:textAllCaps="false"
-            android:textColor="@color/main_Color"
+            android:textColor="@color/amazonite"
             android:textSize="17sp" />
     </LinearLayout>
 

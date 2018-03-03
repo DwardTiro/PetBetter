@@ -70,7 +70,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
             android:layout_marginEnd="13dp"
-            android:background="@color/main_White"
+            android:background="@color/colorWhite"
             android:src="@mipmap/ic_delete_black_24dp" />
     </LinearLayout>
 
@@ -90,9 +90,9 @@
             android:layout_width="50dp"
             android:layout_height="30dp"
             android:text="1"
-            android:background="@color/main_White"
+            android:background="@color/colorWhite"
             android:textAllCaps="false"
-            android:textColor="@color/main_Color"
+            android:textColor="@color/amazonite"
             android:textSize="25sp"
             >
 
@@ -104,10 +104,10 @@
             android:layout_height="30dp"
             style="?android:attr/borderlessButtonStyle"
             android:layout_marginLeft="175dp"
-            android:background="@color/main_White"
+            android:background="@color/colorWhite"
             android:text="@string/reply"
             android:textAllCaps="false"
-            android:textColor="@color/main_Color"
+            android:textColor="@color/amazonite"
             android:textSize="17sp" />
 
         <Button
@@ -116,10 +116,10 @@
             android:layout_height="30dp"
             style="?android:attr/borderlessButtonStyle"
             android:layout_marginLeft="5dp"
-            android:background="@color/main_White"
+            android:background="@color/colorWhite"
             android:text="Edit"
             android:textAllCaps="false"
-            android:textColor="@color/main_Color"
+            android:textColor="@color/amazonite"
             android:textSize="17sp" />
     </LinearLayout>
 </LinearLayout>

@@ -169,11 +169,12 @@
         <activity android:name=".activities.MessagesActivity" />
         <activity android:name=".activities.VeterinarianHomeActivity" />
 
-        <service android:name=".services.MyService"></service>
+        <service android:name=".services.MyService"/>
 
-        <receiver android:name=".services.NotificationReceiver"></receiver>
+        <receiver android:name=".services.NotificationReceiver"/>
 
-        <activity android:name=".activities.NotificationActivity"></activity>
+        <activity android:name=".activities.NotificationActivity"/>
+        <activity android:name=".activities.ShowLocationActivity"/>
     </application>
 
 </manifest>

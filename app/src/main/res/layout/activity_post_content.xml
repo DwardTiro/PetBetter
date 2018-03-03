@@ -104,55 +104,53 @@
             android:textSize="15sp"
             android:textColor="@color/black"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-
-            android:background="@drawable/comment_box"
-            android:paddingTop="10dp">
-
-            <EditText
-                android:id="@+id/homeListCommentBox"
-                android:layout_width="245dp"
-                android:layout_height="wrap_content"
-
-                android:layout_marginLeft="15dp"
-
-                android:layout_marginRight="15dp"
-                android:background="@drawable/custom_edittext"
-
-                android:hint="Write a comment."
-                android:paddingLeft="10dp"
-                android:textColorHint="@color/timestamp"
-                android:textSize="15sp"
-
-                />
-
-            <Button
-                android:id="@+id/homeListPostCommentButton"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="50dp"
-
-                android:layout_height="30dp"
-                android:background="@color/main_White"
-                android:text="Reply"
-                android:textAllCaps="false"
-
-                android:textColor="@color/main_Color"
-                android:textSize="17sp" />
-
-        </LinearLayout>
     </LinearLayout>
 
     <FrameLayout
         android:id="@+id/postrep_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:scrollbars="vertical"
-        android:layout_alignParentStart="true"
         android:layout_below="@+id/linearLayout">
 
     </FrameLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/comment_box"
+        android:layout_marginTop="5dp">
 
+        <EditText
+            android:id="@+id/homeListCommentBox"
+            android:layout_width="245dp"
+            android:layout_height="wrap_content"
+
+            android:layout_marginLeft="15dp"
+
+            android:layout_marginRight="15dp"
+            android:background="@drawable/custom_edittext"
+
+            android:hint="Write a comment."
+            android:paddingLeft="10dp"
+            android:textColorHint="@color/timestamp"
+            android:textSize="15sp"
+
+            />
+
+        <Button
+            android:id="@+id/homeListPostCommentButton"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:background="@color/colorWhite"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp"
+            android:text="Reply"
+            android:textAllCaps="false"
+
+            android:textColor="@color/amazonite"
+            android:textSize="15sp" />
+
+    </LinearLayout>
 </RelativeLayout>
