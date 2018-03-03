@@ -208,25 +208,30 @@ public class DataAdapter {
     public User getUser(String email){
 
         String sql = "SELECT * FROM " + USER_TABLE + " WHERE email = '" + email + "'";
-        Cursor c = petBetterDb.rawQuery(sql, null);
+        try{
+            Cursor c = petBetterDb.rawQuery(sql, null);
 
-        Log.e("cursor", c.getCount() + "");
+            Log.e("cursor", c.getCount() + "");
 
-        c.moveToFirst();
+            c.moveToFirst();
 
-        User result = new User(c.getLong(c.getColumnIndexOrThrow("_id")),
-                c.getString(c.getColumnIndexOrThrow("first_name")),
-                c.getString(c.getColumnIndexOrThrow("last_name")),
-                c.getString(c.getColumnIndexOrThrow("mobile_num")),
-                c.getString(c.getColumnIndexOrThrow("phone_num")),
-                c.getString(c.getColumnIndexOrThrow("email")),
-                c.getString(c.getColumnIndexOrThrow("password")),
-                c.getInt(c.getColumnIndexOrThrow("age")),
-                c.getInt(c.getColumnIndexOrThrow("user_type")),
-                c.getString(c.getColumnIndexOrThrow("user_photo")));
+            User result = new User(c.getLong(c.getColumnIndexOrThrow("_id")),
+                    c.getString(c.getColumnIndexOrThrow("first_name")),
+                    c.getString(c.getColumnIndexOrThrow("last_name")),
+                    c.getString(c.getColumnIndexOrThrow("mobile_num")),
+                    c.getString(c.getColumnIndexOrThrow("phone_num")),
+                    c.getString(c.getColumnIndexOrThrow("email")),
+                    c.getString(c.getColumnIndexOrThrow("password")),
+                    c.getInt(c.getColumnIndexOrThrow("age")),
+                    c.getInt(c.getColumnIndexOrThrow("user_type")),
+                    c.getString(c.getColumnIndexOrThrow("user_photo")));
 
-        c.close();
-        return result;
+            c.close();
+
+            return result;
+        }catch(CursorIndexOutOfBoundsException e){
+            return null;
+        }
     }
 
     public Follower getFollowerWithId(long id){

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.provider.ContactsContract;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
@@ -150,9 +151,22 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<User> call, Response<User> response) {
                     if(response.isSuccessful()){
+
                         final User user = response.body();
 
-                        boolean result = true;
+
+                        if(getUser(response.body().getEmail())==null){
+                            addUser((int) user.getUserId(), user.getFirstName(), user.getLastName(), user.getEmail(),
+                                    user.getPassword(), user.getUserType());
+                        }
+                        /*
+                        try{
+                            getUser(response.body().getEmail());
+                        }catch(Exception e){
+                            addUser((int) user.getUserId(), user.getFirstName(), user.getLastName(), user.getEmail(),
+                                    user.getPassword(), user.getUserType());
+                        }*/
+
                         User thisUser = user;
 
 
@@ -251,8 +265,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-
-
 
     public void syncVetChanges(){
 
@@ -441,6 +453,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
 
     public void syncPostRepChanges(){
 
@@ -863,6 +876,36 @@ public class MainActivity extends AppCompatActivity {
         }
 
         boolean result = petBetterDb.checkLogin(email, password);
+        petBetterDb.closeDatabase();
+
+
+        return result;
+    }
+
+    private User getUser(String email) {
+
+        try {
+            petBetterDb.openDatabase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        User result = petBetterDb.getUser(email);
+        petBetterDb.closeDatabase();
+
+
+        return result;
+    }
+
+    private long addUser(int userId, String firstName, String lastName, String email, String password, int userType) {
+
+        try {
+            petBetterDb.openDatabase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        long result = petBetterDb.addUser(userId, firstName, lastName, email, password, userType);
         petBetterDb.closeDatabase();
 
 
@@ -1447,5 +1490,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
+    @Override
+    public void onBackPressed() {
+    }
 }
