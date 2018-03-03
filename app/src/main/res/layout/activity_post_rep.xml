@@ -116,45 +116,42 @@
 
         />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/comment_box"
         android:layout_marginTop="5dp"
-        >
+        android:background="@drawable/comment_box">
 
         <EditText
             android:id="@+id/commentThreadCommentBox"
             android:layout_width="245dp"
             android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="15dp"
 
-            android:layout_marginLeft="15dp"
-
-            android:layout_marginRight="15dp"
             android:background="@drawable/custom_edittext"
 
             android:hint="Write a comment."
             android:paddingLeft="10dp"
             android:textColorHint="@color/timestamp"
-            android:textSize="15sp"
-
-            />
+            android:textSize="15sp" />
 
         <Button
             android:id="@+id/commentThreadCommentButton"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:background="@color/colorWhite"
-            android:layout_marginTop="2dp"
+            android:layout_alignParentEnd="true"
             android:layout_marginBottom="2dp"
+            android:layout_marginTop="2dp"
+            android:background="@color/colorWhite"
             android:text="Reply"
             android:textAllCaps="false"
 
             android:textColor="@color/amazonite"
             android:textSize="15sp" />
 
-    </LinearLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

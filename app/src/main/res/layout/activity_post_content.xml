@@ -1,32 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/postContentLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/main_White"
-    android:orientation="vertical"
-    android:id="@+id/postContentLayout">
+    android:orientation="vertical">
 
     <include
         android:id="@+id/vPostToolbar"
         layout="@layout/toolbar_viewpost"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        />
+        android:layout_height="wrap_content" />
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/vPostToolbar"
+        android:layout_centerHorizontal="true"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="13dp"
         android:background="@drawable/rounded_bg_corner"
         android:orientation="vertical"
-        android:paddingBottom="10dp"
-        android:paddingTop="20dp"
-        android:id="@+id/linearLayout"
 
-        android:layout_below="@+id/vPostToolbar"
-        android:layout_centerHorizontal="true">
+        android:paddingBottom="10dp"
+        android:paddingTop="20dp">
 
         <LinearLayout
 
@@ -35,6 +34,7 @@
             android:orientation="horizontal"
             android:paddingLeft="15dp"
             android:paddingRight="15dp">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -101,8 +101,8 @@
             android:paddingRight="15dp"
             android:paddingTop="15dp"
             android:text="This is a text. This is a text. This is a text. This is a text. This is a text. This is a text. This is a text. This is a text."
-            android:textSize="15sp"
-            android:textColor="@color/black"/>
+            android:textColor="@color/black"
+            android:textSize="15sp" />
 
     </LinearLayout>
 
@@ -110,25 +110,27 @@
         android:id="@+id/postrep_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scrollbars="vertical"
-        android:layout_below="@+id/linearLayout">
+        android:layout_below="@+id/linearLayout"
+        android:scrollbars="vertical">
 
     </FrameLayout>
-    <LinearLayout
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/comment_box"
-        android:layout_marginTop="5dp">
+        android:layout_marginTop="5dp"
+        android:background="@drawable/comment_box">
 
         <EditText
             android:id="@+id/homeListCommentBox"
             android:layout_width="245dp"
             android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="15dp"
 
-            android:layout_marginLeft="15dp"
 
-            android:layout_marginRight="15dp"
+
             android:background="@drawable/custom_edittext"
 
             android:hint="Write a comment."
@@ -143,14 +145,15 @@
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:background="@color/colorWhite"
-            android:layout_marginTop="2dp"
+            android:layout_alignParentEnd="true"
             android:layout_marginBottom="2dp"
+            android:layout_marginTop="2dp"
+            android:background="@color/colorWhite"
             android:text="Reply"
             android:textAllCaps="false"
 
             android:textColor="@color/amazonite"
             android:textSize="15sp" />
 
-    </LinearLayout>
+    </RelativeLayout>
 </RelativeLayout>

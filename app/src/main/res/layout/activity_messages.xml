@@ -32,13 +32,6 @@
             android:layout_centerHorizontal="true"
             android:layout_alignParentEnd="true">
 
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/messagesFab"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:backgroundTint="@color/myrtle_green"
-                android:src="@mipmap/ic_mail_outline_white_24dp"
-                app:backgroundTint="@color/amazonite" />
         </FrameLayout>
     </RelativeLayout>
 

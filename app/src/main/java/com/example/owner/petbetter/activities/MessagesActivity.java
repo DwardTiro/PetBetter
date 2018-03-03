@@ -131,14 +131,6 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
         textNavUser = (TextView) headerView.findViewById(R.id.textNavUser);
         textNavUser.setText(user.getName());
 
-        messagesFab = (FloatingActionButton) findViewById(R.id.messagesFab);
-        messagesFab.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent intent = new Intent(MessagesActivity.this, com.example.owner.petbetter.activities.NewMessageActivity.class);
-                startActivity(intent);
-            }
-        });
-
         messagesRecyclerView = (RecyclerView) findViewById(R.id.messagesRecyclerView);
         messageList = getMessages(user.getUserId());
         System.out.println("Size of message list in this thing "+messageList.size());
