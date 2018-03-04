@@ -23,7 +23,7 @@ public class ShowLocationActivity extends FragmentActivity
     @Override
     public void onCreate(Bundle savedInstance){
         super.onCreate(savedInstance);
-        setContentView(R.layout.activity_show_location);
+        //setContentView(R.layout.activity_show_location);
 
     }
 

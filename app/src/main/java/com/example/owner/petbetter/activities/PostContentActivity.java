@@ -24,6 +24,8 @@ import com.example.owner.petbetter.classes.PostRep;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.fragments.FragmentPostReps;
+import com.example.owner.petbetter.interfaces.CheckUpdates;
+import com.example.owner.petbetter.services.NotificationReceiver;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -53,8 +55,6 @@ public class PostContentActivity extends AppCompatActivity {
     private TextView postTitle;
     private TextView homeListContent;
 
-
-
     private DataAdapter petBetterDb;
     private SystemSessionManager systemSessionManager;
     private User user, postUser;
@@ -65,6 +65,21 @@ public class PostContentActivity extends AppCompatActivity {
     private String timeStamp;
     private int nId;
     HerokuService service;
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        try {
+            //on click notification
+            Bundle extras = getIntent().getExtras();
+            String jsonMyObject;
+            jsonMyObject = extras.getString("notifPost");
+
+            Notifications notifItem = new Gson().fromJson(jsonMyObject, Notifications.class);
+            notifRead(notifItem.getId());
+        } catch (Exception e) {
+            Log.e("onclick", "Exception onclick" + e);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle SavedInstance){
@@ -96,11 +111,28 @@ public class PostContentActivity extends AppCompatActivity {
         String jsonMyObject;
         Bundle extras = getIntent().getExtras();
 
+        /*
+        try{
+            jsonMyObject = extras.getString("thisPost");
+
+            postItem = new Gson().fromJson(jsonMyObject, Post.class);
+
+            postUser = getPostUser(postItem.getUserId());
+        }catch(NullPointerException npe){
+            jsonMyObject = extras.getString("notifPost");
+
+            postItem = new Gson().fromJson(jsonMyObject, Post.class);
+            postUser = getPostUser(postItem.getUserId());
+        }*/
+
         jsonMyObject = extras.getString("thisPost");
 
         postItem = new Gson().fromJson(jsonMyObject, Post.class);
 
         postUser = getPostUser(postItem.getUserId());
+        System.out.println("POSTITEM ID IS: "+postItem.getId());
+
+
         Bundle bundle = new Bundle();
         System.out.println("POST ID BEFORE SEND "+postItem.getUserId());
         bundle.putLong("postId", postItem.getId());
@@ -339,6 +371,18 @@ public class PostContentActivity extends AppCompatActivity {
         }
     }
 
+    public void notifRead(long notifId){
+
+        //modify this method in such a way that it only gets bookmarks tagged by user. Separate from facilities.
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        petBetterDb.notifRead(notifId);
+        petBetterDb.closeDatabase();
+    }
+
     public long notifyPostRep(int notifId, long toId, long userId, int isRead, int type, String timeStamp, int postId, int isSynced){
 
         try {
@@ -352,5 +396,4 @@ public class PostContentActivity extends AppCompatActivity {
 
         return result;
     }
-
 }

@@ -1,6 +1,7 @@
 package com.example.owner.petbetter.fragments;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,6 +20,8 @@ import com.example.owner.petbetter.classes.Marker;
 import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
+import com.example.owner.petbetter.interfaces.CheckUpdates;
+import com.example.owner.petbetter.services.NotificationReceiver;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.google.gson.Gson;
 
@@ -26,7 +29,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class FragmentHome extends Fragment {
+public class FragmentHome extends Fragment implements CheckUpdates {
     private HomeAdapter homeAdapter;
     private RecyclerView recyclerView;
     private ArrayList<Post> postList;
@@ -36,7 +39,23 @@ public class FragmentHome extends Fragment {
     private SystemSessionManager systemSessionManager;
     private User user;
     private String email;
+    private NotificationReceiver notifReceiver = new NotificationReceiver(this);
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        getActivity().registerReceiver(this.notifReceiver, new IntentFilter(Intent.ACTION_ATTACH_DATA));
+        onResult();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        getActivity().unregisterReceiver(notifReceiver);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance){
@@ -116,5 +135,13 @@ public class FragmentHome extends Fragment {
         petBetterDb.closeDatabase();
 
         return result;
+    }
+
+    @Override
+    public void onResult() {
+        if(postList.size()!=getPosts().size()){
+            postList = getPosts();
+            homeAdapter.updateList(postList);
+        }
     }
 }

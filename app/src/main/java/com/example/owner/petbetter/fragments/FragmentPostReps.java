@@ -1,6 +1,7 @@
 package com.example.owner.petbetter.fragments;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -20,6 +21,8 @@ import com.example.owner.petbetter.classes.PostRep;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
 import com.example.owner.petbetter.database.DataAdapter;
+import com.example.owner.petbetter.interfaces.CheckUpdates;
+import com.example.owner.petbetter.services.NotificationReceiver;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.google.android.gms.vision.text.Text;
 import com.google.gson.Gson;
@@ -32,7 +35,7 @@ import java.util.HashMap;
  * Created by owner on 14/10/2017.
  */
 
-public class FragmentPostReps extends Fragment{
+public class FragmentPostReps extends Fragment implements CheckUpdates {
     private PostRepAdapter postRepAdapter;
     private RecyclerView recyclerView;
     private ArrayList<PostRep> postRepList, postChildList;
@@ -42,10 +45,26 @@ public class FragmentPostReps extends Fragment{
     private User postUser;
     private Post postItem;
 
+    private NotificationReceiver notifReceiver = new NotificationReceiver(this);
     private DataAdapter petBetterDb;
     private SystemSessionManager systemSessionManager;
     private User user;
     private String email;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        getActivity().registerReceiver(this.notifReceiver, new IntentFilter(Intent.ACTION_ATTACH_DATA));
+        onResult();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        getActivity().unregisterReceiver(notifReceiver);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance){
@@ -191,4 +210,12 @@ public class FragmentPostReps extends Fragment{
         return result;
     }
 
+    @Override
+    public void onResult() {
+        if(postRepList.size()!=getPostReps(postItem.getId()).size()){
+            postRepList = getPostReps(postItem.getId());
+            postRepAdapter.updateList(postRepList);
+
+        }
+    }
 }

@@ -19,6 +19,7 @@ import android.view.View.MeasureSpec;
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
+import com.example.owner.petbetter.classes.MessageRep;
 import com.example.owner.petbetter.classes.PostRep;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
@@ -237,6 +238,13 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
         ArrayList<PostRep> result = petBetterDb.getPostRepsFromParent((int) parentId);
         petBetterDb.closeDatabase();
         return result;
+    }
+
+    public void updateList(ArrayList<PostRep> newList){
+        postRepList.clear();
+        postRepList.addAll(newList);
+        this.notifyDataSetChanged();
+        //recyclerView.setAdapter(this);
     }
 
 

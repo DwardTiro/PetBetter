@@ -2,6 +2,7 @@ package com.example.owner.petbetter.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -37,6 +38,8 @@ import com.example.owner.petbetter.fragments.FragmentHome;
 import com.example.owner.petbetter.fragments.FragmentMessages;
 import com.example.owner.petbetter.fragments.FragmentMessagesHome;
 import com.example.owner.petbetter.fragments.FragmentUserProfile;
+import com.example.owner.petbetter.interfaces.CheckUpdates;
+import com.example.owner.petbetter.services.NotificationReceiver;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -50,7 +53,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CommActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class CommActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, CheckUpdates {
 
     private DataAdapter petBetterDb;
     private ImageButton btnHome;
@@ -64,7 +67,21 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
     private int currFragment;
     private ImageView notifButton;
 
+    private NotificationReceiver notifReceiver = new NotificationReceiver(this);
     HerokuService service;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        CommActivity.this.registerReceiver(this.notifReceiver, new IntentFilter(Intent.ACTION_ATTACH_DATA));
+        onResult();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        CommActivity.this.unregisterReceiver(notifReceiver);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,7 +148,7 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
         btnCommunity.setImageResource(R.mipmap.ic_people_white_24dp);
         container.removeAllViews();
         FragmentHome fragment3 = new FragmentHome();
-        getSupportFragmentManager().beginTransaction().add(R.id.comm_container,fragment3).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.comm_container,fragment3).commitAllowingStateLoss();
 
         btnHome.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -142,7 +159,7 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
                 btnCommunity.setImageResource(R.mipmap.ic_people_white_24dp);
                 container.removeAllViews();
                 FragmentHome fragment3 = new FragmentHome();
-                getSupportFragmentManager().beginTransaction().add(R.id.comm_container,fragment3).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.comm_container,fragment3).commitAllowingStateLoss();
                 currFragment = 2;
             }
         });
@@ -155,7 +172,7 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
                 btnHome.setBackgroundResource(R.color.medTurquoise);
                 container.removeAllViews();
                 FragmentCommunity fragment2 = new FragmentCommunity();
-                getSupportFragmentManager().beginTransaction().add(R.id.comm_container,fragment2).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.comm_container,fragment2).commitAllowingStateLoss();
                 currFragment = 1;
             }
         });
@@ -179,7 +196,7 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
         btnCommunity.setBackgroundResource(R.color.medTurquoise);
         btnCommunity.setImageResource(R.mipmap.ic_people_white_24dp);
         container.removeAllViews();
-        getSupportFragmentManager().beginTransaction().add(R.id.comm_container,fragment3).commitAllowingStateLoss();
+        getSupportFragmentManager().beginTransaction().replace(R.id.comm_container,fragment3).commitAllowingStateLoss();
     }
 
     @Override
@@ -238,7 +255,7 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
                         btnHome.setBackgroundResource(R.color.medTurquoise);
                         container.removeAllViews();
                         FragmentCommunity fragment2 = new FragmentCommunity();
-                        getSupportFragmentManager().beginTransaction().add(R.id.comm_container,fragment2).commit();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.comm_container,fragment2).commitAllowingStateLoss();
                     }
                     else{
                         btnHome.setBackgroundColor(Color.WHITE);
@@ -246,7 +263,7 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
                         btnCommunity.setImageResource(R.mipmap.ic_people_white_24dp);
                         container.removeAllViews();
                         FragmentHome fragment3 = new FragmentHome();
-                        getSupportFragmentManager().beginTransaction().add(R.id.comm_container,fragment3).commit();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.comm_container,fragment3).commitAllowingStateLoss();
                     }
                 }
             }
@@ -357,5 +374,24 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
         petBetterDb.closeDatabase();
 
         return result;
+    }
+
+    @Override
+    public void onResult() {
+        //for both posts and topics, just update the fragments
+
+        /*
+        if(topicList.size()!=getMessageReps(messageId).size()){
+            messageRepList = getMessageReps(messageId);
+            messageRepAdapter.updateList(messageRepList);
+
+        }
+
+        if(messageRepList.size()!=getMessageReps(messageId).size()){
+            messageRepList = getMessageReps(messageId);
+            messageRepAdapter.updateList(messageRepList);
+
+        }
+        */
     }
 }

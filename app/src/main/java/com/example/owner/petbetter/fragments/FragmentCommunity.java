@@ -2,6 +2,7 @@ package com.example.owner.petbetter.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -22,6 +23,8 @@ import com.example.owner.petbetter.classes.Marker;
 import com.example.owner.petbetter.classes.Topic;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
+import com.example.owner.petbetter.interfaces.CheckUpdates;
+import com.example.owner.petbetter.services.NotificationReceiver;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.google.gson.Gson;
 
@@ -29,12 +32,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class FragmentCommunity extends Fragment {
+public class FragmentCommunity extends Fragment implements CheckUpdates{
     private CommunityAdapter communityAdapter;
     private RecyclerView recyclerView;
     private ArrayList<Topic> topicList;
     private TextView nameTextView;
 
+    private NotificationReceiver notifReceiver = new NotificationReceiver(this);
     private DataAdapter petBetterDb;
     private SystemSessionManager systemSessionManager;
     private User user;
@@ -48,6 +52,15 @@ public class FragmentCommunity extends Fragment {
     @SuppressLint("ValidFragment")
     public FragmentCommunity(ArrayList<Topic> topicList) {
         this.topicList = topicList;
+    }
+
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        getActivity().unregisterReceiver(notifReceiver);
     }
 
     @Override
@@ -109,6 +122,10 @@ public class FragmentCommunity extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+
+        getActivity().registerReceiver(this.notifReceiver, new IntentFilter(Intent.ACTION_ATTACH_DATA));
+        onResult();
+
         if(allowRefresh){
             System.out.println("WHEN DO WE ENTER THIS?");
             allowRefresh = false;
@@ -169,5 +186,14 @@ public class FragmentCommunity extends Fragment {
         petBetterDb.closeDatabase();
 
         return result;
+    }
+
+    @Override
+    public void onResult() {
+        if(topicList.size()!=getTopics().size()){
+            topicList = getTopics();
+            communityAdapter.updateList(topicList);
+
+        }
     }
 }

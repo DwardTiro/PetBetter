@@ -122,6 +122,13 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
         this.notifyDataSetChanged();
     }
 
+    public void updateList(ArrayList<Topic> newList){
+        topicList.clear();
+        topicList.addAll(newList);
+        this.notifyDataSetChanged();
+        //recyclerView.setAdapter(this);
+    }
+
     private void initializeDatabase() {
 
         petBetterDb = new DataAdapter(context);

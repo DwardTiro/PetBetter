@@ -19,12 +19,15 @@ import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.activities.MainActivity;
 import com.example.owner.petbetter.activities.MessageActivity;
 import com.example.owner.petbetter.activities.MessagesActivity;
+import com.example.owner.petbetter.activities.PostContentActivity;
 import com.example.owner.petbetter.adapters.MessageAdapter;
 import com.example.owner.petbetter.adapters.MessageRepAdapter;
 import com.example.owner.petbetter.classes.Follower;
 import com.example.owner.petbetter.classes.Message;
 import com.example.owner.petbetter.classes.MessageRep;
 import com.example.owner.petbetter.classes.Notifications;
+import com.example.owner.petbetter.classes.Post;
+import com.example.owner.petbetter.classes.PostRep;
 import com.example.owner.petbetter.classes.Topic;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
@@ -122,10 +125,19 @@ public class MyService extends Service {
                                 while(val<notifArray.size()){
 
                                     if(notifArray.get(val).getType()==1){
+                                        syncPostChanges();
+                                        syncPostRepChanges();
+
                                         appNotif.setSmallIcon(R.drawable.app_icon)
                                                 .setTicker(notifArray.get(val).getDoerName()+" has replied to your post")
                                                 .setWhen(System.currentTimeMillis()).setContentTitle(notifArray.get(val).getDoerName())
                                                 .setContentText("has replied to your post");
+
+                                        Intent intentNotif = new Intent(MyService.this, PostContentActivity.class);
+                                        Post postItem = getPost(notifArray.get(val).getSourceId());
+                                        intentNotif.putExtra("thisPost", new Gson().toJson(postItem));
+                                        PendingIntent pendingIntent = PendingIntent.getActivity(MyService.this, 0, intentNotif, PendingIntent.FLAG_UPDATE_CURRENT);
+                                        appNotif.setContentIntent(pendingIntent);
                                     }
                                     if(notifArray.get(val).getType()==2){
                                         syncMessageChanges(userId);
@@ -197,6 +209,100 @@ public class MyService extends Service {
             stopSelf();
         }
     };
+
+    public void syncPostChanges(){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        System.out.println("WE HERE BOOIII");
+        ArrayList<Post> unsyncedPosts = getUnsyncedPosts();
+
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String jsonArray = gson.toJson(unsyncedPosts);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.addPosts(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    System.out.println("POSTS ADDED YEY");
+                    dataSynced(9);
+
+                    final Call<ArrayList<Post>> call2 = service2.getPosts();
+                    call2.enqueue(new Callback<ArrayList<Post>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<Post>> call, Response<ArrayList<Post>> response) {
+                            if(response.isSuccessful()){
+                                setPosts(response.body());
+
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<Post>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
+    public void syncPostRepChanges(){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        System.out.println("WE HERE BOOIII");
+        ArrayList<PostRep> unsyncedPostReps = getUnsyncedPostReps();
+
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String jsonArray = gson.toJson(unsyncedPostReps);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.addPostReps(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    System.out.println("POSTREPS ADDED YEY");
+                    dataSynced(10);
+
+                    final Call<ArrayList<PostRep>> call2 = service2.getAllPostReps();
+                    call2.enqueue(new Callback<ArrayList<PostRep>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<PostRep>> call, Response<ArrayList<PostRep>> response) {
+                            if(response.isSuccessful()){
+                                setPostReps(response.body());
+
+                                Intent intent = new Intent().setAction(Intent.ACTION_ATTACH_DATA);
+                                notifReceiver.onReceive(context, intent);
+                                context.sendBroadcast(intent);
+
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<PostRep>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
 
     public void syncMessageChanges(final long userId){
 
@@ -308,6 +414,48 @@ public class MyService extends Service {
         return result;
     }
 
+    private Post getPost(long postId){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        Post result = petBetterDb.getPost(postId);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<Post> getUnsyncedPosts(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Post> result = petBetterDb.getUnsyncedPosts();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<PostRep> getUnsyncedPostReps(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<PostRep> result = petBetterDb.getUnsyncedPostReps();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
     private ArrayList<Message> getMessages(long userId){
 
         try {
@@ -397,6 +545,30 @@ public class MyService extends Service {
             e.printStackTrace();
         }
         long result = petBetterDb.setNotifications(notifList);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    public long setPosts(ArrayList<Post> postList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setPosts(postList);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    public long setPostReps(ArrayList<PostRep> postRepList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setPostReps(postRepList);
         petBetterDb.closeDatabase();
 
         return result;

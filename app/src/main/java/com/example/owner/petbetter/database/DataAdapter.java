@@ -1164,11 +1164,13 @@ public class DataAdapter {
     public Post getPost(long postId){
 
         String sql = "SELECT * FROM " + POST_TABLE + " WHERE _id = '" + postId + "' AND is_deleted != 1";
+
         Cursor c = petBetterDb.rawQuery(sql, null);
 
         Log.e("cursor", c.getCount() + "");
 
         c.moveToFirst();
+
 
         Post result = new Post(c.getInt(c.getColumnIndexOrThrow("_id")),
                 c.getLong(c.getColumnIndexOrThrow("user_id")),

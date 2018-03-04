@@ -2,6 +2,7 @@ package com.example.owner.petbetter.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -19,6 +20,8 @@ import com.example.owner.petbetter.adapters.HomeAdapter;
 import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
+import com.example.owner.petbetter.interfaces.CheckUpdates;
+import com.example.owner.petbetter.services.NotificationReceiver;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.google.gson.Gson;
 
@@ -30,13 +33,14 @@ import java.util.HashMap;
  * Created by owner on 7/10/2017.
  */
 
-public class FragmentPosts extends Fragment {
+public class FragmentPosts extends Fragment implements CheckUpdates {
 
     private HomeAdapter homeAdapter;
     private RecyclerView recyclerView;
     private ArrayList<Post> postList;
     private TextView nameTextView;
 
+    private NotificationReceiver notifReceiver = new NotificationReceiver(this);
     private DataAdapter petBetterDb;
     private SystemSessionManager systemSessionManager;
     private User user;
@@ -51,6 +55,13 @@ public class FragmentPosts extends Fragment {
     @SuppressLint("ValidFragment")
     public FragmentPosts(ArrayList<Post> postList) {
         this.postList = postList;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        getActivity().unregisterReceiver(notifReceiver);
     }
 
     @Override
@@ -114,6 +125,11 @@ public class FragmentPosts extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+
+
+        getActivity().registerReceiver(this.notifReceiver, new IntentFilter(Intent.ACTION_ATTACH_DATA));
+        onResult();
+
         if(allowRefresh){
             System.out.println("WHEN DO WE ENTER THIS?");
             allowRefresh = false;
@@ -160,5 +176,14 @@ public class FragmentPosts extends Fragment {
         petBetterDb.closeDatabase();
 
         return result;
+    }
+
+    @Override
+    public void onResult() {
+        if(postList.size()!=getTopicPosts(topicId).size()){
+            postList = getTopicPosts(topicId);
+            homeAdapter.updateList(postList);
+
+        }
     }
 }
