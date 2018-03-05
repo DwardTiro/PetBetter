@@ -292,7 +292,7 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
                         btnHome.setBackgroundResource(R.color.medTurquoise);
                         container.removeAllViews();
                         FragmentCommunity fragment2 = new FragmentCommunity();
-                        getSupportFragmentManager().beginTransaction().add(R.id.comm_container,fragment2).commit();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.comm_container,fragment2).commit();
                     }
                     else{
                         btnHome.setBackgroundColor(Color.WHITE);
@@ -300,7 +300,7 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
                         btnCommunity.setImageResource(R.mipmap.ic_people_white_24dp);
                         container.removeAllViews();
                         FragmentHome fragment3 = new FragmentHome();
-                        getSupportFragmentManager().beginTransaction().add(R.id.comm_container,fragment3).commit();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.comm_container,fragment3).commit();
                     }
                 }
             }
@@ -378,7 +378,25 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onResult() {
-        //for both posts and topics, just update the fragments
+        //maybe you could show a button that says "more results" and it updates the fragments when you tap it.
+
+        /*
+        if(currFragment==1){
+            btnCommunity.setImageResource(R.mipmap.ic_people_black_24dp);
+            btnCommunity.setBackgroundColor(Color.WHITE);
+            btnHome.setBackgroundResource(R.color.medTurquoise);
+            container.removeAllViews();
+            FragmentCommunity fragment2 = new FragmentCommunity();
+            getSupportFragmentManager().beginTransaction().replace(R.id.comm_container,fragment2).commit();
+        }
+        else{
+            btnHome.setBackgroundColor(Color.WHITE);
+            btnCommunity.setBackgroundResource(R.color.medTurquoise);
+            btnCommunity.setImageResource(R.mipmap.ic_people_white_24dp);
+            container.removeAllViews();
+            FragmentHome fragment3 = new FragmentHome();
+            getSupportFragmentManager().beginTransaction().replace(R.id.comm_container,fragment3).commit();
+        }*/
 
         /*
         if(topicList.size()!=getMessageReps(messageId).size()){

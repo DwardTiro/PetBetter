@@ -20,6 +20,7 @@ import com.example.owner.petbetter.activities.MainActivity;
 import com.example.owner.petbetter.activities.MessageActivity;
 import com.example.owner.petbetter.activities.MessagesActivity;
 import com.example.owner.petbetter.activities.PostContentActivity;
+import com.example.owner.petbetter.activities.TopicContentActivity;
 import com.example.owner.petbetter.adapters.MessageAdapter;
 import com.example.owner.petbetter.adapters.MessageRepAdapter;
 import com.example.owner.petbetter.classes.Follower;
@@ -111,6 +112,60 @@ public class MyService extends Service {
             // This is where you try to pull data from remotedb periodically and do notifs and messages
 
             final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+            final Call<ArrayList<Post>> call2 = service.getPosts();
+
+            call2.enqueue(new Callback<ArrayList<Post>>() {
+                @Override
+                public void onResponse(Call<ArrayList<Post>> call2, Response<ArrayList<Post>> response) {
+                    if(response.isSuccessful()){
+                        if(response.body().size()!=getPosts().size()){
+                            syncPostChanges();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ArrayList<Post>> call2, Throwable t) {
+
+                }
+            });
+
+            final Call<ArrayList<PostRep>> call3 = service.getAllPostReps();
+
+            call3.enqueue(new Callback<ArrayList<PostRep>>() {
+                @Override
+                public void onResponse(Call<ArrayList<PostRep>> call3, Response<ArrayList<PostRep>> response) {
+                    if(response.isSuccessful()){
+                        if(response.body().size()!= getAllPostReps().size()){
+                            syncPostRepChanges();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ArrayList<PostRep>> call3, Throwable t) {
+
+                }
+            });
+
+            final Call<ArrayList<Topic>> call4 = service.getTopics();
+
+            call4.enqueue(new Callback<ArrayList<Topic>>() {
+                @Override
+                public void onResponse(Call<ArrayList<Topic>> call4, Response<ArrayList<Topic>> response) {
+                    if(response.isSuccessful()){
+                        if(response.body().size()!= getTopics().size()){
+                            syncTopicChanges();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ArrayList<Topic>> call4, Throwable t) {
+
+                }
+            });
+
             final Call<ArrayList<Notifications>> call = service.getNotifications(userId);
 
             call.enqueue(new Callback<ArrayList<Notifications>>() {
@@ -125,9 +180,6 @@ public class MyService extends Service {
                                 while(val<notifArray.size()){
 
                                     if(notifArray.get(val).getType()==1){
-                                        syncPostChanges();
-                                        syncPostRepChanges();
-
                                         appNotif.setSmallIcon(R.drawable.app_icon)
                                                 .setTicker(notifArray.get(val).getDoerName()+" has replied to your post")
                                                 .setWhen(System.currentTimeMillis()).setContentTitle(notifArray.get(val).getDoerName())
@@ -160,6 +212,12 @@ public class MyService extends Service {
                                                 .setTicker(notifArray.get(val).getDoerName()+" has posted in "+topic.getTopicName())
                                                 .setWhen(System.currentTimeMillis()).setContentTitle(notifArray.get(val).getDoerName())
                                                 .setContentText(" has posted in "+topic.getTopicName());
+
+                                        Intent intentNotif = new Intent(MyService.this, PostContentActivity.class);
+                                        Post postItem = getPost(notifArray.get(val).getSourceId());
+                                        intentNotif.putExtra("thisPost", new Gson().toJson(postItem));
+                                        PendingIntent pendingIntent = PendingIntent.getActivity(MyService.this, 0, intentNotif, PendingIntent.FLAG_UPDATE_CURRENT);
+                                        appNotif.setContentIntent(pendingIntent);
                                     }
                                     if(notifArray.get(val).getType()==4){
                                         Follower follower = getFollowerWithId(notifArray.get(val).getSourceId());
@@ -168,6 +226,11 @@ public class MyService extends Service {
                                                 .setTicker(notifArray.get(val).getDoerName()+" followed your topic ")
                                                 .setWhen(System.currentTimeMillis()).setContentTitle(notifArray.get(val).getDoerName())
                                                 .setContentText(" has followed "+topic.getTopicName());
+
+                                        Intent intentNotif = new Intent(MyService.this, TopicContentActivity.class);
+                                        intentNotif.putExtra("thisTopic", new Gson().toJson(topic));
+                                        PendingIntent pendingIntent = PendingIntent.getActivity(MyService.this, 0, intentNotif, PendingIntent.FLAG_UPDATE_CURRENT);
+                                        appNotif.setContentIntent(pendingIntent);
                                     }
 
 
@@ -210,6 +273,54 @@ public class MyService extends Service {
         }
     };
 
+    public void syncTopicChanges(){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        System.out.println("WE HERE BOOIII");
+        ArrayList<Topic> unsyncedTopics = getUnsyncedTopics();
+
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String jsonArray = gson.toJson(unsyncedTopics);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.addTopics(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    System.out.println("TOPICS ADDED YEY");
+                    dataSynced(9);
+
+                    final Call<ArrayList<Topic>> call2 = service2.getTopics();
+                    call2.enqueue(new Callback<ArrayList<Topic>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<Topic>> call, Response<ArrayList<Topic>> response) {
+                            if(response.isSuccessful()){
+                                setTopics(response.body());
+
+                                Intent intent = new Intent().setAction(Intent.ACTION_ATTACH_DATA);
+                                notifReceiver.onReceive(context, intent);
+                                context.sendBroadcast(intent);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<Topic>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
     public void syncPostChanges(){
 
         final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
@@ -234,6 +345,9 @@ public class MyService extends Service {
                         public void onResponse(Call<ArrayList<Post>> call, Response<ArrayList<Post>> response) {
                             if(response.isSuccessful()){
                                 setPosts(response.body());
+                                Intent intent = new Intent().setAction(Intent.ACTION_ATTACH_DATA);
+                                notifReceiver.onReceive(context, intent);
+                                context.sendBroadcast(intent);
 
                             }
                         }
@@ -400,6 +514,20 @@ public class MyService extends Service {
         });
     }
 
+    private ArrayList<Topic> getUnsyncedTopics(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Topic> result = petBetterDb.getUnsyncedTopics();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
     private ArrayList<MessageRep> getUnsyncedMessageReps(){
 
         try {
@@ -427,6 +555,49 @@ public class MyService extends Service {
 
         return result;
     }
+
+    private ArrayList<PostRep> getAllPostReps(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<PostRep> result = petBetterDb.getAllPostReps();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<Post> getPosts(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Post> result = petBetterDb.getPosts();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<Topic> getTopics(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Topic> result = petBetterDb.getTopics();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
 
     private ArrayList<Post> getUnsyncedPosts(){
 
@@ -465,6 +636,18 @@ public class MyService extends Service {
         }
 
         ArrayList<Message> result = petBetterDb.getMessages(userId);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    public long setTopics(ArrayList<Topic> topicList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setTopics(topicList);
         petBetterDb.closeDatabase();
 
         return result;
