@@ -30,7 +30,9 @@ import com.example.owner.petbetter.classes.Message;
 import com.example.owner.petbetter.classes.Notifications;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
+import com.example.owner.petbetter.interfaces.CheckLogout;
 import com.example.owner.petbetter.interfaces.CheckUpdates;
+import com.example.owner.petbetter.services.MyService;
 import com.example.owner.petbetter.services.NotificationReceiver;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.google.gson.Gson;
@@ -44,7 +46,7 @@ import java.util.HashMap;
  */
 
 
-public class MessagesActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, CheckUpdates {
+public class MessagesActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, CheckUpdates, CheckLogout {
 
     private ArrayList<Message> messageList;
     private DataAdapter petBetterDb;
@@ -56,7 +58,8 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
     private TextView textNavEmail, textNavUser;
     private Toolbar menuBar;
     private User user;
-    private NotificationReceiver notifReceiver = new NotificationReceiver(this);
+    private NotificationReceiver notifReceiver = new NotificationReceiver((CheckUpdates) this);
+    private NotificationReceiver notifReceiver2 = new NotificationReceiver((CheckLogout) this);
     private ImageView notifButton;
 
     HerokuService service;
@@ -65,6 +68,7 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
     protected void onResume() {
         super.onResume();
         MessagesActivity.this.registerReceiver(this.notifReceiver, new IntentFilter(Intent.ACTION_ATTACH_DATA));
+        MessagesActivity.this.registerReceiver(this.notifReceiver2, new IntentFilter("com.example.ACTION_LOGOUT"));
         onResult();
     }
 
@@ -72,6 +76,7 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
     protected void onPause() {
         super.onPause();
         MessagesActivity.this.unregisterReceiver(notifReceiver);
+        MessagesActivity.this.unregisterReceiver(notifReceiver2);
     }
 
 
@@ -184,7 +189,11 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
             SharedPreferences.Editor editor = preferences.edit();
             editor.clear();
             editor.commit();
+            Intent intentLogout = new Intent().setAction("com.package.ACTION_LOGOUT");
+            notifReceiver.onReceive(this, intentLogout);
+            sendBroadcast(intentLogout);
             startActivity(intent);
+            //stopService(new Intent(MessagesActivity.this, MyService.class));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -291,5 +300,10 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
         petBetterDb.closeDatabase();
 
         return result;
+    }
+
+    @Override
+    public void onLogout() {
+
     }
 }

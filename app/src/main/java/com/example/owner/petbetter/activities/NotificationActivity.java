@@ -2,6 +2,7 @@ package com.example.owner.petbetter.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -25,13 +26,16 @@ import com.example.owner.petbetter.classes.Notifications;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.fragments.FragmentNotifs;
+import com.example.owner.petbetter.interfaces.CheckLogout;
+import com.example.owner.petbetter.services.MyService;
+import com.example.owner.petbetter.services.NotificationReceiver;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class NotificationActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class NotificationActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, CheckLogout {
 
     private DataAdapter petBetterDb;
     private ImageButton btnBookmarks;
@@ -42,8 +46,21 @@ public class NotificationActivity extends AppCompatActivity implements Navigatio
     private TextView textNavEmail, textNavUser;
     private User user;
     private ImageView notifButton;
+    private NotificationReceiver notifReceiver = new NotificationReceiver(this);
 
     HerokuService service;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        NotificationActivity.this.registerReceiver(this.notifReceiver, new IntentFilter("com.example.ACTION_LOGOUT"));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        NotificationActivity.this.unregisterReceiver(notifReceiver);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,7 +146,11 @@ public class NotificationActivity extends AppCompatActivity implements Navigatio
             SharedPreferences.Editor editor = preferences.edit();
             editor.clear();
             editor.commit();
+            Intent intentLogout = new Intent().setAction("com.package.ACTION_LOGOUT");
+            notifReceiver.onReceive(this, intentLogout);
+            sendBroadcast(intentLogout);
             startActivity(intent);
+            //stopService(new Intent(NotificationActivity.this, MyService.class));
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -176,4 +197,8 @@ public class NotificationActivity extends AppCompatActivity implements Navigatio
     }
 
 
+    @Override
+    public void onLogout() {
+
+    }
 }

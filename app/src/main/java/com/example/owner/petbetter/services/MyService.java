@@ -40,6 +40,8 @@ import com.google.gson.GsonBuilder;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
 
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -65,6 +67,7 @@ public class MyService extends Service {
 
     NotificationCompat.Builder appNotif;
     private static final AtomicInteger uniqueId = new AtomicInteger(0);
+
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -222,6 +225,7 @@ public class MyService extends Service {
                                     if(notifArray.get(val).getType()==4){
                                         Follower follower = getFollowerWithId(notifArray.get(val).getSourceId());
                                         Topic topic = getTopic(follower.getTopicId());
+
                                         appNotif.setSmallIcon(R.drawable.app_icon)
                                                 .setTicker(notifArray.get(val).getDoerName()+" followed your topic ")
                                                 .setWhen(System.currentTimeMillis()).setContentTitle(notifArray.get(val).getDoerName())
@@ -268,7 +272,7 @@ public class MyService extends Service {
 
             //might need a separate call and service variable for this one
 
-            System.out.println("THE BACKGROUND SERVICE IS RUNNING");
+            System.out.println("BACKGROUND THING");
             stopSelf();
         }
     };
@@ -684,6 +688,7 @@ public class MyService extends Service {
     @Override
     public void onDestroy() {
         this.isRunning = false;
+
     }
 
     @Override
@@ -694,6 +699,8 @@ public class MyService extends Service {
         }
         return START_STICKY;
     }
+
+
 
     private void initializeDatabase() {
 

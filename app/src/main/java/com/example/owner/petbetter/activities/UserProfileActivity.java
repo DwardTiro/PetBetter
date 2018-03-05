@@ -1,6 +1,9 @@
 package com.example.owner.petbetter.activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -21,6 +24,9 @@ import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.classes.Notifications;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
+import com.example.owner.petbetter.interfaces.CheckLogout;
+import com.example.owner.petbetter.services.MyService;
+import com.example.owner.petbetter.services.NotificationReceiver;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 
 import java.sql.SQLException;
@@ -32,7 +38,7 @@ import java.util.HashMap;
  */
 
 
-public class UserProfileActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class UserProfileActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, CheckLogout{
 
     private TextView userProfileName;
     private Button editProfileButton;
@@ -43,8 +49,16 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
     private Toolbar menuBar;
     private User user;
     private ImageView notifButton;
+    private NotificationReceiver notifReceiver = new NotificationReceiver(this);
 
     HerokuService service;
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        UserProfileActivity.this.unregisterReceiver(notifReceiver);
+    }
+
     @Override
     public void onCreate(Bundle savedInstance){
         super.onCreate(savedInstance);
@@ -113,6 +127,9 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
     @Override
     public void onResume(){
         super.onResume();
+
+        UserProfileActivity.this.registerReceiver(this.notifReceiver, new IntentFilter("com.example.ACTION_LOGOUT"));
+
         systemSessionManager = new SystemSessionManager(this);
         if(systemSessionManager.checkLogin())
             finish();
@@ -160,7 +177,17 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
         }
         else if(id == R.id.log_out){
             Intent intent = new Intent(this, com.example.owner.petbetter.activities.MainActivity.class);
+
+            SharedPreferences preferences =getSharedPreferences("prefs", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.clear();
+            editor.commit();
+
+            Intent intentLogout = new Intent().setAction("com.package.ACTION_LOGOUT");
+            notifReceiver.onReceive(this, intentLogout);
+            sendBroadcast(intentLogout);
             startActivity(intent);
+            //stopService(new Intent(UserProfileActivity.this, MyService.class));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -206,5 +233,10 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
         petBetterDb.closeDatabase();
 
         return result;
+    }
+
+    @Override
+    public void onLogout() {
+
     }
 }

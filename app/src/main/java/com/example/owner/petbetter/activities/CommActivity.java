@@ -38,7 +38,9 @@ import com.example.owner.petbetter.fragments.FragmentHome;
 import com.example.owner.petbetter.fragments.FragmentMessages;
 import com.example.owner.petbetter.fragments.FragmentMessagesHome;
 import com.example.owner.petbetter.fragments.FragmentUserProfile;
+import com.example.owner.petbetter.interfaces.CheckLogout;
 import com.example.owner.petbetter.interfaces.CheckUpdates;
+import com.example.owner.petbetter.services.MyService;
 import com.example.owner.petbetter.services.NotificationReceiver;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.google.gson.Gson;
@@ -53,7 +55,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CommActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, CheckUpdates {
+public class CommActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, CheckUpdates, CheckLogout {
 
     private DataAdapter petBetterDb;
     private ImageButton btnHome;
@@ -67,13 +69,15 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
     private int currFragment;
     private ImageView notifButton;
 
-    private NotificationReceiver notifReceiver = new NotificationReceiver(this);
+    private NotificationReceiver notifReceiver = new NotificationReceiver((CheckUpdates) this);
+    private NotificationReceiver notifReceiver2 = new NotificationReceiver((CheckLogout) this);
     HerokuService service;
 
     @Override
     protected void onResume() {
         super.onResume();
         CommActivity.this.registerReceiver(this.notifReceiver, new IntentFilter(Intent.ACTION_ATTACH_DATA));
+        CommActivity.this.registerReceiver(this.notifReceiver2, new IntentFilter("com.example.ACTION_LOGOUT"));
         onResult();
     }
 
@@ -81,6 +85,7 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
     protected void onPause() {
         super.onPause();
         CommActivity.this.unregisterReceiver(notifReceiver);
+        CommActivity.this.unregisterReceiver(notifReceiver2);
     }
 
     @Override
@@ -229,7 +234,12 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
             SharedPreferences.Editor editor = preferences.edit();
             editor.clear();
             editor.commit();
+            Intent intentLogout = new Intent().setAction("com.package.ACTION_LOGOUT");
+            notifReceiver2.onReceive(this, intentLogout);
+            sendBroadcast(intentLogout);
             startActivity(intent);
+            startActivity(intent);
+            //stopService(new Intent(CommActivity.this, MyService.class));
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -411,5 +421,10 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
 
         }
         */
+    }
+
+    @Override
+    public void onLogout() {
+
     }
 }

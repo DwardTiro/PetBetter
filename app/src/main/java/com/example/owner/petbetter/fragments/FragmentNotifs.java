@@ -22,6 +22,7 @@ import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.activities.MessagesActivity;
 import com.example.owner.petbetter.adapters.NotificationsAdapter;
+import com.example.owner.petbetter.classes.Follower;
 import com.example.owner.petbetter.classes.Message;
 import com.example.owner.petbetter.classes.Notifications;
 import com.example.owner.petbetter.classes.Post;
@@ -114,9 +115,20 @@ public class FragmentNotifs extends Fragment implements CheckUpdates {
                     intent.putExtra("thisMessage", new Gson().toJson(messageItem));
                     startActivity(intent);
                 }
-                if(item.getType()==3||item.getType()==4){
+                if(item.getType()==3){
+                    Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.PostContentActivity.class);
+
+                    Follower follower = getFollowerWithId(item.getSourceId());
+                    postItem = getPost(item.getSourceId());
+                    intent.putExtra("thisPost", new Gson().toJson(postItem));
+                    startActivity(intent);
+                }
+
+                if(item.getType()==4){
                     Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.TopicContentActivity.class);
-                    topicItem = getTopic(item.getSourceId());
+
+                    Follower follower = getFollowerWithId(item.getSourceId());
+                    topicItem = getTopic(follower.getTopicId());
                     intent.putExtra("thisTopic", new Gson().toJson(topicItem));
                     startActivity(intent);
                 }
@@ -248,6 +260,20 @@ public class FragmentNotifs extends Fragment implements CheckUpdates {
         }
 
         Post result = petBetterDb.getPost(postId);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private Follower getFollowerWithId(long postId){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        Follower result = petBetterDb.getFollowerWithId(postId);
         petBetterDb.closeDatabase();
 
         return result;

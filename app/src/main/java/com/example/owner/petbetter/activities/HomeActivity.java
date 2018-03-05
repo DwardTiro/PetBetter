@@ -2,6 +2,7 @@ package com.example.owner.petbetter.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
@@ -27,6 +28,9 @@ import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.fragments.FragmentPetClinicListing;
+import com.example.owner.petbetter.interfaces.CheckLogout;
+import com.example.owner.petbetter.services.MyService;
+import com.example.owner.petbetter.services.NotificationReceiver;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 
 import com.example.owner.petbetter.fragments.FragmentVetListing;
@@ -52,7 +56,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, CheckLogout {
 
 
 
@@ -69,9 +73,17 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private SwipeRefreshLayout swipeRefreshLayout;
     private int currFragment;
     private ImageView notifButton;
+    private NotificationReceiver notifReceiver = new NotificationReceiver(this);
 
     private ArrayList<Veterinarian> vetList;
     HerokuService service;
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        HomeActivity.this.unregisterReceiver(notifReceiver);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,6 +171,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onResume(){
         super.onResume();
+
+        HomeActivity.this.registerReceiver(this.notifReceiver, new IntentFilter("com.example.ACTION_LOGOUT"));
 
         systemSessionManager = new SystemSessionManager(this);
         if(systemSessionManager.checkLogin())
@@ -464,7 +478,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             SharedPreferences.Editor editor = preferences.edit();
             editor.clear();
             editor.commit();
+            Intent intentLogout = new Intent().setAction("com.package.ACTION_LOGOUT");
+            notifReceiver.onReceive(this, intentLogout);
+            sendBroadcast(intentLogout);
             startActivity(intent);
+            //stopService(new Intent(HomeActivity.this, MyService.class));
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -482,5 +500,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         petBetterDb.closeDatabase();
 
         return result;
+    }
+
+    @Override
+    public void onLogout() {
+
     }
 }

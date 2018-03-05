@@ -2,6 +2,7 @@ package com.example.owner.petbetter.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
@@ -28,6 +29,9 @@ import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.fragments.FragmentBookmarkListing;
 import com.example.owner.petbetter.fragments.FragmentFacilityListing;
 import com.example.owner.petbetter.fragments.FragmentPetClinicListing;
+import com.example.owner.petbetter.interfaces.CheckLogout;
+import com.example.owner.petbetter.services.MyService;
+import com.example.owner.petbetter.services.NotificationReceiver;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 
 import java.sql.SQLException;
@@ -45,10 +49,23 @@ public class BookmarksActivity extends AppCompatActivity implements NavigationVi
     private TextView textNavEmail, textNavUser;
     private User user;
     private ImageView notifButton;
+    private NotificationReceiver notifReceiver = new NotificationReceiver();
 
     HerokuService service;
 
+    /*
+    @Override
+    protected void onResume() {
+        super.onResume();
+        BookmarksActivity.this.registerReceiver(this.notifReceiver, new IntentFilter("com.example.ACTION_LOGOUT"));
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        BookmarksActivity.this.unregisterReceiver(notifReceiver);
+    }
+    */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -172,7 +189,12 @@ public class BookmarksActivity extends AppCompatActivity implements NavigationVi
             SharedPreferences.Editor editor = preferences.edit();
             editor.clear();
             editor.commit();
+
+            Intent intentLogout = new Intent().setAction("com.package.ACTION_LOGOUT");
+            notifReceiver.onReceive(this, intentLogout);
+            sendBroadcast(intentLogout);
             startActivity(intent);
+            //stopService(new Intent(BookmarksActivity.this, MyService.class));
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

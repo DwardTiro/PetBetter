@@ -1,9 +1,11 @@
 package com.example.owner.petbetter.activities;
 
+import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -30,6 +32,7 @@ import com.example.owner.petbetter.classes.Notifications;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.fragments.FragmentNotifs;
+import com.example.owner.petbetter.interfaces.CheckLogout;
 import com.example.owner.petbetter.services.MyService;
 import com.example.owner.petbetter.services.NotificationReceiver;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
@@ -37,12 +40,17 @@ import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.FutureTask;
 
 /**
  * Created by Kristian on 2/24/2018.
  */
 
-public class VeterinarianHomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class VeterinarianHomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, CheckLogout {
 
     private DataAdapter petBetterDb;
     private NavigationView navigationView;
@@ -52,8 +60,26 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
     private User user;
     private MyService notifService;
     private ImageView notifButton;
+    private NotificationReceiver notifReceiver = new NotificationReceiver(this);
 
+    AlarmManager alarmManager;
+    Intent notifAlarm;
+    PendingIntent pendingIntent;
     HerokuService service;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        VeterinarianHomeActivity.this.registerReceiver(this.notifReceiver, new IntentFilter("com.example.ACTION_LOGOUT"));
+        System.out.println("ONRESUME BOI");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        VeterinarianHomeActivity.this.unregisterReceiver(notifReceiver);
+        System.out.println("ONPAUSE BOI");
+    }
 
     @Override
     public void onCreate(Bundle savedInstance){
@@ -96,12 +122,13 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
         textNavUser = (TextView) headerView.findViewById(R.id.textNavUser);
         textNavUser.setText(user.getName());
 
-        Intent notifAlarm = new Intent(VeterinarianHomeActivity.this, NotificationReceiver.class);
+        notifAlarm = new Intent(VeterinarianHomeActivity.this, NotificationReceiver.class);
         boolean alarmRunning = (PendingIntent.getBroadcast(VeterinarianHomeActivity.this,0,notifAlarm, PendingIntent.FLAG_NO_CREATE)!=null);
         if(alarmRunning==false){
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(VeterinarianHomeActivity.this, 0, notifAlarm, 0);
-            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            pendingIntent = PendingIntent.getBroadcast(VeterinarianHomeActivity.this, 0, notifAlarm, 0);
+            alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
             alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), 10000, pendingIntent);
+            //alarmManager.cancel(pendingIntent);
             //1800000
         }
 
@@ -115,8 +142,6 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
             }
         });
     }
-
-
 
 
     @Override
@@ -135,18 +160,38 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
         } else if (id == R.id.user_profile) {
             Intent intent = new Intent(this, com.example.owner.petbetter.activities.UserProfileActivity.class);
             startActivity(intent);
+        } else if (id == R.id.bookmarks) {
+            Intent intent = new Intent(this, com.example.owner.petbetter.activities.BookmarksActivity.class);
+            startActivity(intent);
         } else if (id == R.id.log_out) {
             Intent intent = new Intent(this, com.example.owner.petbetter.activities.MainActivity.class);
             SharedPreferences preferences =getSharedPreferences("prefs", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = preferences.edit();
             editor.clear();
             editor.commit();
+
+            Intent intentLogout = new Intent().setAction("com.package.ACTION_LOGOUT");
+            //wait until service is finished before you do the onreceive
+
+            notifReceiver.onReceive(this, intentLogout);
+            sendBroadcast(intentLogout);
             startActivity(intent);
+
+
+            //stopService(new Intent(VeterinarianHomeActivity.this, MyService.class));
+
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+
+    public void killBackground(){
+        //Intent notifAlarm = new Intent(VeterinarianHomeActivity.this, NotificationReceiver.class);
+        //PendingIntent pendingIntent = PendingIntent.getBroadcast(VeterinarianHomeActivity.this, 0, notifAlarm, 0);
+        alarmManager.cancel(pendingIntent);
     }
 
     private void initializeDatabase() {
@@ -174,6 +219,8 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
 
         return result;
     }
+
+
     public void vetAddFacilityOnClick(View view){
         Intent intent = new Intent(
                 VeterinarianHomeActivity.this,
@@ -194,5 +241,12 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
         petBetterDb.closeDatabase();
 
         return result;
+    }
+
+    @Override
+    public void onLogout() {
+        System.out.println("SNIPER BOI");
+        alarmManager.cancel(pendingIntent);
+
     }
 }
