@@ -2,20 +2,13 @@ package com.example.owner.petbetter.activities;
 
 import android.content.Intent;
 import android.location.Address;
-import android.location.Geocoder;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ProgressBar;
-import android.widget.RadioButton;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.owner.petbetter.R;
@@ -23,15 +16,10 @@ import com.example.owner.petbetter.classes.Facility;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
-import com.example.owner.petbetter.classes.Marker;
-import com.google.android.gms.maps.model.LatLng;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
 
 public class AddMarkerActivity extends AppCompatActivity {
 

@@ -9,13 +9,10 @@ import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-import android.view.View;
 
-import com.example.owner.petbetter.HerokuService;
-import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.classes.Facility;
 import com.example.owner.petbetter.classes.Follower;
-import com.example.owner.petbetter.classes.Marker;
+import com.example.owner.petbetter.classes.LocationMarker;
 import com.example.owner.petbetter.classes.Message;
 import com.example.owner.petbetter.classes.MessageRep;
 import com.example.owner.petbetter.classes.Notifications;
@@ -29,14 +26,8 @@ import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
 public class DataAdapter {
@@ -501,42 +492,42 @@ public class DataAdapter {
         return ids;
     }
 
-    public ArrayList<Marker> loadMarkers(long userId){
-        ArrayList<Marker> results = new ArrayList<>();
+    public ArrayList<LocationMarker> loadMarkers(long userId){
+        ArrayList<LocationMarker> results = new ArrayList<>();
 
         String sql = "SELECT * FROM "+MARKER_TABLE + " WHERE user_id = '" + userId + "'";
         Cursor c = petBetterDb.rawQuery(sql, null);
 
         while(c.moveToNext()) {
-            Marker marker = new Marker(c.getInt(c.getColumnIndexOrThrow("_id")),
+            LocationMarker locationMarker = new LocationMarker(c.getInt(c.getColumnIndexOrThrow("_id")),
                     c.getString(c.getColumnIndexOrThrow("bldg_name")),
                     c.getDouble(c.getColumnIndexOrThrow("longitude")),
                     c.getDouble(c.getColumnIndexOrThrow("latitude")),
-                    c.getString(c.getColumnIndexOrThrow("location")),
+                    c.getString(c.getColumnIndexOrThrow("locationMarker")),
                     c.getLong(c.getColumnIndexOrThrow("user_id")),
                     c.getInt(c.getColumnIndexOrThrow("type")));
-            results.add(marker);
+            results.add(locationMarker);
         }
 
         c.close();
         return results;
     }
 
-    public ArrayList<Marker> getBookmarks(long userId, int type){
-        ArrayList<Marker> results = new ArrayList<>();
+    public ArrayList<LocationMarker> getBookmarks(long userId, int type){
+        ArrayList<LocationMarker> results = new ArrayList<>();
 
         String sql = "SELECT * FROM "+MARKER_TABLE + " WHERE user_id = '" + userId + "' AND type = '" + type + "'";
         Cursor c = petBetterDb.rawQuery(sql, null);
 
         while(c.moveToNext()) {
-            Marker marker = new Marker(c.getInt(c.getColumnIndexOrThrow("_id")),
+            LocationMarker locationMarker = new LocationMarker(c.getInt(c.getColumnIndexOrThrow("_id")),
                     c.getString(c.getColumnIndexOrThrow("bldg_name")),
                     c.getDouble(c.getColumnIndexOrThrow("longitude")),
                     c.getDouble(c.getColumnIndexOrThrow("latitude")),
-                    c.getString(c.getColumnIndexOrThrow("location")),
+                    c.getString(c.getColumnIndexOrThrow("locationMarker")),
                     c.getLong(c.getColumnIndexOrThrow("user_id")),
                     c.getInt(c.getColumnIndexOrThrow("type")));
-            results.add(marker);
+            results.add(locationMarker);
         }
 
         c.close();
@@ -766,8 +757,8 @@ public class DataAdapter {
         return results;
     }
 
-    public ArrayList<Marker> getUnsyncedMarkers(){
-        ArrayList<Marker> results = new ArrayList<>();
+    public ArrayList<LocationMarker> getUnsyncedMarkers(){
+        ArrayList<LocationMarker> results = new ArrayList<>();
         int userId;
         User user;
 
@@ -775,14 +766,14 @@ public class DataAdapter {
         Cursor c = petBetterDb.rawQuery(sql, null);
 
         while(c.moveToNext()) {
-            Marker marker = new Marker(c.getInt(c.getColumnIndexOrThrow("_id")),
+            LocationMarker locationMarker = new LocationMarker(c.getInt(c.getColumnIndexOrThrow("_id")),
                     c.getString(c.getColumnIndexOrThrow("bldg_name")),
                     c.getDouble(c.getColumnIndexOrThrow("longitude")),
                     c.getDouble(c.getColumnIndexOrThrow("latitude")),
-                    c.getString(c.getColumnIndexOrThrow("location")),
+                    c.getString(c.getColumnIndexOrThrow("locationMarker")),
                     c.getLong(c.getColumnIndexOrThrow("user_id")),
                     c.getInt(c.getColumnIndexOrThrow("type")));
-            results.add(marker);
+            results.add(locationMarker);
         }
 
         c.close();
@@ -970,8 +961,8 @@ public class DataAdapter {
         return results;
     }
 
-    public ArrayList<Marker> getMarkers(){
-        ArrayList<Marker> results = new ArrayList<>();
+    public ArrayList<LocationMarker> getMarkers(){
+        ArrayList<LocationMarker> results = new ArrayList<>();
         String temp;
 
         //String sql = "SELECT * FROM " + FACI_TABLE + " WHERE vet_id = '" + veterinarian.getId() + "'";
@@ -979,14 +970,14 @@ public class DataAdapter {
         Cursor c = petBetterDb.rawQuery(sql, null);
 
         while(c.moveToNext()) {
-            Marker marker = new Marker(c.getInt(c.getColumnIndexOrThrow("_id")),
+            LocationMarker locationMarker = new LocationMarker(c.getInt(c.getColumnIndexOrThrow("_id")),
                     c.getString(c.getColumnIndexOrThrow("bldg_name")),
                     c.getDouble(c.getColumnIndexOrThrow("longitude")),
                     c.getDouble(c.getColumnIndexOrThrow("latitude")),
-                    c.getString(c.getColumnIndexOrThrow("location")),
+                    c.getString(c.getColumnIndexOrThrow("locationMarker")),
                     c.getLong(c.getColumnIndexOrThrow("user_id")),
                     c.getInt(c.getColumnIndexOrThrow("type")));
-            results.add(marker);
+            results.add(locationMarker);
         }
 
         c.close();
@@ -2151,21 +2142,21 @@ public class DataAdapter {
         return result;
     }
 
-    public long setMarkers(ArrayList<Marker> markerList){
+    public long setMarkers(ArrayList<LocationMarker> locationMarkerList){
         long result = 0;
 
         petBetterDb.delete(MARKER_TABLE, null, null);
         System.out.println("REAL NUM OF MARKERS "+getMarkerIds().size());
 
-        for(Marker marker:markerList){
+        for(LocationMarker locationMarker : locationMarkerList){
             ContentValues cv = new ContentValues();
-            cv.put("_id", marker.getId());
-            cv.put("bldg_name", marker.getBldgName());
-            cv.put("longitude", marker.getLongitude());
-            cv.put("latitude", marker.getLatitude());
-            cv.put("location", marker.getLocation());
-            cv.put("user_id", marker.getUserId());
-            cv.put("type", marker.getType());
+            cv.put("_id", locationMarker.getId());
+            cv.put("bldg_name", locationMarker.getBldgName());
+            cv.put("longitude", locationMarker.getLongitude());
+            cv.put("latitude", locationMarker.getLatitude());
+            cv.put("locationMarker", locationMarker.getLocation());
+            cv.put("user_id", locationMarker.getUserId());
+            cv.put("type", locationMarker.getType());
             result = petBetterDb.insert(MARKER_TABLE, null, cv);
         }
         System.out.println("2ND REAL NUM OF MARKERS "+getMarkerIds().size());
@@ -2218,7 +2209,7 @@ public class DataAdapter {
         return result;
     }
 
-    public Marker getMarker(String bldgName){
+    public LocationMarker getMarker(String bldgName){
 
         String sql = "SELECT * FROM " + MARKER_TABLE + " WHERE bldg_name = '" + bldgName + "'";
         Cursor c = petBetterDb.rawQuery(sql, null);
@@ -2227,7 +2218,7 @@ public class DataAdapter {
 
         c.moveToFirst();
 
-        Marker result = new Marker(c.getInt(c.getColumnIndexOrThrow("_id")),
+        LocationMarker result = new LocationMarker(c.getInt(c.getColumnIndexOrThrow("_id")),
                 c.getString(c.getColumnIndexOrThrow("bldg_name")),
                 c.getDouble(c.getColumnIndexOrThrow("longitude")),
                 c.getDouble(c.getColumnIndexOrThrow("latitude")),

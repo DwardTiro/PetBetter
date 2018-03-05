@@ -5,12 +5,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.owner.petbetter.R;
-import com.example.owner.petbetter.classes.Facility;
-import com.example.owner.petbetter.classes.Marker;
+import com.example.owner.petbetter.classes.LocationMarker;
 
 import java.util.ArrayList;
 
@@ -21,14 +19,14 @@ import java.util.ArrayList;
 public class FaciListingAdapter extends RecyclerView.Adapter<FaciListingAdapter.FaciListingViewHolder>{
 
     public interface OnItemClickListener {
-        void onItemClick(Marker item);
+        void onItemClick(LocationMarker item);
     }
 
     private LayoutInflater inflater;
-    private ArrayList<Marker> faciList;
+    private ArrayList<LocationMarker> faciList;
     private final OnItemClickListener listener;
 
-    public FaciListingAdapter(Context context, ArrayList<Marker> faciList, OnItemClickListener listener) {
+    public FaciListingAdapter(Context context, ArrayList<LocationMarker> faciList, OnItemClickListener listener) {
         inflater = LayoutInflater.from(context);
         this.faciList = faciList;
         this.listener = listener;
@@ -46,7 +44,7 @@ public class FaciListingAdapter extends RecyclerView.Adapter<FaciListingAdapter.
     @Override
     public void onBindViewHolder(FaciListingAdapter.FaciListingViewHolder holder, int position) {
 
-        Marker thisFaci = faciList.get(position);
+        LocationMarker thisFaci = faciList.get(position);
         holder.faciListName.setText(thisFaci.getBldgName());
         System.out.println("Bldg name is: " +holder.faciListName.getText());
         holder.faciListAddress.setText(thisFaci.getLocation());
@@ -54,7 +52,7 @@ public class FaciListingAdapter extends RecyclerView.Adapter<FaciListingAdapter.
 
     }
 
-    public void update(ArrayList<Marker> list){
+    public void update(ArrayList<LocationMarker> list){
         faciList.clear();
         faciList.addAll(list);
         notifyDataSetChanged();
@@ -84,7 +82,7 @@ public class FaciListingAdapter extends RecyclerView.Adapter<FaciListingAdapter.
 
         }
 
-        public void bind(final Marker item, final OnItemClickListener listener) {
+        public void bind(final LocationMarker item, final OnItemClickListener listener) {
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {

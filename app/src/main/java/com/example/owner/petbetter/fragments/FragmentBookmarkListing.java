@@ -1,10 +1,8 @@
 package com.example.owner.petbetter.fragments;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,20 +11,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.owner.petbetter.R;
-import com.example.owner.petbetter.activities.VetProfileActivity;
 import com.example.owner.petbetter.adapters.BookmarkListingAdapter;
-import com.example.owner.petbetter.classes.Marker;
+import com.example.owner.petbetter.classes.LocationMarker;
 import com.example.owner.petbetter.classes.User;
-import com.example.owner.petbetter.classes.Veterinarian;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
-import com.google.android.gms.vision.text.Text;
 import com.google.gson.Gson;
 
-import java.lang.reflect.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,7 +29,7 @@ public class FragmentBookmarkListing extends Fragment{
 
     private BookmarkListingAdapter bookmarkListingAdapter;
     private RecyclerView recyclerView;
-    private ArrayList<Marker> bookmarkList;
+    private ArrayList<LocationMarker> bookmarkList;
     private TextView nameTextView;
 
     private DataAdapter petBetterDb;
@@ -64,7 +57,7 @@ public class FragmentBookmarkListing extends Fragment{
         bookmarkList = getBookmarks(user.getUserId(), 1);
         System.out.println("Size of list "+bookmarkList.size());
         bookmarkListingAdapter = new BookmarkListingAdapter(getActivity(), bookmarkList,new BookmarkListingAdapter.OnItemClickListener() {
-            @Override public void onItemClick(Marker item) {
+            @Override public void onItemClick(LocationMarker item) {
                 //Execute command here
                 Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.PointLocActivity.class);
                 intent.putExtra("thisBookmark", new Gson().toJson(item));
@@ -108,7 +101,7 @@ public class FragmentBookmarkListing extends Fragment{
     }
 
 
-    public ArrayList<Marker> getBookmarks(long userId, int type){
+    public ArrayList<LocationMarker> getBookmarks(long userId, int type){
 
         //modify this method in such a way that it only gets bookmarks tagged by user. Separate from facilities.
         try {
@@ -117,7 +110,7 @@ public class FragmentBookmarkListing extends Fragment{
             e.printStackTrace();
         }
 
-        ArrayList<Marker> result = petBetterDb.getBookmarks(userId, type);
+        ArrayList<LocationMarker> result = petBetterDb.getBookmarks(userId, type);
         petBetterDb.closeDatabase();
         return result;
     }

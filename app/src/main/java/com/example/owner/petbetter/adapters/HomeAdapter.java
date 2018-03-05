@@ -11,23 +11,17 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
-import com.example.owner.petbetter.activities.EditProfileActivity;
-import com.example.owner.petbetter.classes.Marker;
 import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

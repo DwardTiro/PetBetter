@@ -2,11 +2,7 @@ package com.example.owner.petbetter.fragments;
 
 import android.content.Intent;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,14 +10,11 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.owner.petbetter.R;
-import com.example.owner.petbetter.adapters.BookmarkListingAdapter;
-import com.example.owner.petbetter.classes.Marker;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class FragmentUserProfile extends Fragment {

@@ -5,7 +5,7 @@ package com.example.owner.petbetter;
  */
 import com.example.owner.petbetter.classes.Facility;
 import com.example.owner.petbetter.classes.Follower;
-import com.example.owner.petbetter.classes.Marker;
+import com.example.owner.petbetter.classes.LocationMarker;
 import com.example.owner.petbetter.classes.Message;
 import com.example.owner.petbetter.classes.MessageRep;
 import com.example.owner.petbetter.classes.Notifications;
@@ -20,18 +20,12 @@ import com.example.owner.petbetter.classes.Veterinarian;
 
 import java.util.ArrayList;
 
-import okhttp3.Request;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
-import retrofit2.http.GET;
-import retrofit2.http.Headers;
 import retrofit2.http.POST;
-import retrofit2.http.Path;
-import retrofit2.http.Query;
 
 public interface HerokuService {
 
@@ -95,11 +89,11 @@ public interface HerokuService {
 
     @FormUrlEncoded
     @POST("loadMarkers.php")
-    Call<ArrayList<Marker>> loadMarkers(@Field("user_id") long userId);
+    Call<ArrayList<LocationMarker>> loadMarkers(@Field("user_id") long userId);
 
     @FormUrlEncoded
     @POST("getBookmarks.php")
-    Call<ArrayList<Marker>> getBookmarks(@Field("user_id") long userId, @Field("type") int type);
+    Call<ArrayList<LocationMarker>> getBookmarks(@Field("user_id") long userId, @Field("type") int type);
 
     @POST("getVeterinarians.php")
     Call<ArrayList<Veterinarian>> getVeterinarians();
@@ -370,6 +364,9 @@ public interface HerokuService {
     @POST("addMarkers.php")
     Call<Void> addMarkers(@Body RequestBody markerList);
 
+    @POST("addLocation.php")
+    Call<Void> addLocation(@Body RequestBody location);
+
     @POST("addFacility.php")
     Call<Void> addFacility(@Body RequestBody facility);
 
@@ -393,7 +390,7 @@ public interface HerokuService {
 
     @FormUrlEncoded
     @POST("getMarker.php")
-    Call<Marker> getMarker(@Field("bldg_name") String bldgName);
+    Call<LocationMarker> getMarker(@Field("bldg_name") String bldgName);
 
     @FormUrlEncoded
     @POST("getPostRepsFromParent.php")

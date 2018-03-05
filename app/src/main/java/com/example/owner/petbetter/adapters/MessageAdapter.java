@@ -8,9 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.owner.petbetter.R;
-import com.example.owner.petbetter.classes.Marker;
 import com.example.owner.petbetter.classes.Message;
-import com.example.owner.petbetter.classes.Post;
 
 import java.util.ArrayList;
 

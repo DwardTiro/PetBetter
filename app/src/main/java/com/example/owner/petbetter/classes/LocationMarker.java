@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by owner on 28/7/2017.
  */
 
-public class Marker {
+public class LocationMarker {
 
     @SerializedName("bldg_name")
     String bldgName;
@@ -29,7 +29,7 @@ public class Marker {
     @SerializedName("type")
     int type;
 
-    public Marker(long id, String bldgName, double longitude, double latitude, String location, long userId, int type) {
+    public LocationMarker(long id, String bldgName, double longitude, double latitude, String location, long userId, int type) {
         this.id = id;
         this.bldgName = bldgName;
         this.longitude = longitude;

@@ -3,7 +3,6 @@ package com.example.owner.petbetter.fragments;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,9 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.owner.petbetter.R;
-import com.example.owner.petbetter.adapters.BookmarkListingAdapter;
 import com.example.owner.petbetter.adapters.HomeAdapter;
-import com.example.owner.petbetter.classes.Marker;
 import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;

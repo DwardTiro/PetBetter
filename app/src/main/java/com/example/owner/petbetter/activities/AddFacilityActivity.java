@@ -58,46 +58,17 @@ public class AddFacilityActivity extends AppCompatActivity {
     public void addFacility(View view){
         service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
-        /*
-        Facility facility = new Facility(
-                4,
-                facilityName.getText().toString(),
-                "Here",
-                openTime.getSelectedItem().toString(),
-                closeTime.getSelectedItem().toString(),
-                phoneNum.getText().toString(),
-                4,
-                0
-                );
-        Gson gson = new GsonBuilder().serializeNulls().create();
-        String jsonArray = gson.toJson(facility);
-        System.out.println(jsonArray);
-        RequestBody body = RequestBody.create(
-                okhttp3.MediaType.parse("application/json; charset=utf-8"),
-                jsonArray.toString()
-        );
-
-        Call<Void> call = service.addFacility(body);
-        call.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                System.out.println("Facility added to server successfully");
-                Intent intent = new Intent(
-                        AddFacilityActivity.this,
-                        com.example.owner.petbetter.activities.AddFacilityActivity.class
-                );
-                startActivity(intent);
-            }
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                System.out.println("FAILED TO ADD FACILITY TO SERVER");
-            }
-        });*/
+        Bundle extras = new Bundle();
+        extras.putString("bldg_name", facilityName.getText().toString());
+        extras.putString("hours_open", openTime.getSelectedItem().toString());
+        extras.putString("hours_close", closeTime.getSelectedItem().toString());
+        extras.putString("phone_num", phoneNum.getText().toString());
 
         Intent intent = new Intent(
                 AddFacilityActivity.this,
                 com.example.owner.petbetter.activities.MapsActivity.class
         );
+        intent.putExtras(extras);
         startActivity(intent);
 
     }

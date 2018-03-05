@@ -13,16 +13,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.owner.petbetter.R;
-import com.example.owner.petbetter.adapters.BookmarkListingAdapter;
 import com.example.owner.petbetter.adapters.MessageRepAdapter;
-import com.example.owner.petbetter.classes.Marker;
 import com.example.owner.petbetter.classes.MessageRep;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.interfaces.CheckUpdates;
 import com.example.owner.petbetter.services.NotificationReceiver;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
-import com.google.gson.Gson;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

@@ -5,12 +5,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.owner.petbetter.R;
-import com.example.owner.petbetter.classes.Facility;
-import com.example.owner.petbetter.classes.Marker;
+import com.example.owner.petbetter.classes.LocationMarker;
 
 import java.util.ArrayList;
 
@@ -21,14 +19,14 @@ import java.util.ArrayList;
 public class BookmarkListingAdapter extends RecyclerView.Adapter<BookmarkListingAdapter.BookmarkListingViewHolder>{
 
     public interface OnItemClickListener {
-        void onItemClick(Marker item);
+        void onItemClick(LocationMarker item);
     }
 
     private LayoutInflater inflater;
-    private ArrayList<Marker> bookmarkList;
+    private ArrayList<LocationMarker> bookmarkList;
     private final OnItemClickListener listener;
 
-    public BookmarkListingAdapter(Context context, ArrayList<Marker> bookmarkList, OnItemClickListener listener) {
+    public BookmarkListingAdapter(Context context, ArrayList<LocationMarker> bookmarkList, OnItemClickListener listener) {
         inflater = LayoutInflater.from(context);
         this.bookmarkList = bookmarkList;
         this.listener = listener;
@@ -45,7 +43,7 @@ public class BookmarkListingAdapter extends RecyclerView.Adapter<BookmarkListing
 
     @Override
     public void onBindViewHolder(BookmarkListingViewHolder holder, int position) {
-        Marker thisBookmark = bookmarkList.get(position);
+        LocationMarker thisBookmark = bookmarkList.get(position);
         holder.bookmarkListName.setText(thisBookmark.getBldgName());
         System.out.println("Bldg name is: " +holder.bookmarkListName.getText());
         holder.bookmarkListAddress.setText(thisBookmark.getLocation());
@@ -53,7 +51,7 @@ public class BookmarkListingAdapter extends RecyclerView.Adapter<BookmarkListing
 
     }
 
-    public void update(ArrayList<Marker> list){
+    public void update(ArrayList<LocationMarker> list){
         bookmarkList.clear();
         bookmarkList.addAll(list);
         notifyDataSetChanged();
@@ -83,7 +81,7 @@ public class BookmarkListingAdapter extends RecyclerView.Adapter<BookmarkListing
             bookmarkListAddress = (TextView) itemView.findViewById(R.id.bookmarkListAddress);
         }
 
-        public void bind(final Marker item, final OnItemClickListener listener) {
+        public void bind(final LocationMarker item, final OnItemClickListener listener) {
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {

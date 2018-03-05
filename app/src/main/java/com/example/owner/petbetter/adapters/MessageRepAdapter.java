@@ -10,12 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.owner.petbetter.R;
-import com.example.owner.petbetter.classes.Marker;
 import com.example.owner.petbetter.classes.MessageRep;
-import com.example.owner.petbetter.classes.User;
-import com.example.owner.petbetter.database.DataAdapter;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**

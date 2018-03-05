@@ -1,29 +1,15 @@
 package com.example.owner.petbetter.activities;
 
-import android.app.AlertDialog;
-import android.app.DialogFragment;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.location.Address;
 import android.location.Geocoder;
-import android.location.Location;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.Toast;
 
 import com.example.owner.petbetter.R;
-import com.example.owner.petbetter.classes.Marker;
+import com.example.owner.petbetter.classes.LocationMarker;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -31,14 +17,11 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.gson.Gson;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
 
 public class PointLocActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -51,7 +34,7 @@ public class PointLocActivity extends FragmentActivity implements OnMapReadyCall
     private SystemSessionManager systemSessionManager;
     private User user;
     private String email;
-    private Marker markerItem;
+    private LocationMarker locationMarkerItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,9 +59,9 @@ public class PointLocActivity extends FragmentActivity implements OnMapReadyCall
         String jsonMyObject;
         Bundle extras = getIntent().getExtras();
         jsonMyObject = extras.getString("thisBookmark");
-        markerItem = new Gson().fromJson(jsonMyObject,Marker.class);
+        locationMarkerItem = new Gson().fromJson(jsonMyObject,LocationMarker.class);
 
-        //Toast.makeText(this, "Longitude: "+markerItem.getLongitude()+"Latitude: "+markerItem.getLatitude(), Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "Longitude: "+locationMarkerItem.getLongitude()+"Latitude: "+locationMarkerItem.getLatitude(), Toast.LENGTH_LONG).show();
     }
 
 
@@ -100,9 +83,9 @@ public class PointLocActivity extends FragmentActivity implements OnMapReadyCall
         //Use the marker data as parameter
 
 
-        LatLng resultLatLng = new LatLng(markerItem.getLatitude(), markerItem.getLongitude());
-        mMap.addMarker(new MarkerOptions().position(resultLatLng).title(markerItem.getBldgName()));
-        goToLocationZoom(markerItem.getLatitude(), markerItem.getLongitude(), 13);
+        LatLng resultLatLng = new LatLng(locationMarkerItem.getLatitude(), locationMarkerItem.getLongitude());
+        mMap.addMarker(new MarkerOptions().position(resultLatLng).title(locationMarkerItem.getBldgName()));
+        goToLocationZoom(locationMarkerItem.getLatitude(), locationMarkerItem.getLongitude(), 13);
         //loadMarker(user.getUserId());
     }
 
@@ -139,7 +122,7 @@ public class PointLocActivity extends FragmentActivity implements OnMapReadyCall
             e.printStackTrace();
         }
 
-        ArrayList<Marker> result = petBetterDb.loadMarkers(userId);
+        ArrayList<LocationMarker> result = petBetterDb.loadMarkers(userId);
         petBetterDb.closeDatabase();
 
         for(int i = 0;i<result.size();i++){

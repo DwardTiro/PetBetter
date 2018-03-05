@@ -4,27 +4,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
-import android.provider.ContactsContract;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.TypefaceUtil;
-import com.example.owner.petbetter.activities.SignUpActivity;
 import com.example.owner.petbetter.classes.Facility;
 import com.example.owner.petbetter.classes.Follower;
-import com.example.owner.petbetter.classes.Marker;
+import com.example.owner.petbetter.classes.LocationMarker;
 import com.example.owner.petbetter.classes.Message;
 import com.example.owner.petbetter.classes.MessageRep;
 import com.example.owner.petbetter.classes.Notifications;
@@ -38,19 +33,12 @@ import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
-import com.example.owner.petbetter.activities.HomeActivity;
-import com.google.android.gms.gcm.Task;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.lang.reflect.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
@@ -58,11 +46,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -550,9 +536,9 @@ public class MainActivity extends AppCompatActivity {
         final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         System.out.println("WE HERE BOOIII");
-        ArrayList<Marker> unsyncedMarkers = getUnsyncedMarkers();
+        ArrayList<LocationMarker> unsyncedLocationMarkers = getUnsyncedMarkers();
         Gson gson = new GsonBuilder().serializeNulls().create();
-        String jsonArray = gson.toJson(unsyncedMarkers);
+        String jsonArray = gson.toJson(unsyncedLocationMarkers);
 
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
         final Call<Void> call = service.addMarkers(body);
@@ -563,10 +549,10 @@ public class MainActivity extends AppCompatActivity {
                     System.out.println("MARKERS ADDED YEY");
                     dataSynced(4);
 
-                    final Call<ArrayList<Marker>> call2 = service2.loadMarkers(userId);
-                    call2.enqueue(new Callback<ArrayList<Marker>>() {
+                    final Call<ArrayList<LocationMarker>> call2 = service2.loadMarkers(userId);
+                    call2.enqueue(new Callback<ArrayList<LocationMarker>>() {
                         @Override
-                        public void onResponse(Call<ArrayList<Marker>> call, Response<ArrayList<Marker>> response) {
+                        public void onResponse(Call<ArrayList<LocationMarker>> call, Response<ArrayList<LocationMarker>> response) {
                             if(response.isSuccessful()){
                                 setMarkers(response.body());
 
@@ -574,7 +560,7 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         @Override
-                        public void onFailure(Call<ArrayList<Marker>> call, Throwable t) {
+                        public void onFailure(Call<ArrayList<LocationMarker>> call, Throwable t) {
                             Log.d("onFailure", t.getLocalizedMessage());
 
                         }
@@ -1074,7 +1060,7 @@ public class MainActivity extends AppCompatActivity {
         return result;
     }
 
-    private ArrayList<Marker> loadMarkers(long userId){
+    private ArrayList<LocationMarker> loadMarkers(long userId){
 
         try {
             petBetterDb.openDatabase();
@@ -1082,7 +1068,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        ArrayList<Marker> result = petBetterDb.loadMarkers(userId);
+        ArrayList<LocationMarker> result = petBetterDb.loadMarkers(userId);
         System.out.println("boi 10");
         petBetterDb.closeDatabase();
 
@@ -1245,7 +1231,7 @@ public class MainActivity extends AppCompatActivity {
         return result;
     }
 
-    private ArrayList<Marker> getUnsyncedMarkers(){
+    private ArrayList<LocationMarker> getUnsyncedMarkers(){
 
         try {
             petBetterDb.openDatabase();
@@ -1253,7 +1239,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        ArrayList<Marker> result = petBetterDb.getUnsyncedMarkers();
+        ArrayList<LocationMarker> result = petBetterDb.getUnsyncedMarkers();
         petBetterDb.closeDatabase();
 
         return result;
@@ -1434,13 +1420,13 @@ public class MainActivity extends AppCompatActivity {
         return result;
     }
 
-    public long setMarkers(ArrayList<Marker> markerList){
+    public long setMarkers(ArrayList<LocationMarker> locationMarkerList){
         try {
             petBetterDb.openDatabase();
         }catch (SQLException e) {
             e.printStackTrace();
         }
-        long result = petBetterDb.setMarkers(markerList);
+        long result = petBetterDb.setMarkers(locationMarkerList);
         petBetterDb.closeDatabase();
 
         return result;

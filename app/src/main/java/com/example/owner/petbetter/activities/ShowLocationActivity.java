@@ -2,21 +2,19 @@ package com.example.owner.petbetter.activities;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 
 import com.example.owner.petbetter.R;
-import com.google.android.gms.common.api.GoogleApi;
+import com.example.owner.petbetter.classes.LocationMarker;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.example.owner.petbetter.classes.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 
@@ -29,7 +27,7 @@ public class ShowLocationActivity extends FragmentActivity
         LocationListener,
         GoogleMap.OnMyLocationButtonClickListener {
     private GoogleMap mMap;
-    private Marker marker;
+    private LocationMarker locationMarker;
 
     @Override
     public void onCreate(Bundle savedInstance) {
@@ -45,7 +43,7 @@ public class ShowLocationActivity extends FragmentActivity
 
 
     @Override
-    public void onLocationChanged(Location location) {
+    public void onLocationChanged(android.location.Location location) {
 
     }
 
@@ -75,8 +73,8 @@ public class ShowLocationActivity extends FragmentActivity
 
         String jsonMyObject;
         Bundle extras = getIntent().getExtras();
-        jsonMyObject = extras.getString("location");
-        marker = new Gson().fromJson(jsonMyObject, Marker.class);
+        jsonMyObject = extras.getString("locationMarker");
+        locationMarker = new Gson().fromJson(jsonMyObject, LocationMarker.class);
 
         if (ContextCompat.checkSelfPermission(
                 this.getApplicationContext(),
@@ -89,10 +87,10 @@ public class ShowLocationActivity extends FragmentActivity
             System.out.println("Error in permission bruh");
         }
 
-        LatLng position = new LatLng(marker.getLatitude(), marker.getLongitude());
+        LatLng position = new LatLng(locationMarker.getLatitude(), locationMarker.getLongitude());
         mMap.addMarker(new MarkerOptions()
                 .position(position)
-                .title(marker.getBldgName())
+                .title(locationMarker.getBldgName())
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(position));
         mMap.animateCamera(CameraUpdateFactory.zoomBy(10));

@@ -1,27 +1,17 @@
 package com.example.owner.petbetter.activities;
 
 import android.Manifest;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.DialogFragment;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -30,13 +20,14 @@ import android.widget.Toast;
 
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
-//import com.example.owner.petbetter.classes.Marker;
+import com.example.owner.petbetter.ServiceGenerator;
+import com.example.owner.petbetter.classes.Facility;
+import com.example.owner.petbetter.classes.LocationMarker;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.FusedLocationProviderApi;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -49,16 +40,18 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.location.LocationListener;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 
-import java.security.Permission;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
+
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MapsActivity extends FragmentActivity
         implements
@@ -87,7 +80,6 @@ public class MapsActivity extends FragmentActivity
     private LocationRequest locationRequest;
     double longitude, latitude;
     LatLng pointTemp;
-    String bldgName = "House";
     int markerId;
     String location;
     private Marker newMarker;
@@ -102,19 +94,15 @@ public class MapsActivity extends FragmentActivity
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             checkLocationPermission();
         }
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(MapsActivity.this);
-        //getLocationPermissions();
+        getLocationPermissions();
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(final GoogleMap googleMap) {
 
         mMap = googleMap;
 
         System.out.println("went here");
-
 
         if (ContextCompat.checkSelfPermission(
                 this.getApplicationContext(),
@@ -123,23 +111,35 @@ public class MapsActivity extends FragmentActivity
             buildGoogleApiClient();
             mMap.setMyLocationEnabled(true);
             mMap.setOnMyLocationButtonClickListener(this);
-
-
-
         } else {
             System.out.println("Error in permission bruh");
         }
 
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions.title("New LocationMarker");
+                markerOptions.position(latLng);
+                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+
+                mMap.clear();
+                mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+                newMarker = mMap.addMarker(markerOptions);
+            }
+        });
+
 
     }
 
-    /*
+
     private void initMap() {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(MapsActivity.this);
+
     }
-*/
+
 
     protected synchronized void buildGoogleApiClient() {
         client = new GoogleApiClient.Builder(this).addConnectionCallbacks(this).addOnConnectionFailedListener(this).addApi(LocationServices.API).build();
@@ -180,7 +180,7 @@ public class MapsActivity extends FragmentActivity
             e.printStackTrace();
         }
 
-        ArrayList<Marker> result = petBetterDb.loadMarkers(userId);
+        ArrayList<LocationMarker> result = petBetterDb.loadMarkers(userId);
         System.out.println("MARKERS RESULT SIZE: " + result.size());
         petBetterDb.closeDatabase();
 
@@ -192,6 +192,14 @@ public class MapsActivity extends FragmentActivity
 
     }
 */
+
+
+    private void goToLocationZoom(double lat, double lng, float zoom) {
+        LatLng ll = new LatLng(lat, lng);
+        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, zoom);
+        mMap.moveCamera(update);
+    }
+
     private User getUser(String email) {
 
         try {
@@ -204,12 +212,6 @@ public class MapsActivity extends FragmentActivity
         petBetterDb.closeDatabase();
 
         return result;
-    }
-
-    private void goToLocationZoom(double lat, double lng, float zoom) {
-        LatLng ll = new LatLng(lat, lng);
-        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, zoom);
-        mMap.moveCamera(update);
     }
 
     private void initializeDatabase() {
@@ -284,6 +286,7 @@ public class MapsActivity extends FragmentActivity
             System.out.println("Fine location permission okay");
             if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
                     COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                initMap();
                 System.out.println("Coarse location permission okay");
                 hasLocationPermission = true;
             } else {
@@ -336,7 +339,7 @@ public class MapsActivity extends FragmentActivity
         LatLng position = new LatLng(latitude, longitude);
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(position);
-        markerOptions.title("My Location");
+        markerOptions.title("My LocationMarker");
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
 
         newMarker = mMap.addMarker(markerOptions);
@@ -347,6 +350,77 @@ public class MapsActivity extends FragmentActivity
         if(client != null){
             LocationServices.FusedLocationApi.removeLocationUpdates(client, this);
         }
+    }
+
+    public void onAddFacilityClicked(View view){
+        System.out.println("went here");
+        System.out.println(newMarker.getPosition().latitude + " " + newMarker.getPosition().longitude);
+        service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+        Bundle extras = getIntent().getExtras();
+        String facilityName = extras.getString("bldg_name");
+        String openTime = extras.getString("hours_open");
+        String closeTime = extras.getString("hours_close");
+        String phoneNum = extras.getString("phone_num");
+
+        Facility facility = new Facility(
+                4,
+                facilityName,
+                "Here",
+                openTime,
+                closeTime,
+                phoneNum,
+                4,
+                0
+        );
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String jsonArray = gson.toJson(facility);
+        System.out.println(jsonArray);
+        RequestBody body = RequestBody.create(
+                okhttp3.MediaType.parse("application/json; charset=utf-8"),
+                jsonArray.toString()
+        );
+
+        LocationMarker locationMarker = new LocationMarker(1,
+                facilityName,
+                newMarker.getPosition().latitude,
+                newMarker.getPosition().longitude,
+                facilityName,
+                4,
+                1
+                );
+        String locationJson = gson.toJson(locationMarker);
+        RequestBody locationBody = RequestBody.create(
+                okhttp3.MediaType.parse("application/json; charset=utf-8"),
+                locationJson.toString()
+        );
+
+        Call<Void> call = service.addFacility(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                System.out.println("Facility added to server successfully");
+
+            }
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                System.out.println("FAILED TO ADD FACILITY TO SERVER");
+            }
+        });
+        Call<Void> locationCall = service.addLocation(locationBody);
+        locationCall.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> locationCall, Response<Void> response) {
+                System.out.println("Location added to server successfully");
+                Intent intent = new Intent(MapsActivity.this, com.example.owner.petbetter.activities.MapsActivity.class);
+                startActivity(intent);
+
+            }
+            @Override
+            public void onFailure(Call<Void> locationCall, Throwable t) {
+                System.out.println("Location TO ADD FACILITY TO SERVER");
+            }
+        });
     }
 }
 
