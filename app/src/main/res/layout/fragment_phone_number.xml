@@ -12,17 +12,17 @@
         android:id="@+id/locationLogo"
         android:layout_width="12dp"
         android:layout_height="15dp"
-        android:src="@mipmap/ic_location_on_black_24dp"
+        android:src="@drawable/ic_call_black_24dp"
         android:background="@color/colorWhite"
         android:layout_marginTop="5dp"
         android:layout_marginStart="5dp"
         />
     <TextView
-        android:id="@+id/addressTextId"
+        android:id="@+id/phoneNumTextId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/locationLogo"
-        android:text="Address:"
+        android:text="Phone Number:"
         android:textStyle="bold"
         android:textSize="15sp"
         android:textColor="@color/black"
@@ -30,24 +30,15 @@
         />
 
     <TextView
-        android:id="@+id/addressTextField"
-        android:layout_below="@id/addressTextId"
+        android:id="@+id/phoneNumTextField"
+        android:layout_below="@id/phoneNumTextId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/sample_address"
+        android:text="@string/sample_landline"
         android:layout_marginStart="7sp"
         android:textSize="14sp"
+        android:layout_marginBottom="10dp"
         />
 
-    <TextView
-        android:layout_below="@id/addressTextField"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Click to view locationMarker"
-        android:layout_marginStart="7sp"
-        android:textSize="12sp"
-        android:layout_marginBottom="5dp"
-        android:textColor="@color/teal_blue"
-        />
 
 </RelativeLayout>
