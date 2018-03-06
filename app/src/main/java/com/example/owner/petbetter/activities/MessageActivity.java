@@ -181,6 +181,7 @@ public class MessageActivity extends AppCompatActivity {
         startActivityForResult(intent, IMG_REQUEST);
         ActivityCompat.requestPermissions(MessageActivity.this,
                 new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},1);
+
     }
 
     private String imageToString(){

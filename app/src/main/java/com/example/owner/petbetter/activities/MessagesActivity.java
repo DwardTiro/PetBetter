@@ -74,7 +74,7 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
     protected void onPause() {
         super.onPause();
         MessagesActivity.this.unregisterReceiver(notifReceiver);
-        MessagesActivity.this.unregisterReceiver(notifReceiver2);
+        //MessagesActivity.this.unregisterReceiver(notifReceiver2);
     }
 
 

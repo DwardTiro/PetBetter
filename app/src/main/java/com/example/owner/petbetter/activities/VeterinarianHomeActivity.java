@@ -62,7 +62,6 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
     private NotificationReceiver notifReceiver = new NotificationReceiver();
 
     AlarmManager alarmManager;
-    Intent notifAlarm;
     PendingIntent pendingIntent;
     HerokuService service;
 
@@ -121,8 +120,13 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
         textNavUser = (TextView) headerView.findViewById(R.id.textNavUser);
         textNavUser.setText(user.getName());
 
-        Intent intentStartBroadcast = new Intent().setAction("START_BROADCAST");
-        sendBroadcast(intentStartBroadcast);
+
+        Intent notifAlarm = new Intent(VeterinarianHomeActivity.this, NotificationReceiver.class);
+        if(PendingIntent.getBroadcast(this,0,notifAlarm, PendingIntent.FLAG_NO_CREATE)==null){
+            Intent intentStartBroadcast = new Intent().setAction("START_BROADCAST");
+            sendBroadcast(intentStartBroadcast);
+        }
+
         /*
         notifAlarm = new Intent(VeterinarianHomeActivity.this, NotificationReceiver.class);
         boolean alarmRunning = (PendingIntent.getBroadcast(VeterinarianHomeActivity.this,0,notifAlarm, PendingIntent.FLAG_NO_CREATE)!=null);

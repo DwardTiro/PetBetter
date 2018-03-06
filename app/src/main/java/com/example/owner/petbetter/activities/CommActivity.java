@@ -1,5 +1,6 @@
 package com.example.owner.petbetter.activities;
 
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -114,6 +115,13 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
 
         initializeDatabase();
         service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+        Intent notifAlarm = new Intent(CommActivity.this, NotificationReceiver.class);
+        if(PendingIntent.getBroadcast(this,0,notifAlarm, PendingIntent.FLAG_NO_CREATE)==null){
+            System.out.println("Pre-broadcast");
+            Intent intentStartBroadcast = new Intent().setAction("START_BROADCAST");
+            sendBroadcast(intentStartBroadcast);
+        }
 
         String email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
         textNavEmail = (TextView) headerView.findViewById(R.id.textNavEmail);
