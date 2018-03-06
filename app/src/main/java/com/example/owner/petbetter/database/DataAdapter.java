@@ -503,7 +503,7 @@ public class DataAdapter {
                     c.getString(c.getColumnIndexOrThrow("bldg_name")),
                     c.getDouble(c.getColumnIndexOrThrow("longitude")),
                     c.getDouble(c.getColumnIndexOrThrow("latitude")),
-                    c.getString(c.getColumnIndexOrThrow("locationMarker")),
+                    c.getString(c.getColumnIndexOrThrow("location")),
                     c.getLong(c.getColumnIndexOrThrow("user_id")),
                     c.getInt(c.getColumnIndexOrThrow("type")));
             results.add(locationMarker);
@@ -524,7 +524,7 @@ public class DataAdapter {
                     c.getString(c.getColumnIndexOrThrow("bldg_name")),
                     c.getDouble(c.getColumnIndexOrThrow("longitude")),
                     c.getDouble(c.getColumnIndexOrThrow("latitude")),
-                    c.getString(c.getColumnIndexOrThrow("locationMarker")),
+                    c.getString(c.getColumnIndexOrThrow("location")),
                     c.getLong(c.getColumnIndexOrThrow("user_id")),
                     c.getInt(c.getColumnIndexOrThrow("type")));
             results.add(locationMarker);
@@ -770,7 +770,7 @@ public class DataAdapter {
                     c.getString(c.getColumnIndexOrThrow("bldg_name")),
                     c.getDouble(c.getColumnIndexOrThrow("longitude")),
                     c.getDouble(c.getColumnIndexOrThrow("latitude")),
-                    c.getString(c.getColumnIndexOrThrow("locationMarker")),
+                    c.getString(c.getColumnIndexOrThrow("location")),
                     c.getLong(c.getColumnIndexOrThrow("user_id")),
                     c.getInt(c.getColumnIndexOrThrow("type")));
             results.add(locationMarker);
@@ -974,7 +974,7 @@ public class DataAdapter {
                     c.getString(c.getColumnIndexOrThrow("bldg_name")),
                     c.getDouble(c.getColumnIndexOrThrow("longitude")),
                     c.getDouble(c.getColumnIndexOrThrow("latitude")),
-                    c.getString(c.getColumnIndexOrThrow("locationMarker")),
+                    c.getString(c.getColumnIndexOrThrow("location")),
                     c.getLong(c.getColumnIndexOrThrow("user_id")),
                     c.getInt(c.getColumnIndexOrThrow("type")));
             results.add(locationMarker);
@@ -2154,7 +2154,7 @@ public class DataAdapter {
             cv.put("bldg_name", locationMarker.getBldgName());
             cv.put("longitude", locationMarker.getLongitude());
             cv.put("latitude", locationMarker.getLatitude());
-            cv.put("locationMarker", locationMarker.getLocation());
+            cv.put("location", locationMarker.getLocation());
             cv.put("user_id", locationMarker.getUserId());
             cv.put("type", locationMarker.getType());
             result = petBetterDb.insert(MARKER_TABLE, null, cv);
