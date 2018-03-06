@@ -124,7 +124,11 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".activities.BookmarksActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+            <intent-filter>
+                <action android:name="com.package.ACTION_LOGOUT"></action>
+            </intent-filter>
+        </activity>
         <activity android:name=".fragments.FragmentBookmarkListing" />
         <activity android:name=".fragments.FragmentFacilityListing" />
         <activity android:name=".fragments.FragmentHome" />
@@ -176,6 +180,12 @@
         <service android:name=".services.MyService"/>
 
         <receiver android:name=".services.NotificationReceiver">
+            <intent-filter>
+                <action android:name="com.package.ACTION_LOGOUT"></action>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="START_BROADCAST"></action>
+            </intent-filter>
         </receiver>
 
         <activity android:name=".activities.NotificationActivity"/>

@@ -28,7 +28,6 @@ import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.fragments.FragmentPetClinicListing;
-import com.example.owner.petbetter.interfaces.CheckLogout;
 import com.example.owner.petbetter.services.MyService;
 import com.example.owner.petbetter.services.NotificationReceiver;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
@@ -56,7 +55,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, CheckLogout {
+public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
 
 
@@ -73,7 +72,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private SwipeRefreshLayout swipeRefreshLayout;
     private int currFragment;
     private ImageView notifButton;
-    private NotificationReceiver notifReceiver = new NotificationReceiver(this);
+    private NotificationReceiver notifReceiver = new NotificationReceiver();
 
     private ArrayList<Veterinarian> vetList;
     HerokuService service;
@@ -502,8 +501,4 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         return result;
     }
 
-    @Override
-    public void onLogout() {
-
-    }
 }

@@ -26,7 +26,6 @@ import com.example.owner.petbetter.classes.Notifications;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.fragments.FragmentNotifs;
-import com.example.owner.petbetter.interfaces.CheckLogout;
 import com.example.owner.petbetter.services.MyService;
 import com.example.owner.petbetter.services.NotificationReceiver;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
@@ -35,7 +34,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class NotificationActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, CheckLogout {
+public class NotificationActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private DataAdapter petBetterDb;
     private ImageButton btnBookmarks;
@@ -46,7 +45,7 @@ public class NotificationActivity extends AppCompatActivity implements Navigatio
     private TextView textNavEmail, textNavUser;
     private User user;
     private ImageView notifButton;
-    private NotificationReceiver notifReceiver = new NotificationReceiver(this);
+    private NotificationReceiver notifReceiver = new NotificationReceiver();
 
     HerokuService service;
 
@@ -194,11 +193,5 @@ public class NotificationActivity extends AppCompatActivity implements Navigatio
         petBetterDb.closeDatabase();
 
         return result;
-    }
-
-
-    @Override
-    public void onLogout() {
-
     }
 }

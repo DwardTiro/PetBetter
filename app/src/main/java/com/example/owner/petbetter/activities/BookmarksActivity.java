@@ -29,7 +29,6 @@ import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.fragments.FragmentBookmarkListing;
 import com.example.owner.petbetter.fragments.FragmentFacilityListing;
 import com.example.owner.petbetter.fragments.FragmentPetClinicListing;
-import com.example.owner.petbetter.interfaces.CheckLogout;
 import com.example.owner.petbetter.services.MyService;
 import com.example.owner.petbetter.services.NotificationReceiver;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;

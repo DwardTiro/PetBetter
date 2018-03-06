@@ -38,7 +38,6 @@ import com.example.owner.petbetter.fragments.FragmentHome;
 import com.example.owner.petbetter.fragments.FragmentMessages;
 import com.example.owner.petbetter.fragments.FragmentMessagesHome;
 import com.example.owner.petbetter.fragments.FragmentUserProfile;
-import com.example.owner.petbetter.interfaces.CheckLogout;
 import com.example.owner.petbetter.interfaces.CheckUpdates;
 import com.example.owner.petbetter.services.MyService;
 import com.example.owner.petbetter.services.NotificationReceiver;
@@ -55,7 +54,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CommActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, CheckUpdates, CheckLogout {
+public class CommActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, CheckUpdates{
 
     private DataAdapter petBetterDb;
     private ImageButton btnHome;
@@ -69,8 +68,8 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
     private int currFragment;
     private ImageView notifButton;
 
-    private NotificationReceiver notifReceiver = new NotificationReceiver((CheckUpdates) this);
-    private NotificationReceiver notifReceiver2 = new NotificationReceiver((CheckLogout) this);
+    private NotificationReceiver notifReceiver = new NotificationReceiver(this);
+    private NotificationReceiver notifReceiver2 = new NotificationReceiver();
     HerokuService service;
 
     @Override
@@ -237,7 +236,6 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
             Intent intentLogout = new Intent().setAction("com.package.ACTION_LOGOUT");
             notifReceiver2.onReceive(this, intentLogout);
             sendBroadcast(intentLogout);
-            startActivity(intent);
             startActivity(intent);
             //stopService(new Intent(CommActivity.this, MyService.class));
         }
@@ -421,10 +419,5 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
 
         }
         */
-    }
-
-    @Override
-    public void onLogout() {
-
     }
 }

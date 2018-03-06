@@ -30,7 +30,6 @@ import com.example.owner.petbetter.classes.Message;
 import com.example.owner.petbetter.classes.Notifications;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
-import com.example.owner.petbetter.interfaces.CheckLogout;
 import com.example.owner.petbetter.interfaces.CheckUpdates;
 import com.example.owner.petbetter.services.MyService;
 import com.example.owner.petbetter.services.NotificationReceiver;
@@ -46,7 +45,7 @@ import java.util.HashMap;
  */
 
 
-public class MessagesActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, CheckUpdates, CheckLogout {
+public class MessagesActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, CheckUpdates {
 
     private ArrayList<Message> messageList;
     private DataAdapter petBetterDb;
@@ -59,7 +58,7 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
     private Toolbar menuBar;
     private User user;
     private NotificationReceiver notifReceiver = new NotificationReceiver((CheckUpdates) this);
-    private NotificationReceiver notifReceiver2 = new NotificationReceiver((CheckLogout) this);
+    private NotificationReceiver notifReceiver2 = new NotificationReceiver();
     private ImageView notifButton;
 
     HerokuService service;
@@ -68,7 +67,6 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
     protected void onResume() {
         super.onResume();
         MessagesActivity.this.registerReceiver(this.notifReceiver, new IntentFilter(Intent.ACTION_ATTACH_DATA));
-        MessagesActivity.this.registerReceiver(this.notifReceiver2, new IntentFilter("com.example.ACTION_LOGOUT"));
         onResult();
     }
 
@@ -300,10 +298,5 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
         petBetterDb.closeDatabase();
 
         return result;
-    }
-
-    @Override
-    public void onLogout() {
-
     }
 }

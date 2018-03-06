@@ -32,7 +32,6 @@ import com.example.owner.petbetter.classes.Notifications;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.fragments.FragmentNotifs;
-import com.example.owner.petbetter.interfaces.CheckLogout;
 import com.example.owner.petbetter.services.MyService;
 import com.example.owner.petbetter.services.NotificationReceiver;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
@@ -50,7 +49,7 @@ import java.util.concurrent.FutureTask;
  * Created by Kristian on 2/24/2018.
  */
 
-public class VeterinarianHomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, CheckLogout {
+public class VeterinarianHomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DataAdapter petBetterDb;
     private NavigationView navigationView;
@@ -60,7 +59,7 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
     private User user;
     private MyService notifService;
     private ImageView notifButton;
-    private NotificationReceiver notifReceiver = new NotificationReceiver(this);
+    private NotificationReceiver notifReceiver = new NotificationReceiver();
 
     AlarmManager alarmManager;
     Intent notifAlarm;
@@ -122,6 +121,9 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
         textNavUser = (TextView) headerView.findViewById(R.id.textNavUser);
         textNavUser.setText(user.getName());
 
+        Intent intentStartBroadcast = new Intent().setAction("START_BROADCAST");
+        sendBroadcast(intentStartBroadcast);
+        /*
         notifAlarm = new Intent(VeterinarianHomeActivity.this, NotificationReceiver.class);
         boolean alarmRunning = (PendingIntent.getBroadcast(VeterinarianHomeActivity.this,0,notifAlarm, PendingIntent.FLAG_NO_CREATE)!=null);
         if(alarmRunning==false){
@@ -130,7 +132,7 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
             alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), 10000, pendingIntent);
             //alarmManager.cancel(pendingIntent);
             //1800000
-        }
+        }*/
 
         notifButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -171,8 +173,6 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
             editor.commit();
 
             Intent intentLogout = new Intent().setAction("com.package.ACTION_LOGOUT");
-            //wait until service is finished before you do the onreceive
-
             notifReceiver.onReceive(this, intentLogout);
             sendBroadcast(intentLogout);
             startActivity(intent);
@@ -241,12 +241,5 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
         petBetterDb.closeDatabase();
 
         return result;
-    }
-
-    @Override
-    public void onLogout() {
-        System.out.println("SNIPER BOI");
-        alarmManager.cancel(pendingIntent);
-
     }
 }

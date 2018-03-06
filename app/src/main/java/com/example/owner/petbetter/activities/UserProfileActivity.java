@@ -24,7 +24,6 @@ import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.classes.Notifications;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
-import com.example.owner.petbetter.interfaces.CheckLogout;
 import com.example.owner.petbetter.services.MyService;
 import com.example.owner.petbetter.services.NotificationReceiver;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
@@ -38,7 +37,7 @@ import java.util.HashMap;
  */
 
 
-public class UserProfileActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, CheckLogout{
+public class UserProfileActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private TextView userProfileName;
     private Button editProfileButton;
@@ -49,7 +48,7 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
     private Toolbar menuBar;
     private User user;
     private ImageView notifButton;
-    private NotificationReceiver notifReceiver = new NotificationReceiver(this);
+    private NotificationReceiver notifReceiver = new NotificationReceiver();
 
     HerokuService service;
 
@@ -235,8 +234,4 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
         return result;
     }
 
-    @Override
-    public void onLogout() {
-
-    }
 }
