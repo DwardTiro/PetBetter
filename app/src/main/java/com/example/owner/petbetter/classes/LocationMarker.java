@@ -29,6 +29,9 @@ public class LocationMarker {
     @SerializedName("type")
     int type;
 
+    @SerializedName("faci_id")
+    long faciId;
+
     public LocationMarker(long id, String bldgName, double longitude, double latitude, String location, long userId, int type) {
         this.id = id;
         this.bldgName = bldgName;
@@ -37,6 +40,17 @@ public class LocationMarker {
         this.location = location;
         this.userId = userId;
         this.type = type;
+    }
+
+    public LocationMarker(long id, String bldgName, double longitude, double latitude, String location, long userId, int type, long faciId) {
+        this.id = id;
+        this.bldgName = bldgName;
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.location = location;
+        this.userId = userId;
+        this.type = type;
+        this.faciId = faciId;
     }
 
     public int getType() {

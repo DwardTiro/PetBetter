@@ -357,6 +357,12 @@ public class MapsActivity extends FragmentActivity
         System.out.println(newMarker.getPosition().latitude + " " + newMarker.getPosition().longitude);
         service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
+        addFacility();
+        addFacilityLocation();
+
+    }
+
+    public void addFacility(){
         Bundle extras = getIntent().getExtras();
         String facilityName = extras.getString("bldg_name");
         String openTime = extras.getString("hours_open");
@@ -376,23 +382,10 @@ public class MapsActivity extends FragmentActivity
         Gson gson = new GsonBuilder().serializeNulls().create();
         String jsonArray = gson.toJson(facility);
         System.out.println(jsonArray);
+
         RequestBody body = RequestBody.create(
                 okhttp3.MediaType.parse("application/json; charset=utf-8"),
-                jsonArray.toString()
-        );
-
-        LocationMarker locationMarker = new LocationMarker(1,
-                facilityName,
-                newMarker.getPosition().latitude,
-                newMarker.getPosition().longitude,
-                facilityName,
-                4,
-                1
-                );
-        String locationJson = gson.toJson(locationMarker);
-        RequestBody locationBody = RequestBody.create(
-                okhttp3.MediaType.parse("application/json; charset=utf-8"),
-                locationJson.toString()
+                jsonArray
         );
 
         Call<Void> call = service.addFacility(body);
@@ -407,20 +400,46 @@ public class MapsActivity extends FragmentActivity
                 System.out.println("FAILED TO ADD FACILITY TO SERVER");
             }
         });
-        Call<Void> locationCall = service.addLocation(locationBody);
+
+    }
+
+    public void addFacilityLocation(){
+
+        Bundle extras = getIntent().getExtras();
+        String facilityName = extras.getString("bldg_name");
+        Gson gson = new GsonBuilder().serializeNulls().create();
+
+
+        LocationMarker locationMarker = new LocationMarker(99,
+                facilityName,
+                newMarker.getPosition().latitude,
+                newMarker.getPosition().longitude,
+                facilityName,
+                4,
+                1,
+                1
+        );
+        String jsonArray = gson.toJson(locationMarker);
+        System.out.println(jsonArray);
+        RequestBody body = RequestBody.create(
+                okhttp3.MediaType.parse("application/json; charset=utf-8"),
+                jsonArray
+        );
+
+
+        Call<Void> locationCall = service.addLocation(body);
         locationCall.enqueue(new Callback<Void>() {
             @Override
-            public void onResponse(Call<Void> locationCall, Response<Void> response) {
+            public void onResponse(Call<Void> call, Response<Void> response) {
                 System.out.println("Location added to server successfully");
-                Intent intent = new Intent(MapsActivity.this, com.example.owner.petbetter.activities.MapsActivity.class);
-                startActivity(intent);
 
             }
             @Override
-            public void onFailure(Call<Void> locationCall, Throwable t) {
+            public void onFailure(Call<Void> call, Throwable t) {
                 System.out.println("Location TO ADD FACILITY TO SERVER");
             }
         });
+
     }
 }
 
