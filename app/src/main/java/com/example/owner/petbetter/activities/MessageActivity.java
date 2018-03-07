@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
@@ -45,6 +46,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.concurrent.ExecutionException;
 
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -140,7 +142,9 @@ public class MessageActivity extends AppCompatActivity {
 
                     //implement messagereps here too
                     //get back here if error
+
                     String image = imageToString();
+
 
 
 
@@ -153,11 +157,14 @@ public class MessageActivity extends AppCompatActivity {
 
                         //uploadMessageRep(getUnsyncedMessageReps());
                         syncMessageRepChanges();
+                        //error this part^
 
                         notifyMessage(nId, messageItem.getFromId(), user.getUserId(), 0, 2, timeStamp, (int) messageItem.getId(), 0);
+                        System.out.println("DON'T ERROR BUI 3");
                         uploadNotifications(getUnsyncedNotifications());
                     }
                     else{
+
                         addMessageRep(messageRepId, (int) messageItem.getUserId(), (int) user.getUserId(), (int) messageItem.getId(),
                                 messageText.getText().toString(), 1, timeStamp, image, 0);
 
@@ -173,6 +180,7 @@ public class MessageActivity extends AppCompatActivity {
                     intent.putExtra("thisMessage", new Gson().toJson(messageItem));
                     finish();
                     startActivity(intent);
+
                 }
             }
         });
@@ -253,6 +261,7 @@ public class MessageActivity extends AppCompatActivity {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG,100,byteArrayOutputStream);
             byte[] imgByte = byteArrayOutputStream.toByteArray();
+
             return Base64.encodeToString(imgByte,Base64.DEFAULT);
         }catch(NullPointerException npe){
             return null;
@@ -354,6 +363,10 @@ public class MessageActivity extends AppCompatActivity {
 
 
                 bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), path);
+                if(bitmap.getHeight()>250||bitmap.getWidth()>250){
+                    bitmap = Bitmap.createScaledBitmap(bitmap,250,250,false);
+                }
+
 
             } catch (IOException e) {
                 e.printStackTrace();

@@ -74,7 +74,7 @@ public class MessageRepAdapter extends RecyclerView.Adapter<MessageRepAdapter.Me
 
         if(thisMessageRep.getMessagePhoto()!=null){
 
-            String newFileName = "http://10.0.2.2/petbetter/"+thisMessageRep.getMessagePhoto();
+            String newFileName = "http://192.168.0.19/petbetter/"+thisMessageRep.getMessagePhoto();
             Glide.with(inflater.getContext()).load(newFileName).error(R.drawable.back_button).into(holder.messageRepImage);
             /*
             Picasso.with(inflater.getContext()).load("http://".concat(newFileName))
