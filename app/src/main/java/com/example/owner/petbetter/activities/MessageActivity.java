@@ -143,13 +143,16 @@ public class MessageActivity extends AppCompatActivity {
                     String image = imageToString();
 
 
+
+
                     nId = generateNotifsId();
 
                     if(messageItem.getUserId()==user.getUserId()){
                         addMessageRep(messageRepId, (int) messageItem.getFromId(), (int) user.getUserId(), (int) messageItem.getId(),
                                 messageText.getText().toString(), 1, timeStamp, image, 0);
 
-                        uploadMessageRep(getUnsyncedMessageReps());
+                        //uploadMessageRep(getUnsyncedMessageReps());
+                        syncMessageRepChanges();
 
                         notifyMessage(nId, messageItem.getFromId(), user.getUserId(), 0, 2, timeStamp, (int) messageItem.getId(), 0);
                         uploadNotifications(getUnsyncedNotifications());
@@ -158,7 +161,8 @@ public class MessageActivity extends AppCompatActivity {
                         addMessageRep(messageRepId, (int) messageItem.getUserId(), (int) user.getUserId(), (int) messageItem.getId(),
                                 messageText.getText().toString(), 1, timeStamp, image, 0);
 
-                        uploadMessageRep(getUnsyncedMessageReps());
+                        //uploadMessageRep(getUnsyncedMessageReps());
+                        syncMessageRepChanges();
 
                         notifyMessage(nId, messageItem.getUserId(), user.getUserId(), 0, 2, timeStamp, (int) messageItem.getId(), 0);
                         uploadNotifications(getUnsyncedNotifications());
@@ -172,6 +176,66 @@ public class MessageActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public void syncMessageRepChanges(){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+        ArrayList<MessageRep> unsyncedMessages = getUnsyncedMessageReps();
+        System.out.println("UNSYNCED MESSAGEREPS: "+unsyncedMessages.size());
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String jsonArray = gson.toJson(unsyncedMessages);
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.addMessageReps(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    System.out.println("MESSAGEREPS ADDED YEY");
+                    dataSynced(6);
+
+                    final Call<ArrayList<MessageRep>> call2 = service2.getMessageReps();
+                    call2.enqueue(new Callback<ArrayList<MessageRep>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<MessageRep>> call, Response<ArrayList<MessageRep>> response) {
+                            if(response.isSuccessful()){
+                                System.out.println("response size messagereps "+response.body().size());
+                                setMessageReps(response.body());
+                                System.out.println("EYY REP: "+response.body().get(6).getRepContent()+" "
+                                        +response.body().get(6).getMessagePhoto());
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<MessageRep>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
+    public long setMessageReps(ArrayList<MessageRep> messageRepList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setMessageReps(messageRepList);
+        petBetterDb.closeDatabase();
+
+        return result;
     }
 
     private void selectImage(){

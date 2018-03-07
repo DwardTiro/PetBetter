@@ -743,6 +743,8 @@ public class MainActivity extends AppCompatActivity {
                             if(response.isSuccessful()){
                                 System.out.println("response size messagereps "+response.body().size());
                                 setMessageReps(response.body());
+                                System.out.println("EYY REP: "+response.body().get(6).getRepContent()+" "
+                                        +response.body().get(6).getMessagePhoto());
                             }
                         }
 

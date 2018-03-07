@@ -57,7 +57,7 @@ public class MessageRep {
     }
 
     public MessageRep(long id, long userId, long senderId, int messageId, String repContent, int isSent, String datePerformed,
-                      String firstName, String lastName) {
+                      String firstName, String lastName, String messagePhoto) {
         this.id = id;
         this.userId = userId;
         this.senderId = senderId;
@@ -66,6 +66,7 @@ public class MessageRep {
         this.isSent = isSent;
         this.datePerformed = datePerformed;
         this.userName = firstName+" "+lastName;
+        this.messagePhoto = messagePhoto;
     }
 
     public long getSenderId() {

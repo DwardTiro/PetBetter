@@ -16,14 +16,14 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 	$n = count($messagereplist);
 	echo $n;
 	$i = 0;
-	echo $messagereplist[$i]['_id'];
+	//echo $messagereplist[$i]['_id'];
 	
 	while($i<$n){
 		$title = substr(md5(rand()), 0, 7);
 		$upload_path = "uploads/messagereps/$title.jpg";
 		
-		if(!($userlist['user_photo']==null)){
-			file_put_contents($upload_path, base64_decode($userlist['user_photo']));
+		if(!($messagereplist[$i]['message_photo']==null)){
+			file_put_contents($upload_path, base64_decode($messagereplist['message_photo']));
 		}
 		else{
 			$upload_path = null;

@@ -350,7 +350,7 @@ public class DataAdapter {
 
         String sql = "SELECT mr._id AS _id, mr.user_id AS user_id, mr.sender_id AS sender_id, mr.message_id AS message_id, " +
                 "mr.rep_content AS rep_content, mr.is_sent AS is_sent, mr.date_performed AS date_performed, " +
-                "u.first_name AS first_name, u.last_name AS last_name FROM messagereps AS mr INNER JOIN users AS u " +
+                "mr.message_photo AS message_photo, u.first_name AS first_name, u.last_name AS last_name FROM messagereps AS mr INNER JOIN users AS u " +
                 "ON mr.sender_id = u._id WHERE mr.message_id = '" + messageId + "'";
         Cursor c = petBetterDb.rawQuery(sql, null);
 
@@ -363,7 +363,8 @@ public class DataAdapter {
                     c.getInt(c.getColumnIndexOrThrow("is_sent")),
                     c.getString(c.getColumnIndexOrThrow("date_performed")),
                     c.getString(c.getColumnIndexOrThrow("first_name")),
-                    c.getString(c.getColumnIndexOrThrow("last_name")));
+                    c.getString(c.getColumnIndexOrThrow("last_name")),
+                    c.getString(c.getColumnIndexOrThrow("message_photo")));
             results.add(messagerep);
         }
 
@@ -401,7 +402,7 @@ public class DataAdapter {
 
         String sql = "SELECT mr._id AS _id, mr.user_id AS user_id, mr.sender_id AS sender_id, mr.message_id AS message_id, " +
                 "mr.rep_content AS rep_content, mr.is_sent AS is_sent, mr.date_performed AS date_performed, " +
-                "u.first_name AS first_name, u.last_name AS last_name FROM messagereps AS mr INNER JOIN users AS u " +
+                "mr.message_photo AS message_photo, u.first_name AS first_name, u.last_name AS last_name FROM messagereps AS mr INNER JOIN users AS u " +
                 "ON mr.sender_id = u._id WHERE mr.user_id = '" + userId + "'";
         Cursor c = petBetterDb.rawQuery(sql, null);
 
@@ -414,7 +415,8 @@ public class DataAdapter {
                     c.getInt(c.getColumnIndexOrThrow("is_sent")),
                     c.getString(c.getColumnIndexOrThrow("date_performed")),
                     c.getString(c.getColumnIndexOrThrow("first_name")),
-                    c.getString(c.getColumnIndexOrThrow("last_name")));
+                    c.getString(c.getColumnIndexOrThrow("last_name")),
+                    c.getString(c.getColumnIndexOrThrow("message_photo")));
             results.add(messagerep);
         }
 
@@ -2134,6 +2136,7 @@ public class DataAdapter {
             cv.put("rep_content", messagerep.getRepContent());
             cv.put("is_sent", messagerep.getIsSent());
             cv.put("date_performed", messagerep.getDatePerformed());
+            //here
             cv.put("message_photo", messagerep.getMessagePhoto());
             result = petBetterDb.insert(MESSAGE_REP_TABLE, null, cv);
         }
