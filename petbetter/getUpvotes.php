@@ -2,7 +2,6 @@
 
 require 'init.php';
 
-$post_id = $_POST['post_id'];
 $response = array(); 
 //$sql = "SELECT * FROM users WHERE email = ? AND password = ?";
 //$sql = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
