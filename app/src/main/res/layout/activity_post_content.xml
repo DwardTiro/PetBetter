@@ -1,209 +1,219 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/postContentLayout"
+
+<android.support.v4.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/refreshPostContent"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/main_White"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <include
-        android:id="@+id/vPostToolbar"
-        layout="@layout/toolbar_viewpost"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/postContentLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent"
+        android:background="@color/main_White"
+        android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/vPostToolbar"
-        android:layout_centerHorizontal="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="13dp"
-        android:background="@drawable/rounded_bg_corner"
-        android:orientation="vertical"
-
-        android:paddingBottom="10dp"
-        android:paddingTop="20dp">
+        <include
+            android:id="@+id/vPostToolbar"
+            layout="@layout/toolbar_viewpost"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <LinearLayout
-
-            android:layout_width="wrap_content"
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp">
+            android:layout_below="@+id/vPostToolbar"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="13dp"
+            android:background="@drawable/rounded_bg_corner"
+            android:orientation="vertical"
+
+            android:paddingBottom="10dp"
+            android:paddingTop="20dp">
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/homeListUserPicture"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/app_icon" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp">
 
                 <LinearLayout
-                    android:layout_width="224dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingEnd="0dp"
-                    android:paddingStart="10dp">
+                    android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/homeListUserName"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Kristian Sisayan"
-                        android:textColor="@color/black"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
+                    <ImageView
+                        android:id="@+id/homeListUserPicture"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/app_icon" />
 
-                    <TextView
-                        android:id="@+id/homeListTimeStamp"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="224dp"
                         android:layout_height="wrap_content"
-                        android:text="20 hrs"
-                        android:textColor="@color/timestamp"
-                        android:textSize="13sp" />
+                        android:orientation="vertical"
+                        android:paddingEnd="0dp"
+                        android:paddingStart="10dp">
+
+                        <TextView
+                            android:id="@+id/homeListUserName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Kristian Sisayan"
+                            android:textColor="@color/black"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/homeListTimeStamp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="20 hrs"
+                            android:textColor="@color/timestamp"
+                            android:textSize="13sp" />
+
+                    </LinearLayout>
+
 
                 </LinearLayout>
 
 
             </LinearLayout>
 
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/homeListPostTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-
-            android:text="This is a text."
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/homeListContent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="10dp"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:paddingTop="15dp"
-            android:text="This is a text. This is a text. This is a text. This is a text. This is a text. This is a text. This is a text. This is a text."
-            android:textColor="@color/black"
-            android:textSize="15sp" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:orientation="horizontal">
-
-            <ImageButton
-                android:id="@+id/upPostButton"
-                android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/homeListPostTitle"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="0dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/main_White"
-                android:adjustViewBounds="true"
-                android:maxHeight="24dp"
-                android:maxWidth="24dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_thumb_up_grey600_48dp" />
+                android:layout_marginTop="10dp"
+
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+
+                android:text="This is a text."
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/upCounter"
-                android:layout_width="50dp"
-                android:layout_height="30dp"
-                android:text="1"
-                android:background="@color/colorWhite"
-                android:layout_marginLeft="5dp"
-                android:textAllCaps="false"
-                android:textColor="@color/amazonite"
-                android:textAlignment="center"
-                android:textSize="25sp">
+                android:id="@+id/homeListContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingTop="15dp"
+                android:text="This is a text. This is a text. This is a text. This is a text. This is a text. This is a text. This is a text. This is a text."
+                android:textColor="@color/black"
+                android:textSize="15sp" />
 
-            </TextView>
-
-            <ImageButton
-                android:id="@+id/downPostButton"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/main_White"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="5dp"
-                android:adjustViewBounds="true"
-                android:maxHeight="24dp"
-                android:maxWidth="24dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_thumb_down_grey600_48dp"/>
+                android:layout_marginLeft="10dp"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/upPostButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="0dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/main_White"
+                    android:adjustViewBounds="true"
+                    android:maxHeight="24dp"
+                    android:maxWidth="24dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_thumb_up_grey600_48dp" />
+
+                <TextView
+                    android:id="@+id/upCounter"
+                    android:layout_width="50dp"
+                    android:layout_height="30dp"
+                    android:text="1"
+                    android:background="@color/colorWhite"
+                    android:layout_marginLeft="5dp"
+                    android:textAllCaps="false"
+                    android:textColor="@color/amazonite"
+                    android:textAlignment="center"
+                    android:textSize="25sp">
+
+                </TextView>
+
+                <ImageButton
+                    android:id="@+id/downPostButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/main_White"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="5dp"
+                    android:adjustViewBounds="true"
+                    android:maxHeight="24dp"
+                    android:maxWidth="24dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_thumb_down_grey600_48dp"/>
 
 
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
 
-    <FrameLayout
-        android:id="@+id/postrep_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/linearLayout"
-        android:scrollbars="vertical">
-
-    </FrameLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="5dp"
-        android:background="@drawable/comment_box">
-
-        <EditText
-            android:id="@+id/homeListCommentBox"
-            android:layout_width="245dp"
+        <FrameLayout
+            android:id="@+id/postrep_container"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="15dp"
+            android:layout_below="@+id/linearLayout"
+            android:scrollbars="vertical">
 
+        </FrameLayout>
 
-
-            android:background="@drawable/custom_edittext"
-
-            android:hint="Write a comment."
-            android:paddingLeft="10dp"
-            android:textColorHint="@color/timestamp"
-            android:textSize="15sp"
-
-            />
-
-        <Button
-            android:id="@+id/homeListPostCommentButton"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="50dp"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_marginBottom="2dp"
-            android:layout_marginTop="2dp"
-            android:background="@color/colorWhite"
-            android:text="Reply"
-            android:textAllCaps="false"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/comment_box">
 
-            android:textColor="@color/amazonite"
-            android:textSize="15sp" />
+            <EditText
+                android:id="@+id/homeListCommentBox"
+                android:layout_width="245dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="15dp"
+
+
+
+                android:background="@drawable/custom_edittext"
+
+                android:hint="Write a comment."
+                android:paddingLeft="10dp"
+                android:textColorHint="@color/timestamp"
+                android:textSize="15sp"
+
+                />
+
+            <Button
+                android:id="@+id/homeListPostCommentButton"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginBottom="2dp"
+                android:layout_marginTop="2dp"
+                android:background="@color/colorWhite"
+                android:text="Reply"
+                android:textAllCaps="false"
+
+                android:textColor="@color/amazonite"
+                android:textSize="15sp" />
+
+        </RelativeLayout>
 
     </RelativeLayout>
 
-</RelativeLayout>
+</android.support.v4.widget.SwipeRefreshLayout>
+

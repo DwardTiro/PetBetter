@@ -3,6 +3,7 @@ package com.example.owner.petbetter.activities;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -69,6 +70,8 @@ public class PostContentActivity extends AppCompatActivity {
     private String timeStamp;
     private int nId;
     private Upvote vote;
+    private SwipeRefreshLayout refreshPostContent;
+    private FragmentPostReps fragment;
     HerokuService service;
 
     @Override
@@ -107,8 +110,17 @@ public class PostContentActivity extends AppCompatActivity {
         upPostButton = (ImageButton) findViewById(R.id.upPostButton);
         upCounter = (TextView) findViewById(R.id.upCounter);
         downPostButton = (ImageButton) findViewById(R.id.downPostButton);
+        refreshPostContent = (SwipeRefreshLayout) findViewById(R.id.refreshPostContent);
 
-
+        refreshPostContent.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshPostContent.setRefreshing(true);
+                syncUpvoteChanges();
+                syncPostRepChanges();
+                refreshPostContent.setRefreshing(false);
+            }
+        });
 
 
         systemSessionManager = new SystemSessionManager(this);
@@ -150,9 +162,9 @@ public class PostContentActivity extends AppCompatActivity {
         Bundle bundle = new Bundle();
         System.out.println("POST ID BEFORE SEND "+postItem.getUserId());
         bundle.putLong("postId", postItem.getId());
-        FragmentPostReps fragment = new FragmentPostReps();
+        fragment = new FragmentPostReps();
         fragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction().add(R.id.postrep_container,fragment).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.postrep_container,fragment).commitAllowingStateLoss();
 
         profileName.setText(postUser.getFirstName()+" "+postUser.getLastName());
         postTitle.setText(postItem.getTopicName());
@@ -213,8 +225,9 @@ public class PostContentActivity extends AppCompatActivity {
                         upPostButton.setEnabled(true);
                         downPostButton.setEnabled(true);
                     }
-                }, 3000);
-                if(vote==null){
+                }, 1500);
+
+                if(vote==null){//0
                     int id = generateUpvoteId();
                     addVote(id, (int) postItem.getId(), (int) user.getUserId(), 1, 1, 0);
                     upPostButton.setImageResource(R.mipmap.ic_thumb_up_black_24dp);
@@ -222,10 +235,34 @@ public class PostContentActivity extends AppCompatActivity {
 
                     syncUpvoteChanges();
                 }
-                else{
-                    removeVote(vote.getId());
-                    upPostButton.setImageResource(R.drawable.ic_thumb_up_grey600_48dp);
-                    vote= null;
+                try{
+                    if(vote.getValue()==1){
+                        removeVote(vote.getId());
+                        upPostButton.setImageResource(R.drawable.ic_thumb_up_grey600_48dp);
+                        vote= null;
+                    }
+                    if(vote.getValue()==-1){
+                        alterVote(vote.getId(),1);
+                        upPostButton.setImageResource(R.mipmap.ic_thumb_up_black_24dp);
+                        downPostButton.setImageResource(R.drawable.ic_thumb_down_grey600_48dp);
+                    }
+                } catch (NullPointerException npe){
+                    vote = getUserVote((int) postItem.getId(),(int) user.getUserId(),1);
+
+                    if(vote!=null){
+                        if(vote.getValue()==1){
+                            upPostButton.setImageResource(R.mipmap.ic_thumb_up_black_24dp);
+                            downPostButton.setImageResource(R.drawable.ic_thumb_down_grey600_48dp);
+                        }
+                        else{
+                            downPostButton.setImageResource(R.mipmap.ic_thumb_down_black_24dp);
+                            upPostButton.setImageResource(R.drawable.ic_thumb_up_grey600_48dp);
+                        }
+                    }
+                    else{
+                        upPostButton.setImageResource(R.drawable.ic_thumb_up_grey600_48dp);
+                        downPostButton.setImageResource(R.drawable.ic_thumb_down_grey600_48dp);
+                    }
                 }
 
 
@@ -253,10 +290,33 @@ public class PostContentActivity extends AppCompatActivity {
                     upPostButton.setImageResource(R.drawable.ic_thumb_up_grey600_48dp);
                     syncUpvoteChanges();
                 }
-                else{
-                    removeVote(vote.getId());
-                    downPostButton.setImageResource(R.drawable.ic_thumb_down_grey600_48dp);
-                    vote = null;
+                try{
+                    if(vote.getValue()==-1){
+                        removeVote(vote.getId());
+                        downPostButton.setImageResource(R.drawable.ic_thumb_down_grey600_48dp);
+                        vote = null;
+                    }
+                    if(vote.getValue()==1){
+                        alterVote(vote.getId(),-1);
+                        downPostButton.setImageResource(R.mipmap.ic_thumb_down_black_24dp);
+                        upPostButton.setImageResource(R.drawable.ic_thumb_up_grey600_48dp);
+                    }
+                }catch(NullPointerException npe){
+                    vote = getUserVote((int) postItem.getId(),(int) user.getUserId(),1);
+                    if(vote!=null){
+                        if(vote.getValue()==1){
+                            upPostButton.setImageResource(R.mipmap.ic_thumb_up_black_24dp);
+                            downPostButton.setImageResource(R.drawable.ic_thumb_down_grey600_48dp);
+                        }
+                        else{
+                            downPostButton.setImageResource(R.mipmap.ic_thumb_down_black_24dp);
+                            upPostButton.setImageResource(R.drawable.ic_thumb_up_grey600_48dp);
+                        }
+                    }
+                    else{
+                        upPostButton.setImageResource(R.drawable.ic_thumb_up_grey600_48dp);
+                        downPostButton.setImageResource(R.drawable.ic_thumb_down_grey600_48dp);
+                    }
                 }
 
             }
@@ -298,6 +358,70 @@ public class PostContentActivity extends AppCompatActivity {
         });
     }
 
+    public void alterVote(long id, int value){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final Call<Void> call = service.alterVote(id, value);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    syncUpvoteChanges();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
+    public void syncPostRepChanges(){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        System.out.println("WE HERE BOOIII");
+        ArrayList<PostRep> unsyncedPostReps = getUnsyncedPostReps();
+
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String jsonArray = gson.toJson(unsyncedPostReps);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.addPostReps(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    dataSynced(10);
+
+                    final Call<ArrayList<PostRep>> call2 = service2.getAllPostReps();
+                    call2.enqueue(new Callback<ArrayList<PostRep>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<PostRep>> call, Response<ArrayList<PostRep>> response) {
+                            if(response.isSuccessful()){
+                                setPostReps(response.body());
+                                getSupportFragmentManager().beginTransaction().replace(R.id.postrep_container,fragment)
+                                        .commitAllowingStateLoss();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<PostRep>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
     public void syncUpvoteChanges(){
 
         final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
@@ -325,6 +449,20 @@ public class PostContentActivity extends AppCompatActivity {
                                 setUpvotes(response.body());
                                 upCounter.setText(String.valueOf(getVoteCount((int) postItem.getId(),1)));
                                 vote = getUserVote((int) postItem.getId(),(int) user.getUserId(),1);
+                                if(vote!=null){
+                                    if(vote.getValue()==1){
+                                        upPostButton.setImageResource(R.mipmap.ic_thumb_up_black_24dp);
+                                        downPostButton.setImageResource(R.drawable.ic_thumb_down_grey600_48dp);
+                                    }
+                                    else{
+                                        downPostButton.setImageResource(R.mipmap.ic_thumb_down_black_24dp);
+                                        upPostButton.setImageResource(R.drawable.ic_thumb_up_grey600_48dp);
+                                    }
+                                }
+                                else{
+                                    upPostButton.setImageResource(R.drawable.ic_thumb_up_grey600_48dp);
+                                    downPostButton.setImageResource(R.drawable.ic_thumb_down_grey600_48dp);
+                                }
                             }
                         }
 
@@ -417,6 +555,18 @@ public class PostContentActivity extends AppCompatActivity {
                 Toast.makeText(PostContentActivity.this, "Unable to upload notifications on server", Toast.LENGTH_LONG);
             }
         });
+    }
+
+    public long setPostReps(ArrayList<PostRep> postRepList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setPostReps(postRepList);
+        petBetterDb.closeDatabase();
+
+        return result;
     }
 
     private ArrayList<PostRep> getUnsyncedPostReps(){

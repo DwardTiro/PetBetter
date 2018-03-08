@@ -3,52 +3,22 @@
 require 'init.php';
 
 $_id = $_POST['_id'];
+$value = $_POST['value'];
 
-//$upvotelist = json_decode(file_get_contents('php://input'),true);
+$response = array(); 
 //$sql = "SELECT * FROM users WHERE email = ? AND password = ?";
 //$sql = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
 
 //$result = mysqli_query($con, $sql);
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
-	
-	if($stmt = $mysqli->prepare("DELETE FROM upvotes WHERE _id= $_id")){
+
+	echo $_id;
+	echo $value;
+	if($stmt = $mysqli->prepare("UPDATE upvotes SET value = $value WHERE _id = $_id")){
 		$stmt->execute();
 		$stmt->close();
-		
 	}
-	
-	
-		
-		//echo json_encode(array('_id'=>$vetlist['_id']));
-		
-		//$stmt->bind_result($_id, $first_name, $last_name, $mobile_num, $phone_num, $email,  $password, $age, $user_type);
-		//$stmt->store_result();
-	
-	/*
-		if($stmt->fetch()){
-			
-			$stmt->close();
-			//echo json_encode($response);
-			echo json_encode(array('_id'=>$_id,
-			'first_name'=>$first_name,
-			'last_name'=>$last_name,
-			'mobile_num'=>$mobile_num,
-			'phone_num'=>$phone_num,
-			'email'=>$email,
-			'password'=>$password,
-			'age'=>$age,
-			'user_type'=>$user_type));
-		}
-		else{
-			
-			$stmt->close();
-			echo 'SQL Query Error';
-		}
-		*/
-		//echo json_encode($stmt);
-		//echo json_encode(array('user'=>$response));
-	
 }
 
 /*

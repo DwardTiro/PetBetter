@@ -404,6 +404,10 @@ public interface HerokuService {
     Call<Void> removeVote(@Field("_id") long id);
 
     @FormUrlEncoded
+    @POST("alterVote.php")
+    Call<Void> alterVote(@Field("_id") long id, @Field("value") int value);
+
+    @FormUrlEncoded
     @POST("getPostRepsFromParent.php")
     Call<ArrayList<PostRep>> getPostRepsFromParent(@Field("parent_id") long parentId);
 
