@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 08, 2018 at 09:36 AM
+-- Generation Time: Mar 02, 2018 at 04:33 PM
 -- Server version: 10.1.10-MariaDB
 -- PHP Version: 7.0.3
 
@@ -43,8 +43,20 @@ CREATE TABLE `facilities` (
 
 INSERT INTO `facilities` (`faci_id`, `faci_name`, `location`, `hours_open`, `hours_close`, `contact_info`, `vet_id`, `rating`) VALUES
 (1, 'Ivanhoe Veterinary Clinic', 'Solenad 1 Nuvali, Santa Rosa, Laguna ', '8:00', '17:00', '8704421', 1, 4),
-(2, 'Bookmark', 'Manila', '', '', '', 1, 4),
-(57, 'Another Clinic', 'Somewhere in Phil', '8:00', '17:00', '8765432', 3, 2);
+(2, 'Bookmark', 'Manila', '1:00', '2:00', '', 1, 3),
+(58, 'Another Clinic', 'Somewhere in Phil', '8:00', '17:00', '8765432', 3, 1),
+(59, 'Another Clinic', 'Somewhere in Phil', '8:00', '17:00', '8765432', 3, 2),
+(60, 'Another Clinic', 'Somewhere in Phil', '8:00', '17:00', '8765432', 3, 2),
+(61, 'Another Clinic', 'Somewhere in Phil', '8:00', '17:00', '8765432', 3, 2),
+(62, 'Another Clinic', 'Somewhere in Phil', '8:00', '17:00', '8765432', 3, 2),
+(63, 'Another Clinic', 'Somewhere in Phil', '8:00', '17:00', '8765432', 3, 2),
+(64, 'Another Clinic', 'Somewhere in Phil', '8:00', '17:00', '8765432', 3, 2),
+(65, 'Another Clinic', 'Somewhere in Phil', '8:00', '17:00', '8765432', 3, 2),
+(66, 'Another Clinic', 'Somewhere in Phil', '8:00', '17:00', '8765432', 3, 2),
+(67, 'Another Clinic', 'Somewhere in Phil', '8:00', '17:00', '8765432', 3, 2),
+(68, 'Another Clinic', 'Somewhere in Phil', '8:00', '17:00', '8765432', 3, 2),
+(69, 'Another Clinic', 'Somewhere in Phil', '8:00', '17:00', '8765432', 3, 2),
+(70, 'Another Clinic', 'Somewhere in Phil', '8:00', '17:00', '8765432', 3, 2);
 
 -- --------------------------------------------------------
 
@@ -64,14 +76,59 @@ CREATE TABLE `followers` (
 
 INSERT INTO `followers` (`_id`, `topic_id`, `user_id`) VALUES
 (163, 1, 3),
-(165, 2, 1),
+(164, 1, 1),
+(165, 2, 2),
 (166, 1, 3),
-(168, 2, 3),
+(167, 1, 1),
+(168, 2, 1),
 (169, 1, 3),
-(341, 1, 3),
-(342, 1, 1),
-(343, 2, 1),
-(344, 1, 3);
+(170, 1, 1),
+(171, 2, 1),
+(172, 1, 3),
+(173, 1, 1),
+(174, 2, 1),
+(175, 1, 3),
+(176, 1, 1),
+(177, 2, 1),
+(178, 1, 3),
+(179, 1, 1),
+(180, 2, 1),
+(181, 1, 3),
+(182, 1, 1),
+(183, 2, 1),
+(184, 1, 3),
+(185, 1, 1),
+(186, 2, 1),
+(187, 1, 3),
+(188, 1, 1),
+(189, 2, 1),
+(190, 1, 3),
+(191, 1, 1),
+(192, 2, 1),
+(193, 1, 3),
+(194, 1, 1),
+(195, 2, 1),
+(196, 1, 3),
+(197, 1, 1),
+(198, 2, 1),
+(199, 1, 3),
+(200, 1, 1),
+(201, 2, 1),
+(202, 1, 3),
+(203, 1, 1),
+(204, 2, 1),
+(205, 1, 3),
+(206, 1, 1),
+(207, 2, 1),
+(208, 1, 3),
+(209, 1, 1),
+(210, 2, 1),
+(211, 1, 3),
+(212, 1, 1),
+(213, 2, 1),
+(214, 1, 3),
+(215, 1, 1),
+(216, 2, 1);
 
 -- --------------------------------------------------------
 
@@ -96,7 +153,25 @@ CREATE TABLE `markers` (
 
 INSERT INTO `markers` (`_id`, `bldg_name`, `longitude`, `latitude`, `location`, `user_id`, `type`, `faci_id`) VALUES
 (1, 'De La Salle University', 121, 15, '', 1, 1, 0),
-(3, 'Facility', 122, 14, '', 1, 2, 0);
+(3, 'Facility', 122, 14, '', 1, 2, 0),
+(58, 'Another Location', 120.9938468, 15, '', 1, 1, 0),
+(59, 'Another Location', 120.9938468, 15, '', 1, 1, 0),
+(60, 'Another Location', 120.9938468, 15, '', 1, 1, 0),
+(61, 'Another Location', 120.9938468, 15, '', 1, 1, 0),
+(62, 'Another Location', 120.9938468, 15, '', 1, 1, 0),
+(63, 'Another Location', 120.9938468, 15, '', 1, 1, 0),
+(64, 'Another Location', 120.9938468, 15, '', 1, 1, 0),
+(65, 'Another Location', 120.9938468, 15, '', 1, 1, 0),
+(66, 'Another Location', 120.9938468, 15, '', 1, 1, 0),
+(67, 'Another Location', 120.9938468, 15, '', 1, 1, 0),
+(68, 'Another Location', 120.9938468, 15, '', 1, 1, 0),
+(69, 'Another Location', 120.9938468, 15, '', 1, 1, 0),
+(70, 'Another Location', 120.9938468, 15, '', 1, 1, 0),
+(71, 'Another Location', 120.9938468, 15, '', 1, 1, 0),
+(72, 'Another Location', 120.9938468, 15, '', 1, 1, 0),
+(73, 'Another Location', 120.9938468, 15, '', 1, 1, 0),
+(74, 'Another Location', 120.9938468, 15, '', 1, 1, 0),
+(75, 'Another Location', 120.9938468, 15, '', 1, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -112,7 +187,7 @@ CREATE TABLE `messagereps` (
   `rep_content` text,
   `is_sent` int(11) DEFAULT NULL,
   `date_performed` text,
-  `message_photo` text
+  `message_photo` varchar(150) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -120,46 +195,27 @@ CREATE TABLE `messagereps` (
 --
 
 INSERT INTO `messagereps` (`_id`, `user_id`, `sender_id`, `message_id`, `rep_content`, `is_sent`, `date_performed`, `message_photo`) VALUES
-(2, 1, 2, 10, 'Hi!', 1, '', NULL),
-(3, 1, 2, 10, 'Yes? :D', 1, '', NULL),
-(4, 1, 1, 1, '?', 1, '', NULL),
-(29, 3, 1, 1, '!!', 1, NULL, NULL),
-(30, 3, 1, 1, '!!', 1, NULL, NULL),
-(31, 3, 1, 1, '!!', 1, NULL, NULL),
-(33, 3, 1, 1, 'wassaup', 1, NULL, NULL),
-(34, 1, 2, 10, '!!', 1, NULL, NULL),
-(35, 3, 1, 1, 'yoh', 1, '2018-03-06T17:35:15Z', NULL),
-(36, 3, 1, 1, 'eyyy', 1, '2018-03-06T17:35:15Z', NULL),
-(37, 1, 3, 1, 'eyyy', 1, '2018-03-06T17:35:15Z', NULL),
-(38, 3, 1, 1, 'sinigang', 1, '2018-03-06T23:53:07Z', NULL),
-(39, 3, 1, 1, 'yoh', 1, '2018-03-06T23:57:49Z', NULL),
-(40, 3, 1, 1, 'WASSAP', 1, '2018-03-07T00:00:19Z', NULL),
-(41, 3, 1, 1, 'MEN', 1, '2018-03-07T00:04:46Z', NULL),
-(42, 3, 1, 1, 'YOH', 1, '2018-03-07T00:08:54Z', NULL),
-(43, 3, 1, 1, 'wat', 1, '2018-03-07T00:10:31Z', NULL),
-(44, 3, 1, 1, 'working?', 1, '2018-03-07T00:11:34Z', 'uploads/messagereps/fac0532.jpg'),
-(45, 3, 1, 1, 'eyyy john!!', 1, '2018-03-07T16:33:51Z', NULL),
-(46, 1, 3, 1, 'eyy edward', 1, '2018-03-07T16:36:14Z', NULL),
-(47, 3, 1, 1, 'didn''t get a notif. :(', 1, '2018-03-07T16:36:34Z', 'uploads/messagereps/9560584.jpg'),
-(48, 1, 3, 1, 'sad lah', 1, '2018-03-07T16:38:45Z', NULL),
-(49, 3, 1, 1, 'do you get notifs?', 1, '2018-03-07T16:38:27Z', NULL),
-(50, 1, 3, 1, 'yup', 1, '2018-03-07T16:40:15Z', NULL),
-(51, 1, 3, 1, 'yoh', 1, '2018-03-07T16:41:38Z', 'uploads/messagereps/649a347.jpg'),
-(52, 1, 3, 1, 'test', 1, '2018-03-07T17:09:01Z', 'uploads/messagereps/1533e36.jpg'),
-(53, 1, 3, 1, 'test', 1, '2018-03-07T17:09:01Z', 'uploads/messagereps/cb1791d.jpg'),
-(54, 1, 3, 1, '1', 1, '2018-03-07T17:26:25Z', 'uploads/messagereps/31163fe.jpg'),
-(55, 1, 3, 1, '2', 1, '2018-03-07T17:34:17Z', 'uploads/messagereps/b8e13fb.jpg'),
-(56, 1, 3, 1, 'yoh', 1, '2018-03-07T17:49:04Z', NULL),
-(57, 1, 3, 1, 'eyy', 1, '2018-03-07T17:50:22Z', NULL),
-(58, 1, 3, 1, 'check', 1, '2018-03-07T17:50:52Z', NULL),
-(59, 1, 3, 1, '?', 1, '2018-03-07T17:51:19Z', NULL),
-(60, 3, 1, 1, 'g', 1, '2018-03-07T17:50:20Z', NULL),
-(61, 3, 1, 1, 'j', 1, '2018-03-07T18:02:42Z', 'uploads/messagereps/0cb5ebb.jpg'),
-(62, 2, 1, 10, 'ee', 1, '2018-03-08T02:59:33Z', 'uploads/messagereps/6f942b9.jpg'),
-(64, 2, 1, 10, 'wfff', 1, '2018-03-08T03:56:50Z', 'uploads/messagereps/965052c.jpg'),
-(65, 2, 1, 10, 'lol', 1, '2018-03-08T03:57:42Z', 'uploads/messagereps/883e881.jpg'),
-(66, 2, 1, 10, 'eyy', 1, '2018-03-08T04:01:45Z', 'uploads/messagereps/ae0eb3e.jpg'),
-(67, 2, 1, 10, 'dgsgs', 1, '2018-03-08T04:02:35Z', 'uploads/messagereps/ccf4769.jpg');
+(40, 1, 2, 2, 'hi', 1, '2018-03-01T14:44:11Z', NULL),
+(41, 1, 2, 2, 'eyyy', 1, '2018-03-01T15:07:55Z', NULL),
+(42, 1, 2, 2, 'watup', 1, '2018-03-01T15:09:16Z', NULL),
+(43, 1, 2, 2, 'eyy yoh~', 1, '2018-03-01T15:12:44Z', NULL),
+(44, 1, 2, 2, 'heybruh', 1, '2018-03-01T15:16:49Z', NULL),
+(49, 1, 2, 2, 'Lodi~', 1, NULL, NULL),
+(74, 1, 2, 2, 'first test', 1, NULL, NULL),
+(75, 1, 2, 2, 'test2', 1, NULL, NULL),
+(89, 1, 3, 1, 'Hi!', 1, NULL, NULL),
+(90, 2, 1, 2, 'hi dude', 1, '2018-03-02T15:35:00Z', NULL),
+(94, 2, 1, 2, 'wassap', 1, '2018-03-02T15:53:53Z', NULL),
+(95, 2, 1, 2, 'eyy watup', 1, '2018-03-02T15:56:50Z', NULL),
+(96, 2, 1, 2, 'meng', 1, '2018-03-02T16:04:17Z', NULL),
+(97, 2, 1, 2, 'yoh?', 1, '2018-03-02T16:26:58Z', NULL),
+(98, 1, 2, 2, 'eyyy', 1, '2018-03-02T16:04:17Z', NULL),
+(99, 1, 2, 2, 'eyyy', 1, '2018-03-02T16:04:17Z', NULL),
+(100, 1, 2, 2, 'eyyy', 1, '2018-03-02T16:04:17Z', NULL),
+(102, 1, 2, 2, 'working now bois', 1, '2018-03-02T16:04:17Z', NULL),
+(103, 1, 2, 2, 'still working?', 1, '2018-03-02T16:04:17Z', NULL),
+(104, 1, 2, 2, 'still working??', 1, '2018-03-02T16:04:17Z', NULL),
+(105, 1, 2, 2, 'still working???', 1, '2018-03-02T16:04:17Z', NULL);
 
 -- --------------------------------------------------------
 
@@ -179,7 +235,7 @@ CREATE TABLE `messages` (
 
 INSERT INTO `messages` (`_id`, `user_one`, `user_two`) VALUES
 (1, 3, 1),
-(10, 1, 2);
+(2, 1, 2);
 
 -- --------------------------------------------------------
 
@@ -191,7 +247,6 @@ CREATE TABLE `notifications` (
   `_id` int(11) NOT NULL,
   `user_id` int(11) DEFAULT NULL,
   `doer_id` int(11) DEFAULT NULL,
-  `is_read` int(11) DEFAULT NULL,
   `type` int(11) DEFAULT NULL,
   `date_performed` text,
   `source_id` int(11) DEFAULT NULL
@@ -201,37 +256,65 @@ CREATE TABLE `notifications` (
 -- Dumping data for table `notifications`
 --
 
-INSERT INTO `notifications` (`_id`, `user_id`, `doer_id`, `is_read`, `type`, `date_performed`, `source_id`) VALUES
-(1, 1, 2, 1, 2, '', 2),
-(2, 1, 3, 0, 1, '', 2),
-(27, 1, 2, 0, 1, NULL, 2),
-(28, 1, 2, 0, 1, NULL, 2),
-(29, 1, 2, 0, 1, NULL, 2),
-(30, 1, 2, 0, 1, NULL, 2),
-(31, 1, 2, 0, 1, NULL, 2),
-(32, 1, 2, 0, 1, NULL, 2),
-(33, 1, 2, 0, 1, NULL, 2),
-(34, 1, 2, 0, 2, NULL, 2),
-(37, 1, 2, 0, 2, NULL, 10),
-(38, 1, 2, 1, 1, '2018-02-19T17:42:35Z', 3),
-(39, 1, 1, 0, 1, '2018-03-04T01:36:00Z', 3),
-(40, 1, 1, 0, 1, '2018-03-04T01:36:00Z', 3),
-(41, 1, 1, 1, 1, '2018-03-04T01:37:10Z', 3),
-(43, 1, 2, 0, 1, '2018-03-04T01:46:24Z', 16),
-(44, 1, 2, 0, 1, '2018-03-04T01:46:24Z', 17),
-(45, 1, 2, 0, 1, '2018-03-04T01:46:24Z', 12),
-(46, 1, 2, 0, 1, '2018-03-04T01:46:24Z', 12),
-(47, 1, 2, 0, 1, '2018-03-04T01:46:24Z', 12),
-(48, 1, 2, 0, 1, '2018-03-04T01:46:24Z', 12),
-(49, 1, 1, 1, 1, '2018-03-05T01:54:23Z', 12),
-(50, 1, 1, 1, 1, '2018-03-05T01:54:23Z', 12),
-(51, 1, 1, 1, 1, '2018-03-05T01:57:04Z', 12),
-(54, 1, 2, 1, 1, '2018-02-19T17:42:35Z', 3),
-(57, 1, 3, 1, 4, '2018-03-05T01:57:04Z', 168),
-(58, 3, 1, 0, 3, '2018-03-05T13:25:31Z', 2),
-(59, 1, 3, 1, 4, '2018-03-05T01:57:04Z', 168),
-(60, 1, 3, 1, 4, '2018-03-05T01:57:04Z', 168),
-(61, 1, 3, 1, 4, '2018-03-05T01:57:04Z', 168);
+INSERT INTO `notifications` (`_id`, `user_id`, `doer_id`, `type`, `date_performed`, `source_id`) VALUES
+(1, 1, 2, 2, '', 2),
+(2, 1, 3, 1, '', 2),
+(27, 1, 2, 1, NULL, 2),
+(28, 1, 2, 1, NULL, 2),
+(29, 1, 2, 1, NULL, 2),
+(30, 1, 2, 1, NULL, 2),
+(31, 1, 2, 1, NULL, 2),
+(32, 1, 2, 1, '2018-02-19T17:42:35Z', 3),
+(36, 1, 2, 1, NULL, 1),
+(38, 1, 3, 1, NULL, 3),
+(39, 1, 2, 1, '2018-02-19T17:42:35Z', 3),
+(40, 1, 2, 1, NULL, 1),
+(42, 1, 2, 3, NULL, 2),
+(43, 1, 2, 4, NULL, 163),
+(44, 2, 1, 2, '2018-03-01T14:44:11Z', 2),
+(45, 1, 2, 1, '2018-02-19T17:42:35Z', 3),
+(46, 1, 2, 1, '2018-02-19T17:42:35Z', 3),
+(47, 1, 2, 1, '2018-02-19T17:42:35Z', 3),
+(48, 2, 1, 2, '2018-03-01T15:07:55Z', 2),
+(49, 2, 1, 2, '2018-03-01T15:09:16Z', 2),
+(50, 2, 1, 2, '2018-03-01T15:12:44Z', 2),
+(51, 2, 1, 2, '2018-03-01T15:16:49Z', 2),
+(52, 1, 2, 2, '2018-03-01T16:34:02Z', 11),
+(56, 1, 2, 2, '2018-03-01T16:34:02Z', 11),
+(61, 1, 2, 2, '2018-03-01T16:34:02Z', 11),
+(62, 1, 2, 1, '2018-02-19T17:42:35Z', 3),
+(63, 1, 2, 2, '2018-02-19T17:42:35Z', 3),
+(64, 1, 2, 2, '2018-03-01T16:34:02Z', 11),
+(84, 1, 2, 2, '2018-03-01T16:34:02Z', 11),
+(85, 1, 2, 2, '2018-03-01T16:34:02Z', 11),
+(86, 1, 2, 2, '2018-03-01T16:34:02Z', 11),
+(87, 1, 2, 2, '2018-03-01T16:34:02Z', 11),
+(88, 1, 2, 2, '2018-03-01T16:34:02Z', 11),
+(89, 1, 2, 2, '2018-03-01T16:34:02Z', 11),
+(90, 1, 2, 2, '2018-03-01T16:34:02Z', 11),
+(91, 1, 2, 2, '2018-03-01T16:34:02Z', 11),
+(92, 1, 2, 2, '2018-03-01T16:34:02Z', 11),
+(93, 1, 2, 2, '2018-03-01T16:34:02Z', 11),
+(94, 1, 2, 2, '2018-03-01T16:34:02Z', 11),
+(95, 1, 2, 2, '2018-03-01T16:34:02Z', 11),
+(96, 1, 2, 2, '2018-03-01T16:34:02Z', 11),
+(97, 1, 2, 2, '2018-03-01T16:34:02Z', 11),
+(98, 1, 2, 2, '2018-03-01T16:34:02Z', 11),
+(99, 1, 2, 1, '2018-02-19T17:42:35Z', 3),
+(100, 1, 2, 1, '2018-02-19T17:42:35Z', 3),
+(101, 2, 1, 2, '2018-03-02T15:35:00Z', 2),
+(105, 2, 1, 2, '2018-03-02T15:53:53Z', 1),
+(106, 2, 1, 2, '2018-03-02T15:56:50Z', 0),
+(107, 2, 1, 2, '2018-03-02T16:04:17Z', 2),
+(108, 2, 1, 2, '2018-03-02T16:26:58Z', 2),
+(109, 1, 2, 2, '2018-03-02T16:04:17Z', 2),
+(110, 1, 2, 2, '2018-03-02T16:04:17Z', 2),
+(111, 1, 2, 2, '2018-03-01T16:34:02Z', 11),
+(112, 1, 2, 2, '2018-03-01T16:34:02Z', 11),
+(113, 1, 2, 2, '2018-03-01T16:34:02Z\r\n', 11),
+(114, 1, 2, 2, '2018-03-01T16:34:02Z', 11),
+(115, 1, 2, 2, '2018-03-01T16:34:02Z', 11),
+(116, 1, 2, 2, '2018-03-01T16:34:02Z', 11);
 
 -- --------------------------------------------------------
 
@@ -255,7 +338,20 @@ CREATE TABLE `pets` (
 
 INSERT INTO `pets` (`_id`, `user_id`, `name`, `classification`, `breed`, `height`, `weight`) VALUES
 (1, 2, 'Ming Ming', 'Cat', 'Persian', 4, 4),
-(19, 1, 'Sue', 'Cat', 'Siamese', 5, 5);
+(19, 1, 'Sue', 'Cat', 'Siamese', 5, 5),
+(20, 1, 'Sue', 'Cat', 'Siamese', 5, 5),
+(21, 1, 'Sue', 'Cat', 'Siamese', 5, 5),
+(22, 1, 'Sue', 'Cat', 'Siamese', 5, 5),
+(23, 1, 'Sue', 'Cat', 'Siamese', 5, 5),
+(24, 1, 'Sue', 'Cat', 'Siamese', 5, 5),
+(25, 1, 'Sue', 'Cat', 'Siamese', 5, 5),
+(26, 1, 'Sue', 'Cat', 'Siamese', 5, 5),
+(27, 1, 'Sue', 'Cat', 'Siamese', 5, 5),
+(28, 1, 'Sue', 'Cat', 'Siamese', 5, 5),
+(29, 1, 'Sue', 'Cat', 'Siamese', 5, 5),
+(30, 1, 'Sue', 'Cat', 'Siamese', 5, 5),
+(31, 1, 'Sue', 'Cat', 'Siamese', 5, 5),
+(32, 1, 'Sue', 'Cat', 'Siamese', 5, 5);
 
 -- --------------------------------------------------------
 
@@ -283,15 +379,20 @@ INSERT INTO `postreps` (`_id`, `user_id`, `post_id`, `parent_id`, `rep_content`,
 (3, 2, 1, 1, 'We give free treats~', '', 0),
 (4, 1, 1, 1, 'Loking forward to this. :D', '', 0),
 (5, 1, 2, 1, 'Yay~', '', 1),
-(14, 1, 3, 0, 'hi', '2018-03-04T01:36:00Z', 0),
-(15, 1, 3, 5, 'hello\n', '2018-03-04T01:37:10Z', 1),
-(16, 2, 12, 0, 'wazzap\r\n', '2018-03-04T01:37:10Z', 0),
-(17, 2, 12, 0, 'wazzap boi\r\n', '2018-03-04T01:37:10Z', 0),
-(18, 1, 12, 0, 'ye buiiii', '2018-03-05T01:54:23Z', 1),
-(19, 1, 12, 0, 'weird stuff', '2018-03-05T01:57:04Z', 0),
-(20, 1, 12, 0, 'tell me about it', '2018-03-05T01:57:04Z', 0),
-(21, 1, 12, 0, 'o rly?', '2018-03-05T01:57:04Z', 0),
-(22, 2, 12, 0, 'yuh', '2018-03-05T01:57:04Z', 0);
+(8, 1, 1, 1, 'Wew', '', 0),
+(9, 1, 1, 1, 'Wew', '', 0),
+(10, 1, 1, 1, 'Wew', '', 0),
+(11, 1, 1, 1, 'Wew', '', 0),
+(12, 1, 1, 1, 'Wew', '', 0),
+(13, 1, 1, 1, 'Wew', '', 0),
+(14, 1, 1, 1, 'Wew', '', 0),
+(15, 1, 1, 1, 'Wew', '', 0),
+(16, 1, 1, 1, 'Wew', '', 0),
+(17, 1, 1, 1, 'Wew', '', 0),
+(18, 1, 1, 1, 'Wew', '', 0),
+(19, 1, 1, 1, 'Wew', '', 0),
+(20, 1, 1, 1, 'Wew', '', 0),
+(21, 1, 1, 1, 'Wew', '', 0);
 
 -- --------------------------------------------------------
 
@@ -317,7 +418,15 @@ INSERT INTO `posts` (`_id`, `user_id`, `topic_name`, `topic_content`, `topic_id`
 (1, 3, 'Come visit my clinic!', 'Hi guys! I''m John Ivanhoe. If you are a pet owner you may want to visit my clinic for regular check ups.', 1, '', 0),
 (2, 1, 'Hi guys! Looking for a doctor to treat my dog.', 'Could I get suggestions as to who I could contact or where to go?', 1, '', 0),
 (3, 1, 'I love dogs', 'Hi guys! I love dogs', 2, '', 0),
-(4, 2, 'Hey!', 'Hi!', 2, '', 1);
+(4, 2, 'Hey!', 'Hi!', 2, '', 0),
+(5, 4, 'Pets update!', 'So I bought a cat and I named her Sue.', 1, NULL, 0),
+(6, 4, 'Pets update!', 'So I bought a cat and I named her Sue.', 1, NULL, 0),
+(7, 4, 'Pets update!', 'So I bought a cat and I named her Sue.', 1, NULL, 0),
+(8, 4, 'Pets update!', 'So I bought a cat and I named her Sue.', 1, NULL, 0),
+(9, 4, 'Pets update!', 'So I bought a cat and I named her Sue.', 1, NULL, 0),
+(10, 4, 'Pets update!', 'So I bought a cat and I named her Sue.', 1, NULL, 0),
+(11, 4, 'Pets update!', 'So I bought a cat and I named her Sue.', 1, NULL, 0),
+(12, 4, 'Pets update!', 'So I bought a cat and I named her Sue.', 1, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -363,7 +472,33 @@ CREATE TABLE `services` (
 
 INSERT INTO `services` (`_id`, `faci_id`, `service_name`, `service_price`, `is_deleted`) VALUES
 (3, 1, 'Grooming', 100, 0),
-(4, 1, 'Consultation', 200, 0);
+(4, 1, 'Consultation', 200, 0),
+(5, 1, 'Grooming', 100, 0),
+(6, 1, 'Consultation', 200, 0),
+(7, 1, 'Grooming', 100, 0),
+(8, 1, 'Consultation', 200, 0),
+(9, 1, 'Grooming', 100, 0),
+(10, 1, 'Consultation', 200, 0),
+(11, 1, 'Grooming', 100, 0),
+(12, 1, 'Consultation', 200, 0),
+(13, 1, 'Grooming', 100, 0),
+(14, 1, 'Consultation', 200, 0),
+(15, 1, 'Grooming', 100, 0),
+(16, 1, 'Consultation', 200, 0),
+(17, 1, 'Grooming', 100, 0),
+(18, 1, 'Consultation', 200, 0),
+(19, 1, 'Grooming', 100, 0),
+(20, 1, 'Consultation', 200, 0),
+(21, 1, 'Grooming', 100, 0),
+(22, 1, 'Consultation', 200, 0),
+(23, 1, 'Grooming', 100, 0),
+(24, 1, 'Consultation', 200, 0),
+(25, 1, 'Grooming', 100, 0),
+(26, 1, 'Consultation', 200, 0),
+(27, 1, 'Grooming', 100, 0),
+(28, 1, 'Consultation', 200, 0),
+(29, 1, 'Grooming', 100, 0),
+(30, 1, 'Consultation', 200, 0);
 
 -- --------------------------------------------------------
 
@@ -387,30 +522,15 @@ CREATE TABLE `topics` (
 INSERT INTO `topics` (`_id`, `creator_id`, `topic_name`, `topic_desc`, `date_created`, `is_deleted`) VALUES
 (1, 0, 'General', 'Default', '', 0),
 (2, 1, 'For dog lovers only', 'Basically everything about dogs are welcome.', '', 0),
-(3, 3, 'Another topic', 'For general use', '', 0);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `upvotes`
---
-
-CREATE TABLE `upvotes` (
-  `_id` int(11) NOT NULL,
-  `feed_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `value` int(11) NOT NULL,
-  `type` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `upvotes`
---
-
-INSERT INTO `upvotes` (`_id`, `feed_id`, `user_id`, `value`, `type`) VALUES
-(1, 1, 1, -1, 1),
-(2, 1, 3, 1, 1),
-(3, 1, 2, -1, 1);
+(3, 3, 'Another topic', 'For general use', '', 0),
+(4, 2, 'Cats are better', 'They just are', NULL, 0),
+(5, 2, 'Cats are better', 'They just are', NULL, 0),
+(6, 2, 'Cats are better', 'They just are', NULL, 0),
+(7, 2, 'Cats are better', 'They just are', NULL, 0),
+(8, 2, 'Cats are better', 'They just are', NULL, 0),
+(9, 2, 'Cats are better', 'They just are', NULL, 0),
+(10, 2, 'Cats are better', 'They just are', NULL, 0),
+(11, 2, 'Cats are better', 'They just are', NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -465,7 +585,8 @@ CREATE TABLE `veterinarians` (
 INSERT INTO `veterinarians` (`_id`, `user_id`, `specialty`, `rating`, `phone_num`) VALUES
 (1, 3, 'Animal Behaviour', 4, '098654321'),
 (2, 1, 'Veterinary Specialist', 0, '0987654321'),
-(58, 4, 'Breeding', 2, '');
+(60, 4, 'Breeding', 1.5, ''),
+(61, 2, 'Animal Research', 1, '12345678');
 
 --
 -- Indexes for dumped tables
@@ -544,12 +665,6 @@ ALTER TABLE `topics`
   ADD PRIMARY KEY (`_id`);
 
 --
--- Indexes for table `upvotes`
---
-ALTER TABLE `upvotes`
-  ADD PRIMARY KEY (`_id`);
-
---
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -569,47 +684,47 @@ ALTER TABLE `veterinarians`
 -- AUTO_INCREMENT for table `facilities`
 --
 ALTER TABLE `facilities`
-  MODIFY `faci_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=139;
+  MODIFY `faci_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
 --
 -- AUTO_INCREMENT for table `followers`
 --
 ALTER TABLE `followers`
-  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=413;
+  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=217;
 --
 -- AUTO_INCREMENT for table `markers`
 --
 ALTER TABLE `markers`
-  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=139;
+  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
 --
 -- AUTO_INCREMENT for table `messagereps`
 --
 ALTER TABLE `messagereps`
-  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
+  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=106;
 --
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=175;
+  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=117;
 --
 -- AUTO_INCREMENT for table `pets`
 --
 ALTER TABLE `pets`
-  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=100;
+  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 --
 -- AUTO_INCREMENT for table `postreps`
 --
 ALTER TABLE `postreps`
-  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=99;
+  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 --
 -- AUTO_INCREMENT for table `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=91;
+  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 --
 -- AUTO_INCREMENT for table `ratings`
 --
@@ -619,17 +734,12 @@ ALTER TABLE `ratings`
 -- AUTO_INCREMENT for table `services`
 --
 ALTER TABLE `services`
-  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=169;
+  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 --
 -- AUTO_INCREMENT for table `topics`
 --
 ALTER TABLE `topics`
-  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=96;
---
--- AUTO_INCREMENT for table `upvotes`
---
-ALTER TABLE `upvotes`
-  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 --
 -- AUTO_INCREMENT for table `users`
 --
@@ -639,7 +749,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `veterinarians`
 --
 ALTER TABLE `veterinarians`
-  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
+  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

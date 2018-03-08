@@ -29,6 +29,7 @@ import com.example.owner.petbetter.classes.PostRep;
 import com.example.owner.petbetter.classes.Rating;
 import com.example.owner.petbetter.classes.Services;
 import com.example.owner.petbetter.classes.Topic;
+import com.example.owner.petbetter.classes.Upvote;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
 import com.example.owner.petbetter.database.DataAdapter;
@@ -182,6 +183,7 @@ public class MainActivity extends AppCompatActivity {
 
                         syncRatingChanges();
 
+                        syncUpvoteChanges();
 
 
 
@@ -334,6 +336,52 @@ public class MainActivity extends AppCompatActivity {
 
                         @Override
                         public void onFailure(Call<ArrayList<Post>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
+    public void syncUpvoteChanges(){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+
+        ArrayList<Upvote> unsyncedUpvotes = getUnsyncedUpvotes();
+
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String jsonArray = gson.toJson(unsyncedUpvotes);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.addUpvotes(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    System.out.println("POSTS ADDED YEY");
+                    dataSynced(15);
+
+                    final Call<ArrayList<Upvote>> call2 = service2.getUpvotes();
+                    call2.enqueue(new Callback<ArrayList<Upvote>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<Upvote>> call, Response<ArrayList<Upvote>> response) {
+                            if(response.isSuccessful()){
+                                setUpvotes(response.body());
+
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<Upvote>> call, Throwable t) {
                             Log.d("onFailure", t.getLocalizedMessage());
 
                         }
@@ -1149,6 +1197,20 @@ public class MainActivity extends AppCompatActivity {
         return result;
     }
 
+    private ArrayList<Upvote> getUnsyncedUpvotes(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Upvote> result = petBetterDb.getUnsyncedUpvotes();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
     private ArrayList<Services> getUnsyncedServices(){
 
         try {
@@ -1333,6 +1395,18 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         long result = petBetterDb.setRatings(rateList);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    public long setUpvotes(ArrayList<Upvote> upvoteList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setUpvotes(upvoteList);
         petBetterDb.closeDatabase();
 
         return result;

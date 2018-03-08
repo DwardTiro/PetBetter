@@ -67,10 +67,14 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
     @Override
     public void onBindViewHolder(HomeViewHolder holder, final int position) {
         final Post thisPost = postList.get(position);
-
+        initializeDatabase();
         holder.topicName.setText(thisPost.getTopicName());
         holder.topicDescription.setText(thisPost.getTopicContent());
         holder.topicUser.setText(thisPost.getTopicUser());
+        int result = getVoteCount(thisPost.getId(), 1);
+        holder.upvoteCounter.setText(String.valueOf(result));
+        holder.upvotePostButton.setVisibility(View.INVISIBLE);
+        holder.downvotePostButton.setVisibility(View.INVISIBLE);
         holder.bind(thisPost, listener);
 
         if(user.getUserId()==thisPost.getUserId()){
@@ -99,7 +103,6 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
                         @Override
                         public void onClick(View view) {
 
-                            initializeDatabase();
                             deletePost(thisPost.getId());
 
                             service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
@@ -140,6 +143,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
         */
     }
 
+
     private void initializeDatabase() {
 
         petBetterDb = new DataAdapter(context);
@@ -152,6 +156,18 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
 
     }
 
+    private int getVoteCount(long postId, int type){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        int result = petBetterDb.getVoteCount((int) postId, type);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
     private long deletePost(long postId){
         try {
             petBetterDb.openDatabase();
@@ -205,6 +221,9 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
         private TextView topicDescription;
         private TextView topicUser;
         private ImageButton deletePostButton;
+        private ImageButton upvotePostButton;
+        private ImageButton downvotePostButton;
+        private TextView upvoteCounter;
 
         public HomeViewHolder(View itemView) {
             super(itemView);
@@ -213,6 +232,9 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
             topicDescription = (TextView) itemView.findViewById(R.id.topicDescription);
             topicUser = (TextView) itemView.findViewById(R.id.topicUser);
             deletePostButton = (ImageButton) itemView.findViewById(R.id.deletePostButton);
+            upvotePostButton = (ImageButton) itemView.findViewById(R.id.upvotePostButton);
+            downvotePostButton = (ImageButton) itemView.findViewById(R.id.downvotePostButton);
+            upvoteCounter = (TextView) itemView.findViewById(R.id.upvoteCounter);
         }
 
         public void bind(final Post item, final OnItemClickListener listener) {

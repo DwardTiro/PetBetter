@@ -15,6 +15,7 @@ import com.example.owner.petbetter.classes.PostRep;
 import com.example.owner.petbetter.classes.Rating;
 import com.example.owner.petbetter.classes.Services;
 import com.example.owner.petbetter.classes.Topic;
+import com.example.owner.petbetter.classes.Upvote;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
 
@@ -158,6 +159,9 @@ public interface HerokuService {
 
     @POST("getTopics.php")
     Call<ArrayList<Topic>> getTopics();
+
+    @POST("getUpvotes.php")
+    Call<ArrayList<Upvote>> getUpvotes();
 
     @FormUrlEncoded
     @POST("createMessage.php")
@@ -354,6 +358,9 @@ public interface HerokuService {
 
     @POST("addTopics.php")
     Call<Void> addTopics(@Body RequestBody topicList);
+
+    @POST("addUpvotes.php")
+    Call<Void> addUpvotes(@Body RequestBody upvoteList);
 
     @POST("addPostReps.php")
     Call<Void> addPostReps(@Body RequestBody postRepList);

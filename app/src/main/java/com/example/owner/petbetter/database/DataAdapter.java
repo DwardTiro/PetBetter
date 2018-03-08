@@ -22,6 +22,7 @@ import com.example.owner.petbetter.classes.PostRep;
 import com.example.owner.petbetter.classes.Rating;
 import com.example.owner.petbetter.classes.Services;
 import com.example.owner.petbetter.classes.Topic;
+import com.example.owner.petbetter.classes.Upvote;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
 
@@ -55,6 +56,7 @@ public class DataAdapter {
     private static final String RATE_TABLE = "ratings";
     private static final String PET_TABLE = "pets";
     private static final String SERVICE_TABLE = "services";
+    private static final String UPVOTE_TABLE = "upvotes";
 
 
 
@@ -622,6 +624,25 @@ public class DataAdapter {
         return results;
     }
 
+    public ArrayList<Upvote> getUnsyncedUpvotes(){
+        ArrayList<Upvote> results = new ArrayList<>();
+
+        String sql = "SELECT * FROM "+UPVOTE_TABLE+" WHERE is_synced = 0";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            Upvote upvote = new Upvote(c.getLong(c.getColumnIndexOrThrow("_id")),
+                    c.getInt(c.getColumnIndexOrThrow("feed_id")),
+                    c.getInt(c.getColumnIndexOrThrow("user_id")),
+                    c.getInt(c.getColumnIndexOrThrow("value")),
+                    c.getInt(c.getColumnIndexOrThrow("type")));
+            results.add(upvote);
+        }
+
+        c.close();
+        return results;
+    }
+
     public ArrayList<Post> getUnsyncedPosts(){
         ArrayList<Post> results = new ArrayList<>();
         int userId;
@@ -936,8 +957,12 @@ public class DataAdapter {
         if(n==14){
             petBetterDb.update(RATE_TABLE,cv,"is_synced=?", whereArgs);
         }
+        if(n==15){
+            petBetterDb.update(UPVOTE_TABLE,cv,"is_synced=?", whereArgs);
+        }
         petBetterDb.close();
     }
+
 
     public ArrayList<Facility> getClinics(){
         ArrayList<Facility> results = new ArrayList<>();
@@ -1653,6 +1678,46 @@ public class DataAdapter {
         return result;
     }
 
+    public ArrayList<Upvote> getUpvotes(int feedId, int type){
+        ArrayList<Upvote> results = new ArrayList<>();
+
+        String sql = "SELECT * FROM " + UPVOTE_TABLE + " WHERE feed_id = '"+feedId+"' AND type = '"+type+"'";
+
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+
+            Upvote upvote = new Upvote(c.getLong(c.getColumnIndexOrThrow("_id")),
+                    c.getInt(c.getColumnIndexOrThrow("feed_id")),
+                    c.getInt(c.getColumnIndexOrThrow("user_id")),
+                    c.getInt(c.getColumnIndexOrThrow("value")),
+                    c.getInt(c.getColumnIndexOrThrow("type")),
+                    c.getInt(c.getColumnIndexOrThrow("is_synced")));
+            results.add(upvote);
+            System.out.println("How many times boi");
+        }
+
+        c.close();
+        return results;
+    }
+
+    public int getVoteCount (int feedId, int type) {
+
+        int result= 0;
+        ArrayList<Upvote> voteList = getUpvotes(feedId, type);
+
+        for(Upvote thisVote : voteList){
+            if(thisVote.getValue()==1){
+                result++;
+            }
+            else{
+                result--;
+            }
+        }
+
+        return result;
+    }
+
     public boolean checkIfFollower (int topicId, int userId) {
 
         ArrayList<Integer> ids = new ArrayList<>();
@@ -1985,6 +2050,29 @@ public class DataAdapter {
             result = petBetterDb.insert(POST_TABLE, null, cv);
         }
         System.out.println("2ND REAL NUM OF POSTS: "+getPosts().size());
+
+        return result;
+    }
+
+    public long setUpvotes(ArrayList<Upvote> upvoteList){
+        long result = 0;
+
+        petBetterDb.delete(UPVOTE_TABLE, null, null);
+        //System.out.println("REAL NUM OF POSTS: "+getPosts().size());
+        //System.out.println("POST LIST SIZE "+postList.size());
+
+
+        for(Upvote upvote:upvoteList){
+            ContentValues cv = new ContentValues();
+            cv.put("_id", upvote.getId());
+            cv.put("feed_id", upvote.getFeedId());
+            cv.put("user_id", upvote.getUserId());
+            cv.put("value", upvote.getValue());
+            cv.put("type", upvote.getType());
+            cv.put("is_synced", 1);
+            result = petBetterDb.insert(UPVOTE_TABLE, null, cv);
+        }
+        //System.out.println("2ND REAL NUM OF POSTS: "+getPosts().size());
 
         return result;
     }
