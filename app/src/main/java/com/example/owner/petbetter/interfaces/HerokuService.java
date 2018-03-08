@@ -400,6 +400,10 @@ public interface HerokuService {
     Call<LocationMarker> getMarker(@Field("bldg_name") String bldgName);
 
     @FormUrlEncoded
+    @POST("removeVote.php")
+    Call<Void> removeVote(@Field("_id") long id);
+
+    @FormUrlEncoded
     @POST("getPostRepsFromParent.php")
     Call<ArrayList<PostRep>> getPostRepsFromParent(@Field("parent_id") long parentId);
 

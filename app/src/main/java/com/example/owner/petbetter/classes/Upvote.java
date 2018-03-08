@@ -23,15 +23,15 @@ public class Upvote {
     int type;
 
     @SerializedName("is_synced")
-    int is_synced;
+    int isSynced;
 
-    public Upvote(long id, int feedId, int userId, int value, int type, int is_synced) {
+    public Upvote(long id, int feedId, int userId, int value, int type, int isSynced) {
         this.id = id;
         this.feedId = feedId;
         this.userId = userId;
         this.value = value;
         this.type = type;
-        this.is_synced = is_synced;
+        this.isSynced = isSynced;
     }
 
     public Upvote(long id, int feedId, int userId, int value, int type) {
@@ -51,11 +51,11 @@ public class Upvote {
     }
 
     public int getIs_synced() {
-        return is_synced;
+        return isSynced;
     }
 
     public void setIs_synced(int is_synced) {
-        this.is_synced = is_synced;
+        this.isSynced = is_synced;
     }
 
     public long getId() {

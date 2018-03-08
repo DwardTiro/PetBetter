@@ -1249,6 +1249,22 @@ public class DataAdapter {
         return result;
     }
 
+    public long addVote(long id, int feedId, int userId, int value, int type, int isSynced){
+        long result;
+
+        ContentValues cv = new ContentValues();
+        cv.put("_id", id);
+        cv.put("feed_id", feedId);
+        cv.put("user_id", userId);
+        cv.put("value", value);
+        cv.put("type", type);
+        cv.put("is_synced", isSynced);
+
+        result = petBetterDb.insert(UPVOTE_TABLE, null, cv);
+
+        return result;
+    }
+
     public ArrayList<Notifications> getNotifications(long userId){
         ArrayList<Notifications> results = new ArrayList<>();
 
@@ -1718,6 +1734,35 @@ public class DataAdapter {
         return result;
     }
 
+    public Upvote getUserVote (int feedId, int userId, int type) {
+
+
+        ArrayList<Integer> ids = new ArrayList<>();
+
+        String sql = "SELECT * FROM "+UPVOTE_TABLE+" WHERE user_id = '"+userId+"' AND type = '"+ type +"' AND feed_id = '"
+                +feedId+"'";
+        Upvote result = null;
+
+        try{
+            Cursor c = petBetterDb.rawQuery(sql, null);
+
+            c.moveToFirst();
+            result = new Upvote(c.getLong(c.getColumnIndexOrThrow("_id")),
+                    c.getInt(c.getColumnIndexOrThrow("feed_id")),
+                    c.getInt(c.getColumnIndexOrThrow("user_id")),
+                    c.getInt(c.getColumnIndexOrThrow("value")),
+                    c.getInt(c.getColumnIndexOrThrow("type")),
+                    c.getInt(c.getColumnIndexOrThrow("is_synced")));
+
+            c.close();
+            return result;
+        }catch(CursorIndexOutOfBoundsException c){
+            return null;
+        }
+
+
+    }
+
     public boolean checkIfFollower (int topicId, int userId) {
 
         ArrayList<Integer> ids = new ArrayList<>();
@@ -1890,6 +1935,21 @@ public class DataAdapter {
         ArrayList<Integer> ids = new ArrayList<>();
 
         String sql = "SELECT _id FROM "+FACI_TABLE;
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            ids.add(c.getInt(c.getColumnIndexOrThrow("_id")));
+        }
+
+        c.close();
+        return ids;
+    }
+
+    public ArrayList<Integer> generateUpvoteIds () {
+
+        ArrayList<Integer> ids = new ArrayList<>();
+
+        String sql = "SELECT _id FROM "+UPVOTE_TABLE;
         Cursor c = petBetterDb.rawQuery(sql, null);
 
         while(c.moveToNext()) {

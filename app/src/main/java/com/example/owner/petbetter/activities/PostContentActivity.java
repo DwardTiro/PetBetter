@@ -21,6 +21,7 @@ import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.classes.Notifications;
 import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.PostRep;
+import com.example.owner.petbetter.classes.Upvote;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.fragments.FragmentPostReps;
@@ -54,6 +55,9 @@ public class PostContentActivity extends AppCompatActivity {
     private TextView postTimeStamp;
     private TextView postTitle;
     private TextView homeListContent;
+    private ImageButton upPostButton;
+    private TextView upCounter;
+    private ImageButton downPostButton;
 
     private DataAdapter petBetterDb;
     private SystemSessionManager systemSessionManager;
@@ -64,6 +68,7 @@ public class PostContentActivity extends AppCompatActivity {
     private EditText commentText;
     private String timeStamp;
     private int nId;
+    private Upvote vote;
     HerokuService service;
 
     @Override
@@ -99,6 +104,11 @@ public class PostContentActivity extends AppCompatActivity {
         homeListContent = (TextView) findViewById(R.id.homeListContent);
         commentButton = (Button) findViewById(R.id.homeListPostCommentButton);
         commentText = (EditText) findViewById(R.id.homeListCommentBox);
+        upPostButton = (ImageButton) findViewById(R.id.upPostButton);
+        upCounter = (TextView) findViewById(R.id.upCounter);
+        downPostButton = (ImageButton) findViewById(R.id.downPostButton);
+
+
 
 
         systemSessionManager = new SystemSessionManager(this);
@@ -131,6 +141,10 @@ public class PostContentActivity extends AppCompatActivity {
 
         postUser = getPostUser(postItem.getUserId());
         System.out.println("POSTITEM ID IS: "+postItem.getId());
+
+        int voteCount = getVoteCount((int) postItem.getId(),1);
+        upCounter.setText(String.valueOf(voteCount));
+
 
 
         Bundle bundle = new Bundle();
@@ -175,6 +189,79 @@ public class PostContentActivity extends AppCompatActivity {
             }
         });
 
+
+        vote = getUserVote((int) postItem.getId(),(int) user.getUserId(),1);
+
+        if(vote!=null){
+            if(vote.getValue()==1){
+                upPostButton.setImageResource(R.mipmap.ic_thumb_up_black_24dp);
+            }
+            else{
+                downPostButton.setImageResource(R.mipmap.ic_thumb_down_black_24dp);
+            }
+        }
+
+        upPostButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                upPostButton.setEnabled(false);
+                downPostButton.setEnabled(false);
+                upPostButton.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        upPostButton.setEnabled(true);
+                        downPostButton.setEnabled(true);
+                    }
+                }, 3000);
+                if(vote==null){
+                    int id = generateUpvoteId();
+                    addVote(id, (int) postItem.getId(), (int) user.getUserId(), 1, 1, 0);
+                    upPostButton.setImageResource(R.mipmap.ic_thumb_up_black_24dp);
+                    downPostButton.setImageResource(R.drawable.ic_thumb_down_grey600_48dp);
+
+                    syncUpvoteChanges();
+                }
+                else{
+                    removeVote(vote.getId());
+                    upPostButton.setImageResource(R.drawable.ic_thumb_up_grey600_48dp);
+                    vote= null;
+                }
+
+
+            }
+        });
+
+        downPostButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                upPostButton.setEnabled(false);
+                downPostButton.setEnabled(false);
+                upPostButton.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        upPostButton.setEnabled(true);
+                        downPostButton.setEnabled(true);
+                    }
+                }, 3000);
+
+                if(vote==null){
+                    int id = generateUpvoteId();
+                    addVote(id, (int) postItem.getId(), (int) user.getUserId(), -1, 1, 0);
+                    downPostButton.setImageResource(R.mipmap.ic_thumb_down_black_24dp);
+                    upPostButton.setImageResource(R.drawable.ic_thumb_up_grey600_48dp);
+                    syncUpvoteChanges();
+                }
+                else{
+                    removeVote(vote.getId());
+                    downPostButton.setImageResource(R.drawable.ic_thumb_down_grey600_48dp);
+                    vote = null;
+                }
+
+            }
+        });
+
     }
 
     public void viewPostBackButtonClicked(View view){
@@ -190,6 +277,98 @@ public class PostContentActivity extends AppCompatActivity {
         } catch(SQLException e ){
             e.printStackTrace();
         }
+    }
+
+    public void removeVote(long id){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final Call<Void> call = service.removeVote(id);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    syncUpvoteChanges();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
+    public void syncUpvoteChanges(){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+
+        ArrayList<Upvote> unsyncedUpvotes = getUnsyncedUpvotes();
+
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String jsonArray = gson.toJson(unsyncedUpvotes);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.addUpvotes(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    System.out.println("POSTS ADDED YEY");
+                    dataSynced(15);
+
+                    final Call<ArrayList<Upvote>> call2 = service2.getUpvotes();
+                    call2.enqueue(new Callback<ArrayList<Upvote>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<Upvote>> call, Response<ArrayList<Upvote>> response) {
+                            if(response.isSuccessful()){
+                                setUpvotes(response.body());
+                                upCounter.setText(String.valueOf(getVoteCount((int) postItem.getId(),1)));
+                                vote = getUserVote((int) postItem.getId(),(int) user.getUserId(),1);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<Upvote>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
+    private ArrayList<Upvote> getUnsyncedUpvotes(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Upvote> result = petBetterDb.getUnsyncedUpvotes();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    public long setUpvotes(ArrayList<Upvote> upvoteList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setUpvotes(upvoteList);
+        petBetterDb.closeDatabase();
+
+        return result;
     }
 
     private void uploadPostReps(ArrayList<PostRep> postreps){
@@ -254,6 +433,34 @@ public class PostContentActivity extends AppCompatActivity {
         return result;
     }
 
+    private long addVote(long id, int feedId, int userId, int value, int type, int isSynced){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        long result = petBetterDb.addVote(id, feedId, userId, value, type, isSynced);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private Upvote getUserVote(int feedId, int userId, int type){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        Upvote result = petBetterDb.getUserVote(feedId, userId, type);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
     private void dataSynced(int n){
 
         try {
@@ -264,6 +471,20 @@ public class PostContentActivity extends AppCompatActivity {
 
         petBetterDb.dataSynced(n);
         petBetterDb.closeDatabase();
+    }
+
+    private int getVoteCount(int feedId, int type){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        int result = petBetterDb.getVoteCount(feedId,type);
+        petBetterDb.closeDatabase();
+
+        return result;
     }
 
     private ArrayList<Notifications> getUnsyncedNotifications(){
@@ -278,6 +499,30 @@ public class PostContentActivity extends AppCompatActivity {
         petBetterDb.closeDatabase();
 
         return result;
+    }
+
+    public int generateUpvoteId(){
+        ArrayList<Integer> storedIds;
+        int upvoteId = 1;
+
+        try {
+            petBetterDb.openDatabase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        storedIds = petBetterDb.generateUpvoteIds();
+        petBetterDb.closeDatabase();
+
+
+        if(storedIds.isEmpty()) {
+            return upvoteId;
+        } else {
+            while (storedIds.contains(upvoteId)){
+                upvoteId += 1;
+            }
+            return upvoteId;
+        }
     }
 
     public int generatePostRepId(){
