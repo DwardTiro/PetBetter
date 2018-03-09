@@ -13,9 +13,13 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -38,6 +42,7 @@ import com.google.gson.GsonBuilder;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -51,6 +56,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.example.owner.petbetter.R.layout.simple_list_item_1;
+
 /**
  * Created by Kristian on 10/16/2017.
  */
@@ -58,12 +65,14 @@ import retrofit2.Response;
 public class NewMessageActivity extends AppCompatActivity {
 
 
-    EditText newMsgSendTo;
+    private AutoCompleteTextView newMsgSendTo;
     EditText newMsgContent;
     Button newMsgSendButton;
     private ImageButton newMsgAddPhoto;
     private static final int IMG_REQUEST = 777;
     private Bitmap bitmap;
+    private ArrayAdapter<String> adapterSuggestions;
+    private String[] suggestions;
 
     private DataAdapter petBetterDb;
     private SystemSessionManager systemSessionManager;
@@ -100,7 +109,7 @@ public class NewMessageActivity extends AppCompatActivity {
         String email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
         user = getUser(email);
 
-        newMsgSendTo = (EditText) findViewById(R.id.newMsgSendTo);
+        newMsgSendTo = (AutoCompleteTextView) findViewById(R.id.newMsgSendTo);
         newMsgContent = (EditText) findViewById(R.id.newMsgContent);
         newMsgSendButton = (Button) findViewById(R.id.newMsgSendBtn);
         newMsgAddPhoto = (ImageButton) findViewById(R.id.newMsgAddPhoto);
@@ -181,6 +190,51 @@ public class NewMessageActivity extends AppCompatActivity {
             }
         });
 
+        newMsgSendTo.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+                //query the substring to server data
+
+                Gson gson = new GsonBuilder().serializeNulls().create();
+                String jsonArray = gson.toJson(newMsgSendTo.getText().toString());
+
+                RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+
+                final Call<ArrayList<User>> call = service.queryEmail(body);
+                call.enqueue(new Callback<ArrayList<User>>() {
+                    @Override
+                    public void onResponse(Call<ArrayList<User>> call, Response<ArrayList<User>> response) {
+                        ArrayList<User> userList = response.body();
+
+                        for(int i=0;i<userList.size();i++){
+                            suggestions[i] = userList.get(i).getEmail();
+                        }
+
+                        adapterSuggestions = new ArrayAdapter<String>(NewMessageActivity.this, simple_list_item_1, suggestions);
+                        //ArrayAdapter<Veterinarian> adapter = new ArrayAdapter<Veterinarian>(this,R.layout.,vetList);
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<ArrayList<User>> call, Throwable t) {
+                        Log.d("onFailure", t.getLocalizedMessage());
+                        Toast.makeText(NewMessageActivity.this, "Unable to get vets from server", Toast.LENGTH_LONG);
+                    }
+                });
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     public void syncMessageChanges(final long userId){

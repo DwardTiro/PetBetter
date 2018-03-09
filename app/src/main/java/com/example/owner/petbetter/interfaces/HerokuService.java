@@ -236,6 +236,9 @@ public interface HerokuService {
     @POST("queryFacilities.php")
     Call<ArrayList<Facility>> queryFacilities(@Body RequestBody query);
 
+    @POST("queryEmail.php")
+    Call<ArrayList<User>> queryEmail(@Body RequestBody query);
+
     @POST("queryTopics.php")
     Call<ArrayList<Topic>> queryTopics(@Body RequestBody query);
 

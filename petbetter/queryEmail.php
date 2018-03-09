@@ -17,23 +17,25 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 	//$query = "%{$_POST['query']}%";
 	$query = "%{$queryjson}%";
 
-	if($stmt = $mysqli->prepare("SELECT * FROM facilities WHERE faci_name LIKE ?")){
+	if($stmt = $mysqli->prepare("SELECT * FROM users WHERE email LIKE ?")){
 		$stmt->bind_param("s", $query);
 		$stmt->execute();
-		$stmt->bind_result($_id, $faci_name, $location, $hours_open, $hours_close, $contact_info, $vet_id, $rating);
+		$stmt->bind_result($user_id, $first_name, $last_name, $mobile_num, $phone_num, $email, $password, $age, $user_type, $user_photo);
 		$stmt->store_result();
 	
 		if($stmt->fetch()){
 			
 			do{
-				array_push($response, array('_id'=>$_id,
-				'faci_name'=>$faci_name,
-				'location'=>$location,
-				'hours_open'=>$hours_open,
-				'hours_close'=>$hours_close,
-				'contact_info'=>$contact_info,
-				'vet_id'=>$vet_id,
-				'rating'=>$rating));
+				array_push($response, array('user_id'=>$user_id,
+				'first_name'=>$first_name,
+				'last_name'=>$last_name,
+				'mobile_num'=>$mobile_num,
+				'phone_num'=>$phone_num,
+				'email'=>$email,
+				'password'=>$password,
+				'age'=>$age,
+				'user_type'=>$user_type,
+				'user_photo'=>$user_photo));
 			}while($stmt->fetch());
 			
 			

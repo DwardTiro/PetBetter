@@ -25,7 +25,7 @@
             android:layout_height="463dp"
             android:orientation="vertical">
 
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/newMsgSendTo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -33,6 +33,7 @@
                 android:layout_marginBottom="5dp"
                 android:paddingStart="15dp"
                 android:paddingEnd="15dp"
+                android:dropDownHeight="300dp"
                 android:hint="Send a message to"
                 android:textColorHint="@color/timestamp"
                 android:background="@drawable/custom_edittext"/>
