@@ -1,6 +1,7 @@
 package com.example.owner.petbetter.activities;
 
 import android.graphics.Color;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -52,6 +53,9 @@ public class TopicContentActivity extends AppCompatActivity {
     private ImageButton followButton;
     private int nId;
     private String timeStamp;
+    private SwipeRefreshLayout refreshTopicContent;
+    private FragmentPosts fragment3;
+    private Bundle bundle;
     HerokuService service;
 
     @Override
@@ -67,6 +71,17 @@ public class TopicContentActivity extends AppCompatActivity {
 
         topicContentName = (TextView) findViewById(R.id.topicContentName);
         followButton = (ImageButton) findViewById(R.id.followButton);
+        refreshTopicContent = (SwipeRefreshLayout) findViewById(R.id.refreshTopicContent);
+
+        refreshTopicContent.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshTopicContent.setRefreshing(true);
+                syncPostChanges();
+                refreshTopicContent.setRefreshing(false);
+            }
+        });
+
         activityTitle.setText("View Topic");
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
@@ -88,11 +103,11 @@ public class TopicContentActivity extends AppCompatActivity {
         topicItem = new Gson().fromJson(jsonMyObject, Topic.class);
 
         topicContentName.setText(topicItem.getTopicName());
-        Bundle bundle = new Bundle();
+        bundle = new Bundle();
         bundle.putLong("topicId", topicItem.getId());
-        FragmentPosts fragment3 = new FragmentPosts();
+        fragment3 = new FragmentPosts();
         fragment3.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction().add(R.id.topic_container,fragment3).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.topic_container,fragment3).commitAllowingStateLoss();
 
         if(checkIfFollower((int) topicItem.getId(), (int) user.getUserId())==true){
             followButton.setBackgroundColor(Color.YELLOW);
@@ -189,6 +204,80 @@ public class TopicContentActivity extends AppCompatActivity {
                 Toast.makeText(TopicContentActivity.this, "Unable to upload followers on server", Toast.LENGTH_LONG);
             }
         });
+    }
+
+    public void syncPostChanges(){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        System.out.println("WE HERE BOOIII");
+        ArrayList<Post> unsyncedPosts = getUnsyncedPosts();
+
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String jsonArray = gson.toJson(unsyncedPosts);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.addPosts(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    System.out.println("POSTS ADDED YEY");
+                    dataSynced(9);
+
+                    final Call<ArrayList<Post>> call2 = service2.getPosts();
+                    call2.enqueue(new Callback<ArrayList<Post>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<Post>> call, Response<ArrayList<Post>> response) {
+                            if(response.isSuccessful()){
+                                setPosts(response.body());
+                                fragment3 = new FragmentPosts();
+                                fragment3.setArguments(bundle);
+                                getSupportFragmentManager().beginTransaction().replace(R.id.topic_container,fragment3).commitAllowingStateLoss();
+                                System.out.println("DO WE REPLACE FRAGMENT AT LEAST??");
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<Post>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
+    public long setPosts(ArrayList<Post> postList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setPosts(postList);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<Post> getUnsyncedPosts(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Post> result = petBetterDb.getUnsyncedPosts();
+        petBetterDb.closeDatabase();
+
+        return result;
     }
 
     private ArrayList<Follower> getUnsyncedFollowers(){

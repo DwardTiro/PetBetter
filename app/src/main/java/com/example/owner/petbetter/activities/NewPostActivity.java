@@ -100,15 +100,8 @@ public class NewPostActivity extends AppCompatActivity {
 
                     topicFollowers = getTopicFollowers(topicId);
 
-                    for(int i = 0;i<topicFollowers.size();i++){
-                        if(topicFollowers.get(i).getUserId()!=user.getUserId()){
-                            nId = generateNotifsId();
-                            //notifyAllTopicUsers();
-                            notifyTopicPost(nId, topicFollowers.get(i).getUserId(), user.getUserId(), 0, 3, timeStamp, (int) topicId, 0);
-                            syncNotifChanges(user.getUserId());
-                        }
-                    }
-
+                    notifyTopicPost(nId, user.getUserId(), user.getUserId(), 0, 3, timeStamp, (int) topicId, 0);
+                    syncNotifChanges(user.getUserId());
                     finish();
                 }
             }
