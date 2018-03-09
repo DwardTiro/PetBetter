@@ -14,6 +14,7 @@ import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.classes.Follower;
+import com.example.owner.petbetter.classes.Notifications;
 import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.Topic;
 import com.example.owner.petbetter.classes.User;
@@ -102,7 +103,9 @@ public class NewPostActivity extends AppCompatActivity {
                     for(int i = 0;i<topicFollowers.size();i++){
                         if(topicFollowers.get(i).getUserId()!=user.getUserId()){
                             nId = generateNotifsId();
+                            //notifyAllTopicUsers();
                             notifyTopicPost(nId, topicFollowers.get(i).getUserId(), user.getUserId(), 0, 3, timeStamp, (int) topicId, 0);
+                            syncNotifChanges(user.getUserId());
                         }
                     }
 
@@ -110,6 +113,79 @@ public class NewPostActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public void syncNotifChanges(final long userId){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+        ArrayList<Notifications> unsyncedNotifs = getUnsyncedNotifications();
+        System.out.println("UNSYNCED NOTIFS: "+unsyncedNotifs.size());
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String jsonArray = gson.toJson(unsyncedNotifs);
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.addNotifications(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    System.out.println("NOTIFICATIONS ADDED YEY");
+                    dataSynced(7);
+
+                    final Call<ArrayList<Notifications>> call2 = service2.getNotifications(userId);
+                    call2.enqueue(new Callback<ArrayList<Notifications>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<Notifications>> call, Response<ArrayList<Notifications>> response) {
+                            if(response.isSuccessful()){
+                                System.out.println("notif response size "+response.body().size());
+                                setNotifications(response.body());
+                                //write this method. update dataSynced().
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<Notifications>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
+    private ArrayList<Notifications> getUnsyncedNotifications(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Notifications> result = petBetterDb.getUnsyncedNotifications();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    public long setNotifications(ArrayList<Notifications> notifList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setNotifications(notifList);
+        petBetterDb.closeDatabase();
+
+        return result;
     }
 
     private void uploadPost(ArrayList<Post> posts){

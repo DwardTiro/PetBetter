@@ -236,6 +236,7 @@ public class MyService extends Service {
                                         PendingIntent pendingIntent = PendingIntent.getActivity(MyService.this, 0, intentNotif, PendingIntent.FLAG_UPDATE_CURRENT);
                                         appNotif.setContentIntent(pendingIntent);
                                     }
+                                    //
 
 
 
