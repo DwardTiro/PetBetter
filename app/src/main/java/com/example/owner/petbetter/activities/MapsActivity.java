@@ -12,6 +12,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -24,6 +25,7 @@ import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.classes.Facility;
 import com.example.owner.petbetter.classes.LocationMarker;
 import com.example.owner.petbetter.classes.User;
+import com.example.owner.petbetter.classes.Veterinarian;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.google.android.gms.common.ConnectionResult;
@@ -47,6 +49,7 @@ import com.google.gson.GsonBuilder;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -83,6 +86,13 @@ public class MapsActivity extends FragmentActivity
     int markerId;
     String location;
     private Marker newMarker;
+    private int vetId;
+
+    private String faciName;
+    private String openTime;
+    private String closeTime;
+    private String phoneNum;
+
 
     HerokuService service;
 
@@ -91,9 +101,27 @@ public class MapsActivity extends FragmentActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
         }
+
+        Bundle extras = getIntent().getExtras();
+        faciName = extras.getString("bldg_name");
+        openTime = extras.getString("hours_open");
+        closeTime = extras.getString("hours_close");
+        phoneNum = extras.getString("phone_num");
+
+        service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        systemSessionManager = new SystemSessionManager(this);
+        if (systemSessionManager.checkLogin())
+            finish();
+
+        HashMap<String, String> userIn = systemSessionManager.getUserDetails();
+        initializeDatabase();
+
+        String email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
+        user = getUser(email);
+        vetId = getVeterinarian((int) user.getUserId()).getId();
         getLocationPermissions();
     }
 
@@ -115,11 +143,12 @@ public class MapsActivity extends FragmentActivity
             System.out.println("Error in permission bruh");
         }
 
+
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
                 MarkerOptions markerOptions = new MarkerOptions();
-                markerOptions.title("New LocationMarker");
+                markerOptions.title(faciName);
                 markerOptions.position(latLng);
                 markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
 
@@ -171,28 +200,6 @@ public class MapsActivity extends FragmentActivity
         }
     }
 
-    /*
-    private void loadMarkers(long userId) {
-        LatLng resultLatLng;
-        try {
-            petBetterDb.openDatabase();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        ArrayList<LocationMarker> result = petBetterDb.loadMarkers(userId);
-        System.out.println("MARKERS RESULT SIZE: " + result.size());
-        petBetterDb.closeDatabase();
-
-        for (int i = 0; i < result.size(); i++) {
-            resultLatLng = new LatLng(result.get(i).getLatitude(), result.get(i).getLongitude());
-            mMap.addMarker(new MarkerOptions().position(resultLatLng).title(result.get(i).getBldgName()));
-            goToLocationZoom(result.get(i).getLatitude(), result.get(i).getLongitude(), 13);
-        }
-
-    }
-*/
-
 
     private void goToLocationZoom(double lat, double lng, float zoom) {
         LatLng ll = new LatLng(lat, lng);
@@ -214,6 +221,51 @@ public class MapsActivity extends FragmentActivity
         return result;
     }
 
+    private Veterinarian getVeterinarian(int user_id) {
+
+        try {
+            petBetterDb.openDatabase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        Veterinarian result = petBetterDb.getVeterinarianWithId(user_id);
+        ArrayList<Integer> ids = petBetterDb.generateFaciIds();
+
+        for (int i = 0; i < ids.size(); i++) {
+            System.out.print(ids.get(i) + " ");
+        }
+
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private Facility getNewFacility(int vet_id) {
+        try {
+            petBetterDb.openDatabase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        Facility result = petBetterDb.getNewFacilityWithId(vet_id);
+
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private void dataSync(int n) {
+        try {
+            petBetterDb.openDatabase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        petBetterDb.dataSynced(n);
+        petBetterDb.closeDatabase();
+
+    }
+
     private void initializeDatabase() {
 
         petBetterDb = new DataAdapter(this);
@@ -225,6 +277,96 @@ public class MapsActivity extends FragmentActivity
         }
 
     }
+
+    private long addFacilitytoDB(
+            int faci_id,
+            String faci_name,
+            String location,
+            String hours_open,
+            String hours_close,
+            String contact_info,
+            int vet_id
+    ) {
+
+        try{
+            petBetterDb.openDatabase();
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        long result = petBetterDb.addFacility(faci_id,faci_name,location,hours_open,hours_close,contact_info,vet_id);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<Facility> getUnsyncedFacilities() {
+        try {
+            petBetterDb.openDatabase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Facility> result = petBetterDb.getUnsyncedFacilities();
+
+        return result;
+    }
+
+    private void syncFacilityChanges(){
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        System.out.println("WE HERE BOOIII");
+        ArrayList<Facility> unsyncedFacilities = getUnsyncedFacilities();
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String jsonArray = gson.toJson(unsyncedFacilities);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.addFacilities(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    System.out.println("FACILITIES ADDED YEY");
+                    dataSync(2);
+
+                    final Call<ArrayList<Facility>> call2 = service2.getClinics();
+                    call2.enqueue(new Callback<ArrayList<Facility>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<Facility>> call, Response<ArrayList<Facility>> response) {
+                            if(response.isSuccessful()){
+                                System.out.println("Number of clinics from server: "+response.body().size());
+                                setFacilities(response.body());
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<Facility>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
+    public long setFacilities(ArrayList<Facility> faciList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setFacilities(faciList);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
 
     public void mapBackButtonClicked(View view) {
         finish();
@@ -253,7 +395,6 @@ public class MapsActivity extends FragmentActivity
     public void onConnectionSuspended(int i) {
 
     }
-
 
     public boolean checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -314,15 +455,14 @@ public class MapsActivity extends FragmentActivity
         switch (requestCode) {
             case REQUEST_LOCATION_CODE: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if(ContextCompat.checkSelfPermission(this,
-                            Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-                        if(client == null){
+                    if (ContextCompat.checkSelfPermission(this,
+                            Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                        if (client == null) {
                             buildGoogleApiClient();
                         }
                         mMap.setMyLocationEnabled(true);
                     }
-                }
-                else{
+                } else {
                     System.out.println("Denied");
                 }
             }
@@ -347,38 +487,34 @@ public class MapsActivity extends FragmentActivity
         mMap.moveCamera(CameraUpdateFactory.newLatLng(position));
         mMap.animateCamera(CameraUpdateFactory.zoomBy(15));
 
-        if(client != null){
+        if (client != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(client, this);
         }
     }
 
-    public void onAddFacilityClicked(View view){
+    public void onAddFacilityClicked(View view) {
         System.out.println("went here");
         System.out.println(newMarker.getPosition().latitude + " " + newMarker.getPosition().longitude);
-        service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
         addFacility();
         addFacilityLocation();
 
     }
 
-    public void addFacility(){
-        Bundle extras = getIntent().getExtras();
-        String facilityName = extras.getString("bldg_name");
-        String openTime = extras.getString("hours_open");
-        String closeTime = extras.getString("hours_close");
-        String phoneNum = extras.getString("phone_num");
+    public void addFacility() {
 
         Facility facility = new Facility(
                 4,
-                facilityName,
+                faciName,
                 "Here",
                 openTime,
                 closeTime,
                 phoneNum,
-                4,
+                vetId,
                 0
         );
+
+        addFacilitytoDB(4,faciName,"",openTime,closeTime,phoneNum,vetId);
         Gson gson = new GsonBuilder().serializeNulls().create();
         String jsonArray = gson.toJson(facility);
         System.out.println(jsonArray);
@@ -393,8 +529,10 @@ public class MapsActivity extends FragmentActivity
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 System.out.println("Facility added to server successfully");
-
+                dataSync(2);
+                syncFacilityChanges();
             }
+
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 System.out.println("FAILED TO ADD FACILITY TO SERVER");
@@ -403,21 +541,20 @@ public class MapsActivity extends FragmentActivity
 
     }
 
-    public void addFacilityLocation(){
+    public void addFacilityLocation() {
 
-        Bundle extras = getIntent().getExtras();
-        String facilityName = extras.getString("bldg_name");
+        long faciId = getNewFacility(vetId).getId();
+
         Gson gson = new GsonBuilder().serializeNulls().create();
 
-
         LocationMarker locationMarker = new LocationMarker(99,
-                facilityName,
+                faciName,
                 newMarker.getPosition().latitude,
                 newMarker.getPosition().longitude,
-                facilityName,
-                4,
+                faciName,
+                user.getUserId(),
                 1,
-                1
+                faciId
         );
         String jsonArray = gson.toJson(locationMarker);
         System.out.println(jsonArray);
@@ -434,6 +571,7 @@ public class MapsActivity extends FragmentActivity
                 System.out.println("Location added to server successfully");
 
             }
+
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 System.out.println("Location TO ADD FACILITY TO SERVER");

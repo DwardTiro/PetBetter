@@ -268,6 +268,72 @@ public class DataAdapter {
         return result;
     }
 
+    public Veterinarian getVeterinarianWithId(int user_id){
+        User user = getUserWithId(user_id);
+        String sql = "SELECT * FROM " + VET_TABLE + " WHERE user_id = '" + user_id + "'";
+
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        c.moveToFirst();
+
+        Veterinarian result = new Veterinarian(
+                c.getInt(c.getColumnIndexOrThrow("_id")),
+                c.getLong(c.getColumnIndexOrThrow("user_id")),
+                user.getLastName(),
+                user.getFirstName(),
+                user.getMobileNumber(),
+                user.getPhoneNumber(),
+                user.getEmail(),
+                user.getPassword(),
+                user.getAge(),
+                user.getUserType(),
+                user.getUserPhoto(),
+                c.getString(c.getColumnIndexOrThrow("specialty")),
+                c.getFloat(c.getColumnIndexOrThrow("rating"))
+        );
+        return result;
+    }
+
+    public LocationMarker getMarkerWithId(int faci_id){
+        String sql = "SELECT * FROM " + MARKER_TABLE + " WHERE faci_id = '" + faci_id + "'";
+
+        Cursor c = petBetterDb.rawQuery(sql, null);
+        c.moveToFirst();
+
+        LocationMarker result = new LocationMarker(
+                c.getLong(c.getColumnIndexOrThrow("_id")),
+                c.getString(c.getColumnIndexOrThrow("bldg_name")),
+                c.getDouble(c.getColumnIndexOrThrow("latitude")),
+                c.getDouble(c.getColumnIndexOrThrow("longitude")),
+                c.getString(c.getColumnIndexOrThrow("location")),
+                c.getLong(c.getColumnIndexOrThrow("user_id")),
+                c.getInt(c.getColumnIndexOrThrow("type")),
+                c.getLong(c.getColumnIndexOrThrow("faci_id"))
+        );
+
+        return result;
+    }
+
+    public Facility getNewFacilityWithId(int vet_id){
+        String sql = "SELECT * FROM " + FACI_TABLE + " WHERE vet_id = '" + vet_id + "'";
+
+        Cursor c = petBetterDb.rawQuery(sql, null);
+        c.moveToLast();
+
+        Facility result = new Facility(
+                c.getInt(c.getColumnIndexOrThrow("_id")),
+                c.getString(c.getColumnIndexOrThrow("faci_name")),
+                c.getString(c.getColumnIndexOrThrow("location")),
+                c.getString(c.getColumnIndexOrThrow("hours_open")),
+                c.getString(c.getColumnIndexOrThrow("hours_close")),
+                c.getString(c.getColumnIndexOrThrow("contact_info")),
+                c.getInt(c.getColumnIndexOrThrow("vet_id")),
+                c.getFloat(c.getColumnIndexOrThrow("rating"))
+        );
+
+        return result;
+    }
+
     public ArrayList<Post> getPosts(){
 
         ArrayList<Post> results = new ArrayList<>();
@@ -1074,19 +1140,6 @@ public class DataAdapter {
         return results;
     }
 
-    public long addMarker(int rowId, String bldgName, String location){
-        long result;
-
-        ContentValues cv = new ContentValues();
-        cv.put("_id", rowId);
-        cv.put("bldg_name", bldgName);
-
-
-        result = petBetterDb.insert(MARKER_TABLE, null, cv);
-
-
-        return result;
-    }
 
     public long addUser(int userId, String firstName, String lastName, String email, String password, int userType){
         long result;
@@ -1159,6 +1212,51 @@ public class DataAdapter {
         return ids;
     }
 
+    public long addFacility(
+            int faci_id,
+            String faci_name,
+            String location,
+            String hours_open,
+            String hours_close,
+            String contact_info,
+            int vet_id
+            ){
+        long result;
+
+        ContentValues cv = new ContentValues();
+        cv.put("_id", faci_id);
+        cv.put("faci_name", faci_name);
+        cv.put("location", location);
+        cv.put("hours_open", hours_open);
+        cv.put("hours_close", hours_close);
+        cv.put("contact_info", contact_info);
+        cv.put("vet_id", vet_id);
+        cv.put("rating", 0);
+        cv.put("is_synced", 0);
+
+        result = petBetterDb.insert(FACI_TABLE, null, cv);
+
+        return result;
+    }
+
+    public long addMarker(int rowId, String bldgName, double latitude, double longitude, long user_id, long faciId){
+        long result;
+
+        ContentValues cv = new ContentValues();
+        cv.put("_id", rowId);
+        cv.put("bldg_name", bldgName);
+        cv.put("latitude", latitude);
+        cv.put("longitude", longitude);
+        cv.put("user_id", user_id);
+        cv.put("faci_id", faciId);
+        cv.put("is_synced", 0);
+
+
+        result = petBetterDb.insert(MARKER_TABLE, null, cv);
+
+
+        return result;
+    }
 
 
     public long addPostRep(int postRepId, int userId, int postId, int parentId, String repContent, String datePerformed){
