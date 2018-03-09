@@ -12,7 +12,7 @@
         android:id="@+id/locationLogo"
         android:layout_width="12dp"
         android:layout_height="15dp"
-        android:src="@mipmap/ic_location_on_black_24dp"
+        android:src="@drawable/ic_alarm_black_24dp"
         android:background="@color/colorWhite"
         android:layout_marginTop="5dp"
         android:layout_marginStart="5dp"
@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/locationLogo"
-        android:text="Address:"
+        android:text="Operating Hours:"
         android:textStyle="bold"
         android:textSize="15sp"
         android:textColor="@color/black"
@@ -30,24 +30,36 @@
         />
 
     <TextView
-        android:id="@+id/addressTextField"
+        android:id="@+id/openTimeTextField"
         android:layout_below="@id/addressTextId"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/sample_address"
+        android:text="@string/sample_open_time"
         android:layout_marginStart="7sp"
         android:textSize="14sp"
         />
-
     <TextView
-        android:layout_below="@id/addressTextField"
-        android:layout_width="match_parent"
+        android:id="@+id/dashTextField"
+        android:layout_below="@id/addressTextId"
+        android:layout_toEndOf="@id/openTimeTextField"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Click to view location."
+        android:text=" - "
         android:layout_marginStart="7sp"
-        android:textSize="12sp"
-        android:layout_marginBottom="5dp"
-        android:textColor="@color/teal_blue"
+        android:textSize="14sp"
         />
+    <TextView
+        android:id="@+id/closeTimeTextField"
+        android:layout_below="@id/addressTextId"
+        android:layout_toEndOf="@id/dashTextField"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sample_close_time"
+        android:layout_marginStart="7sp"
+        android:textSize="14sp"
+        android:layout_marginBottom="10dp"
+        />
+
+
 
 </RelativeLayout>

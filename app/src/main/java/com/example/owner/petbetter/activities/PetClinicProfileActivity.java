@@ -47,10 +47,10 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_petclinic_profile);
 
         petClinicName = (TextView) findViewById(R.id.clinicName);
-        petClinicAddress = (TextView) findViewById(R.id.clinicAddress);
-        petClinicLandline = (TextView) findViewById(R.id.clinicLandLine);
-        petClinicOpenTime = (TextView) findViewById(R.id.clinicOpenTime);
-        petClinicCloseTime = (TextView) findViewById(R.id.clinicCloseTime);
+        petClinicAddress = (TextView) findViewById(R.id.addressTextField);
+        petClinicLandline = (TextView) findViewById(R.id.phoneNumTextField);
+        petClinicOpenTime = (TextView) findViewById(R.id.openTimeTextField);
+        petClinicCloseTime = (TextView) findViewById(R.id.closeTimeTextField);
         petClinicRating = (TextView) findViewById(R.id.clinicRatingNumerator);
 
 
@@ -86,6 +86,8 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         petClinicAddress.setText(faciItem.getLocation());
         petClinicRating.setText(String.valueOf(faciItem.getRating()));
         petClinicLandline.setText(faciItem.getContactInfo());
+        petClinicOpenTime.setText(faciItem.getHoursOpen());
+        petClinicCloseTime.setText(faciItem.getHoursClose());
 
         petClinicRateButton.setOnClickListener(new View.OnClickListener() {
             @Override
