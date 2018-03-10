@@ -146,7 +146,7 @@ public class PetClinicProfileActivity extends AppCompatActivity {
                                         for(int i = 0; i<faciRatings.size();i++){
                                             n = n + faciRatings.get(i);
                                         }
-                                        n = n/faciRatings.size();
+                                        n = n/(float) faciRatings.size();
                                         petClinicRating.setText(String.valueOf(n));
                                     }
                                     else{

@@ -176,7 +176,7 @@ public class VetProfileActivity extends AppCompatActivity {
                                         for(int i = 0; i<vetRatings.size();i++){
                                             n = n + vetRatings.get(i);
                                         }
-                                        n = n/vetRatings.size();
+                                        n = n/(float) vetRatings.size();
                                         vetRating.setText(String.valueOf(n));
                                     }
                                     else{
