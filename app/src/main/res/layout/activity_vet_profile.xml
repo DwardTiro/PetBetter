@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    >
+    android:layout_height="match_parent">
 
     <include
-        layout="@layout/toolbar_profile"
         android:id="@+id/vetProfileToolbar"
-        android:layout_height="wrap_content"
+        layout="@layout/toolbar_profile"
         android:layout_width="match_parent"
-        />
+        android:layout_height="wrap_content" />
+
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -24,116 +23,135 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <ImageView
-                    android:id="@+id/profileImage"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:background="@drawable/sample_vet_clinic" />
+                <FrameLayout
+                    android:id="@+id/profileImageFrame"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
-                <ImageView
-                    android:layout_width="120dp"
-                    android:layout_height="100dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="150dp"
-                    android:src="@drawable/vet_sample_pic" />
-            </RelativeLayout>
+                    <ImageView
+                        android:id="@+id/profileImage"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:src="@drawable/vet_sample_pic" />
 
-            <TextView
-                android:id="@+id/profileName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="10dp"
-                android:text="@string/sample_name"
-                android:textColor="@color/black"
-                android:textSize="30dp"
-                android:textStyle="bold" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal">
-
-            </LinearLayout>
-
-            <include
-                layout="@layout/fragment_specialty"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="5dp"
-                />
-            <include
-                layout="@layout/fragment_phone_number"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="5dp"
-                />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="10dp"
-
-                android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="160dp"
+                        android:layout_height="160dp"
+                        android:layout_marginStart="6dp"
+                        android:layout_marginTop="6dp"
+                        android:src="@drawable/profile_image_border" />
+                </FrameLayout>
 
                 <TextView
-                    android:id="@+id/profileRatingText"
+                    android:id="@+id/profileName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Rating: "
+                    android:layout_gravity="center"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_toEndOf="@+id/profileImageFrame"
+                    android:text="@string/sample_name"
                     android:textColor="@color/black"
+                    android:textSize="30dp"
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/vetListRating"
+                    android:id="@+id/textRating"
+                    android:layout_toEndOf="@+id/profileImageFrame"
+                    android:layout_below="@id/profileName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/sample_rating"
-                    android:textColor="@color/black" />
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="8dp"
+                    android:text="Rating:"
+                    android:textSize="17sp"
+                    android:textColor="@color/black"
+                    />
 
                 <TextView
-                    android:id="@+id/profileRatingDenominator"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/vetListRating"
+                    android:layout_width="35dp"
                     android:layout_height="wrap_content"
-                    android:text="/5"
-                    android:textColor="@color/black" />
-            </LinearLayout>
+                    android:layout_below="@+id/profileName"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_toEndOf="@+id/textRating"
+                    android:background="@color/main_Color"
+                    android:text="5.0"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
 
+            </RelativeLayout>
 
-            <Button
-                android:id="@+id/messageVetButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-
-                android:textAllCaps="false"
-                android:text="Message"/>
-
-
-            <LinearLayout
+            <include
+                layout="@layout/fragment_specialty"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="20dp">
+                android:layout_marginBottom="5dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp" />
 
+            <include
+                layout="@layout/fragment_phone_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp" />
 
-                <Button
-                    android:id="@+id/rateVetButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-
-                    android:text="Rate" />
-
-
-            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:gravity="center_horizontal">
+
+        <Button
+            android:id="@+id/messageVetButton"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_weight="0"
+            android:background="@color/amazonite"
+            android:drawablePadding="5dp"
+            android:drawableStart="@drawable/ic_email_white_18dp"
+            android:gravity="start|center_vertical"
+            android:padding="5dp"
+            android:text="Message"
+            android:textAllCaps="false"
+
+            android:textColor="@color/colorWhite"
+            android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/rateVetButton"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@+id/messageVetButton"
+            android:layout_weight="1"
+            android:background="@color/amazonite"
+            android:drawablePadding="5dp"
+            android:drawableStart="@drawable/ic_star_border_white_18dp"
+            android:gravity="start|center_vertical"
+            android:padding="5dp"
+            android:text="Rate"
+            android:textAllCaps="false"
+
+            android:textColor="@color/colorWhite"
+            android:textSize="15sp" />
+
+    </RelativeLayout>
+
 </RelativeLayout>
