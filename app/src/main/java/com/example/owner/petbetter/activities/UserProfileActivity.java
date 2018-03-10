@@ -12,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -120,6 +121,15 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
             }
         });
 
+        hideItems();
+    }
+
+    public void hideItems(){
+        Menu menu = navigationView.getMenu();
+        if(user.getUserType()==1){
+            menu.findItem(R.id.bookmarks).setVisible(false);
+            menu.findItem(R.id.community).setVisible(false);
+        }
     }
 
 
@@ -150,13 +160,20 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
         String userName = user.getFirstName() + " " +user.getLastName();
         userProfileName.setText(userName);
     }
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
         if(id == R.id.home){
-            Intent intent = new Intent(this, com.example.owner.petbetter.activities.CommActivity.class);
-            startActivity(intent);
+            if(user.getUserType()==1){
+                Intent intent = new Intent(this, com.example.owner.petbetter.activities.VeterinarianHomeActivity.class);
+                startActivity(intent);
+            }
+            else{
+                Intent intent = new Intent(this, com.example.owner.petbetter.activities.CommActivity.class);
+                startActivity(intent);
+            }
         }
         else if(id == R.id.community){
             Intent intent = new Intent(this, com.example.owner.petbetter.activities.HomeActivity.class);

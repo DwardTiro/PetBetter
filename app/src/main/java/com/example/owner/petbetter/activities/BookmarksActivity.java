@@ -13,6 +13,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -152,6 +153,16 @@ public class BookmarksActivity extends AppCompatActivity implements NavigationVi
                 startActivity(intent);
             }
         });
+
+        hideItems();
+    }
+
+    public void hideItems(){
+        Menu menu = navigationView.getMenu();
+        if(user.getUserType()==1){
+            menu.findItem(R.id.bookmarks).setVisible(false);
+            menu.findItem(R.id.community).setVisible(false);
+        }
     }
 
     public void viewPostBackButtonClicked(View view){
@@ -163,8 +174,14 @@ public class BookmarksActivity extends AppCompatActivity implements NavigationVi
         int id = item.getItemId();
 
         if(id == R.id.home){
-            Intent intent = new Intent(this, com.example.owner.petbetter.activities.CommActivity.class);
-            startActivity(intent);
+            if(user.getUserType()==1){
+                Intent intent = new Intent(this, com.example.owner.petbetter.activities.VeterinarianHomeActivity.class);
+                startActivity(intent);
+            }
+            else{
+                Intent intent = new Intent(this, com.example.owner.petbetter.activities.CommActivity.class);
+                startActivity(intent);
+            }
         }
         else if(id == R.id.community){
             Intent intent = new Intent(this, com.example.owner.petbetter.activities.HomeActivity.class);

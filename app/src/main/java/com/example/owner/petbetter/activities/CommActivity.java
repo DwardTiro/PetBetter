@@ -102,6 +102,8 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
         nDrawerLayout.setDrawerListener(nToggle);
         nToggle.syncState();
 
+
+
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -198,7 +200,17 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+        hideItems();
     }
+
+    public void hideItems(){
+        Menu menu = navigationView.getMenu();
+        if(user.getUserType()==1){
+            menu.findItem(R.id.bookmarks).setVisible(false);
+            menu.findItem(R.id.community).setVisible(false);
+        }
+    }
+
     @Override
     public void onRestart(){
         super.onRestart();
@@ -216,8 +228,14 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if(id == R.id.home){
-            Intent intent = new Intent(this, com.example.owner.petbetter.activities.CommActivity.class);
-            startActivity(intent);
+            if(user.getUserType()==1){
+                Intent intent = new Intent(this, com.example.owner.petbetter.activities.VeterinarianHomeActivity.class);
+                startActivity(intent);
+            }
+            else{
+                Intent intent = new Intent(this, com.example.owner.petbetter.activities.CommActivity.class);
+                startActivity(intent);
+            }
         }
         else if(id == R.id.community){
             Intent intent = new Intent(this, com.example.owner.petbetter.activities.HomeActivity.class);
