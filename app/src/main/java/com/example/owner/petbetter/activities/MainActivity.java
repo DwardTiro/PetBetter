@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.location.Location;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
@@ -162,6 +163,8 @@ public class MainActivity extends AppCompatActivity {
                         syncClinicChanges();
 
                         syncFollowerChanges();
+
+                        syncLocationChanges();
 
                         syncMarkerChanges(thisUser.getUserId());
 
@@ -624,6 +627,49 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public void syncLocationChanges(){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        System.out.println("WE HERE BOOIII");
+        ArrayList<LocationMarker> unsyncedLocations = getUnsyncedMarkers();
+
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String jsonArray = gson.toJson(unsyncedLocations);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.addLocations(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    System.out.println("SERVICES ADDED YEY");
+                    dataSynced(4);
+
+                    final Call<ArrayList<LocationMarker>> call2 = service2.loadLocations();
+                    call2.enqueue(new Callback<ArrayList<LocationMarker>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<LocationMarker>> call, Response<ArrayList<LocationMarker>> response) {
+                            if(response.isSuccessful()){
+                                setLocationMarkers(response.body());
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<LocationMarker>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
 
     public void syncMessageChanges(final long userId){
 
@@ -1503,6 +1549,18 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         long result = petBetterDb.setMarkers(locationMarkerList);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    public long setLocationMarkers(ArrayList<LocationMarker> locationMarkerList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setLocationMarkers(locationMarkerList);
         petBetterDb.closeDatabase();
 
         return result;

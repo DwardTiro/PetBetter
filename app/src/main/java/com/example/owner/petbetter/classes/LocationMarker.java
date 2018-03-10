@@ -108,4 +108,12 @@ public class LocationMarker {
     public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
+
+    public long getFaciId() {
+        return faciId;
+    }
+
+    public void setFaciId(long faciId) {
+        this.faciId = faciId;
+    }
 }

@@ -310,7 +310,9 @@ public class MapsActivity extends FragmentActivity
             String bldg_name,
             double latitude,
             double longitude,
+            String location,
             long userId,
+            int type,
             long faciId
             ){
 
@@ -319,7 +321,7 @@ public class MapsActivity extends FragmentActivity
         } catch (SQLException e){
             e.printStackTrace();
         }
-        long result = petBetterDb.addMarker(marker_id, bldg_name, latitude, longitude, userId, faciId);
+        long result = petBetterDb.addMarker(marker_id, bldg_name, latitude, longitude, location, userId, type, faciId);
         petBetterDb.closeDatabase();
 
         return result;
@@ -384,6 +386,76 @@ public class MapsActivity extends FragmentActivity
                 Log.d("onFailure", t.getLocalizedMessage());
             }
         });
+    }
+
+    public void syncLocationChanges(){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        System.out.println("WE HERE BOOIII");
+        ArrayList<LocationMarker> unsyncedLocations = getUnsyncedMarkers();
+
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String jsonArray = gson.toJson(unsyncedLocations);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.addLocations(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    System.out.println("SERVICES ADDED YEY");
+                    dataSync(4);
+
+                    final Call<ArrayList<LocationMarker>> call2 = service2.loadLocations();
+                    call2.enqueue(new Callback<ArrayList<LocationMarker>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<LocationMarker>> call, Response<ArrayList<LocationMarker>> response) {
+                            if(response.isSuccessful()){
+                                setLocationMarkers(response.body());
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<LocationMarker>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
+    private ArrayList<LocationMarker> getUnsyncedMarkers(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<LocationMarker> result = petBetterDb.getUnsyncedMarkers();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    public long setLocationMarkers(ArrayList<LocationMarker> locationMarkerList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setLocationMarkers(locationMarkerList);
+        petBetterDb.closeDatabase();
+
+        return result;
     }
 
     public long setFacilities(ArrayList<Facility> faciList){
@@ -613,7 +685,6 @@ public class MapsActivity extends FragmentActivity
         locationId = generateNewLocationMarkerId();
         System.out.println("Generated Location Id is: " + locationId);
 
-        Gson gson = new GsonBuilder().serializeNulls().create();
 
         LocationMarker locationMarker = new LocationMarker(
                 locationId,
@@ -625,6 +696,19 @@ public class MapsActivity extends FragmentActivity
                 1,
                 faciId
         );
+
+        addLocationMarkertoDB(
+                (int) locationId,
+                faciName,
+                newMarker.getPosition().latitude,
+                newMarker.getPosition().longitude,
+                address,
+                user.getUserId(),
+                1,
+                (int)faciId);
+
+        Gson gson = new GsonBuilder().serializeNulls().create();
+
         String jsonArray = gson.toJson(locationMarker);
         System.out.println(jsonArray);
         RequestBody body = RequestBody.create(
@@ -638,6 +722,8 @@ public class MapsActivity extends FragmentActivity
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 System.out.println("Location added to server successfully");
+                dataSync(4);
+                syncLocationChanges();
                 Intent intent = new Intent(MapsActivity.this, com.example.owner.petbetter.activities.VeterinarianHomeActivity.class);
                 startActivity(intent);
 

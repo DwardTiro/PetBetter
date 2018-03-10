@@ -1239,7 +1239,7 @@ public class DataAdapter {
         return result;
     }
 
-    public long addMarker(int rowId, String bldgName, double latitude, double longitude, long user_id, long faciId){
+    public long addMarker(int rowId, String bldgName, double latitude, double longitude, String location, long user_id, int type, long faciId){
         long result;
 
         ContentValues cv = new ContentValues();
@@ -1247,7 +1247,9 @@ public class DataAdapter {
         cv.put("bldg_name", bldgName);
         cv.put("latitude", latitude);
         cv.put("longitude", longitude);
+        cv.put("location", location);
         cv.put("user_id", user_id);
+        cv.put("type", type);
         cv.put("faci_id", faciId);
         cv.put("is_synced", 0);
 
@@ -2433,6 +2435,29 @@ public class DataAdapter {
             cv.put("location", locationMarker.getLocation());
             cv.put("user_id", locationMarker.getUserId());
             cv.put("type", locationMarker.getType());
+            result = petBetterDb.insert(MARKER_TABLE, null, cv);
+        }
+        System.out.println("2ND REAL NUM OF MARKERS "+getMarkerIds().size());
+
+        return result;
+    }
+
+    public long setLocationMarkers(ArrayList<LocationMarker> locationMarkerList){
+        long result = 0;
+
+        petBetterDb.delete(MARKER_TABLE, null, null);
+        System.out.println("REAL NUM OF MARKERS "+getMarkerIds().size());
+
+        for(LocationMarker locationMarker : locationMarkerList){
+            ContentValues cv = new ContentValues();
+            cv.put("_id", locationMarker.getId());
+            cv.put("bldg_name", locationMarker.getBldgName());
+            cv.put("longitude", locationMarker.getLongitude());
+            cv.put("latitude", locationMarker.getLatitude());
+            cv.put("location", locationMarker.getLocation());
+            cv.put("user_id", locationMarker.getUserId());
+            cv.put("type", locationMarker.getType());
+            cv.put("faci_id,", locationMarker.getFaciId());
             result = petBetterDb.insert(MARKER_TABLE, null, cv);
         }
         System.out.println("2ND REAL NUM OF MARKERS "+getMarkerIds().size());

@@ -92,9 +92,13 @@ public interface HerokuService {
     @POST("loadMarkers.php")
     Call<ArrayList<LocationMarker>> loadMarkers(@Field("user_id") long userId);
 
+
     @FormUrlEncoded
     @POST("getBookmarks.php")
     Call<ArrayList<LocationMarker>> getBookmarks(@Field("user_id") long userId, @Field("type") int type);
+
+    @POST("loadLocations.php")
+    Call<ArrayList<LocationMarker>> loadLocations();
 
     @POST("getVeterinarians.php")
     Call<ArrayList<Veterinarian>> getVeterinarians();
@@ -374,6 +378,9 @@ public interface HerokuService {
 
     @POST("addServices.php")
     Call<Void> addServices(@Body RequestBody serviceList);
+
+    @POST("addLocations.php")
+    Call<Void> addLocations(@Body RequestBody locationList);
 
     @POST("addMarkers.php")
     Call<Void> addMarkers(@Body RequestBody markerList);
