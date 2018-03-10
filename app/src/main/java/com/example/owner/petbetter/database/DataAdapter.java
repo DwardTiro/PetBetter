@@ -2442,7 +2442,9 @@ public class DataAdapter {
 
         for(Facility facility:faciList){
             ContentValues cv = new ContentValues();
-            //cv.put("_id", facility.getId());
+
+            System.out.println("From DB Faci ID: "+facility.getId());
+            cv.put("_id", facility.getId());
             cv.put("faci_name", facility.getFaciName());
             cv.put("location", facility.getLocation());
             cv.put("hours_open", facility.getHoursOpen());

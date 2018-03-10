@@ -92,6 +92,8 @@ public class MapsActivity extends FragmentActivity
     private String openTime;
     private String closeTime;
     private String phoneNum;
+    private String address;
+    private long faciId;
 
 
     HerokuService service;
@@ -110,6 +112,7 @@ public class MapsActivity extends FragmentActivity
         openTime = extras.getString("hours_open");
         closeTime = extras.getString("hours_close");
         phoneNum = extras.getString("phone_num");
+        address = extras.getString("location");
 
         service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         systemSessionManager = new SystemSessionManager(this);
@@ -139,6 +142,7 @@ public class MapsActivity extends FragmentActivity
             buildGoogleApiClient();
             mMap.setMyLocationEnabled(true);
             mMap.setOnMyLocationButtonClickListener(this);
+            onMyLocationButtonClick();
         } else {
             System.out.println("Error in permission bruh");
         }
@@ -300,6 +304,27 @@ public class MapsActivity extends FragmentActivity
         return result;
     }
 
+    private long addLocationMarkertoDB(
+            int marker_id,
+            String bldg_name,
+            double latitude,
+            double longitude,
+            long userId,
+            long faciId
+            ){
+
+        try{
+            petBetterDb.openDatabase();
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        long result = petBetterDb.addMarker(marker_id, bldg_name, latitude, longitude, userId, faciId);
+        petBetterDb.closeDatabase();
+
+        return result;
+
+    }
+
     private ArrayList<Facility> getUnsyncedFacilities() {
         try {
             petBetterDb.openDatabase();
@@ -308,6 +333,9 @@ public class MapsActivity extends FragmentActivity
         }
 
         ArrayList<Facility> result = petBetterDb.getUnsyncedFacilities();
+
+
+        petBetterDb.closeDatabase();
 
         return result;
     }
@@ -335,6 +363,8 @@ public class MapsActivity extends FragmentActivity
                             if(response.isSuccessful()){
                                 System.out.println("Number of clinics from server: "+response.body().size());
                                 setFacilities(response.body());
+                                faciId = getNewFacility(vetId).getId();
+                                System.out.println("Faci id is: " + faciId);
                             }
                         }
 
@@ -413,7 +443,7 @@ public class MapsActivity extends FragmentActivity
 
     @Override
     public boolean onMyLocationButtonClick() {
-        Toast.makeText(MapsActivity.this, "Checked your location", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(MapsActivity.this, "Checked your location", Toast.LENGTH_SHORT).show();
         return false;
     }
 
@@ -501,12 +531,30 @@ public class MapsActivity extends FragmentActivity
 
     }
 
+    private int generateNewFacilityID(){
+        ArrayList<Integer> faciIDs;
+        try{
+            petBetterDb.openDatabase();
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+        faciIDs = petBetterDb.generateFaciIds();
+
+        int lastID = faciIDs.get(faciIDs.size() - 1);
+        lastID += 1;
+
+        petBetterDb.closeDatabase();
+
+        return lastID;
+    }
+
     public void addFacility() {
 
+        faciId = generateNewFacilityID();
         Facility facility = new Facility(
-                4,
+                (int)faciId,
                 faciName,
-                "Here",
+                address,
                 openTime,
                 closeTime,
                 phoneNum,
@@ -514,7 +562,7 @@ public class MapsActivity extends FragmentActivity
                 0
         );
 
-        addFacilitytoDB(4,faciName,"",openTime,closeTime,phoneNum,vetId);
+        addFacilitytoDB((int)faciId,faciName,"",openTime,closeTime,phoneNum,vetId);
         Gson gson = new GsonBuilder().serializeNulls().create();
         String jsonArray = gson.toJson(facility);
         System.out.println(jsonArray);
@@ -531,6 +579,8 @@ public class MapsActivity extends FragmentActivity
                 System.out.println("Facility added to server successfully");
                 dataSync(2);
                 syncFacilityChanges();
+                Facility newFacility = getNewFacility(vetId);
+                System.out.println("Hello ID is "+ newFacility.getId());
             }
 
             @Override
@@ -542,8 +592,7 @@ public class MapsActivity extends FragmentActivity
     }
 
     public void addFacilityLocation() {
-
-        long faciId = getNewFacility(vetId).getId();
+        System.out.println("Start adding new location");
 
         Gson gson = new GsonBuilder().serializeNulls().create();
 
@@ -551,7 +600,7 @@ public class MapsActivity extends FragmentActivity
                 faciName,
                 newMarker.getPosition().latitude,
                 newMarker.getPosition().longitude,
-                faciName,
+                address,
                 user.getUserId(),
                 1,
                 faciId
@@ -569,6 +618,8 @@ public class MapsActivity extends FragmentActivity
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 System.out.println("Location added to server successfully");
+                Intent intent = new Intent(MapsActivity.this, com.example.owner.petbetter.activities.VeterinarianHomeActivity.class);
+                startActivity(intent);
 
             }
 

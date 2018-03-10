@@ -12,12 +12,13 @@
         android:layout_height="wrap_content" />
 
     <LinearLayout
+        android:id="@+id/basicInfoLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/addFacilityToolbar"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
-        android:orientation="vertical"
-        android:layout_below="@id/addFacilityToolbar">
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="match_parent"
@@ -67,17 +68,48 @@
                 android:layout_marginTop="15dp"
                 android:text="Operating Hours" />
 
-            <Spinner
-                android:id="@+id/addFacilityOpenTimeSpinner"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:entries="@array/facilityOpenTimeSpinner" />
+                android:layout_marginBottom="10dp"
+                android:layout_marginStart="6dp"
+                android:orientation="horizontal">
 
-            <Spinner
-                android:id="@+id/addFacilityCloseTimeSpinner"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Open Time:"
+                    android:textColor="@color/black"
+                    android:textSize="13sp" />
+
+                <Spinner
+                    android:id="@+id/addFacilityOpenTimeSpinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/facilityOpenTimeSpinner"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:entries="@array/facilityOpenTimeSpinner" />
+                android:layout_marginBottom="5dp"
+                android:layout_marginStart="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Close Time:"
+                    android:textColor="@color/black"
+                    android:textSize="13sp" />
+
+                <Spinner
+                    android:id="@+id/addFacilityCloseTimeSpinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/facilityOpenTimeSpinner" />
+            </LinearLayout>
 
             <TextView
                 android:layout_width="match_parent"
@@ -99,16 +131,40 @@
                 android:inputType="text"
                 android:maxLines="1"
                 android:padding="5dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="15dp"
+                android:text="Address" />
+
+            <EditText
+                android:id="@+id/addFacilityAddress"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/rounded_bg_corner"
+                android:inputType="text"
+                android:maxLines="1"
+                android:padding="5dp"
+                android:layout_marginBottom="10dp"/>
+
+
         </LinearLayout>
 
     </LinearLayout>
+
 
     <Button
         android:id="@+id/addFacilityButton"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="0dp"
         android:layout_marginEnd="10dp"
         android:layout_marginStart="10dp"
         android:background="@color/medTurquoise"

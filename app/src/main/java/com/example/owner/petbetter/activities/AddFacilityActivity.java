@@ -31,6 +31,7 @@ public class AddFacilityActivity extends AppCompatActivity {
 
     private Button addFacilityButton;
     private EditText facilityName;
+    private EditText facilityAddress;
     private EditText phoneNum;
     private Spinner openTime;
     private Spinner closeTime;
@@ -53,6 +54,7 @@ public class AddFacilityActivity extends AppCompatActivity {
         phoneNum = (EditText) findViewById(R.id.addFacilityPhone);
         openTime = (Spinner) findViewById(R.id.addFacilityOpenTimeSpinner);
         closeTime = (Spinner) findViewById(R.id.addFacilityCloseTimeSpinner);
+        facilityAddress = (EditText) findViewById(R.id.addFacilityAddress);
     }
 
     public void addFacility(View view){
@@ -63,6 +65,7 @@ public class AddFacilityActivity extends AppCompatActivity {
         extras.putString("hours_open", openTime.getSelectedItem().toString());
         extras.putString("hours_close", closeTime.getSelectedItem().toString());
         extras.putString("phone_num", phoneNum.getText().toString());
+        extras.putString("location", facilityAddress.getText().toString());
 
         Intent intent = new Intent(
                 AddFacilityActivity.this,

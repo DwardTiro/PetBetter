@@ -19,7 +19,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 		if($stmt->fetch()){
 			
 			do{
-				array_push($response, array('_id'=>$_id,
+				array_push($response, array('faci_id'=>$_id,
 				'faci_name'=>$faci_name,
 				'location'=>$location,
 				'hours_open'=>$hours_open,
