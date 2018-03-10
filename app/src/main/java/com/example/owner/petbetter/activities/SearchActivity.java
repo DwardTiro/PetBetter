@@ -78,12 +78,13 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
     private Button postSearchButton;
     private AutoCompleteTextView actvSearch;
     private RelativeLayout relativeLayout;
-    private int currFragment;
+    private int currFragment = 1;
     HerokuService service;
     HerokuService service2;
     HerokuService service3;
     HerokuService service4;
     private FragmentVetListing fragment1;
+    private FragmentPetClinicListing fragment2;
 
     private String VET_TAG = "Veterinarians";
     private String FACI_TAG = "Facilities";
@@ -269,8 +270,8 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
                         public void onResponse(Call<ArrayList<Facility>> call, Response<ArrayList<Facility>> response) {
                             ArrayList<Facility> faciList = response.body();
 
-                            FragmentPetClinicListing fragment1 = new FragmentPetClinicListing(faciList);
-                            getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment1).
+                            fragment2 = new FragmentPetClinicListing(faciList);
+                            getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment2).
                                     addToBackStack(null).commitAllowingStateLoss();
                             //ArrayAdapter<Veterinarian> adapter = new ArrayAdapter<Veterinarian>(this,R.layout.,vetList);
 
@@ -561,10 +562,25 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
     @Override
     protected void onResume() {
         super.onResume();
-        if(currFragment==1){
-            getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment1).
-                    addToBackStack(null).commitAllowingStateLoss();
+
+        try{
+            if(currFragment==1){
+                getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment1).
+                        addToBackStack(null).commitAllowingStateLoss();
+            }
+            if(currFragment==2){
+                getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment2).
+                        addToBackStack(null).commitAllowingStateLoss();
+            }
+        }catch(NullPointerException npe){
+            if(vetSearchButton.getBackground().equals("R.color.myrtle_green")){
+                currFragment = 1;
+            }
+            if(petSearchButton.getBackground().equals("R.color.myrtle_green")){
+                currFragment = 2;
+            }
         }
+
     }
 
     @Override
