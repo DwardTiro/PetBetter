@@ -30,7 +30,6 @@
                     android:layout_height="200dp"
                     android:background="@drawable/sample_vet_clinic" />
 
-
                 <ImageView
                     android:layout_width="120dp"
                     android:layout_height="100dp"
@@ -115,12 +114,8 @@
                 android:layout_height="wrap_content"
 
                 android:textAllCaps="false"
-                android:text="Message">
-                <ImageView
-                    android:src="@mipmap/ic_mail_outline_black_24dp"
-                    android:contentDescription="Logo"
-                    />
-            </Button>
+                android:text="Message"/>
+
 
             <LinearLayout
                 android:layout_width="wrap_content"
