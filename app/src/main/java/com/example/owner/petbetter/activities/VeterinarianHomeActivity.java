@@ -147,16 +147,31 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
 
             }
         });
+
+        hideItems();
     }
 
+    public void hideItems(){
+        Menu menu = navigationView.getMenu();
+        if(user.getUserType()==1){
+            menu.findItem(R.id.bookmarks).setVisible(false);
+            menu.findItem(R.id.community).setVisible(false);
+        }
+    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
         if (id == R.id.home) {
-            Intent intent = new Intent(this, com.example.owner.petbetter.activities.CommActivity.class);
-            startActivity(intent);
+            if(user.getUserType()==1){
+                Intent intent = new Intent(this, com.example.owner.petbetter.activities.VeterinarianHomeActivity.class);
+                startActivity(intent);
+            }
+            else{
+                Intent intent = new Intent(this, com.example.owner.petbetter.activities.CommActivity.class);
+                startActivity(intent);
+            }
         } else if (id == R.id.community) {
             Intent intent = new Intent(this, com.example.owner.petbetter.activities.HomeActivity.class);
             startActivity(intent);

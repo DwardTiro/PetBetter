@@ -17,6 +17,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -160,6 +161,15 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
             }
         });
 
+        hideItems();
+    }
+
+    public void hideItems(){
+        Menu menu = navigationView.getMenu();
+        if(user.getUserType()==1){
+            menu.findItem(R.id.bookmarks).setVisible(false);
+            menu.findItem(R.id.community).setVisible(false);
+        }
     }
 
     @Override
@@ -167,8 +177,14 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
         int id = item.getItemId();
 
         if (id == R.id.home) {
-            Intent intent = new Intent(this, com.example.owner.petbetter.activities.CommActivity.class);
-            startActivity(intent);
+            if(user.getUserType()==1){
+                Intent intent = new Intent(this, com.example.owner.petbetter.activities.VeterinarianHomeActivity.class);
+                startActivity(intent);
+            }
+            else{
+                Intent intent = new Intent(this, com.example.owner.petbetter.activities.CommActivity.class);
+                startActivity(intent);
+            }
         } else if (id == R.id.community) {
             Intent intent = new Intent(this, com.example.owner.petbetter.activities.HomeActivity.class);
             startActivity(intent);

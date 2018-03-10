@@ -93,7 +93,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
         DrawerLayout nDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle nToggle = new ActionBarDrawerToggle(this, nDrawerLayout,toolbar, R.string.open, R.string.close);
         nDrawerLayout.setDrawerListener(nToggle);
@@ -109,6 +108,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         petCareButton = (Button) findViewById(R.id.petCareButton);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refreshHome);
         notifButton = (ImageView) findViewById(R.id.imageview_notifs);
+
+
 
 
         View headerView = navigationView.getHeaderView(0);
@@ -185,6 +186,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     protected void onRestart(){
         super.onRestart();
         recreate();
+    }
+
+    public void hideItems(){
+        Menu menu = navigationView.getMenu();
+        if(user.getUserType()==1){
+            menu.findItem(R.id.bookmarks).setVisible(false);
+            menu.findItem(R.id.community).setVisible(false);
+        }
     }
 
     public void syncClinicChanges(){
@@ -431,6 +440,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.nav_bar,menu);
+        hideItems();
         return true;
     }
 
@@ -452,8 +462,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if(id == R.id.home){
-            Intent intent = new Intent(this, com.example.owner.petbetter.activities.CommActivity.class);
-            startActivity(intent);
+            if(user.getUserType()==1){
+                Intent intent = new Intent(this, com.example.owner.petbetter.activities.VeterinarianHomeActivity.class);
+                startActivity(intent);
+            }
+            else{
+                Intent intent = new Intent(this, com.example.owner.petbetter.activities.CommActivity.class);
+                startActivity(intent);
+            }
         }
         else if(id == R.id.community){
             Intent intent = new Intent(this, com.example.owner.petbetter.activities.HomeActivity.class);
