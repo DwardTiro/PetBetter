@@ -4,23 +4,33 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
+import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.classes.Message;
+import com.example.owner.petbetter.classes.Rating;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Kristian on 8/8/2017.
@@ -92,7 +102,7 @@ public class VetProfileActivity extends AppCompatActivity {
         vetName.setText(vetItem.getFirstName()+" "+vetItem.getLastName());
         vetLandline.setText(vetItem.getMobileNumber());
         vetSpecialty.setText(vetItem.getSpecialty());
-        vetRating.setText(String.valueOf(vetItem.getRating()));
+        syncRatingChanges();
 
 
 
@@ -132,6 +142,135 @@ public class VetProfileActivity extends AppCompatActivity {
 
         //Toast.makeText(this, "Vet's Name: "+vetItem.getName() + ". Delete this toast. Just to help you see where vet variable is", Toast.LENGTH_LONG).show();
     }
+
+    public void syncRatingChanges(){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service3 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        ArrayList<Rating> unsyncedRatings = getUnsyncedRatings();
+
+        System.out.println("how many ratings? "+unsyncedRatings.size());
+
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String jsonArray = gson.toJson(unsyncedRatings);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.addRatings(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    System.out.println("RATINGS ADDED YEY");
+                    dataSynced(14);
+
+                    final Call<ArrayList<Rating>> call2 = service2.getRatings();
+                    call2.enqueue(new Callback<ArrayList<Rating>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<Rating>> call, Response<ArrayList<Rating>> response) {
+                            if(response.isSuccessful()){
+                                setRatings(response.body());
+                                ArrayList<Float> vetRatings = getVeterinarianRatings(vetItem.getId());
+                                float n = 0;
+                                if(vetRatings!=null){
+                                    if(vetRatings.size()>0){
+                                        for(int i = 0; i<vetRatings.size();i++){
+                                            n = n + vetRatings.get(i);
+                                        }
+                                        n = n/vetRatings.size();
+                                        vetRating.setText(String.valueOf(n));
+                                    }
+                                    else{
+                                        vetRating.setText("0.0");
+                                    }
+                                }
+
+                                final Call<Void> call3 = service3.updateRating(vetItem.getId(), n, 1);
+                                call3.enqueue(new Callback<Void>() {
+                                    @Override
+                                    public void onResponse(Call<Void> call, Response<Void> response) {
+
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<Void> call, Throwable t) {
+
+                                    }
+                                });
+
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<Rating>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
+    public long setRatings(ArrayList<Rating> rateList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setRatings(rateList);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<Float> getVeterinarianRatings(long vetId){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Float> result = petBetterDb.getVeterinarianRatings(vetId);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<Rating> getUnsyncedRatings(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Rating> result = petBetterDb.getUnsyncedRatings();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private void dataSynced(int n){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        petBetterDb.dataSynced(n);
+        petBetterDb.closeDatabase();
+
+    }
+
+
     @Override
     protected void onResume(){
         super.onResume();

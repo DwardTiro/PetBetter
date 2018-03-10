@@ -1687,31 +1687,43 @@ public class DataAdapter {
         ArrayList<Float> ratings = new ArrayList<>();
 
         String sql = "SELECT rating FROM ratings WHERE rating_type = 1 AND rated_id = "+vet_id;
-        Cursor c = petBetterDb.rawQuery(sql,null);
 
-        System.out.println("rate received");
-        while (c.moveToNext()){
-            ratings.add(c.getFloat(c.getColumnIndexOrThrow("rating")));
+        try{
+            Cursor c = petBetterDb.rawQuery(sql,null);
+
+            System.out.println("rate received");
+            while (c.moveToNext()){
+                ratings.add(c.getFloat(c.getColumnIndexOrThrow("rating")));
+            }
+
+            c.close();
+
+            return ratings;
+        }catch(CursorIndexOutOfBoundsException cpe){
+            return null;
         }
 
-        c.close();
-
-        return ratings;
     }
     public ArrayList<Float> getFacilityRatings(long facility_id){
 
         ArrayList<Float> ratings = new ArrayList<>();
 
-        String sql = "SELECT rating FROM ratings WHERE rating_type = 2 AND rated_id = "+ facility_id;
-        Cursor c = petBetterDb.rawQuery(sql,null);
+        try{
+            String sql = "SELECT rating FROM ratings WHERE rating_type = 2 AND rated_id = "+ facility_id;
+            Cursor c = petBetterDb.rawQuery(sql,null);
 
-        while (c.moveToNext()){
-            ratings.add(c.getFloat(c.getColumnIndexOrThrow("rating")));
+            while (c.moveToNext()){
+                ratings.add(c.getFloat(c.getColumnIndexOrThrow("rating")));
+            }
+
+            c.close();
+
+            return ratings;
+        }catch(CursorIndexOutOfBoundsException cpe){
+            return null;
         }
 
-        c.close();
 
-        return ratings;
     }
 
     public void setNewVetRating(float newRating, long vet_id){
@@ -2442,8 +2454,11 @@ public class DataAdapter {
 
         for(Facility facility:faciList){
             ContentValues cv = new ContentValues();
+<<<<<<< HEAD
 
             System.out.println("From DB Faci ID: "+facility.getId());
+=======
+>>>>>>> 13c7fbf14a7967017927bcb660b8bd315e90acc3
             cv.put("_id", facility.getId());
             cv.put("faci_name", facility.getFaciName());
             cv.put("location", facility.getLocation());
