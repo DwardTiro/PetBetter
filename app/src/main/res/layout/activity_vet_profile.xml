@@ -60,61 +60,22 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
+            <include
+                layout="@layout/fragment_specialty"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="5dp"
-
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="5dp"
-
-                    android:text="Landline: "
-                    android:textColor="@color/black"
-                    android:textSize="15dp"
-                    android:textStyle="bold"
-
-                    />
-
-                <TextView
-                    android:id="@+id/profileLandLine"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="5dp"
-
-                    android:text="@string/sample_landline"
-                    android:textColor="@color/black"
-                    android:textSize="15dp" />
-
-
-            </LinearLayout>
-
-            <LinearLayout
                 android:layout_width="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="5dp"
+                />
+            <include
+                layout="@layout/fragment_phone_number"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="10dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Specialty: "
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/vetSpecialty"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/sample_specialty" />
-
-            </LinearLayout>
+                android:layout_width="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="5dp"
+                />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -147,18 +108,25 @@
                     android:textColor="@color/black" />
             </LinearLayout>
 
+
+            <Button
+                android:id="@+id/messageVetButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:textAllCaps="false"
+                android:text="Message">
+                <ImageView
+                    android:src="@mipmap/ic_mail_outline_black_24dp"
+                    android:contentDescription="Logo"
+                    />
+            </Button>
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp">
-
-                <Button
-                    android:id="@+id/messageVetButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-
-                    android:text="Message" />
 
 
                 <Button

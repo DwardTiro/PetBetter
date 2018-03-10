@@ -59,8 +59,8 @@ public class VetProfileActivity extends AppCompatActivity {
 
         profileBG = (ImageView) findViewById(R.id.profileImage);
         vetName = (TextView) findViewById(R.id.profileName);
-        vetLandline = (TextView) findViewById(R.id.profileLandLine);
-        vetSpecialty = (TextView) findViewById(R.id.vetSpecialty);
+        vetLandline = (TextView) findViewById(R.id.phoneNumTextField);
+        vetSpecialty = (TextView) findViewById(R.id.specialtyTextField);
         vetRating = (TextView) findViewById(R.id.vetListRating);
         rateVetButton = (Button) findViewById(R.id.rateVetButton);
         messageVetButton = (Button) findViewById(R.id.messageVetButton);

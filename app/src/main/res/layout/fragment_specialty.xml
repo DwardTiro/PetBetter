@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="10dp"
+    android:layout_marginStart="10dp"
+    android:background="@drawable/rounded_bg_corner">
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="12dp"
+        android:layout_height="15dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@color/colorWhite"
+        android:src="@drawable/app_icon_yellow" />
+
+    <TextView
+        android:id="@+id/TextId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="2dp"
+        android:layout_toEndOf="@+id/logo"
+        android:text="Specialty:"
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/specialtyTextField"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/TextId"
+        android:layout_marginBottom="10dp"
+        android:layout_marginStart="7sp"
+        android:text="@string/sample_specialty"
+        android:textSize="14sp" />
+
+
+</RelativeLayout>
