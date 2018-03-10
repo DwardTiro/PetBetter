@@ -17,7 +17,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 				$location['location'],
 				$location['user_id'],
 				$location['type'], 
-				$location['vet_id']);
+				$location['faci_id']);
 			$stmt->execute();
 			$stmt->close();
 			echo 'Location added';

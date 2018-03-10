@@ -94,6 +94,7 @@ public class MapsActivity extends FragmentActivity
     private String phoneNum;
     private String address;
     private long faciId;
+    private long locationId;
 
 
     HerokuService service;
@@ -591,12 +592,31 @@ public class MapsActivity extends FragmentActivity
 
     }
 
+    private int generateNewLocationMarkerId(){
+        try{
+            petBetterDb.openDatabase();
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        ArrayList<Integer> ids = petBetterDb.generateLocationMarkerIds();
+        int newId = ids.get(ids.size() - 1);
+        newId += 1;
+
+        petBetterDb.closeDatabase();
+
+        return newId;
+    }
+
     public void addFacilityLocation() {
         System.out.println("Start adding new location");
 
+        locationId = generateNewLocationMarkerId();
+        System.out.println("Generated Location Id is: " + locationId);
+
         Gson gson = new GsonBuilder().serializeNulls().create();
 
-        LocationMarker locationMarker = new LocationMarker(99,
+        LocationMarker locationMarker = new LocationMarker(
+                locationId,
                 faciName,
                 newMarker.getPosition().latitude,
                 newMarker.getPosition().longitude,
