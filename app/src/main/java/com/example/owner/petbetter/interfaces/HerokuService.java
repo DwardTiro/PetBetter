@@ -288,6 +288,10 @@ public interface HerokuService {
     Call<Void> deleteFollower(@Field("topic_id") long topicId, @Field("user_id") long userId);
 
     @FormUrlEncoded
+    @POST("updateRating.php")
+    Call<Void> updateRating(@Field("_id") long id, @Field("value") float value, @Field("type") int type);
+
+    @FormUrlEncoded
     @POST("checkIfFollower.php")
     Call<ArrayList<Follower>> getTopicFollowers(@Field("topic_id") long topicId);
 

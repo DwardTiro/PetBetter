@@ -83,7 +83,7 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
     HerokuService service2;
     HerokuService service3;
     HerokuService service4;
-
+    private FragmentVetListing fragment1;
 
     private String VET_TAG = "Veterinarians";
     private String FACI_TAG = "Facilities";
@@ -142,7 +142,7 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
             public void onResponse(Call<ArrayList<Veterinarian>> call, Response<ArrayList<Veterinarian>> response) {
                 ArrayList<Veterinarian> vetList = response.body();
 
-                FragmentVetListing fragment1 = new FragmentVetListing(vetList);
+                fragment1 = new FragmentVetListing(vetList);
 
                 getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment1).
                         addToBackStack(null).commitAllowingStateLoss();
@@ -556,6 +556,15 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
         searchSpinner.setOnItemSelectedListener(this);
   */
         return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(currFragment==1){
+            getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment1).
+                    addToBackStack(null).commitAllowingStateLoss();
+        }
     }
 
     @Override
