@@ -4,7 +4,10 @@ require 'init.php';
 
 //$vetlist = $_POST['vetlist'];;
 
-$messagereplist = json_decode(file_get_contents('php://input'),true);
+$id = $_POST['id'];
+$image = $_POST['image'];
+$type = $_POST['type'];
+
 //$sql = "SELECT * FROM users WHERE email = ? AND password = ?";
 //$sql = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
 
@@ -13,35 +16,30 @@ $messagereplist = json_decode(file_get_contents('php://input'),true);
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
 	
-	$n = count($messagereplist);
-	echo $n;
-	$i = 0;
 	//echo $messagereplist[$i]['_id'];
 	
-	while($i<$n){
+	if($type==1){
 		$title = substr(md5(rand()), 0, 7);
-		$upload_path = "uploads/messagereps/$title.jpg";
+		$upload_path = "uploads/users/$title.jpg";
+		file_put_contents($upload_path, base64_decode($image));
 		
-		if(!($messagereplist[$i]['message_photo']==null)){
-			file_put_contents($upload_path, base64_decode($messagereplist['message_photo']));
-		}
-		else{
-			$upload_path = null;
-		}
-		//file_put_contents($upload_path, base64_decode($messagereplist[$i]['message_photo']));
-		if($stmt = $mysqli->prepare("INSERT INTO messagereps (user_id, sender_id, message_id, rep_content, is_sent, date_performed, message_photo) VALUES (?,?,?,?,?,?,?)")){
-			$stmt->bind_param("sssssss", $messagereplist[$i]['user_id'], $messagereplist[$i]['sender_id'], $messagereplist[$i]['message_id'], $messagereplist[$i]['rep_content'], $messagereplist[$i]['is_sent'], 
-				$messagereplist[$i]['date_performed'], $upload_path);
+		if($stmt = $mysqli->prepare("UPDATE users SET user_photo = ? WHERE user_id = ?")){
+			$stmt->bind_param("ss",  $upload_path, $id);
 			$stmt->execute();
 			$stmt->close();
-			$i = $i + 1;
-			echo 'and here?';
 		}
-		else{
-			//echo 'and here?';
-			break;
-		}
+	}
+	
+	if($type==2){
+		$title = substr(md5(rand()), 0, 7);
+		$upload_path = "uploads/facilities/$title.jpg";
+		file_put_contents($upload_path, base64_decode($image));
 		
+		if($stmt = $mysqli->prepare("UPDATE facilities SET faci_photo = ? WHERE faci_id = ?")){
+			$stmt->bind_param("ss", $upload_path, $id);
+			$stmt->execute();
+			$stmt->close();
+		}
 	}
 	
 		
