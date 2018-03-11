@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
@@ -103,6 +104,12 @@ public class VetProfileActivity extends AppCompatActivity {
         vetName.setText(vetItem.getFirstName()+" "+vetItem.getLastName());
         vetLandline.setText(vetItem.getMobileNumber());
         vetSpecialty.setText(vetItem.getSpecialty());
+
+        if(vetItem.getUserPhoto()!=null){
+            String newFileName = "http://192.168.0.19/petbetter/"+vetItem.getUserPhoto();
+            System.out.println("USER PHOTO "+user.getUserPhoto());
+            Glide.with(VetProfileActivity.this).load(newFileName).error(R.drawable.back_button).into(profileBG);
+        }
         syncRatingChanges();
 
 

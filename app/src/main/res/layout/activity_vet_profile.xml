@@ -34,7 +34,8 @@
                         android:layout_height="150dp"
                         android:layout_marginStart="10dp"
                         android:layout_marginTop="10dp"
-                        android:src="@drawable/vet_sample_pic" />
+                        android:src="@drawable/vet_sample_pic"
+                        android:adjustViewBounds="true"/>
 
                     <ImageView
                         android:layout_width="160dp"

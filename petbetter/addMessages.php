@@ -19,7 +19,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 	
 	while($i<$n){
 		if($stmt = $mysqli->prepare("INSERT INTO messages (user_one, user_two) VALUES (?,?)")){
-			$stmt->bind_param("ss", $messagelist[$i]['user_id'], $messagelist[$i]['from_id']);
+			$stmt->bind_param("ss", $messagelist[$i]['user_one'], $messagelist[$i]['user_two']);
 			$stmt->execute();
 			$stmt->close();
 			$i = $i + 1;

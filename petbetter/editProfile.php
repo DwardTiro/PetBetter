@@ -13,7 +13,7 @@ $response = array();
 if($_SERVER['REQUEST_METHOD']=='POST'){
 
 	$i = 0;
-	echo $userlist['email'];
+	
 	
 	$title = substr(md5(rand()), 0, 7);
 	$upload_path = "uploads/users/$title.jpg";
