@@ -54,6 +54,7 @@ public class VetProfileActivity extends AppCompatActivity {
     private Veterinarian vetItem;
     private Message messageItem;
     private long mId;
+    private boolean messageExist = true;
 
     @Override
     protected void onCreate(Bundle savedInstance){
@@ -106,7 +107,9 @@ public class VetProfileActivity extends AppCompatActivity {
 
 
 
-        mId = getMessageId(user.getUserId(), vetItem.getUserId());
+        syncMessageChanges(user.getUserId());
+
+        //mId = getMessageId(user.getUserId(), vetItem.getUserId());
 
         rateVetButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,16 +128,16 @@ public class VetProfileActivity extends AppCompatActivity {
 
                 if(mId!=0){
                     messageItem = getMessage(mId);
+                    Intent intent = new Intent(view.getContext(),MessageActivity.class);
+                    intent.putExtra("thisMessage", new Gson().toJson(messageItem));
+                    startActivity(intent);
                 }
                 else{
                     mId = generateMessageId();
-                    createMessage((int) mId, user.getUserId(), vetItem.getUserId());
-                    messageItem = new Message(mId, vetItem.getUserId(),user.getUserId(), user.getFirstName(), user.getLastName());
+                    createMessage((int) mId, vetItem.getUserId(), user.getUserId());
+                    messageExist = false;
+                    syncMessageChanges(user.getUserId());
                 }
-
-                Intent intent = new Intent(view.getContext(),MessageActivity.class);
-                intent.putExtra("thisMessage", new Gson().toJson(messageItem));
-                startActivity(intent);
 
             }
         });
@@ -215,6 +218,86 @@ public class VetProfileActivity extends AppCompatActivity {
                 Log.d("onFailure", t.getLocalizedMessage());
             }
         });
+    }
+
+    public void syncMessageChanges(final long userId){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+        ArrayList<Message> unsyncedMessages = getUnsyncedMessages();
+        System.out.println("UNSYNCED MESSAGES: "+unsyncedMessages.size());
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String jsonArray = gson.toJson(unsyncedMessages);
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.addMessages(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    System.out.println("MESSAGES ADDED YEY");
+                    dataSynced(5);
+
+                    final Call<ArrayList<Message>> call2 = service2.getMessages(userId);
+                    call2.enqueue(new Callback<ArrayList<Message>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<Message>> call, Response<ArrayList<Message>> response) {
+                            if(response.isSuccessful()){
+                                setMessages(response.body());
+                                mId = getMessageId(user.getUserId(), vetItem.getUserId());
+                                if(messageExist==false){
+                                    messageItem = getMessage(mId);
+                                    Intent intent = new Intent(VetProfileActivity.this,MessageActivity.class);
+                                    intent.putExtra("thisMessage", new Gson().toJson(messageItem));
+                                    startActivity(intent);
+                                    messageExist = true;
+                                }
+
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<Message>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
+    public long setMessages(ArrayList<Message> messageList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setMessages(messageList);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<Message> getUnsyncedMessages(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Message> result = petBetterDb.getUnsyncedMessages();
+        petBetterDb.closeDatabase();
+
+        return result;
     }
 
     public long setRatings(ArrayList<Rating> rateList){
