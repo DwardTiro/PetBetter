@@ -99,6 +99,7 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         petClinicOpenTime.setText(faciItem.getHoursOpen());
         petClinicCloseTime.setText(faciItem.getHoursClose());
 
+
         petClinicRateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -318,6 +319,18 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         return result;
     }
 
+    private LocationMarker getLocationMarker(int faciId){
+        try{
+            petBetterDb.openDatabase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        LocationMarker result = petBetterDb.getMarkerWithId(faciId);
+        petBetterDb.closeDatabase();
+        return result;
+    }
+
     //get methods
     public TextView getPetClinicName(){
         return petClinicName;
@@ -365,6 +378,18 @@ public class PetClinicProfileActivity extends AppCompatActivity {
     public void viewPostBackButtonClicked(View view){
 
         Intent intent = new Intent(this, com.example.owner.petbetter.activities.HomeActivity.class);
+        startActivity(intent);
+    }
+    public void onFacilityLocationClicked(View view){
+        System.out.println("This faciId in pet profile: "+ faciItem.getId());
+        LocationMarker location = getLocationMarker((int)faciItem.getId());
+        Bundle extras = new Bundle();
+        extras.putString("bldg_name", location.getBldgName());
+        extras.putDouble("latitude", location.getLatitude());
+        extras.putDouble("longitude", location.getLongitude());
+
+        Intent intent = new Intent(this, com.example.owner.petbetter.activities.ShowLocationActivity.class);
+        intent.putExtras(extras);
         startActivity(intent);
     }
 }

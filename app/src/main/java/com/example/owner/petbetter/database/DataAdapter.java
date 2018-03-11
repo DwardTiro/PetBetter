@@ -861,7 +861,8 @@ public class DataAdapter {
                     c.getDouble(c.getColumnIndexOrThrow("latitude")),
                     c.getString(c.getColumnIndexOrThrow("location")),
                     c.getLong(c.getColumnIndexOrThrow("user_id")),
-                    c.getInt(c.getColumnIndexOrThrow("type")));
+                    c.getInt(c.getColumnIndexOrThrow("type")),
+                    c.getInt(c.getColumnIndexOrThrow("faci_id")));
             results.add(locationMarker);
         }
 
@@ -1250,8 +1251,8 @@ public class DataAdapter {
         cv.put("location", location);
         cv.put("user_id", user_id);
         cv.put("type", type);
-        cv.put("faci_id", faciId);
         cv.put("is_synced", 0);
+        cv.put("faci_id", faciId);
 
 
         result = petBetterDb.insert(MARKER_TABLE, null, cv);
@@ -2457,7 +2458,7 @@ public class DataAdapter {
             cv.put("location", locationMarker.getLocation());
             cv.put("user_id", locationMarker.getUserId());
             cv.put("type", locationMarker.getType());
-            cv.put("faci_id,", locationMarker.getFaciId());
+            cv.put("faci_id", locationMarker.getFaciId());
             result = petBetterDb.insert(MARKER_TABLE, null, cv);
         }
         System.out.println("2ND REAL NUM OF MARKERS "+getMarkerIds().size());

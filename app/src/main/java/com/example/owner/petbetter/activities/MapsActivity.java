@@ -665,14 +665,19 @@ public class MapsActivity extends FragmentActivity
     }
 
     private int generateNewLocationMarkerId(){
+        int newId;
         try{
             petBetterDb.openDatabase();
         } catch (SQLException e){
             e.printStackTrace();
         }
         ArrayList<Integer> ids = petBetterDb.generateLocationMarkerIds();
-        int newId = ids.get(ids.size() - 1);
-        newId += 1;
+        if(ids.size() != 0){
+            newId = ids.get(ids.size() - 1);
+            newId += 1;
+        }
+        else
+            newId = 1;
 
         petBetterDb.closeDatabase();
 
@@ -731,7 +736,7 @@ public class MapsActivity extends FragmentActivity
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                System.out.println("Location TO ADD FACILITY TO SERVER");
+                System.out.println("Add location failed.");
             }
         });
 

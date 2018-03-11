@@ -642,7 +642,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if(response.isSuccessful()){
-                    System.out.println("SERVICES ADDED YEY");
+                    System.out.println("Locations ADDED YEY");
                     dataSynced(4);
 
                     final Call<ArrayList<LocationMarker>> call2 = service2.loadLocations();

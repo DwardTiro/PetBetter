@@ -6,6 +6,7 @@ import android.location.LocationListener;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.view.View;
 
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.classes.LocationMarker;
@@ -28,6 +29,12 @@ public class ShowLocationActivity extends FragmentActivity
         GoogleMap.OnMyLocationButtonClickListener {
     private GoogleMap mMap;
     private LocationMarker locationMarker;
+
+    String bldgName;
+    Double latitude;
+    Double longitude;
+
+
 
     @Override
     public void onCreate(Bundle savedInstance) {
@@ -64,17 +71,31 @@ public class ShowLocationActivity extends FragmentActivity
 
     @Override
     public boolean onMyLocationButtonClick() {
+
+        LatLng position = new LatLng(latitude, longitude);
+        mMap.addMarker(new MarkerOptions()
+                .position(position)
+                .title(bldgName)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(position));
+        mMap.animateCamera(CameraUpdateFactory.zoomBy(10));
         return false;
     }
 
+    public void viewPostBackButtonClicked(View view){
+        finish();
+    }
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
         String jsonMyObject;
         Bundle extras = getIntent().getExtras();
-        jsonMyObject = extras.getString("locationMarker");
-        locationMarker = new Gson().fromJson(jsonMyObject, LocationMarker.class);
+        bldgName = extras.getString("bldg_name");
+        latitude = extras.getDouble("latitude");
+        longitude = extras.getDouble("longitude");
+
+
 
         if (ContextCompat.checkSelfPermission(
                 this.getApplicationContext(),
@@ -87,13 +108,21 @@ public class ShowLocationActivity extends FragmentActivity
             System.out.println("Error in permission bruh");
         }
 
-        LatLng position = new LatLng(locationMarker.getLatitude(), locationMarker.getLongitude());
+        mMap.clear();
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(longitude,latitude)));
+        mMap.animateCamera(CameraUpdateFactory.zoomBy(15));
+
+        System.out.println("In show location bldg_name: "+bldgName);
+        System.out.println("In show location latitude: "+latitude);
+        System.out.println("In show location longitude: "+longitude);
+        /*
+        LatLng position = new LatLng(latitude, longitude);
         mMap.addMarker(new MarkerOptions()
                 .position(position)
-                .title(locationMarker.getBldgName())
+                .title(bldgName)
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(position));
-        mMap.animateCamera(CameraUpdateFactory.zoomBy(10));
-
+        mMap.animateCamera(CameraUpdateFactory.zoomBy(15));
+        */
     }
 }
