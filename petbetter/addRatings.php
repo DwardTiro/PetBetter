@@ -13,23 +13,44 @@ $response = array();
 if($_SERVER['REQUEST_METHOD']=='POST'){
 	
 	$n = count($ratelist);
-	echo $n;
+	//echo $n;
 	$i = 0;
 	//echo $notiflist[$i]['_id'];
 	
 	while($i<$n){
-		if($stmt = $mysqli->prepare("INSERT INTO ratings (rater_id, rated_id, rating, comment, rating_type, date_created, is_deleted) VALUES (?,?,?,?,?,?,?)")){
-			$stmt->bind_param("sssssss", $ratelist[$i]['rater_id'], $ratelist[$i]['rated_id'], $ratelist[$i]['rating'], $ratelist[$i]['comment'], $ratelist[$i]['rating_type'],  
-				$ratelist[$i]['date_created'], $ratelist[$i]['is_deleted']);
-			$stmt->execute();
-			$stmt->close();
-			$i = $i + 1;
-		}
-		else{
-			//echo 'and here?';
-			break;
-		}
 		
+		//$rater_id = $ratelist[$i]['rater_id'];
+		//$rated_id = $ratelist[$i]['rated_id'];
+		if($stmt = $mysqli->prepare("SELECT rating FROM ratings WHERE rater_id = ? AND rated_id = ? AND rating_type = ?")){
+			//$stmt = mysql_query("SELECT rating FROM ratings WHERE rater_id = $rater_id AND rated_id = $rated_id");
+			$stmt->bind_param("sss", $ratelist[$i]['rater_id'],$ratelist[$i]['rated_id'],$ratelist[$i]['rating_type']);
+			$stmt->execute();
+			$stmt->store_result();
+			
+			if($stmt->num_rows>0){
+				//echo $ratelist[$i]['rating'];
+			
+				if($stmt = $mysqli->prepare("UPDATE  ratings SET rating = ? WHERE rater_id = ? AND rated_id = ? AND rating_type = ?")){
+					$stmt->bind_param("ssss", $ratelist[$i]['rating'], $ratelist[$i]['rater_id'], $ratelist[$i]['rated_id'], $ratelist[$i]['rating_type']);
+					$stmt->execute();
+					$stmt->close();
+					//UPDATE  ratings SET rating = ? WHERE rater_id = ? AND rated_id = ?
+				}
+			}
+			else{
+				if($stmt = $mysqli->prepare("INSERT INTO ratings (rater_id, rated_id, rating, comment, rating_type, date_created, is_deleted) VALUES (?,?,?,?,?,?,?)")){
+					$stmt->bind_param("sssssss", $ratelist[$i]['rater_id'], $ratelist[$i]['rated_id'], $ratelist[$i]['rating'], $ratelist[$i]['comment'], $ratelist[$i]['rating_type'], 
+					$ratelist[$i]['date_created'], $ratelist[$i]['is_deleted']);
+					$stmt->execute();
+					$stmt->close();
+						
+				}				
+				else{
+					$stmt->close();
+				}
+			}
+		}
+		$i = $i + 1;
 	}
 }
 
