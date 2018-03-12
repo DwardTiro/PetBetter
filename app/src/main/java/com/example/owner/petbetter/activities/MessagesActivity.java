@@ -166,8 +166,8 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
-        getMenuInflater().inflate(R.menu.nav_bar,menu);
-        hideItems();
+        getMenuInflater().inflate(R.menu.options_menu,menu);
+        //hideItems();
         return true;
     }
 
@@ -175,12 +175,21 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
     public boolean onOptionsItemSelected(MenuItem item){
         int id = item.getItemId();
 
-        if(id == R.id.action_search){
+        /*
+        if(id == R.id.search_option){
             //change appearance of toolbar
             Intent intent = new Intent(this, com.example.owner.petbetter.activities.SearchActivity.class);
             startActivity(intent);
             return true;
+        }*/
+        if(id == R.id.new_message_option){
+            //change appearance of toolbar
+            Intent intent = new Intent(this, com.example.owner.petbetter.activities.NewMessageActivity.class);
+            startActivity(intent);
+            return true;
         }
+
+
         return super.onOptionsItemSelected(item);
     }
 
