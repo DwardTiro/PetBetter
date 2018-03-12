@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -97,6 +98,8 @@ public class MapsActivity extends FragmentActivity
     private long faciId;
     private long locationId;
 
+    private Button addLocationButton;
+
 
     HerokuService service;
 
@@ -108,6 +111,8 @@ public class MapsActivity extends FragmentActivity
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
         }
+
+        addLocationButton = (Button) findViewById(R.id.addLocationButton);
 
         Bundle extras = getIntent().getExtras();
         faciName = extras.getString("bldg_name");
@@ -154,6 +159,9 @@ public class MapsActivity extends FragmentActivity
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
+
+                addLocationButton.setEnabled(true);
+                addLocationButton.setBackgroundColor(getResources().getColor(R.color.myrtle_green));
                 MarkerOptions markerOptions = new MarkerOptions();
                 markerOptions.title(faciName);
                 markerOptions.position(latLng);
@@ -585,7 +593,7 @@ public class MapsActivity extends FragmentActivity
         LatLng position = new LatLng(latitude, longitude);
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(position);
-        markerOptions.title("My LocationMarker");
+        markerOptions.title(faciName);
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
 
         newMarker = mMap.addMarker(markerOptions);
@@ -609,6 +617,7 @@ public class MapsActivity extends FragmentActivity
 
     private int generateNewFacilityID(){
         ArrayList<Integer> faciIDs;
+        int newId;
         try{
             petBetterDb.openDatabase();
         } catch(SQLException e) {
@@ -616,12 +625,16 @@ public class MapsActivity extends FragmentActivity
         }
         faciIDs = petBetterDb.generateFaciIds();
 
-        int lastID = faciIDs.get(faciIDs.size() - 1);
-        lastID += 1;
+        if(faciIDs.size() != 0){
+            newId = faciIDs.get(faciIDs.size() - 1);
+            newId += 1;
+        }
+        else
+            newId = 1;
 
         petBetterDb.closeDatabase();
 
-        return lastID;
+        return newId;
     }
 
     public void addFacility() {

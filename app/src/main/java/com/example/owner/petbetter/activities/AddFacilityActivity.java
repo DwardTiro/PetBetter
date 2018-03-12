@@ -3,12 +3,15 @@ package com.example.owner.petbetter.activities;
 import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
@@ -71,6 +74,10 @@ public class AddFacilityActivity extends AppCompatActivity {
         facilityAddress = (EditText) findViewById(R.id.addFacilityAddress);
         editImage = (ImageButton) findViewById(R.id.clinicEditImage);
 
+        facilityName.addTextChangedListener(formWatcher);
+        phoneNum.addTextChangedListener(formWatcher);
+        facilityAddress.addTextChangedListener(formWatcher);
+
         editImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,6 +88,32 @@ public class AddFacilityActivity extends AppCompatActivity {
 
     }
 
+    private final TextWatcher formWatcher = new TextWatcher(){
+
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            if(facilityName.getText().toString().length() == 0 ||
+                    phoneNum.getText().toString().length() == 0 ||
+                    facilityAddress.getText().toString().length() == 0){
+                addFacilityButton.setBackgroundColor(getResources().getColor(R.color.medTurquoise));
+                addFacilityButton.setEnabled(false);
+            }
+            else {
+                addFacilityButton.setEnabled(true);
+                addFacilityButton.setBackgroundColor(getResources().getColor(R.color.myrtle_green));
+            }
+        }
+    };
     public void addFacility(View view){
         if(facilityAddress.getText().toString()!=""){
             service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);

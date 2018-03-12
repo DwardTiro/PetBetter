@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -58,7 +60,39 @@ public class SignUpUserActivity extends AppCompatActivity {
         signupPassword = (TextInputLayout) findViewById(R.id.textInputLayoutSignUp);
         nextButton = (Button) findViewById(R.id.signUpNextButton);
 
+        signupFirstName.addTextChangedListener(formWatcher);
+        signupLastName.addTextChangedListener(formWatcher);
+        signupEmail.addTextChangedListener(formWatcher);
+        signupPassword.getEditText().addTextChangedListener(formWatcher);
+
     }
+
+    private final TextWatcher formWatcher = new TextWatcher(){
+
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            if(signupFirstName.getText().toString().length() == 0 ||
+                    signupLastName.getText().toString().length() == 0 ||
+                    signupEmail.getText().toString().length() == 0 ||
+                    signupPassword.getEditText().getText().length() == 0){
+                nextButton.setEnabled(false);
+            }
+            else {
+                nextButton.setEnabled(true);
+
+            }
+        }
+    };
 
     public void signUpNext(View v){
         service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);

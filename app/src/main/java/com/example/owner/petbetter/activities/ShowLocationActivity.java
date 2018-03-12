@@ -109,14 +109,16 @@ public class ShowLocationActivity extends FragmentActivity
         }
 
         mMap.clear();
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(longitude,latitude)));
+        LatLng position = new LatLng(latitude,longitude);
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(position));
         mMap.animateCamera(CameraUpdateFactory.zoomBy(15));
 
         System.out.println("In show location bldg_name: "+bldgName);
         System.out.println("In show location latitude: "+latitude);
         System.out.println("In show location longitude: "+longitude);
         /*
-        LatLng position = new LatLng(latitude, longitude);
+
         mMap.addMarker(new MarkerOptions()
                 .position(position)
                 .title(bldgName)

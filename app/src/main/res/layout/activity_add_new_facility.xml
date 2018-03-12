@@ -190,6 +190,7 @@
                     android:layout_marginEnd="10dp"
                     android:layout_marginStart="10dp"
                     android:background="@color/medTurquoise"
+                    android:enabled="false"
                     android:onClick="addFacility"
                     android:text="Add Facility"
                     android:textAllCaps="false"
@@ -199,10 +200,6 @@
 
         </ScrollView>
     </RelativeLayout>
-
-
-
-
 
 
 </RelativeLayout>

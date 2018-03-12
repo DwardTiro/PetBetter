@@ -23,6 +23,7 @@
         tools:context="com.example.owner.petbetter.activities.MapsActivity" />
 
     <Button
+        android:id="@+id/addLocationButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -31,6 +32,7 @@
         android:textColor="@color/colorWhite"
         android:textAllCaps="false"
         android:onClick="onAddFacilityClicked"
+        android:enabled="false"
         />
 
 </RelativeLayout>
