@@ -78,7 +78,11 @@ public class FragmentMessages extends Fragment implements CheckUpdates {
 
         recyclerView = (RecyclerView) view.findViewById(R.id.messagesListing);
         //cause of error. change to where the recyclerview is.
-        messageList = getMessages(user.getUserId());
+
+        if(messageList==null){
+            messageList = getMessages(user.getUserId());
+        }
+
         System.out.println("Size of list "+messageList.size());
         messageAdapter = new MessageAdapter(getActivity(), messageList,new MessageAdapter.OnItemClickListener() {
             @Override public void onItemClick(Message item) {
@@ -97,7 +101,7 @@ public class FragmentMessages extends Fragment implements CheckUpdates {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        getActivity().registerReceiver(this.notifReceiver, new IntentFilter(Intent.ACTION_ATTACH_DATA));
+        //getActivity().registerReceiver(this.notifReceiver, new IntentFilter(Intent.ACTION_ATTACH_DATA));
 
         return view;
     }
@@ -187,8 +191,9 @@ public class FragmentMessages extends Fragment implements CheckUpdates {
 
     @Override
     public void onResult() {
-        messageList = getMessages(user.getUserId());
-        messageAdapter.updateList(messageList);
+
+        //messageList = getMessages(user.getUserId());
+        //messageAdapter.updateList(messageList);
         //messageAdapter.notifyDataSetChanged();
         System.out.println("ONRESULT MESSAGES");
     }

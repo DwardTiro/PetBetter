@@ -71,6 +71,7 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
     private TextView textNavEmail, textNavUser;
     private Toolbar menuBar;
     private User user;
+    private FragmentMessages fragment1;
     //private NotificationReceiver notifReceiver = new NotificationReceiver((CheckUpdates) this);
     //private NotificationReceiver notifReceiver2 = new NotificationReceiver();
     private ImageView notifButton;
@@ -151,7 +152,7 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
         textNavUser = (TextView) headerView.findViewById(R.id.textNavUser);
         textNavUser.setText(user.getName());
 
-        FragmentMessages fragment1 = new FragmentMessages();
+        fragment1 = new FragmentMessages();
         getSupportFragmentManager().beginTransaction().add(R.id.messages_container,fragment1).commitAllowingStateLoss();
 
         /*
@@ -191,31 +192,41 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+                if(actvMessage.getText().toString().equals("")){
+                    Intent intent = new Intent(MessagesActivity.this, com.example.owner.petbetter.activities.MessagesActivity.class);
+                    startActivity(intent);
+                }
+                else{
+                    service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
-                //query the substring to server data
-                final Call<ArrayList<Message>> call = service.queryMessages(actvMessage.getText().toString(), user.getUserId());
-                call.enqueue(new Callback<ArrayList<Message>>() {
-                    @Override
-                    public void onResponse(Call<ArrayList<Message>> call, Response<ArrayList<Message>> response) {
-                        ArrayList<Message> messageList = response.body();
-                        System.out.println("RESPONSE BODY SOIIIIZE: "+response.body().size());
+                    //query the substring to server data
+                    final Call<ArrayList<Message>> call = service.queryMessages(actvMessage.getText().toString(), user.getUserId());
+                    call.enqueue(new Callback<ArrayList<Message>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<Message>> call, Response<ArrayList<Message>> response) {
+                            ArrayList<Message> messageList = response.body();
 
-                        FragmentMessages fragment1 = new FragmentMessages(messageList);
-                        //replace frame_search
+                            for(Message message : messageList){
+                                User mUser = getUserWithId(message.getUserId());
+                                message.setFromName(mUser.getName());
+                            }
+                            fragment1 = new FragmentMessages(messageList);
+                            //replace frame_se
 
-                        getSupportFragmentManager().beginTransaction().replace(R.id.messages_container,fragment1).
-                                addToBackStack(null).commitAllowingStateLoss();
-                        //ArrayAdapter<Veterinarian> adapter = new ArrayAdapter<Veterinarian>(this,R.layout.,vetList);
+                            getSupportFragmentManager().beginTransaction().replace(R.id.messages_container,fragment1).
+                                    addToBackStack(null).commitAllowingStateLoss();
+                            //ArrayAdapter<Veterinarian> adapter = new ArrayAdapter<Veterinarian>(this,R.layout.,vetList);
 
-                    }
+                        }
 
-                    @Override
-                    public void onFailure(Call<ArrayList<Message>> call, Throwable t) {
-                        Log.d("onFailure", t.getLocalizedMessage());
-                        Toast.makeText(MessagesActivity.this, "Unable to get vets from server", Toast.LENGTH_LONG);
-                    }
-                });
+                        @Override
+                        public void onFailure(Call<ArrayList<Message>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+                            Toast.makeText(MessagesActivity.this, "Unable to get vets from server", Toast.LENGTH_LONG);
+                        }
+                    });
+                }
+
             }
 
 
