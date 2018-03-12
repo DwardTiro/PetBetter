@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 12, 2018 at 08:24 AM
+-- Generation Time: Mar 08, 2018 at 09:36 AM
 -- Server version: 10.1.10-MariaDB
 -- PHP Version: 7.0.3
 
@@ -34,17 +34,17 @@ CREATE TABLE `facilities` (
   `hours_close` text NOT NULL,
   `contact_info` text NOT NULL,
   `vet_id` int(11) NOT NULL,
-  `rating` double NOT NULL,
-  `faci_photo` text
+  `rating` double NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `facilities`
 --
 
-INSERT INTO `facilities` (`faci_id`, `faci_name`, `location`, `hours_open`, `hours_close`, `contact_info`, `vet_id`, `rating`, `faci_photo`) VALUES
-(1, 'Ivanhoe Veterinary Clinic', 'Solenad 1 Nuvali, Santa Rosa, Laguna ', '8:00', '17:00', '8704421', 1, 1.8333334, ''),
-(2, 'Bookmark', 'Manila', '', '', '', 1, 4, '');
+INSERT INTO `facilities` (`faci_id`, `faci_name`, `location`, `hours_open`, `hours_close`, `contact_info`, `vet_id`, `rating`) VALUES
+(1, 'Ivanhoe Veterinary Clinic', 'Solenad 1 Nuvali, Santa Rosa, Laguna ', '8:00', '17:00', '8704421', 1, 4),
+(2, 'Bookmark', 'Manila', '', '', '', 1, 4),
+(57, 'Another Clinic', 'Somewhere in Phil', '8:00', '17:00', '8765432', 3, 2);
 
 -- --------------------------------------------------------
 
@@ -65,8 +65,13 @@ CREATE TABLE `followers` (
 INSERT INTO `followers` (`_id`, `topic_id`, `user_id`) VALUES
 (163, 1, 3),
 (165, 2, 1),
-(166, 1, 2),
-(417, 1, 1);
+(166, 1, 3),
+(168, 2, 3),
+(169, 1, 3),
+(341, 1, 3),
+(342, 1, 1),
+(343, 2, 1),
+(344, 1, 3);
 
 -- --------------------------------------------------------
 
@@ -91,8 +96,7 @@ CREATE TABLE `markers` (
 
 INSERT INTO `markers` (`_id`, `bldg_name`, `longitude`, `latitude`, `location`, `user_id`, `type`, `faci_id`) VALUES
 (1, 'De La Salle University', 121, 15, '', 1, 1, 0),
-(3, 'Facility', 122, 14, '', 1, 2, 0),
-(139, 'Another Location', 120.9938468, 15, '', 1, 1, 0);
+(3, 'Facility', 122, 14, '', 1, 2, 0);
 
 -- --------------------------------------------------------
 
@@ -155,9 +159,7 @@ INSERT INTO `messagereps` (`_id`, `user_id`, `sender_id`, `message_id`, `rep_con
 (64, 2, 1, 10, 'wfff', 1, '2018-03-08T03:56:50Z', 'uploads/messagereps/965052c.jpg'),
 (65, 2, 1, 10, 'lol', 1, '2018-03-08T03:57:42Z', 'uploads/messagereps/883e881.jpg'),
 (66, 2, 1, 10, 'eyy', 1, '2018-03-08T04:01:45Z', 'uploads/messagereps/ae0eb3e.jpg'),
-(67, 2, 1, 10, 'dgsgs', 1, '2018-03-08T04:02:35Z', 'uploads/messagereps/ccf4769.jpg'),
-(70, 4, 2, 14, ' Hi doc', 1, '2018-03-12T01:46:49Z', NULL),
-(71, 3, 2, 15, 'JOHNNNN BY BOIIIIII', 1, '2018-03-12T01:47:23Z', NULL);
+(67, 2, 1, 10, 'dgsgs', 1, '2018-03-08T04:02:35Z', 'uploads/messagereps/ccf4769.jpg');
 
 -- --------------------------------------------------------
 
@@ -177,9 +179,7 @@ CREATE TABLE `messages` (
 
 INSERT INTO `messages` (`_id`, `user_one`, `user_two`) VALUES
 (1, 3, 1),
-(10, 1, 2),
-(14, 4, 2),
-(15, 3, 2);
+(10, 1, 2);
 
 -- --------------------------------------------------------
 
@@ -196,6 +196,42 @@ CREATE TABLE `notifications` (
   `date_performed` text,
   `source_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `notifications`
+--
+
+INSERT INTO `notifications` (`_id`, `user_id`, `doer_id`, `is_read`, `type`, `date_performed`, `source_id`) VALUES
+(1, 1, 2, 1, 2, '', 2),
+(2, 1, 3, 0, 1, '', 2),
+(27, 1, 2, 0, 1, NULL, 2),
+(28, 1, 2, 0, 1, NULL, 2),
+(29, 1, 2, 0, 1, NULL, 2),
+(30, 1, 2, 0, 1, NULL, 2),
+(31, 1, 2, 0, 1, NULL, 2),
+(32, 1, 2, 0, 1, NULL, 2),
+(33, 1, 2, 0, 1, NULL, 2),
+(34, 1, 2, 0, 2, NULL, 2),
+(37, 1, 2, 0, 2, NULL, 10),
+(38, 1, 2, 1, 1, '2018-02-19T17:42:35Z', 3),
+(39, 1, 1, 0, 1, '2018-03-04T01:36:00Z', 3),
+(40, 1, 1, 0, 1, '2018-03-04T01:36:00Z', 3),
+(41, 1, 1, 1, 1, '2018-03-04T01:37:10Z', 3),
+(43, 1, 2, 0, 1, '2018-03-04T01:46:24Z', 16),
+(44, 1, 2, 0, 1, '2018-03-04T01:46:24Z', 17),
+(45, 1, 2, 0, 1, '2018-03-04T01:46:24Z', 12),
+(46, 1, 2, 0, 1, '2018-03-04T01:46:24Z', 12),
+(47, 1, 2, 0, 1, '2018-03-04T01:46:24Z', 12),
+(48, 1, 2, 0, 1, '2018-03-04T01:46:24Z', 12),
+(49, 1, 1, 1, 1, '2018-03-05T01:54:23Z', 12),
+(50, 1, 1, 1, 1, '2018-03-05T01:54:23Z', 12),
+(51, 1, 1, 1, 1, '2018-03-05T01:57:04Z', 12),
+(54, 1, 2, 1, 1, '2018-02-19T17:42:35Z', 3),
+(57, 1, 3, 1, 4, '2018-03-05T01:57:04Z', 168),
+(58, 3, 1, 0, 3, '2018-03-05T13:25:31Z', 2),
+(59, 1, 3, 1, 4, '2018-03-05T01:57:04Z', 168),
+(60, 1, 3, 1, 4, '2018-03-05T01:57:04Z', 168),
+(61, 1, 3, 1, 4, '2018-03-05T01:57:04Z', 168);
 
 -- --------------------------------------------------------
 
@@ -219,16 +255,7 @@ CREATE TABLE `pets` (
 
 INSERT INTO `pets` (`_id`, `user_id`, `name`, `classification`, `breed`, `height`, `weight`) VALUES
 (1, 2, 'Ming Ming', 'Cat', 'Persian', 4, 4),
-(19, 1, 'Sue', 'Cat', 'Siamese', 5, 5),
-(100, 1, 'Sue', 'Cat', 'Siamese', 5, 5),
-(101, 1, 'Sue', 'Cat', 'Siamese', 5, 5),
-(102, 1, 'Sue', 'Cat', 'Siamese', 5, 5),
-(103, 1, 'Sue', 'Cat', 'Siamese', 5, 5),
-(104, 1, 'Sue', 'Cat', 'Siamese', 5, 5),
-(105, 1, 'Sue', 'Cat', 'Siamese', 5, 5),
-(106, 1, 'Sue', 'Cat', 'Siamese', 5, 5),
-(107, 1, 'Sue', 'Cat', 'Siamese', 5, 5),
-(108, 1, 'Sue', 'Cat', 'Siamese', 5, 5);
+(19, 1, 'Sue', 'Cat', 'Siamese', 5, 5);
 
 -- --------------------------------------------------------
 
@@ -290,24 +317,7 @@ INSERT INTO `posts` (`_id`, `user_id`, `topic_name`, `topic_content`, `topic_id`
 (1, 3, 'Come visit my clinic!', 'Hi guys! I''m John Ivanhoe. If you are a pet owner you may want to visit my clinic for regular check ups.', 1, '', 0),
 (2, 1, 'Hi guys! Looking for a doctor to treat my dog.', 'Could I get suggestions as to who I could contact or where to go?', 1, '', 0),
 (3, 1, 'I love dogs', 'Hi guys! I love dogs', 2, '', 0),
-(4, 2, 'Hey!', 'Hi!', 2, '', 1),
-(91, 4, 'Pets update!', 'So I bought a cat and I named her Sue.', 1, NULL, 0),
-(92, 1, 'Eyy', 'Yoh', 1, '2018-03-09T20:30:58Z', 0),
-(94, 1, 'Eyy2', 'Yoh2', 1, '2018-03-09T20:30:58Z', 0),
-(95, 1, 'Eyy3', 'watup', 1, '2018-03-09T20:47:42Z', 0),
-(96, 4, 'Pets update!', 'So I bought a cat and I named her Sue.', 1, NULL, 0),
-(97, 1, 'Hello ', 'Hi', 1, '2018-03-09T20:56:59Z', 0),
-(98, 1, 'yuu', 'yuyuyuu', 1, '2018-03-09T20:59:06Z', 0),
-(99, 1, 'don''t duplicate huuu', 'plssss', 1, '2018-03-09T21:12:48Z', 0),
-(100, 4, 'Pets update!', 'So I bought a cat and I named her Sue.', 1, NULL, 0),
-(101, 1, 'ehuedh', 'wdeudh', 1, '2018-03-09T21:14:59Z', 0),
-(102, 1, 'We oki?', 'oki?', 1, '2018-03-09T21:17:37Z', 0),
-(103, 1, 'Oks?', 'Manoks?', 1, '2018-03-09T21:20:59Z', 0),
-(104, 1, 'test', 'test', 1, '2018-03-09T21:26:06Z', 0),
-(105, 1, 'check', 'check', 1, '2018-03-09T21:27:27Z', 0),
-(106, 1, 'We cool?', '???', 1, '2018-03-09T21:36:20Z', 0),
-(107, 1, 'We okay dude?', '???', 1, '2018-03-09T21:36:20Z', 0),
-(108, 1, 'plsssss', '???', 1, '2018-03-09T21:36:20Z', 0);
+(4, 2, 'Hey!', 'Hi!', 2, '', 1);
 
 -- --------------------------------------------------------
 
@@ -331,12 +341,7 @@ CREATE TABLE `ratings` (
 --
 
 INSERT INTO `ratings` (`_id`, `rater_id`, `rated_id`, `rating`, `comment`, `rating_type`, `date_created`, `is_deleted`) VALUES
-(1, 2, 1, 4, 'Very nice.', 1, '', 0),
-(2, 4, 1, 1, 'Very bad', 1, '', 0),
-(3, 2, 58, 2, '', 1, '2018-03-11T03:45:07Z', 0),
-(6, 4, 1, 1, '', 2, '2018-03-11T04:27:54Z', 0),
-(7, 6, 1, 1.5, '', 2, '2018-03-11T04:27:54Z', 0),
-(9, 6, 1, 4, '', 1, '2018-03-11T11:25:50Z', 0);
+(1, 2, 1, 4, 'Very nice.', 1, '', 0);
 
 -- --------------------------------------------------------
 
@@ -357,25 +362,8 @@ CREATE TABLE `services` (
 --
 
 INSERT INTO `services` (`_id`, `faci_id`, `service_name`, `service_price`, `is_deleted`) VALUES
-(0, 1, 'Grooming', 100, 0),
 (3, 1, 'Grooming', 100, 0),
-(4, 1, 'Consultation', 200, 0),
-(169, 1, 'Grooming', 100, 0),
-(170, 1, 'Consultation', 200, 0),
-(171, 1, 'Grooming', 100, 0),
-(172, 1, 'Consultation', 200, 0),
-(173, 1, 'Grooming', 100, 0),
-(174, 1, 'Consultation', 200, 0),
-(175, 1, 'Grooming', 100, 0),
-(176, 1, 'Consultation', 200, 0),
-(177, 1, 'Grooming', 100, 0),
-(178, 1, 'Consultation', 200, 0),
-(179, 1, 'Grooming', 100, 0),
-(180, 1, 'Consultation', 200, 0),
-(181, 1, 'Grooming', 100, 0),
-(182, 1, 'Consultation', 200, 0),
-(183, 1, 'Grooming', 100, 0),
-(184, 1, 'Consultation', 200, 0);
+(4, 1, 'Consultation', 200, 0);
 
 -- --------------------------------------------------------
 
@@ -397,7 +385,6 @@ CREATE TABLE `topics` (
 --
 
 INSERT INTO `topics` (`_id`, `creator_id`, `topic_name`, `topic_desc`, `date_created`, `is_deleted`) VALUES
-(0, 2, 'Cats are better', 'They just are', NULL, 0),
 (1, 0, 'General', 'Default', '', 0),
 (2, 1, 'For dog lovers only', 'Basically everything about dogs are welcome.', '', 0),
 (3, 3, 'Another topic', 'For general use', '', 0);
@@ -422,7 +409,8 @@ CREATE TABLE `upvotes` (
 
 INSERT INTO `upvotes` (`_id`, `feed_id`, `user_id`, `value`, `type`) VALUES
 (1, 1, 1, -1, 1),
-(2, 1, 3, 1, 1);
+(2, 1, 3, 1, 1),
+(3, 1, 2, -1, 1);
 
 -- --------------------------------------------------------
 
@@ -448,8 +436,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `first_name`, `last_name`, `mobile_num`, `phone_num`, `email`, `password`, `age`, `user_type`, `user_photo`) VALUES
-(1, 'Edward', 'Tiro', '9152794135.', '1234568', 'edward_tiro@dlsu.edu.ph', '123', 20, 1, 'uploads/users/1534184.jpg'),
-(2, 'Kristian', 'Sisayan', '9567761376.', '9876543', 'kristian_sisayan@dlsu.edu.ph', '113', 20, 2, 'uploads/users/238f646.jpg'),
+(1, 'Edward', 'Tiro', '9152794135', '123456890', 'edward_tiro@dlsu.edu.ph', '123', 20, 1, NULL),
+(2, 'Kristian', 'Sisayan', '9567761376.', '9876543', 'kristian_sisayan@dlsu.edu.ph', '113', 20, 2, NULL),
 (3, 'John', 'Ivanhoe', '', '8704421', 'john_ivanhoe@gmail.com', '1234', 30, 1, NULL),
 (4, 'John', 'Dion', '09152791111', '1234567', 'john_dion@gmail.com', '111', 0, 2, NULL),
 (5, 'Kristian', 'Sisayan', '', '', 'sisayan.kristian@gmail.com', 'glmrklls', 0, 1, NULL),
@@ -475,7 +463,7 @@ CREATE TABLE `veterinarians` (
 --
 
 INSERT INTO `veterinarians` (`_id`, `user_id`, `specialty`, `rating`, `phone_num`) VALUES
-(1, 3, 'Animal Behaviour', 3, '098654321'),
+(1, 3, 'Animal Behaviour', 4, '098654321'),
 (2, 1, 'Veterinary Specialist', 0, '0987654321'),
 (58, 4, 'Breeding', 2, '');
 
@@ -581,67 +569,67 @@ ALTER TABLE `veterinarians`
 -- AUTO_INCREMENT for table `facilities`
 --
 ALTER TABLE `facilities`
-  MODIFY `faci_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=148;
+  MODIFY `faci_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=139;
 --
 -- AUTO_INCREMENT for table `followers`
 --
 ALTER TABLE `followers`
-  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=418;
+  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=413;
 --
 -- AUTO_INCREMENT for table `markers`
 --
 ALTER TABLE `markers`
-  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=148;
+  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=139;
 --
 -- AUTO_INCREMENT for table `messagereps`
 --
 ALTER TABLE `messagereps`
-  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
+  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
 --
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
+  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=175;
 --
 -- AUTO_INCREMENT for table `pets`
 --
 ALTER TABLE `pets`
-  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=109;
+  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=100;
 --
 -- AUTO_INCREMENT for table `postreps`
 --
 ALTER TABLE `postreps`
-  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=108;
+  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=99;
 --
 -- AUTO_INCREMENT for table `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=115;
+  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=91;
 --
 -- AUTO_INCREMENT for table `ratings`
 --
 ALTER TABLE `ratings`
-  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `services`
 --
 ALTER TABLE `services`
-  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=185;
+  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=169;
 --
 -- AUTO_INCREMENT for table `topics`
 --
 ALTER TABLE `topics`
-  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=104;
+  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=96;
 --
 -- AUTO_INCREMENT for table `upvotes`
 --
 ALTER TABLE `upvotes`
-  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `users`
 --
@@ -651,7 +639,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `veterinarians`
 --
 ALTER TABLE `veterinarians`
-  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
+  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
