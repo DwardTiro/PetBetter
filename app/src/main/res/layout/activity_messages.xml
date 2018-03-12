@@ -25,16 +25,11 @@
             android:layout_height="wrap_content"
             />
 
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/messagesRecyclerView"
+        <FrameLayout
+            android:id="@+id/messages_container"
             android:layout_width="match_parent"
             android:layout_height="510dp"
-            android:layout_below="@id/messagesToolbar" />
-
-        <FrameLayout
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_below="@id/messagesToolbar"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_alignParentEnd="true">

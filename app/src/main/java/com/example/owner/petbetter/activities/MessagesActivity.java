@@ -16,12 +16,16 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
@@ -30,23 +34,32 @@ import com.example.owner.petbetter.adapters.MessageAdapter;
 import com.example.owner.petbetter.classes.Message;
 import com.example.owner.petbetter.classes.Notifications;
 import com.example.owner.petbetter.classes.User;
+import com.example.owner.petbetter.classes.Veterinarian;
 import com.example.owner.petbetter.database.DataAdapter;
+import com.example.owner.petbetter.fragments.FragmentMessages;
+import com.example.owner.petbetter.fragments.FragmentVetListing;
 import com.example.owner.petbetter.interfaces.CheckUpdates;
 import com.example.owner.petbetter.services.MyService;
 import com.example.owner.petbetter.services.NotificationReceiver;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Kristian on 2/22/2018.
  */
 
 
-public class MessagesActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, CheckUpdates {
+public class MessagesActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private ArrayList<Message> messageList;
     private DataAdapter petBetterDb;
@@ -58,25 +71,27 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
     private TextView textNavEmail, textNavUser;
     private Toolbar menuBar;
     private User user;
-    private NotificationReceiver notifReceiver = new NotificationReceiver((CheckUpdates) this);
-    private NotificationReceiver notifReceiver2 = new NotificationReceiver();
+    //private NotificationReceiver notifReceiver = new NotificationReceiver((CheckUpdates) this);
+    //private NotificationReceiver notifReceiver2 = new NotificationReceiver();
     private ImageView notifButton;
+    private AutoCompleteTextView actvMessage;
 
     HerokuService service;
 
     @Override
     protected void onResume() {
         super.onResume();
-        MessagesActivity.this.registerReceiver(this.notifReceiver, new IntentFilter(Intent.ACTION_ATTACH_DATA));
-        onResult();
+        //MessagesActivity.this.registerReceiver(this.notifReceiver, new IntentFilter(Intent.ACTION_ATTACH_DATA));
+        //onResult();
     }
 
+    /*
     @Override
     protected void onPause() {
         super.onPause();
         MessagesActivity.this.unregisterReceiver(notifReceiver);
         //MessagesActivity.this.unregisterReceiver(notifReceiver2);
-    }
+    }*/
 
 
     @Override
@@ -122,6 +137,7 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
         initializeDatabase();
         service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         notifButton = (ImageView) findViewById(R.id.imageview_notifs);
+        actvMessage = (AutoCompleteTextView) findViewById(R.id.actvMesaage);
 
         if(!getUnsyncedNotifications().isEmpty())
             notifButton.setImageResource(R.mipmap.ic_notifications_active_black_24dp);
@@ -135,6 +151,10 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
         textNavUser = (TextView) headerView.findViewById(R.id.textNavUser);
         textNavUser.setText(user.getName());
 
+        FragmentMessages fragment1 = new FragmentMessages();
+        getSupportFragmentManager().beginTransaction().add(R.id.messages_container,fragment1).commitAllowingStateLoss();
+
+        /*
         messagesRecyclerView = (RecyclerView) findViewById(R.id.messagesRecyclerView);
         messageList = getMessages(user.getUserId());
         System.out.println("Size of message list in this thing "+messageList.size());
@@ -151,7 +171,7 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
         messagesRecyclerView.setItemAnimator(new DefaultItemAnimator());
         messagesRecyclerView.setHasFixedSize(true);
         messagesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
+        */
         notifButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -162,6 +182,49 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
         });
 
         hideItems();
+        actvMessage.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+                //query the substring to server data
+                final Call<ArrayList<Message>> call = service.queryMessages(actvMessage.getText().toString(), user.getUserId());
+                call.enqueue(new Callback<ArrayList<Message>>() {
+                    @Override
+                    public void onResponse(Call<ArrayList<Message>> call, Response<ArrayList<Message>> response) {
+                        ArrayList<Message> messageList = response.body();
+                        System.out.println("RESPONSE BODY SOIIIIZE: "+response.body().size());
+
+                        FragmentMessages fragment1 = new FragmentMessages(messageList);
+                        //replace frame_search
+
+                        getSupportFragmentManager().beginTransaction().replace(R.id.messages_container,fragment1).
+                                addToBackStack(null).commitAllowingStateLoss();
+                        //ArrayAdapter<Veterinarian> adapter = new ArrayAdapter<Veterinarian>(this,R.layout.,vetList);
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<ArrayList<Message>> call, Throwable t) {
+                        Log.d("onFailure", t.getLocalizedMessage());
+                        Toast.makeText(MessagesActivity.this, "Unable to get vets from server", Toast.LENGTH_LONG);
+                    }
+                });
+            }
+
+
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     @Override
@@ -233,7 +296,7 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
             editor.clear();
             editor.commit();
             Intent intentLogout = new Intent().setAction("com.package.ACTION_LOGOUT");
-            notifReceiver.onReceive(this, intentLogout);
+            //notifReceiver.onReceive(this, intentLogout);
             sendBroadcast(intentLogout);
             startActivity(intent);
             //stopService(new Intent(MessagesActivity.this, MyService.class));
@@ -323,13 +386,13 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
         return result;
     }
 
-    @Override
+    /*
     public void onResult() {
         messageList = getMessages(user.getUserId());
         messageAdapter.updateList(messageList);
         //messageAdapter.notifyDataSetChanged();
         System.out.println("ONRESULT MESSAGES");
-    }
+    }*/
 
     private ArrayList<Notifications> getUnsyncedNotifications(){
 

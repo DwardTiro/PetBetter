@@ -18,23 +18,5 @@
         android:layout_alignParentBottom="true">
     </android.support.v7.widget.RecyclerView>
 
-    <FrameLayout
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true">
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@mipmap/ic_mail_outline_white_24dp"
-            android:backgroundTint="@color/myrtle_green"
-            app:backgroundTint="@color/amazonite"
-            />
-    </FrameLayout>
-
 
 </RelativeLayout>

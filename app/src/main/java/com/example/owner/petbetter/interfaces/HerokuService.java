@@ -243,6 +243,10 @@ public interface HerokuService {
     @POST("queryFacilities.php")
     Call<ArrayList<Facility>> queryFacilities(@Body RequestBody query);
 
+    @FormUrlEncoded
+    @POST("queryMessages.php")
+    Call<ArrayList<Message>> queryMessages(@Field("queryjson") String query, @Field("_id") long _id);
+
     @POST("queryEmail.php")
     Call<ArrayList<User>> queryEmail(@Body RequestBody query);
 

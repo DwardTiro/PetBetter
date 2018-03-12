@@ -1,5 +1,6 @@
 package com.example.owner.petbetter.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.design.widget.FloatingActionButton;
@@ -42,6 +43,14 @@ public class FragmentMessages extends Fragment implements CheckUpdates {
     private boolean allowRefresh = false;
     private NotificationReceiver notifReceiver = new NotificationReceiver(this);
 
+    public FragmentMessages() {
+    }
+
+    @SuppressLint("ValidFragment")
+    public FragmentMessages(ArrayList<Message> messageList) {
+        this.messageList = messageList;
+    }
+
     @Override
     public void onPause() {
         super.onPause();
@@ -82,22 +91,13 @@ public class FragmentMessages extends Fragment implements CheckUpdates {
             }
         });
         //messageAdapter = new MessageAdapter(getActivity(), messageList);
-        messageAdapter.notifyItemRangeChanged(0, messageAdapter.getItemCount());
+        //messageAdapter.notifyItemRangeChanged(0, messageAdapter.getItemCount());
         recyclerView.setAdapter(messageAdapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         getActivity().registerReceiver(this.notifReceiver, new IntentFilter(Intent.ACTION_ATTACH_DATA));
-
-        fab = (FloatingActionButton) view.findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.NewMessageActivity.class);
-                startActivity(intent);
-                allowRefresh = true;
-            }
-        });
 
         return view;
     }
