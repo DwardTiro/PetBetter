@@ -2238,6 +2238,34 @@ public class DataAdapter {
         return result;
     }
 
+    public long setUsers(ArrayList<User> userList){
+        long result = 0;
+
+        petBetterDb.delete(USER_TABLE, null, null);
+
+
+
+        for(User user:userList){
+            ContentValues cv = new ContentValues();
+            cv.put("_id", user.getUserId());
+            cv.put("first_name", user.getFirstName());
+            cv.put("last_name", user.getLastName());
+            cv.put("mobile_num", user.getMobileNumber());
+            cv.put("phone_num", user.getPhoneNumber());
+            cv.put("email", user.getEmail());
+            cv.put("password", user.getPassword());
+            cv.put("age", user.getAge());
+            cv.put("user_type", user.getUserType());
+            cv.put("user_photo", user.getUserPhoto());
+            cv.put("is_synced", 1);
+
+            result = petBetterDb.insert(USER_TABLE, null, cv);
+        }
+        //System.out.println("2ND REAL NUM OF POSTS: "+getPosts().size());
+
+        return result;
+    }
+
     public long setUpvotes(ArrayList<Upvote> upvoteList){
         long result = 0;
 

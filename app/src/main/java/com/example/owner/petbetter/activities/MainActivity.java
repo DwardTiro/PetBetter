@@ -188,6 +188,8 @@ public class MainActivity extends AppCompatActivity {
 
                         syncUpvoteChanges();
 
+                        syncUsers();
+
 
 
                         try {
@@ -349,6 +351,28 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
+    public void syncUsers(){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+        final Call<ArrayList<User>> call = service.getUsers();
+        call.enqueue(new Callback<ArrayList<User>>() {
+            @Override
+            public void onResponse(Call<ArrayList<User>> call, Response<ArrayList<User>> response) {
+                if(response.isSuccessful()){
+                    setUsers(response.body());
+                    dataSynced(9);
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<User>> call, Throwable t) {
                 Log.d("onFailure", t.getLocalizedMessage());
             }
         });
@@ -1469,6 +1493,19 @@ public class MainActivity extends AppCompatActivity {
 
         return result;
     }
+
+    public long setUsers(ArrayList<User> userList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setUsers(userList);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
 
     public long setServices(ArrayList<Services> serviceList){
         try {

@@ -109,6 +109,9 @@ public interface HerokuService {
     @POST("getAllPostReps.php")
     Call<ArrayList<PostRep>> getAllPostReps();
 
+    @POST("getUsers.php")
+    Call<ArrayList<User>> getUsers();
+
     @POST("getClinics.php")
     Call<ArrayList<Facility>> getClinics();
 

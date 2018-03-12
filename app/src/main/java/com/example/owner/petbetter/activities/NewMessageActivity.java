@@ -466,6 +466,9 @@ public class NewMessageActivity extends AppCompatActivity {
 
 
                 bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), path);
+                if(bitmap.getHeight()>250||bitmap.getWidth()>250){
+                    bitmap = Bitmap.createScaledBitmap(bitmap,250,250,false);
+                }
 
             } catch (IOException e) {
                 e.printStackTrace();
