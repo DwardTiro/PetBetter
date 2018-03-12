@@ -12,8 +12,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ServiceGenerator {
 
 
-    //private static final String BASE_URL = "http://192.168.0.16/petbetter/";
-    private static final String BASE_URL = "http://10.0.2.2/petbetter/";
+    public static final String BASE_URL = "http://192.168.0.19/petbetter/";
+    //private static final String BASE_URL = "http://10.0.2.2/petbetter/";
     //private static final String BASE_URL = "http://localhost/petbetter/";
     //private static final String BASE_URL = "https://petbetter.herokuapp.com/";
     private static Retrofit retrofit;

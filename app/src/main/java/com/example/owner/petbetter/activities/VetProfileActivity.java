@@ -33,6 +33,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.example.owner.petbetter.ServiceGenerator.BASE_URL;
+
 /**
  * Created by Kristian on 8/8/2017.
  */
@@ -106,7 +108,8 @@ public class VetProfileActivity extends AppCompatActivity {
         vetSpecialty.setText(vetItem.getSpecialty());
 
         if(vetItem.getUserPhoto()!=null){
-            String newFileName = "http://192.168.0.19/petbetter/"+vetItem.getUserPhoto();
+            String newFileName = BASE_URL + vetItem.getUserPhoto();
+            //String newFileName = "http://192.168.0.19/petbetter/"+vetItem.getUserPhoto();
             System.out.println("USER PHOTO "+user.getUserPhoto());
             Glide.with(VetProfileActivity.this).load(newFileName).error(R.drawable.back_button).into(profileBG);
         }

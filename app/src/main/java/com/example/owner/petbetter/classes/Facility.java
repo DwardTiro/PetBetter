@@ -33,6 +33,10 @@ public class Facility {
 
     @SerializedName("contact_info")
     private String contactInfo;
+
+    @SerializedName("faci_photo")
+    private String faciPhoto;
+
     private double longitude;
     private double latitude;
 
@@ -45,6 +49,27 @@ public class Facility {
         this.contactInfo = contactInfo;
         this.vetId = vetId;
         this.rating = rating;
+    }
+
+    public Facility(int id, String faciName, String location, String hoursOpen, String hoursClose, String contactInfo, int vetId,
+                    float rating, String faciPhoto) {
+        this.id = id;
+        this.faciName = faciName;
+        this.location = location;
+        this.hoursOpen = hoursOpen;
+        this.hoursClose = hoursClose;
+        this.contactInfo = contactInfo;
+        this.vetId = vetId;
+        this.rating = rating;
+        this.faciPhoto = faciPhoto;
+    }
+
+    public String getFaciPhoto() {
+        return faciPhoto;
+    }
+
+    public void setFaciPhoto(String faciPhoto) {
+        this.faciPhoto = faciPhoto;
     }
 
     public double getLongitude() {

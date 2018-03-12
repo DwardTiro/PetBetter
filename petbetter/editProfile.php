@@ -24,7 +24,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 	else{
 		$upload_path = null;
 	}
-	echo $upload_path;
+	//echo $upload_path;
 	if($stmt = $mysqli->prepare("UPDATE users SET first_name = ?, last_name = ?, mobile_num = ?,  phone_num = ?, email = ?, password = ?, age = ?, user_type = ?, user_photo = ? WHERE user_id = ?")){
 		$stmt->bind_param("ssssssssss", $userlist['first_name'], $userlist['last_name'], $userlist['mobile_num'], $userlist['phone_num'], $userlist['email'], $userlist['password'], 
 			$userlist['age'], $userlist['user_type'], $upload_path, $userlist['user_id']);

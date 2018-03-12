@@ -18,7 +18,7 @@
         android:layout_below="@+id/editProfileToolbar"
         android:orientation="vertical">
 
-        <RelativeLayout
+        <FrameLayout
             android:id="@+id/profileImagesLayout"
             android:layout_width="150dp"
             android:layout_height="150dp"
@@ -31,7 +31,14 @@
                 android:background="@drawable/vet_sample_pic"
                 android:adjustViewBounds="true"/>
 
-        </RelativeLayout>
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:src="@mipmap/ic_add_a_photo_black_24dp"
+                android:contentDescription="Add photo" />
+
+        </FrameLayout>
 
 
         <ScrollView

@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.owner.petbetter.R;
+import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.classes.MessageRep;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -29,6 +30,8 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
+
+import static com.example.owner.petbetter.ServiceGenerator.BASE_URL;
 
 /**
  * Created by owner on 15/10/2017.
@@ -74,7 +77,8 @@ public class MessageRepAdapter extends RecyclerView.Adapter<MessageRepAdapter.Me
 
         if(thisMessageRep.getMessagePhoto()!=null){
 
-            String newFileName = "http://192.168.0.19/petbetter/"+thisMessageRep.getMessagePhoto();
+            String newFileName = BASE_URL + thisMessageRep.getMessagePhoto();
+            //String newFileName = "http://192.168.0.19/petbetter/"+thisMessageRep.getMessagePhoto();
             Glide.with(inflater.getContext()).load(newFileName).error(R.drawable.back_button).into(holder.messageRepImage);
             /*
             Picasso.with(inflater.getContext()).load("http://".concat(newFileName))

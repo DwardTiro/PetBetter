@@ -93,6 +93,7 @@ public class MapsActivity extends FragmentActivity
     private String closeTime;
     private String phoneNum;
     private String address;
+    private String image;
     private long faciId;
     private long locationId;
 
@@ -114,6 +115,7 @@ public class MapsActivity extends FragmentActivity
         closeTime = extras.getString("hours_close");
         phoneNum = extras.getString("phone_num");
         address = extras.getString("location");
+        image = extras.getString("image");
 
         service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         systemSessionManager = new SystemSessionManager(this);
@@ -290,7 +292,8 @@ public class MapsActivity extends FragmentActivity
             String hours_open,
             String hours_close,
             String contact_info,
-            int vet_id
+            int vet_id,
+            String faciPhoto
     ) {
 
         try{
@@ -299,7 +302,7 @@ public class MapsActivity extends FragmentActivity
             e.printStackTrace();
         }
 
-        long result = petBetterDb.addFacility(faci_id,faci_name,location,hours_open,hours_close,contact_info,vet_id);
+        long result = petBetterDb.addFacility(faci_id,faci_name,location,hours_open,hours_close,contact_info,vet_id, faciPhoto);
         petBetterDb.closeDatabase();
 
         return result;
@@ -632,10 +635,11 @@ public class MapsActivity extends FragmentActivity
                 closeTime,
                 phoneNum,
                 vetId,
-                0
+                0,
+                image
         );
 
-        addFacilitytoDB((int)faciId,faciName,"",openTime,closeTime,phoneNum,vetId);
+        addFacilitytoDB((int)faciId,faciName,"",openTime,closeTime,phoneNum,vetId, image);
         Gson gson = new GsonBuilder().serializeNulls().create();
         String jsonArray = gson.toJson(facility);
         System.out.println(jsonArray);

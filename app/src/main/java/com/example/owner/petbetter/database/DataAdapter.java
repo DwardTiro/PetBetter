@@ -1213,15 +1213,8 @@ public class DataAdapter {
         return ids;
     }
 
-    public long addFacility(
-            int faci_id,
-            String faci_name,
-            String location,
-            String hours_open,
-            String hours_close,
-            String contact_info,
-            int vet_id
-            ){
+    public long addFacility(int faci_id, String faci_name, String location, String hours_open, String hours_close,
+                            String contact_info, int vet_id, String faciPhoto){
         long result;
 
         ContentValues cv = new ContentValues();
@@ -1233,6 +1226,7 @@ public class DataAdapter {
         cv.put("contact_info", contact_info);
         cv.put("vet_id", vet_id);
         cv.put("rating", 0);
+        cv.put("faci_photo", faciPhoto);
         cv.put("is_synced", 0);
 
         result = petBetterDb.insert(FACI_TABLE, null, cv);
@@ -2191,7 +2185,7 @@ public class DataAdapter {
             cv.put("rating", vet.getRating());
             result = petBetterDb.insert(VET_TABLE, null, cv);
         }
-        System.out.println("2ND REAL NUM OF VETS "+getVeterinarians().size());
+        //System.out.println("2ND REAL NUM OF VETS "+getVeterinarians().size());
         return result;
     }
 

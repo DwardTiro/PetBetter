@@ -39,6 +39,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.example.owner.petbetter.ServiceGenerator.BASE_URL;
+
 /**
  * Created by Kristian on 10/23/2017.
  */
@@ -96,7 +98,8 @@ public class EditProfileActivity extends AppCompatActivity {
         phoneEdit.setText(user.getPhoneNumber());
 
         if(user.getUserPhoto()!=null){
-            String newFileName = "http://192.168.0.19/petbetter/"+user.getUserPhoto();
+            String newFileName = BASE_URL + user.getUserPhoto();
+            //String newFileName = "http://192.168.0.19/petbetter/"+user.getUserPhoto();
             System.out.println("USER PHOTO "+user.getUserPhoto());
             Glide.with(EditProfileActivity.this).load(newFileName).error(R.drawable.back_button).into(editImage);
         }
