@@ -1,6 +1,7 @@
 package com.example.owner.petbetter.fragments;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.design.widget.FloatingActionButton;
@@ -10,26 +11,35 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.PopupMenu;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.adapters.CommunityAdapter;
+import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.Topic;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.interfaces.CheckUpdates;
+import com.example.owner.petbetter.interfaces.PlaceInfoListener;
 import com.example.owner.petbetter.services.NotificationReceiver;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
+import com.google.android.gms.location.places.Place;
 import com.google.gson.Gson;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class FragmentCommunity extends Fragment implements CheckUpdates{
+public class FragmentCommunity extends Fragment implements CheckUpdates, PlaceInfoListener {
     private CommunityAdapter communityAdapter;
     private RecyclerView recyclerView;
     private ArrayList<Topic> topicList;
@@ -40,8 +50,10 @@ public class FragmentCommunity extends Fragment implements CheckUpdates{
     private SystemSessionManager systemSessionManager;
     private User user;
     private String email;
-    private FloatingActionButton fab;
+    //private FloatingActionButton fab;
     private boolean allowRefresh = false;
+    private PopupWindow popUpConfirmationWindow;
+    private ArrayList<Post> topicPosts;
 
     public FragmentCommunity() {
     }
@@ -95,7 +107,7 @@ public class FragmentCommunity extends Fragment implements CheckUpdates{
                 startActivity(intent);
 
             }
-        });
+        }, this);
         //homeAdapter = new HomeAdapter(getActivity(), postList);
         communityAdapter.notifyItemRangeChanged(0, communityAdapter.getItemCount());
         recyclerView.setAdapter(communityAdapter);
@@ -103,6 +115,7 @@ public class FragmentCommunity extends Fragment implements CheckUpdates{
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        /*
         fab = (FloatingActionButton) view.findViewById(R.id.fabCom);
         fab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -112,6 +125,7 @@ public class FragmentCommunity extends Fragment implements CheckUpdates{
                 allowRefresh = true;
             }
         });
+        */
 
         return view;
     }
@@ -193,4 +207,109 @@ public class FragmentCommunity extends Fragment implements CheckUpdates{
 
         }
     }
+
+    @Override
+    public void onPopupMenuClicked(final View view, final int pos) {
+        final Topic thisTopic = topicList.get(pos);
+        PopupMenu options = new PopupMenu(this.getContext(), view);
+        MenuInflater inflater = options.getMenuInflater();
+        inflater.inflate(R.menu.post_topic_menu, options.getMenu());
+        System.out.println("Options menu clicked");
+        options.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                switch (menuItem.getItemId()){
+                    case R.id.menu_edit_post_topic:
+                        System.out.println("Edit topic clicked");
+                        return true;
+                    case R.id.menu_delete_post_topic:
+                        LayoutInflater layoutInflater = (LayoutInflater) view.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                        View popUpConfirmation = layoutInflater.inflate(R.layout.popup_confirmation_delete_topic, null);
+
+                        popUpConfirmation.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+
+
+                        popUpConfirmationWindow = new PopupWindow(popUpConfirmation, 750, 360, true);
+                        popUpConfirmationWindow.showAtLocation(popUpConfirmation, Gravity.CENTER, 0, 0);
+
+                        Button cancelButton = (Button) popUpConfirmationWindow.getContentView().findViewById(R.id.popUpTopicCancelButton);
+
+                        Button deleteButton = (Button) popUpConfirmationWindow.getContentView().findViewById(R.id.popUpTopicDeleteButton);
+
+                        cancelButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                popUpConfirmationWindow.dismiss();
+                            }
+                        });
+
+                        deleteButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                initializeDatabase();
+                                topicPosts = getTopicPosts(thisTopic.getId());
+                                deleteTopic(thisTopic.getId());
+                                for (int i = 0; i < topicPosts.size(); i++) {
+                                    deletePost(topicPosts.get(i).getId());
+                                }
+                                update(pos);
+                                popUpConfirmationWindow.dismiss();
+                            }
+                        });
+                        return true;
+
+                    default: return false;
+                }
+
+            }
+        });
+
+        options.show();
+
+    }
+
+    private ArrayList<Post> getTopicPosts(long topicId) {
+        try {
+            petBetterDb.openDatabase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Post> result = petBetterDb.getTopicPosts(topicId);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private long deleteTopic(long topicId) {
+        try {
+            petBetterDb.openDatabase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        long result = petBetterDb.deleteTopic(topicId);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private long deletePost(long postId) {
+        try {
+            petBetterDb.openDatabase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        long result = petBetterDb.deletePost(postId);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    public void update(int position) {
+        topicList.remove(position);
+        communityAdapter.notifyDataSetChanged();
+    }
+
 }

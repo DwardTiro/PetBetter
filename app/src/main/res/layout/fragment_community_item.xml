@@ -1,77 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="120dp"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="5dp"
     android:layout_marginEnd="10dp"
     android:layout_marginStart="10dp"
-    android:layout_marginTop="10dp"
-    android:background="@drawable/rounded_bg_corner"
-    android:onClick="homeListingClicked"
+    android:layout_marginTop="5dp"
+    card_view:cardCornerRadius="2dp">
 
-    android:orientation="horizontal"
-    android:weightSum="1">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
 
-    <LinearLayout
-        android:layout_width="280dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="0dp"
-        android:orientation="vertical">
+        android:orientation="horizontal"
+        android:weightSum="1">
 
-        <TextView
-            android:id="@+id/topicComName"
+        <LinearLayout
+            android:id="@+id/topicContentLayout"
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="0dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/topicComName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLength="30"
+                android:maxLines="1"
+                android:text="@string/sample_clinic"
+                android:textColor="@color/black"
+                android:textSize="@dimen/listing_font_size" />
+
+            <TextView
+                android:id="@+id/topicComDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:maxLength="35"
+                android:maxLines="2"
+                android:text="@string/sample_address" />
+
+            <TextView
+                android:id="@+id/topicComUser"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:layout_marginTop="5dp"
+                android:text="@string/sample_address" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:maxLength="30"
-            android:maxLines="1"
-            android:text="@string/sample_clinic"
-            android:textColor="@color/black"
-            android:textSize="@dimen/listing_font_size" />
+            android:layout_marginEnd="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="22dp"
+            android:layout_toEndOf="@+id/topicContentLayout"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/topicComDescription"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:maxLength="35"
-            android:maxLines="2"
-            android:text="@string/sample_address" />
 
-        <TextView
-            android:id="@+id/topicComUser"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="12dp"
-            android:text="@string/sample_address" />
+        </LinearLayout>
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="22dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="0dp"
-        android:orientation="vertical"
-        >
         <ImageButton
-            android:id="@+id/deleteTopicButton"
-            android:layout_width="20dp"
-            android:layout_height="wrap_content"
-
-            android:background="@color/main_White"
-            android:src="@mipmap/ic_delete_black_24dp" />
-        <TextView
-            android:id="@+id/textViewFollowers"
+            android:id="@+id/topicOptionsButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="5dp"
+            android:layout_marginTop="10dp"
+            android:background="@null"
+            android:contentDescription="Topic options"
+            android:src="@drawable/ic_more_vert_black_24dp" />
 
-            android:text="99"
-            android:textSize="25sp" />
+        <RelativeLayout
+            android:id="@+id/topicNumbers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/topicContentLayout"
+            android:layout_marginBottom="10dp"
+            android:layout_marginStart="18dp">
+
+            <TextView
+                android:id="@+id/topicLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:text="Topic"
+                android:textSize="15sp"
+                android:textColor="@color/amazonite"
+                android:textStyle="italic|bold" />
+
+            <ImageView
+                android:id="@+id/iconFollowers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/topicLabel"
+                android:src="@drawable/ic_people_outline_black_24dp" />
+
+            <TextView
+                android:id="@+id/textViewFollowers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_toEndOf="@+id/iconFollowers"
+                android:text="99"
+                android:textSize="17sp" />
 
 
-    </LinearLayout>
-</LinearLayout>
+            <ImageView
+                android:id="@+id/iconPosts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@id/textViewFollowers"
+                android:src="@drawable/ic_import_contacts_black_24dp" />
+
+            <TextView
+                android:id="@+id/textViewPosts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_toEndOf="@id/iconPosts"
+                android:text="99"
+                android:textSize="17sp" />
+
+        </RelativeLayout>
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

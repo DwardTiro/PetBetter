@@ -296,7 +296,7 @@ public class SearchListingAdapter extends RecyclerView.Adapter<RecyclerView.View
             topicDescription = (TextView) itemView.findViewById(R.id.topicComDescription);
             topicUser = (TextView) itemView.findViewById(R.id.topicComUser);
             textviewFollowers = (TextView) itemView.findViewById(R.id.textViewFollowers);
-            deleteTopicButton = (ImageButton) itemView.findViewById(R.id.deleteTopicButton);
+            //deleteTopicButton = (ImageButton) itemView.findViewById(R.id.deleteTopicButton);
         }
 
         private void bind(final Topic item, final OnItemClickListener listener) {

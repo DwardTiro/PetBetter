@@ -46,7 +46,7 @@ public class FragmentPosts extends Fragment implements CheckUpdates {
     private User user;
     private String email;
     private long topicId;
-    private FloatingActionButton fab;
+    //private FloatingActionButton fab;
     private boolean allowRefresh = false;
 
     public FragmentPosts() {
@@ -109,6 +109,7 @@ public class FragmentPosts extends Fragment implements CheckUpdates {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        /*
         fab = (FloatingActionButton) view.findViewById(R.id.fabPosts);
         fab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -118,7 +119,7 @@ public class FragmentPosts extends Fragment implements CheckUpdates {
                 allowRefresh = true;
             }
         });
-
+        */
         return view;
     }
 

@@ -19,6 +19,9 @@ import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.Topic;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
+import com.example.owner.petbetter.interfaces.PlaceInfoListener;
+
+import org.w3c.dom.Text;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -40,13 +43,15 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
     private DataAdapter petBetterDb;
     private ArrayList<Post> topicPosts;
     private PopupWindow popUpConfirmationWindow;
+    private PlaceInfoListener placeInfoListener;
 
-    public CommunityAdapter(Context context, ArrayList<Topic> topicList, User user, OnItemClickListener listener) {
+    public CommunityAdapter(Context context, ArrayList<Topic> topicList, User user, OnItemClickListener listener, PlaceInfoListener placeInfoListener) {
         inflater = LayoutInflater.from(context);
         this.context = context;
         this.topicList = topicList;
         this.listener = listener;
         this.user = user;
+        this.placeInfoListener = placeInfoListener;
     }
 
     @Override
@@ -61,13 +66,23 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
     @Override
     public void onBindViewHolder(final CommunityViewHolder holder, final int position) {
         final Topic thisTopic = topicList.get(position);
+        initializeDatabase();
+        int topicPosts = getTopicPosts(thisTopic.getId()).size();
         holder.topicName.setText(thisTopic.getTopicName());
         holder.topicDescription.setText(thisTopic.getTopicDesc());
         holder.topicUser.setText(thisTopic.getCreatorName());
         holder.textviewFollowers.setText(Integer.toString(thisTopic.getFollowerCount()));
+        holder.textViewPosts.setText(Integer.toString(topicPosts));
         holder.bind(thisTopic, listener);
 
         if (user.getUserId() == thisTopic.getCreatorId()) {
+            holder.optionsButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    placeInfoListener.onPopupMenuClicked(view, position);
+                }
+            });
+            /*
             holder.deleteTopicButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -109,10 +124,11 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
 
 
                 }
-            });
-        } else {
-            holder.deleteTopicButton.setVisibility(View.INVISIBLE);
-            holder.deleteTopicButton.setEnabled(false);
+            });*/
+        }else {
+            //holder.deleteTopicButton.setVisibility(View.INVISIBLE);
+            //holder.deleteTopicButton.setEnabled(false);
+            holder.optionsButton.setVisibility(View.INVISIBLE);
         }
 
     }
@@ -197,7 +213,9 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
         private TextView topicDescription;
         private TextView topicUser;
         private TextView textviewFollowers;
+        private TextView textViewPosts;
         private ImageButton deleteTopicButton;
+        private ImageButton optionsButton;
 
         public CommunityViewHolder(View itemView) {
             super(itemView);
@@ -206,7 +224,9 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
             topicDescription = (TextView) itemView.findViewById(R.id.topicComDescription);
             topicUser = (TextView) itemView.findViewById(R.id.topicComUser);
             textviewFollowers = (TextView) itemView.findViewById(R.id.textViewFollowers);
-            deleteTopicButton = (ImageButton) itemView.findViewById(R.id.deleteTopicButton);
+            //deleteTopicButton = (ImageButton) itemView.findViewById(R.id.deleteTopicButton);
+            optionsButton = (ImageButton) itemView.findViewById(R.id.topicOptionsButton);
+            textViewPosts = (TextView) itemView.findViewById(R.id.textViewPosts);
         }
 
         public void bind(final Topic item, final OnItemClickListener listener) {
