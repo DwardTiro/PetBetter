@@ -1047,7 +1047,8 @@ public class DataAdapter {
                     c.getString(c.getColumnIndexOrThrow("hours_close")),
                     c.getString(c.getColumnIndexOrThrow("contact_info")),
                     c.getInt(c.getColumnIndexOrThrow("vet_id")),
-                    c.getFloat(c.getColumnIndexOrThrow("rating")));
+                    c.getFloat(c.getColumnIndexOrThrow("rating")),
+                    c.getString(c.getColumnIndexOrThrow("faci_photo")));
             results.add(facility);
         }
 
@@ -2531,6 +2532,7 @@ public class DataAdapter {
             cv.put("contact_info", facility.getContactInfo());
             cv.put("vet_id", facility.getVetId());
             cv.put("rating", facility.getRating());
+            cv.put("faci_photo", facility.getFaciPhoto());
             result = petBetterDb.insert(FACI_TABLE, null, cv);
             System.out.println("how meni? "+result);
         }

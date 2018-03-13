@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.classes.Facility;
 
@@ -15,6 +16,8 @@ import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Locale;
+
+import static com.example.owner.petbetter.ServiceGenerator.BASE_URL;
 
 /**
  * Created by owner on 21/8/2017.
@@ -52,6 +55,19 @@ public class ClinicListingAdapter extends RecyclerView.Adapter<ClinicListingAdap
         holder.clinicListName.setText(thisClinic.getFaciName());
         holder.clinicListAddress.setText(thisClinic.getLocation());
         holder.clinicListRating.setText(String.format(Locale.getDefault(),"%.1f",thisClinic.getRating()));
+
+        if(thisClinic.getFaciPhoto()!=null){
+
+            String newFileName = BASE_URL + thisClinic.getFaciPhoto();
+            //String newFileName = "http://192.168.0.19/petbetter/"+thisMessageRep.getMessagePhoto();
+            Glide.with(inflater.getContext()).load(newFileName).error(R.drawable.back_button).into(holder.clinicListImage);
+            /*
+            Picasso.with(inflater.getContext()).load("http://".concat(newFileName))
+                    .error(R.drawable.back_button).into(holder.messageRepImage);*/
+            //setImage(holder.messageRepImage, newFileName);
+
+            holder.clinicListImage.setVisibility(View.VISIBLE);
+        }
         if(thisClinic.getRating() == 0.0){
             holder.clinicListRating.setBackgroundResource(R.color.teal_blue);
         }
