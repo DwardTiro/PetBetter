@@ -16,6 +16,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.view.View.MeasureSpec;
 
+import com.bumptech.glide.Glide;
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
@@ -30,6 +31,8 @@ import java.util.ArrayList;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.example.owner.petbetter.ServiceGenerator.BASE_URL;
 
 
 /**
@@ -92,7 +95,7 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
         final PostRep thisComment = postRepList.get(position);
 
         initializeDatabase();
-
+        User user = getUserWithId(thisComment.getUserId());
         holder.postRepName.setText(thisComment.getUserName());
         holder.postRepTime.setText(thisComment.getDatePerformed());
         holder.postRepContent.setText(thisComment.getRepContent());
@@ -107,6 +110,18 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
             holder.postRepCounter.setEnabled(false);
         }
 
+        if(user.getUserPhoto()!=null){
+
+            String newFileName = BASE_URL + user.getUserPhoto();
+            //String newFileName = "http://192.168.0.19/petbetter/"+thisMessageRep.getMessagePhoto();
+            Glide.with(inflater.getContext()).load(newFileName).error(R.drawable.back_button).into(holder.postRepImage);
+            /*
+            Picasso.with(inflater.getContext()).load("http://".concat(newFileName))
+                    .error(R.drawable.back_button).into(holder.messageRepImage);*/
+            //setImage(holder.messageRepImage, newFileName);
+
+            holder.postRepImage.setVisibility(View.VISIBLE);
+        }
 
         if (user.getUserId() == thisComment.getUserId()) {
             holder.deletePostRepButton.setOnClickListener(new View.OnClickListener() {
@@ -222,6 +237,19 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
         }
 
         long result = petBetterDb.deletePostRep(postRepId);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private User getUserWithId(long userId) {
+        try {
+            petBetterDb.openDatabase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        User result = petBetterDb.getUserWithId((int) userId);
         petBetterDb.closeDatabase();
 
         return result;
