@@ -170,9 +170,11 @@ public class AddFacilityActivity extends AppCompatActivity {
 
 
                 bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), path);
-                if(bitmap.getHeight()>200||bitmap.getWidth()>240){
-                    bitmap = Bitmap.createScaledBitmap(bitmap,200,240,false);
+                if(bitmap.getHeight()>230||bitmap.getWidth()>415){
+                    bitmap = Bitmap.createScaledBitmap(bitmap,415,230,false);
                 }
+                editImage.setImageBitmap(bitmap);
+                editImage.setAdjustViewBounds(true);
 
 
             } catch (IOException e) {
