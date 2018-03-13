@@ -10,14 +10,14 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <include
             android:id="@+id/userProfileToolbar"
             layout="@layout/app_bar_nav_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"/>
+            android:layout_marginBottom="5dp" />
 
         <LinearLayout
             android:id="@+id/profileUserInfo"
@@ -40,6 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="20dp"
                 android:layout_marginTop="10dp"
                 android:text="Juan dela Cruz"
                 android:textSize="25sp"
@@ -47,31 +48,94 @@
 
         </LinearLayout>
 
-        <Button
-            style="?android:borderlessButtonStyle"
-            android:id="@+id/editProfileButton"
+        <RelativeLayout
+            android:id="@+id/postTopicInfoLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/profileUserInfo"
+            android:background="@color/medTurquoise"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:id="@+id/profileTopicTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="20dp"
+                android:text="Topics: "
+                android:textColor="@color/colorWhite"
+                android:textSize="20sp"
+
+                />
+
+            <TextView
+                android:id="@+id/profileTopicTextField"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_toEndOf="@id/profileTopicTextView"
+                android:text="0"
+                android:textColor="@color/colorWhite"
+                android:textSize="20sp"
+                android:textStyle="bold"
+
+                />
+
+
+            <TextView
+                android:id="@+id/profilePostTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="20dp"
+                android:layout_toEndOf="@+id/profileTopicTextField"
+                android:text="Posts: "
+                android:textColor="@color/colorWhite"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/profilePostTextField"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_toEndOf="@id/profilePostTextView"
+                android:text="0"
+                android:textColor="@color/colorWhite"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+
+
+        <include
+            android:id="@+id/userEmailAddress"
+            layout="@layout/fragment_email_address"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_alignParentEnd="true"
-            android:layout_below="@id/userProfileToolbar"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/postTopicInfoLayout"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="15dp" />
+
+        <Button
+            android:id="@+id/editProfileButton"
+            style="?android:borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="5dp"
             android:layout_marginTop="10dp"
             android:background="@color/myrtle_green"
             android:text="Edit Profile"
             android:textAllCaps="false"
+            android:textSize="15sp"
             android:textColor="@color/colorWhite" />
-        <LinearLayout
-            android:layout_below="@+id/profileUserInfo"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-             android:background="@color/lightGrayBG"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Hello"
-                />
-
-        </LinearLayout>
 
     </RelativeLayout>
 

@@ -1626,6 +1626,34 @@ public class DataAdapter {
         return results;
     }
 
+    public ArrayList<Topic> getTopicsWithUserId(long userId){
+
+        ArrayList<Topic> results = new ArrayList<>();
+
+
+        String sql = "SELECT t._id AS _id, t.creator_id AS creator_id, t.topic_name AS topic_name, t.topic_desc AS topic_desc, " +
+                "t.date_created AS date_created, u.first_name AS first_name, u.last_name AS last_name, t.is_deleted AS is_deleted " +
+                " FROM topics AS t INNER JOIN users u ON t.creator_id = u._id " +
+                "WHERE t.creator_id = '" + userId + "' AND t.is_deleted != 1";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            System.out.println("DATA ADAPTER "+ c.getInt(c.getColumnIndexOrThrow("_id")));
+            Topic topic= new Topic(c.getInt(c.getColumnIndexOrThrow("_id")),
+                    c.getLong(c.getColumnIndexOrThrow("creator_id")),
+                    c.getString(c.getColumnIndexOrThrow("topic_name")),
+                    c.getString(c.getColumnIndexOrThrow("topic_desc")),
+                    c.getString(c.getColumnIndexOrThrow("date_created")),
+                    c.getInt(c.getColumnIndexOrThrow("is_deleted")),
+                    c.getString(c.getColumnIndexOrThrow("first_name")),
+                    c.getString(c.getColumnIndexOrThrow("last_name")));
+            results.add(topic);
+        }
+
+        c.close();
+        return results;
+    }
+
     public long createVetRating(int pId,long userId, long vet_id, float rating, String comment, String timeStamp, int isDeleted){
         long result;
 

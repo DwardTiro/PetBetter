@@ -23,11 +23,15 @@ import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.classes.Notifications;
+import com.example.owner.petbetter.classes.Post;
+import com.example.owner.petbetter.classes.Topic;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.services.MyService;
 import com.example.owner.petbetter.services.NotificationReceiver;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
+
+import org.w3c.dom.Text;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -50,6 +54,9 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
     private User user;
     private ImageView notifButton;
     private NotificationReceiver notifReceiver = new NotificationReceiver();
+    private TextView userEmailAddress;
+    private TextView userPostNum;
+    private TextView userTopicNum;
 
     HerokuService service;
 
@@ -112,6 +119,15 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
         String userName = user.getFirstName() + " " +user.getLastName();
         userProfileName.setText(userName);
 
+        userEmailAddress = (TextView) findViewById(R.id.emailTextField);
+        userEmailAddress.setText(user.getEmail());
+
+        userPostNum = (TextView) findViewById(R.id.profilePostTextField);
+        userPostNum.setText(Integer.toString(getPostsWithId(user.getUserId()).size()));
+
+        userTopicNum = (TextView) findViewById(R.id.profileTopicTextField);
+        userTopicNum.setText(Integer.toString(getTopicsWithId(user.getUserId()).size()));
+
         notifButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -159,6 +175,16 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
         userProfileName = (TextView) findViewById(R.id.userProfileName);
         String userName = user.getFirstName() + " " +user.getLastName();
         userProfileName.setText(userName);
+
+        userEmailAddress = (TextView) findViewById(R.id.emailTextField);
+        userEmailAddress.setText(user.getEmail());
+
+        userPostNum = (TextView) findViewById(R.id.profilePostTextField);
+        userPostNum.setText(Integer.toString(getPostsWithId(user.getUserId()).size()));
+
+        userTopicNum = (TextView) findViewById(R.id.profileTopicTextField);
+        userTopicNum.setText(Integer.toString(getTopicsWithId(user.getUserId()).size()));
+
     }
 
     @Override
@@ -232,6 +258,32 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
         }
 
         User result = petBetterDb.getUser(email);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<Post> getPostsWithId(long userId){
+        try{
+            petBetterDb.openDatabase();
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        ArrayList<Post> result = petBetterDb.getPostsWithUserId(userId);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<Topic> getTopicsWithId(long userId){
+        try{
+            petBetterDb.openDatabase();
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        ArrayList<Topic> result = petBetterDb.getTopicsWithUserId(userId);
         petBetterDb.closeDatabase();
 
         return result;
