@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
@@ -37,6 +38,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static com.example.owner.petbetter.ServiceGenerator.BASE_URL;
+
 /**
  * Created by Kristian on 2/20/2018.
  */
@@ -45,6 +48,7 @@ import java.util.HashMap;
 public class UserProfileActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private TextView userProfileName;
+    private ImageView userProfilePicture;
     private Button editProfileButton;
     private DataAdapter petBetterDb;
     private NavigationView navigationView;
@@ -127,6 +131,22 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
 
         userTopicNum = (TextView) findViewById(R.id.profileTopicTextField);
         userTopicNum.setText(Integer.toString(getTopicsWithId(user.getUserId()).size()));
+
+        userProfilePicture = (ImageView) findViewById(R.id.userProfilePicture);
+
+        if(user.getUserPhoto()!=null){
+
+            String newFileName = BASE_URL + user.getUserPhoto();
+            System.out.println(newFileName);
+            Glide.with(UserProfileActivity.this).load(newFileName).error(R.drawable.back_button).into(userProfilePicture);
+            /*
+            Picasso.with(inflater.getContext()).load("http://".concat(newFileName))
+                    .error(R.drawable.back_button).into(holder.messageRepImage);*/
+            //setImage(holder.messageRepImage, newFileName);
+
+            userProfilePicture.setVisibility(View.VISIBLE);
+            userProfilePicture.setAdjustViewBounds(true);
+        }
 
         notifButton.setOnClickListener(new View.OnClickListener() {
             @Override
