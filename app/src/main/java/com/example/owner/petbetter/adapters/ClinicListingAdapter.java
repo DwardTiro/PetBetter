@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -59,13 +60,13 @@ public class ClinicListingAdapter extends RecyclerView.Adapter<ClinicListingAdap
         if(thisClinic.getFaciPhoto()!=null){
 
             String newFileName = BASE_URL + thisClinic.getFaciPhoto();
+
             //String newFileName = "http://192.168.0.19/petbetter/"+thisMessageRep.getMessagePhoto();
             Glide.with(inflater.getContext()).load(newFileName).error(R.drawable.back_button).into(holder.clinicListImage);
             /*
             Picasso.with(inflater.getContext()).load("http://".concat(newFileName))
                     .error(R.drawable.back_button).into(holder.messageRepImage);*/
             //setImage(holder.messageRepImage, newFileName);
-
             holder.clinicListImage.setVisibility(View.VISIBLE);
         }
         if(thisClinic.getRating() == 0.0){
