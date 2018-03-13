@@ -33,7 +33,7 @@
                 android:layout_marginBottom="5dp"
                 android:paddingStart="15dp"
                 android:paddingEnd="15dp"
-                android:dropDownHeight="300dp"
+                android:dropDownHeight="150dp"
                 android:hint="Send a message to"
                 android:textColorHint="@color/timestamp"
                 android:background="@drawable/custom_edittext"/>

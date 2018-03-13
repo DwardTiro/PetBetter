@@ -248,7 +248,7 @@ public interface HerokuService {
     Call<ArrayList<Message>> queryMessages(@Field("queryjson") String query, @Field("_id") long _id);
 
     @POST("queryEmail.php")
-    Call<ArrayList<User>> queryEmail(@Body RequestBody query);
+    Call<ArrayList<String>> queryEmail();
 
     @POST("queryTopics.php")
     Call<ArrayList<Topic>> queryTopics(@Body RequestBody query);

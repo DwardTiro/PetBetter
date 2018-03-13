@@ -41,14 +41,16 @@ public class FragmentMessages extends Fragment implements CheckUpdates {
     private String email;
     private FloatingActionButton fab;
     private boolean allowRefresh = false;
+    private boolean isSearching = false;
     private NotificationReceiver notifReceiver = new NotificationReceiver(this);
 
     public FragmentMessages() {
     }
 
     @SuppressLint("ValidFragment")
-    public FragmentMessages(ArrayList<Message> messageList) {
+    public FragmentMessages(ArrayList<Message> messageList, boolean isSearching) {
         this.messageList = messageList;
+        this.isSearching = isSearching;
     }
 
     @Override
@@ -191,10 +193,11 @@ public class FragmentMessages extends Fragment implements CheckUpdates {
 
     @Override
     public void onResult() {
-
-        //messageList = getMessages(user.getUserId());
-        //messageAdapter.updateList(messageList);
-        //messageAdapter.notifyDataSetChanged();
-        System.out.println("ONRESULT MESSAGES");
+        if(isSearching==false) {
+            messageList = getMessages(user.getUserId());
+            messageAdapter.updateList(messageList);
+            //messageAdapter.notifyDataSetChanged();
+            System.out.println("ONRESULT MESSAGES");
+        }
     }
 }

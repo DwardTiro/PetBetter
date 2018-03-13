@@ -72,7 +72,7 @@ public class NewMessageActivity extends AppCompatActivity {
     private static final int IMG_REQUEST = 777;
     private Bitmap bitmap;
     private ArrayAdapter<String> adapterSuggestions;
-    private String[] suggestions;
+    private ArrayList<String> suggestions;
 
     private DataAdapter petBetterDb;
     private SystemSessionManager systemSessionManager;
@@ -83,6 +83,7 @@ public class NewMessageActivity extends AppCompatActivity {
     private boolean alreadyExist= false;
     HerokuService service;
     HerokuService service2;
+    HerokuService service3;
 
     @Override
     public void onCreate(Bundle savedInstance){
@@ -109,6 +110,7 @@ public class NewMessageActivity extends AppCompatActivity {
         String email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
         user = getUser(email);
 
+        syncUsers();
         newMsgSendTo = (AutoCompleteTextView) findViewById(R.id.newMsgSendTo);
         newMsgContent = (EditText) findViewById(R.id.newMsgContent);
         newMsgSendButton = (Button) findViewById(R.id.newMsgSendBtn);
@@ -124,9 +126,10 @@ public class NewMessageActivity extends AppCompatActivity {
         newMsgSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(newMsgContent.getText().toString()!=""&&newMsgSendTo.getText().toString()!=""){
+                User check = getUser(newMsgSendTo.getText().toString());
+                if(newMsgContent.getText().toString()!=""&&newMsgSendTo.getText().toString()!=""&&check!=null
+                        &&check.getUserId()!=user.getUserId()){
                     usertwo = getUser(newMsgSendTo.getText().toString());
-
 
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
                     sdf.setTimeZone(TimeZone.getTimeZone("GMT+8"));
@@ -187,54 +190,78 @@ public class NewMessageActivity extends AppCompatActivity {
                         }
                     });
                 }
+                else{
+                    if(check==null){
+                        Toast.makeText(NewMessageActivity.this, "That user does not exist.", Toast.LENGTH_SHORT);
+                    }
+                    else{
+                        Toast.makeText(NewMessageActivity.this, "Make sure that all texts are filled.", Toast.LENGTH_SHORT);
+                    }
+                }
             }
         });
 
-        newMsgSendTo.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        service3 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
+        /*
+
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String jsonArray = gson.toJson("");
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        */
+        final Call<ArrayList<String>> call = service3.queryEmail();
+        call.enqueue(new Callback<ArrayList<String>>() {
+            @Override
+            public void onResponse(Call<ArrayList<String>> call, Response<ArrayList<String>> response) {
+                suggestions = response.body();
+
+                adapterSuggestions = new ArrayAdapter<String>(NewMessageActivity.this, simple_list_item_1, suggestions);
+                //ArrayAdapter<Veterinarian> adapter = new ArrayAdapter<Veterinarian>(this,R.layout.,vetList);
+                newMsgSendTo.setThreshold(1);
+                newMsgSendTo.setAdapter(adapterSuggestions);
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
-
-                //query the substring to server data
-
-                Gson gson = new GsonBuilder().serializeNulls().create();
-                String jsonArray = gson.toJson(newMsgSendTo.getText().toString());
-
-                RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
-
-                final Call<ArrayList<User>> call = service.queryEmail(body);
-                call.enqueue(new Callback<ArrayList<User>>() {
-                    @Override
-                    public void onResponse(Call<ArrayList<User>> call, Response<ArrayList<User>> response) {
-                        ArrayList<User> userList = response.body();
-
-                        for(int i=0;i<userList.size();i++){
-                            suggestions[i] = userList.get(i).getEmail();
-                        }
-
-                        adapterSuggestions = new ArrayAdapter<String>(NewMessageActivity.this, simple_list_item_1, suggestions);
-                        //ArrayAdapter<Veterinarian> adapter = new ArrayAdapter<Veterinarian>(this,R.layout.,vetList);
-
-                    }
-
-                    @Override
-                    public void onFailure(Call<ArrayList<User>> call, Throwable t) {
-                        Log.d("onFailure", t.getLocalizedMessage());
-                        Toast.makeText(NewMessageActivity.this, "Unable to get vets from server", Toast.LENGTH_LONG);
-                    }
-                });
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
+            public void onFailure(Call<ArrayList<String>> call, Throwable t) {
+                Log.d("onFailure query", t.getLocalizedMessage());
+                Toast.makeText(NewMessageActivity.this, "Unable to get vets from server", Toast.LENGTH_LONG);
             }
         });
+    }
+
+    public void syncUsers(){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+        final Call<ArrayList<User>> call = service.getUsers();
+        call.enqueue(new Callback<ArrayList<User>>() {
+            @Override
+            public void onResponse(Call<ArrayList<User>> call, Response<ArrayList<User>> response) {
+                if(response.isSuccessful()){
+                    setUsers(response.body());
+                    dataSynced(9);
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<User>> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
+    public long setUsers(ArrayList<User> userList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setUsers(userList);
+        petBetterDb.closeDatabase();
+
+        return result;
     }
 
     public void syncMessageChanges(final long userId){

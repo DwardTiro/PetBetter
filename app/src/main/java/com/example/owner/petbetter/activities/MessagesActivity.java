@@ -210,8 +210,9 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
                                 User mUser = getUserWithId(message.getUserId());
                                 message.setFromName(mUser.getName());
                             }
-                            fragment1 = new FragmentMessages(messageList);
+                            fragment1 = new FragmentMessages(messageList, true);
                             //replace frame_se
+
 
                             getSupportFragmentManager().beginTransaction().replace(R.id.messages_container,fragment1).
                                     addToBackStack(null).commitAllowingStateLoss();
