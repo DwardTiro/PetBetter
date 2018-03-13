@@ -7,8 +7,10 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
@@ -30,6 +32,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.example.owner.petbetter.ServiceGenerator.BASE_URL;
+
 
 public class PetClinicProfileActivity extends AppCompatActivity {
 
@@ -40,6 +44,7 @@ public class PetClinicProfileActivity extends AppCompatActivity {
     private TextView petClinicOpenTime;
     private TextView petClinicCloseTime;
     private TextView petClinicRating;
+    private ImageView clinicProfileImage;
 
     private Button petClinicRateButton;
 
@@ -62,9 +67,11 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         petClinicOpenTime = (TextView) findViewById(R.id.openTimeTextField);
         petClinicCloseTime = (TextView) findViewById(R.id.closeTimeTextField);
         petClinicRating = (TextView) findViewById(R.id.clinicRatingNumerator);
+        clinicProfileImage = (ImageView) findViewById(R.id.clinicProfileImage);
 
 
         petClinicRateButton = (Button) findViewById(R.id.rateClinicButton);
+
 
         //petClinicBookmarkButton.setVisibility(View.GONE);
 
@@ -108,6 +115,13 @@ public class PetClinicProfileActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        if(faciItem.getFaciPhoto()!=null){
+            String newFileName = BASE_URL + faciItem.getFaciPhoto();
+            System.out.println("FACI PHOTO "+faciItem.getFaciPhoto());
+            //String newFileName = "http://192.168.0.19/petbetter/"+thisMessageRep.getMessagePhoto();
+            Glide.with(PetClinicProfileActivity.this).load(newFileName).error(R.drawable.back_button).into(clinicProfileImage);
+        }
 
         syncRatingChanges();
 
