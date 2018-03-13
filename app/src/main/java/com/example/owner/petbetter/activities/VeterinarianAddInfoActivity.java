@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
+import com.example.owner.petbetter.classes.Facility;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
 import com.example.owner.petbetter.database.DataAdapter;
@@ -23,6 +25,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -42,6 +45,7 @@ public class VeterinarianAddInfoActivity extends AppCompatActivity {
     private String emailAddress;
     private String password;
     private int userType;
+    private int userId;
 
     private TextView phoneNumTextView;
     private Spinner vetSpecialtySpinner;
@@ -99,6 +103,143 @@ public class VeterinarianAddInfoActivity extends AppCompatActivity {
         return result;
     }
 
+    private int generateNewUserId(){
+        int newId;
+        try{
+            petBetterDb.openDatabase();
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        ArrayList<Integer> ids = petBetterDb.generateUserIds();
+        if(ids.size() != 0){
+            newId = ids.get(ids.size() - 1);
+            newId += 1;
+        }
+        else
+            newId = 1;
+
+        petBetterDb.closeDatabase();
+
+        return newId;
+    }
+
+    private long addUsertoDB(
+            int userId,
+            String firstName,
+            String lastName,
+            String emailAddress,
+            String password,
+            int userType
+    ) {
+
+        try{
+            petBetterDb.openDatabase();
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        long result = petBetterDb.addUser(userId,firstName,lastName,emailAddress,password,userType);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private void dataSync(int n) {
+        try {
+            petBetterDb.openDatabase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        petBetterDb.dataSynced(n);
+        petBetterDb.closeDatabase();
+
+    }
+
+    private ArrayList<User> getUnsyncedUsers(){
+        try{
+            petBetterDb.openDatabase();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        ArrayList<User> result = petBetterDb.getUnsyncedUsers();
+
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    public long setUsers(ArrayList<User> userList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setUsers(userList);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private User getNewUser(String email) {
+        try {
+            petBetterDb.openDatabase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        User result = petBetterDb.getNewUser(email);
+
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private void syncUserChanges(){
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        System.out.println("WE HERE BOOIII");
+        ArrayList<User> unsyncedUsers = getUnsyncedUsers();
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String jsonArray = gson.toJson(unsyncedUsers);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.addUsers(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    System.out.println("Users ADDED YEY");
+                    dataSync(12);
+
+                    final Call<ArrayList<User>> call2 = service2.getUsers();
+                    call2.enqueue(new Callback<ArrayList<User>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<User>> call, Response<ArrayList<User>> response) {
+                            if(response.isSuccessful()){
+                                System.out.println("Number of clinics from server: "+response.body().size());
+                                setUsers(response.body());
+                                userId = (int)getNewUser(emailAddress).getUserId();
+                                System.out.println("User id is: " + userId);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<User>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
+
     public void signUpVeterinarian(View view) {
         Bundle extras = getIntent().getExtras();
         firstName = extras.getString("first_name");
@@ -117,10 +258,13 @@ public class VeterinarianAddInfoActivity extends AppCompatActivity {
 
 
     private void uploadUsertoDB(){
+        int newId = generateNewUserId();
         service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
 
         User user = new User(firstName, lastName, emailAddress, password, 1);
+
+        addUsertoDB(newId,firstName,lastName,emailAddress,password, 1);
 
         Gson gson = new GsonBuilder().serializeNulls().create();
         String jsonArray = gson.toJson(user);
@@ -132,6 +276,8 @@ public class VeterinarianAddInfoActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 System.out.println("User added to server successfully");
+                dataSync(12);
+
             }
 
             @Override
@@ -144,10 +290,10 @@ public class VeterinarianAddInfoActivity extends AppCompatActivity {
     public void uploadVetToDB(){
         service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
-        User user = getUser(emailAddress);
+        //User user = getUser(emailAddress);
 
         Veterinarian vet = new Veterinarian(99,
-                user.getUserId(),
+                userId,
                 lastName,
                 firstName,
                 phoneNum,

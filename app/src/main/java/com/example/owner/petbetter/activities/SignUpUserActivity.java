@@ -96,7 +96,8 @@ public class SignUpUserActivity extends AppCompatActivity {
     public void signUpNext(View v) {
         Bundle extras = getIntent().getExtras();
         int userType = extras.getInt("USERTYPE");
-        if (userType == 1) {
+        //still fixing function wont go here yet
+        if (userType == 3) {
             Intent intent = new Intent(SignUpUserActivity.this,
                     com.example.owner.petbetter.activities.VeterinarianAddInfoActivity.class);
             Bundle vetExtras = new Bundle();

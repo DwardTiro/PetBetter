@@ -366,7 +366,7 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<ArrayList<User>> call, Response<ArrayList<User>> response) {
                 if(response.isSuccessful()){
                     setUsers(response.body());
-                    dataSynced(9);
+                    dataSynced(12);
 
                 }
             }

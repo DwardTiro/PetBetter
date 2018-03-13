@@ -416,6 +416,9 @@ public interface HerokuService {
     @POST("addMessageReps.php")
     Call<Void> addMessageReps(@Body RequestBody messageRepList);
 
+    @POST("addUsers.php")
+    Call<Void> addUsers(@Body RequestBody userList);
+
     @FormUrlEncoded
     @POST("getMarker.php")
     Call<LocationMarker> getMarker(@Field("bldg_name") String bldgName);

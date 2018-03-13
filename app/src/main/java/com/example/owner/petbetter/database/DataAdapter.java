@@ -334,6 +334,28 @@ public class DataAdapter {
         return result;
     }
 
+    public User getNewUser(String email){
+        String sql = "SELECT * FROM " + USER_TABLE + " WHERE email = '" + email + "'";
+
+        Cursor c = petBetterDb.rawQuery(sql, null);
+        c.moveToLast();
+
+        User result = new User(
+                c.getLong(c.getColumnIndexOrThrow("_id")),
+                c.getString(c.getColumnIndexOrThrow("first_name")),
+                c.getString(c.getColumnIndexOrThrow("last_name")),
+                c.getString(c.getColumnIndexOrThrow("mobile_num")),
+                c.getString(c.getColumnIndexOrThrow("phone_num")),
+                c.getString(c.getColumnIndexOrThrow("email")),
+                c.getString(c.getColumnIndexOrThrow("password")),
+                c.getInt(c.getColumnIndexOrThrow("age")),
+                c.getInt(c.getColumnIndexOrThrow("user_type")),
+                c.getString(c.getColumnIndexOrThrow("user_photo"))
+        );
+
+        return result;
+    }
+
     public ArrayList<Post> getPosts(){
 
         ArrayList<Post> results = new ArrayList<>();
@@ -689,6 +711,26 @@ public class DataAdapter {
         c.close();
         return results;
     }
+
+    public ArrayList<User> getUnsyncedUsers(){
+        ArrayList<User> results = new ArrayList<>();
+
+        String sql = "SELECT * FROM "+USER_TABLE+" WHERE is_synced = 0";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            User user = new User(c.getString(c.getColumnIndexOrThrow("first_name")),
+                    c.getString(c.getColumnIndexOrThrow("last_name")),
+                    c.getString(c.getColumnIndexOrThrow("email")),
+                    c.getString(c.getColumnIndexOrThrow("password")),
+                    c.getInt(c.getColumnIndexOrThrow("user_type")));
+            results.add(user);
+        }
+
+        c.close();
+        return results;
+    }
+
 
     public ArrayList<Upvote> getUnsyncedUpvotes(){
         ArrayList<Upvote> results = new ArrayList<>();
@@ -1156,6 +1198,7 @@ public class DataAdapter {
         cv.put("password", password);
         cv.put("age", 0);
         cv.put("user_type", userType);
+        cv.put("is_synced", 0);
 
 
         result = petBetterDb.insert(USER_TABLE, null, cv);
@@ -2106,6 +2149,21 @@ public class DataAdapter {
         ArrayList<Integer> ids = new ArrayList<>();
 
         String sql = "SELECT _id FROM "+UPVOTE_TABLE;
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            ids.add(c.getInt(c.getColumnIndexOrThrow("_id")));
+        }
+
+        c.close();
+        return ids;
+    }
+
+    public ArrayList<Integer> generateUserIds () {
+
+        ArrayList<Integer> ids = new ArrayList<>();
+
+        String sql = "SELECT _id FROM "+USER_TABLE;
         Cursor c = petBetterDb.rawQuery(sql, null);
 
         while(c.moveToNext()) {
