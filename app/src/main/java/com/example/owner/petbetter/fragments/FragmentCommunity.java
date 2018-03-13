@@ -228,9 +228,6 @@ public class FragmentCommunity extends Fragment implements CheckUpdates, PlaceIn
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 switch (menuItem.getItemId()){
-                    case R.id.menu_edit_post_topic:
-                        System.out.println("Edit topic clicked");
-                        return true;
                     case R.id.menu_delete_post_topic:
                         LayoutInflater layoutInflater = (LayoutInflater) view.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                         View popUpConfirmation = layoutInflater.inflate(R.layout.popup_confirmation_delete_topic, null);

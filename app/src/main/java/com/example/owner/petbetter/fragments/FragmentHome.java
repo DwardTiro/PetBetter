@@ -170,8 +170,6 @@ public class FragmentHome extends Fragment implements CheckUpdates, PlaceInfoLis
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 switch(menuItem.getItemId()){
-                    case R.id.menu_edit_post_topic:
-                        return true;
                     case R.id.menu_delete_post_topic:
                         LayoutInflater inflater = (LayoutInflater) view.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                         View popUpConfirmation = inflater.inflate(R.layout.popup_confirmation_delete_post, null);
