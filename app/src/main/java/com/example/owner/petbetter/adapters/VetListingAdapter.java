@@ -9,11 +9,14 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.classes.Veterinarian;
 
 import java.util.ArrayList;
 import java.util.Locale;
+
+import static com.example.owner.petbetter.ServiceGenerator.BASE_URL;
 
 /**
  * Created by owner on 15/8/2017.
@@ -48,9 +51,24 @@ public class VetListingAdapter extends RecyclerView.Adapter<VetListingAdapter.Ve
     public void onBindViewHolder(VetListingViewHolder holder, int position) {
         Veterinarian thisVet = vetList.get(position);
         holder.vetListName.setText(thisVet.getName());
+
         System.out.println("The vet's name is "+holder.vetListName.getText());
         holder.vetListSpecialty.setText(thisVet.getSpecialty());
         holder.vetListRating.setText(String.format(Locale.getDefault(),"%.1f",thisVet.getRating()));
+
+        if(thisVet.getUserPhoto()!=null){
+
+            String newFileName = BASE_URL + thisVet.getUserPhoto();
+            Glide.with(inflater.getContext()).load(newFileName).error(R.drawable.back_button).into(holder.vetListImage);
+            /*
+            Picasso.with(inflater.getContext()).load("http://".concat(newFileName))
+                    .error(R.drawable.back_button).into(holder.messageRepImage);*/
+            //setImage(holder.messageRepImage, newFileName);
+
+            holder.vetListImage.setVisibility(View.VISIBLE);
+            holder.vetListImage.setAdjustViewBounds(true);
+        }
+
         if(thisVet.getRating() == 0.0){
             holder.vetListRating.setBackgroundResource(R.color.teal_blue);
         }
