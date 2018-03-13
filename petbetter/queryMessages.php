@@ -33,7 +33,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 	if(count($pieces)==1){
 		$query = "%{$pieces[0]}%";
 		$query2 = "%{$pieces[0]}%";
-		if($stmt = $mysqli->prepare("SELECT m._id AS _id, m.user_one AS user_one, m.user_two AS user_two, u.first_name AS first_name, u.last_name AS last_name FROM messages 
+		if($stmt = $mysqli->prepare("SELECT DISTINCT m._id AS _id, m.user_one AS user_one, m.user_two AS user_two, u.first_name AS first_name, u.last_name AS last_name FROM messages 
 				AS m INNER JOIN users AS u ON m.user_one = u.user_id WHERE (m.user_one = ? OR m.user_two = ?) AND (u.first_name LIKE ? OR u.last_name LIKE ?) 
 				UNION 
 				SELECT m._id AS _id, m.user_one AS user_one, m.user_two AS user_two, u.first_name AS first_name, u.last_name AS last_name FROM messages 
@@ -79,7 +79,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 	if(count($pieces)==2){
 		$query = "%{$pieces[0]}%";
 		$query2 = "%{$pieces[1]}%";
-		if($stmt = $mysqli->prepare("SELECT m._id AS _id, m.user_one AS user_one, m.user_two AS user_two, u.first_name AS first_name, u.last_name AS last_name FROM messages 
+		if($stmt = $mysqli->prepare("SELECT DISTINCT m._id AS _id, m.user_one AS user_one, m.user_two AS user_two, u.first_name AS first_name, u.last_name AS last_name FROM messages 
 				AS m INNER JOIN users AS u ON m.user_one = u.user_id WHERE (m.user_one = ? OR m.user_two = ?) AND (u.first_name LIKE ? OR u.last_name LIKE ?) 
 				UNION 
 				SELECT m._id AS _id, m.user_one AS user_one, m.user_two AS user_two, u.first_name AS first_name, u.last_name AS last_name FROM messages 
