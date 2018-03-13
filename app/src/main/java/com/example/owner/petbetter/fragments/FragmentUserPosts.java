@@ -20,6 +20,7 @@ import com.example.owner.petbetter.classes.Message;
 import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
+import com.example.owner.petbetter.interfaces.PlaceInfoListener;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.google.gson.Gson;
 
@@ -31,7 +32,7 @@ import java.util.HashMap;
  * Created by owner on 19/10/2017.
  */
 
-public class FragmentUserPosts extends Fragment {
+public class FragmentUserPosts extends Fragment implements PlaceInfoListener {
     private HomeAdapter homeAdapter;
     private RecyclerView recyclerView;
     private ArrayList<Post> postList;
@@ -71,7 +72,7 @@ public class FragmentUserPosts extends Fragment {
                 intent.putExtra("thisPost", new Gson().toJson(item));
                 startActivity(intent);
             }
-        });
+        }, this);
         //messageAdapter = new MessageAdapter(getActivity(), messageList);
         homeAdapter.notifyItemRangeChanged(0, homeAdapter.getItemCount());
         recyclerView.setAdapter(homeAdapter);
@@ -124,4 +125,8 @@ public class FragmentUserPosts extends Fragment {
         return result;
     }
 
+    @Override
+    public void onPopupMenuClicked(View view, int pos) {
+        System.out.println("Inside User Posts");
+    }
 }

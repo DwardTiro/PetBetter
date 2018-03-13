@@ -1,107 +1,162 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="120dp"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="5dp"
     android:layout_marginEnd="10dp"
     android:layout_marginStart="10dp"
-    android:layout_marginTop="10dp"
-    android:background="@drawable/rounded_bg_corner"
-    android:onClick="homeListingClicked"
-
-    android:orientation="horizontal"
-
-    android:weightSum="1">
-
-    <LinearLayout
-        android:layout_width="280dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="0dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:orientation="vertical">
+    android:layout_marginTop="5dp"
+    card_view:cardCornerRadius="2dp">
 
 
-        <TextView
-            android:id="@+id/topicName"
-            android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+
+        android:weightSum="1">
+
+        <LinearLayout
+            android:id="@+id/postContentLayout"
+            android:layout_width="280dp"
             android:layout_height="wrap_content"
-            android:maxLength="25"
-            android:maxLines="1"
+            android:layout_marginEnd="0dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
 
 
-            android:text="@string/sample_clinic"
-            android:textColor="@color/black"
-            android:textSize="@dimen/listing_font_size" />
-
-        <TextView
-            android:id="@+id/topicDescription"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-
-            android:maxLength="35"
-            android:maxLines="2"
-            android:text="@string/sample_address" />
-
-        <TextView
-            android:id="@+id/topicUser"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="@string/sample_address"
-            android:maxLength="35"
-            />
+            <TextView
+                android:id="@+id/topicName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLength="25"
+                android:maxLines="1"
 
 
-    </LinearLayout>
+                android:text="@string/sample_clinic"
+                android:textColor="@color/black"
+                android:textSize="@dimen/listing_font_size" />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="0dp"
-        android:orientation="vertical">
+            <TextView
+                android:id="@+id/topicDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
 
-        <ImageButton
-            android:id="@+id/upvotePostButton"
+                android:maxLength="35"
+                android:maxLines="2"
+                android:text="@string/sample_address" />
+
+            <TextView
+                android:id="@+id/topicUser"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:maxLength="35"
+                android:text="@string/sample_address" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_toEndOf="@+id/postContentLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="0dp"
-            android:layout_marginTop="5dp"
-            android:background="@color/main_White"
-            android:src="@mipmap/ic_thumb_up_black_24dp" />
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/upvoteCounter"
-            android:layout_width="50dp"
-            android:layout_height="30dp"
-            android:text="1"
-            android:layout_marginTop="2dp"
-            android:background="@color/colorWhite"
-            android:textAllCaps="false"
-            android:textColor="@color/amazonite"
-            android:textSize="25sp">
+            <ImageButton
+                android:id="@+id/upvotePostButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="0dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/main_White"
+                android:src="@mipmap/ic_thumb_up_black_24dp" />
 
-        </TextView>
+            <TextView
+                android:id="@+id/upvoteCounter"
+                android:layout_width="50dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="2dp"
+                android:background="@color/colorWhite"
+                android:text="1"
+                android:textAllCaps="false"
+                android:textColor="@color/amazonite"
+                android:textSize="25sp">
+
+            </TextView>
+
+            <ImageButton
+                android:id="@+id/downvotePostButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:background="@color/main_White"
+                android:src="@mipmap/ic_thumb_down_black_24dp" />
+
+            <ImageButton
+                android:id="@+id/deletePostButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:background="@color/main_White"
+                android:src="@mipmap/ic_delete_black_24dp" />
+        </LinearLayout>
 
         <ImageButton
-            android:id="@+id/downvotePostButton"
+            android:id="@+id/postOptionsButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:background="@color/main_White"
-            android:src="@mipmap/ic_thumb_down_black_24dp" />
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="5dp"
+            android:layout_marginTop="10dp"
+            android:background="@null"
+            android:contentDescription="Post options"
+            android:src="@drawable/ic_more_vert_black_24dp" />
 
-        <ImageButton
-            android:id="@+id/deletePostButton"
+        <RelativeLayout
+            android:id="@+id/topicNumbers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:background="@color/main_White"
-            android:src="@mipmap/ic_delete_black_24dp" />
-    </LinearLayout>
+            android:layout_below="@+id/postContentLayout"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginStart="18dp">
+
+            <TextView
+                android:id="@+id/topicLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:text="Post"
+                android:textSize="15sp"
+                android:textColor="@color/amazonite"
+                android:textStyle="italic|bold" />
 
 
+            <ImageView
+                android:id="@+id/iconReplies"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@id/topicLabel"
+                android:src="@drawable/ic_reply_black_24dp" />
 
-</LinearLayout>
+            <TextView
+                android:id="@+id/textViewReplies"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_toEndOf="@id/iconReplies"
+                android:text="99"
+                android:textSize="17sp" />
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

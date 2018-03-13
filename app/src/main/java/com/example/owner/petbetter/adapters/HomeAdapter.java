@@ -16,8 +16,10 @@ import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.classes.Post;
+import com.example.owner.petbetter.classes.PostRep;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
+import com.example.owner.petbetter.interfaces.PlaceInfoListener;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -43,16 +45,18 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
     private DataAdapter petBetterDb;
     private Context context;
     private PopupWindow popUpConfirmationWindow;
+    private PlaceInfoListener placeInfoListener;
 
     HerokuService service;
 
 
-    public HomeAdapter(Context context, ArrayList<Post> postList, User user, OnItemClickListener listener) {
+    public HomeAdapter(Context context, ArrayList<Post> postList, User user, OnItemClickListener listener, PlaceInfoListener placeInfoListener) {
         inflater = LayoutInflater.from(context);
         this.postList = postList;
         this.listener = listener;
         this.context = context;
         this.user = user;
+        this.placeInfoListener = placeInfoListener;
     }
 
     @Override
@@ -71,13 +75,26 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
         holder.topicName.setText(thisPost.getTopicName());
         holder.topicDescription.setText(thisPost.getTopicContent());
         holder.topicUser.setText(thisPost.getTopicUser());
+        holder.replyCounter.setText(Integer.toString(getPostReps(thisPost.getId()).size()));
         int result = getVoteCount(thisPost.getId(), 1);
         holder.upvoteCounter.setText(String.valueOf(result));
+        holder.upvoteCounter.setVisibility(View.INVISIBLE);
         holder.upvotePostButton.setVisibility(View.INVISIBLE);
         holder.downvotePostButton.setVisibility(View.INVISIBLE);
+
+
         holder.bind(thisPost, listener);
 
+
+
         if(user.getUserId()==thisPost.getUserId()){
+            holder.optionsButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    placeInfoListener.onPopupMenuClicked(view, position);
+                }
+            });
+            /*
             holder.deletePostButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -130,10 +147,11 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
                     });
 
                 }
-            });
+            });*/
         }
         else{
             holder.deletePostButton.setVisibility(View.INVISIBLE);
+            holder.optionsButton.setVisibility(View.INVISIBLE);
             holder.deletePostButton.setEnabled(false);
         }
         /*
@@ -204,6 +222,19 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
         //recyclerView.setAdapter(this);
     }
 
+    public ArrayList<PostRep> getPostReps(long postId){
+        try{
+            petBetterDb.openDatabase();
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        ArrayList<PostRep> results = petBetterDb.getPostReps(postId);
+
+        petBetterDb.closeDatabase();
+        return results;
+    }
+
     @Override
     public int getItemCount() {
         return postList.size();
@@ -224,6 +255,8 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
         private ImageButton upvotePostButton;
         private ImageButton downvotePostButton;
         private TextView upvoteCounter;
+        private ImageButton optionsButton;
+        private TextView replyCounter;
 
         public HomeViewHolder(View itemView) {
             super(itemView);
@@ -235,6 +268,8 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
             upvotePostButton = (ImageButton) itemView.findViewById(R.id.upvotePostButton);
             downvotePostButton = (ImageButton) itemView.findViewById(R.id.downvotePostButton);
             upvoteCounter = (TextView) itemView.findViewById(R.id.upvoteCounter);
+            optionsButton = (ImageButton) itemView.findViewById(R.id.postOptionsButton);
+            replyCounter = (TextView) itemView.findViewById(R.id.textViewReplies);
         }
 
         public void bind(final Post item, final OnItemClickListener listener) {

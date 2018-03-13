@@ -1,5 +1,6 @@
 package com.example.owner.petbetter.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.app.Fragment;
@@ -7,17 +8,27 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.PopupMenu;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
+import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.adapters.HomeAdapter;
 import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.interfaces.CheckUpdates;
+import com.example.owner.petbetter.interfaces.PlaceInfoListener;
 import com.example.owner.petbetter.services.NotificationReceiver;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.google.gson.Gson;
@@ -26,7 +37,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class FragmentHome extends Fragment implements CheckUpdates {
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class FragmentHome extends Fragment implements CheckUpdates, PlaceInfoListener {
     private HomeAdapter homeAdapter;
     private RecyclerView recyclerView;
     private ArrayList<Post> postList;
@@ -37,8 +52,9 @@ public class FragmentHome extends Fragment implements CheckUpdates {
     private User user;
     private String email;
     private NotificationReceiver notifReceiver = new NotificationReceiver(this);
+    private PopupWindow popUpConfirmationWindow;
 
-
+    HerokuService service;
     @Override
     public void onResume() {
         super.onResume();
@@ -84,7 +100,7 @@ public class FragmentHome extends Fragment implements CheckUpdates {
                 intent.putExtra("thisPost", new Gson().toJson(item));
                 startActivity(intent);
             }
-        });
+        }, this);
         //homeAdapter = new HomeAdapter(getActivity(), postList);
         homeAdapter.notifyItemRangeChanged(0, homeAdapter.getItemCount());
         recyclerView.setAdapter(homeAdapter);
@@ -140,5 +156,105 @@ public class FragmentHome extends Fragment implements CheckUpdates {
             postList = getPosts();
             homeAdapter.updateList(postList);
         }
+    }
+
+    @Override
+    public void onPopupMenuClicked(final View view, final int pos) {
+        final Post thisPost = postList.get(pos);
+        PopupMenu options = new PopupMenu(this.getContext(), view);
+        MenuInflater inflater = options.getMenuInflater();
+        inflater.inflate(R.menu.post_topic_menu, options.getMenu());
+        System.out.println("Options menu clicked in home");
+
+        options.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                switch(menuItem.getItemId()){
+                    case R.id.menu_edit_post_topic:
+                        return true;
+                    case R.id.menu_delete_post_topic:
+                        LayoutInflater inflater = (LayoutInflater) view.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                        View popUpConfirmation = inflater.inflate(R.layout.popup_confirmation_delete_post, null);
+
+                        popUpConfirmation.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+
+                        popUpConfirmationWindow = new PopupWindow(popUpConfirmation, 750, 360, true);
+                        popUpConfirmationWindow.showAtLocation(popUpConfirmation, Gravity.CENTER, 0, 0);
+
+                        Button cancelButton = (Button) popUpConfirmationWindow.getContentView().findViewById(R.id.popUpPostCancelButton);
+
+                        Button deleteButton = (Button) popUpConfirmationWindow.getContentView().findViewById(R.id.popUpPostDeleteButton);
+                        cancelButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                popUpConfirmationWindow.dismiss();
+                            }
+                        });
+                        deleteButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+
+                                deletePost(thisPost.getId());
+
+                                service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+                                final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+                                final Call<Void> call = service.deletePost(thisPost.getUserId(), thisPost.getDateCreated());
+                                call.enqueue(new Callback<Void>() {
+                                    @Override
+                                    public void onResponse(Call<Void> call, Response<Void> response) {
+                                        //User thisUser = response.body();
+                                        if(response.isSuccessful()){
+                                            dataSynced(9);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<Void> call, Throwable t) {
+                                        Log.d("onFailure", t.getLocalizedMessage());
+                                    }
+                                });
+
+                                update(pos);
+                                popUpConfirmationWindow.dismiss();
+                            }
+                        });
+                        return true;
+                    default:
+                    return false;
+                }
+            }
+        });
+
+        options.show();
+    }
+
+    private long deletePost(long postId){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        long result = petBetterDb.deletePost(postId);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private void dataSynced(int n){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        petBetterDb.dataSynced(n);
+        petBetterDb.closeDatabase();
+
+    }
+
+    public void update(int position){
+        postList.remove(position);
+        homeAdapter.notifyDataSetChanged();
     }
 }
