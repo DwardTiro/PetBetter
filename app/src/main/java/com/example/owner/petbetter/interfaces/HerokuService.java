@@ -358,15 +358,9 @@ public interface HerokuService {
     @POST("getFacility.php")
     Call<Facility> getFacility(@Field("_id") int id);
 
-    @FormUrlEncoded
+
     @POST("addVet.php")
-    Call<Integer> addVet(
-            @Field("_id") int vetId,
-            @Field("user_id") int userId,
-            @Field("rating") int rating,
-            @Field("specialty") String specialty,
-            @Field("phone_num") String phone_num
-    );
+    Call<Void> addVet(@Body RequestBody veterinarian);
 
     @POST("addVets.php")
     Call<Void> addVets(@Body RequestBody vetList);

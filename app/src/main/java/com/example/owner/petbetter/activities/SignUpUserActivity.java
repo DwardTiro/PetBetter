@@ -67,7 +67,7 @@ public class SignUpUserActivity extends AppCompatActivity {
 
     }
 
-    private final TextWatcher formWatcher = new TextWatcher(){
+    private final TextWatcher formWatcher = new TextWatcher() {
 
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -81,49 +81,63 @@ public class SignUpUserActivity extends AppCompatActivity {
 
         @Override
         public void afterTextChanged(Editable editable) {
-            if(signupFirstName.getText().toString().length() == 0 ||
+            if (signupFirstName.getText().toString().length() == 0 ||
                     signupLastName.getText().toString().length() == 0 ||
                     signupEmail.getText().toString().length() == 0 ||
-                    signupPassword.getEditText().getText().length() == 0){
+                    signupPassword.getEditText().getText().length() == 0) {
                 nextButton.setEnabled(false);
-            }
-            else {
+            } else {
                 nextButton.setEnabled(true);
 
             }
         }
     };
 
-    public void signUpNext(View v){
-        service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
-
+    public void signUpNext(View v) {
         Bundle extras = getIntent().getExtras();
         int userType = extras.getInt("USERTYPE");
-        User user = new User(signupFirstName.getText().toString(), signupLastName.getText().toString(),
-                signupEmail.getText().toString(), signupPassword.getEditText().getText().toString(), userType);
+        if (userType == 1) {
+            Intent intent = new Intent(SignUpUserActivity.this,
+                    com.example.owner.petbetter.activities.VeterinarianAddInfoActivity.class);
+            Bundle vetExtras = new Bundle();
+            extras.putInt("user_type", userType);
+            extras.putString("first_name", signupFirstName.getText().toString());
+            extras.putString("last_name", signupLastName.getText().toString());
+            extras.putString("email_address", signupEmail.getText().toString());
+            extras.putString("password", signupPassword.getEditText().getText().toString());
+            intent.putExtras(vetExtras);
+            startActivity(intent);
 
-        Gson gson = new GsonBuilder().serializeNulls().create();
-        String jsonArray = gson.toJson(user);
-        System.out.println(jsonArray);
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        } else {
+            service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
-        Call<Void> call = service.addUser(body);
-        call.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                System.out.println("User added to server successfully");
-                Intent intent = new Intent(
-                        SignUpUserActivity.this,
-                        com.example.owner.petbetter.activities.SignUpUserTypeActivity.class
-                );
-                startActivity(intent);
-            }
 
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                System.out.println("FAILED TO ADD USER TO SERVER");
-            }
-        });
+            User user = new User(signupFirstName.getText().toString(), signupLastName.getText().toString(),
+                    signupEmail.getText().toString(), signupPassword.getEditText().getText().toString(), userType);
+
+            Gson gson = new GsonBuilder().serializeNulls().create();
+            String jsonArray = gson.toJson(user);
+            System.out.println(jsonArray);
+            RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+
+            Call<Void> call = service.addUser(body);
+            call.enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    System.out.println("User added to server successfully");
+                    Intent intent = new Intent(
+                            SignUpUserActivity.this,
+                            com.example.owner.petbetter.activities.SignUpUserTypeActivity.class
+                    );
+                    startActivity(intent);
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+                    System.out.println("FAILED TO ADD USER TO SERVER");
+                }
+            });
+        }
     }
 
     public void signUpBackButtonClicked(View view) {
