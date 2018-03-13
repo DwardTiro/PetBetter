@@ -221,6 +221,8 @@ public class EditProfileActivity extends AppCompatActivity {
                     bitmap = Bitmap.createScaledBitmap(bitmap,150,150,false);
                 }
 
+                editImage.setImageBitmap(bitmap);
+                editImage.setAdjustViewBounds(true);
 
             } catch (IOException e) {
                 e.printStackTrace();
