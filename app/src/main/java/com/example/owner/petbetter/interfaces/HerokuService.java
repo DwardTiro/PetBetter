@@ -377,6 +377,12 @@ public interface HerokuService {
     @POST("addTopics.php")
     Call<Void> addTopics(@Body RequestBody topicList);
 
+    @POST("deleteTopics.php")
+    Call<Void> deleteTopics(@Body RequestBody topicList);
+
+    @POST("deletePosts.php")
+    Call<Void> deletePosts(@Body RequestBody postList);
+
     @POST("addUpvotes.php")
     Call<Void> addUpvotes(@Body RequestBody upvoteList);
 

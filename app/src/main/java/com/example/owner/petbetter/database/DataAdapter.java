@@ -1980,6 +1980,7 @@ public class DataAdapter {
     public long deletePost(long postId){
         ContentValues cv = new ContentValues();
         cv.put("is_deleted",1);
+        cv.put("is_synced", 1);
 
         String[] whereArgs = new String[]{String.valueOf(postId)};
         long result = petBetterDb.update(POST_TABLE,cv,"_id=?", whereArgs);
@@ -2002,6 +2003,7 @@ public class DataAdapter {
     public long deleteTopic(long topicId){
         ContentValues cv = new ContentValues();
         cv.put("is_deleted",1);
+        cv.put("is_synced", 0);
 
         String[] whereArgs = new String[]{String.valueOf(topicId)};
         long result = petBetterDb.update(TOPIC_TABLE,cv,"_id=?", whereArgs);
@@ -2009,6 +2011,7 @@ public class DataAdapter {
 
         return result;
     }
+
     public void editProfile(long _id, String firstName, String lastName, String emailAddress,String mobileNum,
                             String landline, String image){
 
