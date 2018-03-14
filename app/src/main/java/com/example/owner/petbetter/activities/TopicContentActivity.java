@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,7 +51,7 @@ public class TopicContentActivity extends AppCompatActivity {
     private String email;
 
     private TextView topicContentName;
-    private ImageButton followButton;
+    private Button followButton;
     private int nId;
     private String timeStamp;
     private SwipeRefreshLayout refreshTopicContent;
@@ -70,7 +71,7 @@ public class TopicContentActivity extends AppCompatActivity {
         final TextView activityTitle = (TextView) findViewById(R.id.activity_title);
 
         topicContentName = (TextView) findViewById(R.id.topicContentName);
-        followButton = (ImageButton) findViewById(R.id.followButton);
+        followButton = (Button) findViewById(R.id.followButton);
         refreshTopicContent = (SwipeRefreshLayout) findViewById(R.id.refreshTopicContent);
 
         refreshTopicContent.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -110,12 +111,10 @@ public class TopicContentActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().add(R.id.topic_container,fragment3).commitAllowingStateLoss();
 
         if(checkIfFollower((int) topicItem.getId(), (int) user.getUserId())==true){
-            followButton.setBackgroundColor(Color.YELLOW);
-            followButton.setImageResource(R.mipmap.ic_check_black_24dp);
+            followButton.setBackgroundColor(getResources().getColor(R.color.amazonite));
         }
         else{
-            followButton.setBackgroundColor(Color.WHITE);
-            followButton.setImageResource(R.mipmap.ic_add_black_24dp);
+            followButton.setBackgroundColor(getResources().getColor(R.color.colorWhite));
         }
 
 
@@ -123,8 +122,7 @@ public class TopicContentActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(checkIfFollower((int) topicItem.getId(),(int) user.getUserId())==true){
-                    followButton.setBackgroundColor(Color.WHITE);
-                    followButton.setImageResource(R.mipmap.ic_add_black_24dp);
+                    followButton.setBackgroundColor(getResources().getColor(R.color.amazonite));
                     deleteFollower((int)topicItem.getId(), (int) user.getUserId());
 
                     service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
@@ -147,8 +145,7 @@ public class TopicContentActivity extends AppCompatActivity {
                     });
                 }
                 else{
-                    followButton.setBackgroundColor(Color.YELLOW);
-                    followButton.setImageResource(R.mipmap.ic_check_black_24dp);
+                    followButton.setBackgroundColor(getResources().getColor(R.color.colorWhite));
                     int fId = generateFollowerId();
                     addFollower(fId, (int) topicItem.getId(), (int) user.getUserId(), 0);
                     uploadFollower(getUnsyncedFollowers());

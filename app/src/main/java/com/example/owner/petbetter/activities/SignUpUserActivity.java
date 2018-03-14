@@ -97,15 +97,15 @@ public class SignUpUserActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         int userType = extras.getInt("USERTYPE");
         //still fixing function wont go here yet
-        if (userType == 3) {
+        if (userType == 1) {
             Intent intent = new Intent(SignUpUserActivity.this,
                     com.example.owner.petbetter.activities.VeterinarianAddInfoActivity.class);
             Bundle vetExtras = new Bundle();
-            extras.putInt("user_type", userType);
-            extras.putString("first_name", signupFirstName.getText().toString());
-            extras.putString("last_name", signupLastName.getText().toString());
-            extras.putString("email_address", signupEmail.getText().toString());
-            extras.putString("password", signupPassword.getEditText().getText().toString());
+            vetExtras.putInt("user_type", userType);
+            vetExtras.putString("first_name", signupFirstName.getText().toString());
+            vetExtras.putString("last_name", signupLastName.getText().toString());
+            vetExtras.putString("email_address", signupEmail.getText().toString());
+            vetExtras.putString("password", signupPassword.getEditText().getText().toString());
             intent.putExtras(vetExtras);
             startActivity(intent);
 

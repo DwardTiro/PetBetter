@@ -2,7 +2,11 @@
 
 require 'init.php';
 
-$veterinarian = json_decode(file_get_contents('php://input'), true);
+$user_id = $_POST['user_id'];
+$specialty = $_POST['specialty'];
+$rating = $_POST['rating'];
+$phone_num = $_POST['phone_num'];
+
 
 $response = array(); 
 //$sql = "SELECT * FROM users WHERE email = ? AND password = ?";
@@ -12,14 +16,8 @@ $response = array();
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
 
-	if($stmt = $mysqli->prepare("INSERT INTO veterinarians (user_id, rating, specialty, phone_num) VALUES (,?,?,?,?)")){
-		$stmt->bind_param(
-			"ssss",
-			$veterinarian['user_id'],
-			$veterinarian['rating'],
-			$veterinarian['specialty'],
-			$veterinarian['phone_num']
-		);
+	if($stmt = $mysqli->prepare("INSERT INTO veterinarians (user_id, rating, specialty, phone_num) VALUES (?,?,?,?)")){
+		$stmt->bind_param("ssss", $user_id, $rating, $specialty, $phone_num);
 		$stmt->execute();
 		$stmt->close();
 		echo 'Veterinarian added';

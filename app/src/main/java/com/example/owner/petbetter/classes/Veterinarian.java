@@ -14,6 +14,9 @@ public class Veterinarian extends User {
     @SerializedName("_id")
     int id;
 
+    @SerializedName("user_id")
+    long userId;
+
     @SerializedName("rating")
     float rating;
 
@@ -23,7 +26,9 @@ public class Veterinarian extends User {
         this.id = id;
         this.specialty = specialty;
         this.rating = rating;
+        //this.phoneNumber = phoneNumber;
     }
+
 
     public int getId() {
         return id;

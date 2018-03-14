@@ -66,6 +66,15 @@ public class VeterinarianAddInfoActivity extends AppCompatActivity {
         vetSpecialtySpinner = (Spinner) findViewById(R.id.vetSpecialtySpinner);
         phoneNumTextView = (TextView) findViewById(R.id.signUpVetTextPhoneNum);
         initializeDatabase();
+
+        Bundle extras = getIntent().getExtras();
+        firstName = extras.getString("first_name");
+        lastName = extras.getString("last_name");
+        emailAddress = extras.getString("email_address");
+        password = extras.getString("password");
+        userType = extras.getInt("user_type");
+        specialty = vetSpecialtySpinner.getSelectedItem().toString();
+        phoneNum = phoneNumTextView.getText().toString();
     }
 
     public void signUpBackButtonClicked(View view) {
@@ -241,18 +250,8 @@ public class VeterinarianAddInfoActivity extends AppCompatActivity {
 
 
     public void signUpVeterinarian(View view) {
-        Bundle extras = getIntent().getExtras();
-        firstName = extras.getString("first_name");
-        lastName = extras.getString("last_name");
-        emailAddress = extras.getString("email_address");
-        password = extras.getString("password");
-        userType = extras.getInt("user_type");
-        specialty = vetSpecialtySpinner.getSelectedItem().toString();
-        phoneNum = phoneNumTextView.getText().toString();
+
         uploadUsertoDB();
-        uploadVetToDB();
-
-
     }
 
 
@@ -264,7 +263,7 @@ public class VeterinarianAddInfoActivity extends AppCompatActivity {
 
         User user = new User(firstName, lastName, emailAddress, password, 1);
 
-        addUsertoDB(newId,firstName,lastName,emailAddress,password, 1);
+        //addUsertoDB(newId,firstName,lastName,emailAddress,password, 1);
 
         Gson gson = new GsonBuilder().serializeNulls().create();
         String jsonArray = gson.toJson(user);
@@ -276,7 +275,9 @@ public class VeterinarianAddInfoActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 System.out.println("User added to server successfully");
-                dataSync(12);
+                getUserFromDB();
+
+                //dataSync(12);
 
             }
 
@@ -287,16 +288,42 @@ public class VeterinarianAddInfoActivity extends AppCompatActivity {
         });
     }
 
+    public void getUserFromDB(){
+        service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+        //final User user;
+        Call<User> call = service.checkLogin(emailAddress, password);
+
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                System.out.println("User retrieved from server successfully");
+                final User user = response.body();
+                userId = (int)user.getUserId();
+                uploadVetToDB();
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                System.out.println("Failed to retrieve user from server.");
+            }
+        });
+        //return user;
+    }
+
+
     public void uploadVetToDB(){
         service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
+        //System.out.println("Got user with ID: "+user.getUserId());
         //User user = getUser(emailAddress);
 
+        /*
         Veterinarian vet = new Veterinarian(99,
                 userId,
                 lastName,
                 firstName,
-                phoneNum,
+                null,
                 phoneNum,
                 emailAddress,
                 password,
@@ -305,13 +332,13 @@ public class VeterinarianAddInfoActivity extends AppCompatActivity {
                 null,
                 specialty,
                 0);
-
+        */
         Gson gson = new GsonBuilder().serializeNulls().create();
-        String jsonArray = gson.toJson(vet);
-        System.out.println(jsonArray);
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        //String jsonArray = gson.toJson(vet);
+        //System.out.println(jsonArray);
+        //RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
 
-        Call<Void> call = service.addVet(body);
+        Call<Void> call = service.addVet(userId, specialty, 0, "09567761376");
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
