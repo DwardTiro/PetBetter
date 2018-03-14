@@ -257,7 +257,7 @@ public class FragmentCommunity extends Fragment implements CheckUpdates, PlaceIn
                                 deleteTopic(thisTopic.getId());
                                 deleteTopics();
                                 for (int i = 0; i < topicPosts.size(); i++) {
-                                    deletePost(topicPosts.get(i).getId());
+                                    //deletePost(topicPosts.get(i).getId());
                                 }
                                 update(pos);
                                 deletePosts();
