@@ -14,9 +14,6 @@ public class Veterinarian extends User {
     @SerializedName("_id")
     int id;
 
-    @SerializedName("user_id")
-    long userId;
-
     @SerializedName("rating")
     float rating;
 

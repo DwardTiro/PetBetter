@@ -47,7 +47,7 @@ public class VeterinarianAddInfoActivity extends AppCompatActivity {
     private int userType;
     private int userId;
 
-    private TextView phoneNumTextView;
+    private EditText phoneNumTextView;
     private Spinner vetSpecialtySpinner;
     private DataAdapter petBetterDb;
     HerokuService service;
@@ -64,7 +64,7 @@ public class VeterinarianAddInfoActivity extends AppCompatActivity {
         activityTitle.setText("Sign Up");
 
         vetSpecialtySpinner = (Spinner) findViewById(R.id.vetSpecialtySpinner);
-        phoneNumTextView = (TextView) findViewById(R.id.signUpVetTextPhoneNum);
+        phoneNumTextView = (EditText) findViewById(R.id.signUpVetTextPhoneNum);
         initializeDatabase();
 
         Bundle extras = getIntent().getExtras();
@@ -338,7 +338,7 @@ public class VeterinarianAddInfoActivity extends AppCompatActivity {
         //System.out.println(jsonArray);
         //RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
 
-        Call<Void> call = service.addVet(userId, specialty, 0, "09567761376");
+        Call<Void> call = service.addVet(userId, specialty, 0, phoneNum);
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
