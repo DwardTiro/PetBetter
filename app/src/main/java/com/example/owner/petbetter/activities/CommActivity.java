@@ -25,6 +25,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
@@ -55,6 +56,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.example.owner.petbetter.ServiceGenerator.BASE_URL;
+
 public class CommActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, CheckUpdates{
 
     private DataAdapter petBetterDb;
@@ -68,6 +71,7 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
     private SwipeRefreshLayout refreshCommunity;
     private int currFragment;
     private ImageView notifButton;
+    private ImageView imageViewDrawer;
 
     private NotificationReceiver notifReceiver = new NotificationReceiver(this);
     private NotificationReceiver notifReceiver2 = new NotificationReceiver();
@@ -127,9 +131,25 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
 
         String email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
         textNavEmail = (TextView) headerView.findViewById(R.id.textNavEmail);
+        imageViewDrawer = (ImageView) headerView.findViewById(R.id.imageViewDrawer);
         textNavEmail.setText(email);
 
+
         user = getUser(email);
+
+        if(user.getUserPhoto()!=null){
+
+            String newFileName = BASE_URL + user.getUserPhoto();
+            System.out.println(newFileName);
+            //String newFileName = "http://192.168.0.19/petbetter/"+thisMessageRep.getMessagePhoto();
+            Glide.with(CommActivity.this).load(newFileName).error(R.drawable.back_button).into(imageViewDrawer);
+            /*
+            Picasso.with(inflater.getContext()).load("http://".concat(newFileName))
+                    .error(R.drawable.back_button).into(holder.messageRepImage);*/
+            //setImage(holder.messageRepImage, newFileName);
+
+            imageViewDrawer.setVisibility(View.VISIBLE);
+        }
         notifButton = (ImageView) findViewById(R.id.imageview_notifs);
 
         if(!getUnsyncedNotifications().isEmpty())

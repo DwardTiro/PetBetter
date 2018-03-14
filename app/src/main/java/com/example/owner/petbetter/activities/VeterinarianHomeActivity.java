@@ -25,6 +25,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
@@ -45,6 +46,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 
+import static com.example.owner.petbetter.ServiceGenerator.BASE_URL;
+
 /**
  * Created by Kristian on 2/24/2018.
  */
@@ -60,10 +63,12 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
     private MyService notifService;
     private ImageView notifButton;
     private NotificationReceiver notifReceiver = new NotificationReceiver();
+    private ImageView imageViewDrawer;
 
     AlarmManager alarmManager;
     PendingIntent pendingIntent;
     HerokuService service;
+
 
     @Override
     protected void onResume() {
@@ -111,6 +116,20 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
         textNavEmail.setText(email);
 
         user = getUser(email);
+        imageViewDrawer = (ImageView) headerView.findViewById(R.id.imageViewDrawer);
+        if(user.getUserPhoto()!=null){
+
+            String newFileName = BASE_URL + user.getUserPhoto();
+            System.out.println(newFileName);
+            //String newFileName = "http://192.168.0.19/petbetter/"+thisMessageRep.getMessagePhoto();
+            Glide.with(VeterinarianHomeActivity.this).load(newFileName).error(R.drawable.back_button).into(imageViewDrawer);
+            /*
+            Picasso.with(inflater.getContext()).load("http://".concat(newFileName))
+                    .error(R.drawable.back_button).into(holder.messageRepImage);*/
+            //setImage(holder.messageRepImage, newFileName);
+
+            imageViewDrawer.setVisibility(View.VISIBLE);
+        }
         notifButton = (ImageView) findViewById(R.id.imageview_notifs);
 
         if(!getUnsyncedNotifications().isEmpty())

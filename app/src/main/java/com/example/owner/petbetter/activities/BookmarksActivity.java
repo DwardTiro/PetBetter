@@ -21,6 +21,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
@@ -38,6 +39,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static com.example.owner.petbetter.ServiceGenerator.BASE_URL;
+
 public class BookmarksActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DataAdapter petBetterDb;
@@ -50,6 +53,7 @@ public class BookmarksActivity extends AppCompatActivity implements NavigationVi
     private User user;
     private ImageView notifButton;
     private NotificationReceiver notifReceiver = new NotificationReceiver();
+    private ImageView imageViewDrawer;
 
     HerokuService service;
 
@@ -99,6 +103,20 @@ public class BookmarksActivity extends AppCompatActivity implements NavigationVi
         textNavEmail.setText(email);
 
         user = getUser(email);
+        imageViewDrawer = (ImageView) headerView.findViewById(R.id.imageViewDrawer);
+        if(user.getUserPhoto()!=null){
+
+            String newFileName = BASE_URL + user.getUserPhoto();
+            System.out.println(newFileName);
+            //String newFileName = "http://192.168.0.19/petbetter/"+thisMessageRep.getMessagePhoto();
+            Glide.with(BookmarksActivity.this).load(newFileName).error(R.drawable.back_button).into(imageViewDrawer);
+            /*
+            Picasso.with(inflater.getContext()).load("http://".concat(newFileName))
+                    .error(R.drawable.back_button).into(holder.messageRepImage);*/
+            //setImage(holder.messageRepImage, newFileName);
+
+            imageViewDrawer.setVisibility(View.VISIBLE);
+        }
 
         notifButton = (ImageView) findViewById(R.id.imageview_notifs);
 

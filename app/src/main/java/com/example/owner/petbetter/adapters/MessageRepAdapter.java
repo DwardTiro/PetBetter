@@ -20,6 +20,8 @@ import com.bumptech.glide.Glide;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.classes.MessageRep;
+import com.example.owner.petbetter.classes.User;
+import com.example.owner.petbetter.database.DataAdapter;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -29,6 +31,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import static com.example.owner.petbetter.ServiceGenerator.BASE_URL;
@@ -46,11 +49,14 @@ public class MessageRepAdapter extends RecyclerView.Adapter<MessageRepAdapter.Me
     private ArrayList<MessageRep> messageRepList;
     private final OnItemClickListener listener;
     private RecyclerView recyclerView;
+    private DataAdapter petBetterDb;
+    private Context context;
 
     public MessageRepAdapter(Context context, ArrayList<MessageRep> messageRepList, OnItemClickListener listener) {
         inflater = LayoutInflater.from(context);
         this.messageRepList = messageRepList;
         this.listener = listener;
+        this.context = context;
     }
 
     @Override
@@ -65,6 +71,7 @@ public class MessageRepAdapter extends RecyclerView.Adapter<MessageRepAdapter.Me
     @Override
     public void onBindViewHolder(final MessageRepViewHolder holder, int position) {
         //User user = getUserWithId(thisMessageRep.getSenderId());
+        initializeDatabase();
         MessageRep thisMessageRep = messageRepList.get(position);
         holder.messageRepName.setText(thisMessageRep.getUserName());
         holder.messageRepTime.setText(thisMessageRep.getDatePerformed());
@@ -93,8 +100,52 @@ public class MessageRepAdapter extends RecyclerView.Adapter<MessageRepAdapter.Me
             holder.messageRepImage.setVisibility(View.GONE);
         }
 
+        User user = getUserWithId(thisMessageRep.getUserId());
+
+        if(user.getUserPhoto()!=null){
+
+            String newFileName = BASE_URL + user.getUserPhoto();
+            System.out.println(newFileName);
+            //String newFileName = "http://192.168.0.19/petbetter/"+thisMessageRep.getMessagePhoto();
+            Glide.with(inflater.getContext()).load(newFileName).error(R.drawable.back_button).into(holder.messageRepProfile);
+            /*
+            Picasso.with(inflater.getContext()).load("http://".concat(newFileName))
+                    .error(R.drawable.back_button).into(holder.messageRepImage);*/
+            //setImage(holder.messageRepImage, newFileName);
+
+            holder.messageRepProfile.setVisibility(View.VISIBLE);
+        }
+
+
         holder.bind(thisMessageRep, listener);
 
+    }
+
+    private void initializeDatabase() {
+
+        petBetterDb = new DataAdapter(context);
+
+        try {
+            petBetterDb.createDatabase();
+        } catch(SQLException e ){
+            e.printStackTrace();
+        }
+
+    }
+
+    private User getUserWithId(long id) {
+
+        try {
+            petBetterDb.openDatabase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        User result = petBetterDb.getUserWithId((int) id);
+        petBetterDb.closeDatabase();
+
+
+        return result;
     }
 
     public void updateList(ArrayList<MessageRep> newList){
@@ -123,12 +174,13 @@ public class MessageRepAdapter extends RecyclerView.Adapter<MessageRepAdapter.Me
         private TextView messageRepName;
         private TextView messageRepContent;
         private TextView messageRepTime;
+        private ImageView messageRepProfile;
         private ImageButton deletePostRep;
 
         public MessageRepViewHolder(View itemView) {
             super(itemView);
 
-            messageRepImage = (ImageView) itemView.findViewById(R.id.commentUserProfilePicture);
+            messageRepProfile = (ImageView) itemView.findViewById(R.id.commentUserProfilePicture);
             messageRepName = (TextView) itemView.findViewById(R.id.commentUserProfileName);
             messageRepContent = (TextView) itemView.findViewById(R.id.commentContent);
             messageRepTime = (TextView) itemView.findViewById(R.id.commentTimeStamp);

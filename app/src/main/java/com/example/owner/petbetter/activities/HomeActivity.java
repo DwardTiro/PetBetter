@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.bumptech.glide.Glide;
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
@@ -54,6 +55,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.example.owner.petbetter.ServiceGenerator.BASE_URL;
+
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -76,6 +79,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     private ArrayList<Veterinarian> vetList;
     HerokuService service;
+    private ImageView imageViewDrawer;
 
 
     @Override
@@ -132,6 +136,21 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         textNavEmail.setText(email);
 
         user = getUser(email);
+
+        imageViewDrawer = (ImageView) headerView.findViewById(R.id.imageViewDrawer);
+        if(user.getUserPhoto()!=null){
+
+            String newFileName = BASE_URL + user.getUserPhoto();
+            System.out.println(newFileName);
+            //String newFileName = "http://192.168.0.19/petbetter/"+thisMessageRep.getMessagePhoto();
+            Glide.with(HomeActivity.this).load(newFileName).error(R.drawable.back_button).into(imageViewDrawer);
+            /*
+            Picasso.with(inflater.getContext()).load("http://".concat(newFileName))
+                    .error(R.drawable.back_button).into(holder.messageRepImage);*/
+            //setImage(holder.messageRepImage, newFileName);
+
+            imageViewDrawer.setVisibility(View.VISIBLE);
+        }
 
         //userName = user.getName();
 

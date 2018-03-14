@@ -61,6 +61,7 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
     private TextView userEmailAddress;
     private TextView userPostNum;
     private TextView userTopicNum;
+    private ImageView imageViewDrawer;
 
     HerokuService service;
 
@@ -115,6 +116,20 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
             notifButton.setImageResource(R.mipmap.ic_notifications_active_black_24dp);
 
         user = getUser(email);
+        imageViewDrawer = (ImageView) headerView.findViewById(R.id.imageViewDrawer);
+        if(user.getUserPhoto()!=null){
+
+            String newFileName = BASE_URL + user.getUserPhoto();
+            System.out.println(newFileName);
+            //String newFileName = "http://192.168.0.19/petbetter/"+thisMessageRep.getMessagePhoto();
+            Glide.with(UserProfileActivity.this).load(newFileName).error(R.drawable.back_button).into(imageViewDrawer);
+            /*
+            Picasso.with(inflater.getContext()).load("http://".concat(newFileName))
+                    .error(R.drawable.back_button).into(holder.messageRepImage);*/
+            //setImage(holder.messageRepImage, newFileName);
+
+            imageViewDrawer.setVisibility(View.VISIBLE);
+        }
 
         textNavUser = (TextView) headerView.findViewById(R.id.textNavUser);
         textNavUser.setText(user.getName());
