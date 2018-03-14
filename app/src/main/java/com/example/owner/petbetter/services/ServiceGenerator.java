@@ -13,7 +13,7 @@ public class ServiceGenerator {
 
 
     //public static final String BASE_URL = "http://192.168.0.19/petbetter/";
-    public static final String BASE_URL = "http://192.168.1.5/petbetter/";
+    public static final String BASE_URL = "http://172.16.4.44/petbetter/";
     //
     //private static final String BASE_URL = "http://10.0.2.2/petbetter/";
     //private static final String BASE_URL = "http://localhost/petbetter/";
