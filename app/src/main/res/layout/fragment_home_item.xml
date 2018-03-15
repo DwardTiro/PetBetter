@@ -4,11 +4,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="5dp"
-    android:layout_marginEnd="10dp"
-    android:layout_marginStart="10dp"
-    android:layout_marginTop="5dp"
-    card_view:cardCornerRadius="2dp">
+    android:layout_marginTop="1dp">
 
 
     <RelativeLayout
@@ -20,11 +16,11 @@
 
         <LinearLayout
             android:id="@+id/postContentLayout"
-            android:layout_width="280dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="0dp"
+            android:layout_marginEnd="20dp"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="15dp"
             android:orientation="vertical">
 
 
@@ -34,20 +30,18 @@
                 android:layout_height="wrap_content"
                 android:maxLength="25"
                 android:maxLines="1"
-
-
                 android:text="@string/sample_clinic"
                 android:textColor="@color/black"
                 android:textSize="@dimen/listing_font_size" />
 
             <TextView
                 android:id="@+id/topicDescription"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-
-                android:maxLength="35"
-                android:maxLines="2"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:scrollHorizontally="true"
                 android:text="@string/sample_address" />
 
             <TextView
@@ -62,10 +56,10 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_toEndOf="@+id/postContentLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="0dp"
+            android:layout_toEndOf="@+id/postContentLayout"
             android:orientation="vertical">
 
             <ImageButton
@@ -123,18 +117,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/postContentLayout"
-            android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:layout_marginStart="18dp">
+            android:layout_marginStart="18dp"
+            android:layout_marginTop="10dp">
 
             <TextView
                 android:id="@+id/topicLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="5dp"
+                android:layout_marginEnd="3dp"
                 android:text="Post"
-                android:textSize="15sp"
                 android:textColor="@color/amazonite"
+                android:textSize="15sp"
                 android:textStyle="italic|bold" />
 
 
@@ -142,7 +136,6 @@
                 android:id="@+id/iconReplies"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
                 android:layout_toEndOf="@id/topicLabel"
                 android:src="@drawable/ic_reply_black_24dp" />
 
@@ -150,7 +143,7 @@
                 android:id="@+id/textViewReplies"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
+                android:layout_marginStart="3dp"
                 android:layout_toEndOf="@id/iconReplies"
                 android:text="99"
                 android:textSize="17sp" />
