@@ -2,6 +2,10 @@
 
 require 'init.php';
 
+$source_id = $_POST['source_id'];
+$doer_id = $_POST['doer_id'];
+$type = $_POST['type'];
+
 $response = array(); 
 //$sql = "SELECT * FROM users WHERE email = ? AND password = ?";
 //$sql = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
@@ -10,42 +14,41 @@ $response = array();
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
 
-	if($stmt = $mysqli->prepare("SELECT * FROM followers")){
-		
+	if($stmt = $mysqli->prepare("DELETE FROM notifications WHERE source_id = ? AND doer_id = ? AND type = ?")){
+		$stmt->bind_param("sss", $source_id, $doer_id, $type);
 		$stmt->execute();
-		$stmt->bind_result($_id, $topic_id, $user_id, $is_allowed);
-		$stmt->store_result();
+		$stmt->close();
+		echo 'Notification removed';
+		
+		//$stmt->bind_result($_id, $first_name, $last_name, $mobile_num, $phone_num, $email,  $password, $age, $user_type);
+		//$stmt->store_result();
 	
+	/*
 		if($stmt->fetch()){
 			
-			do{
-				array_push($response, array('_id'=>$_id,
-				'topic_id'=>$topic_id,
-				'user_id'=>$user_id,
-				'is_allowed'=>$is_allowed));
-			}while($stmt->fetch());
-			
-			
 			$stmt->close();
-			
-			echo json_encode($response);
-			/*
+			//echo json_encode($response);
 			echo json_encode(array('_id'=>$_id,
-			'user_id'=>$user_id,
-			'topic_name'=>$topic_name,
-			'topic_content'=>$topic_content,
-			'date_created'=>$date_created,
 			'first_name'=>$first_name,
-			'is_deleted'=>$is_deleted));
-			*/
+			'last_name'=>$last_name,
+			'mobile_num'=>$mobile_num,
+			'phone_num'=>$phone_num,
+			'email'=>$email,
+			'password'=>$password,
+			'age'=>$age,
+			'user_type'=>$user_type));
 		}
 		else{
 			
 			$stmt->close();
-			//echo 'SQL Query Error';
+			echo 'SQL Query Error';
 		}
+		*/
 		//echo json_encode($stmt);
 		//echo json_encode(array('user'=>$response));
+	}
+	else{
+		echo 'SQL Query Error';
 	}
 }
 

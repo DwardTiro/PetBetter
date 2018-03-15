@@ -227,9 +227,9 @@ public class MyService extends Service {
                                         Topic topic = getTopic(follower.getTopicId());
 
                                         appNotif.setSmallIcon(R.drawable.app_icon)
-                                                .setTicker(notifArray.get(val).getDoerName()+" followed your topic ")
+                                                .setTicker(notifArray.get(val).getDoerName()+" want to follow your topic ")
                                                 .setWhen(System.currentTimeMillis()).setContentTitle(notifArray.get(val).getDoerName())
-                                                .setContentText(" has followed "+topic.getTopicName());
+                                                .setContentText(" has requested to follow "+topic.getTopicName());
 
                                         Intent intentNotif = new Intent(MyService.this, TopicContentActivity.class);
                                         intentNotif.putExtra("thisTopic", new Gson().toJson(topic));

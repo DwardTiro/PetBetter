@@ -17,10 +17,22 @@ public class Follower {
     @SerializedName("user_id")
     long userId;
 
-    public Follower(long id, long topicId, long userId) {
+    @SerializedName("is_allowed")
+    int isAllowed;
+
+    public Follower(long id, long topicId, long userId, int isAllowed) {
         this.id = id;
         this.topicId = topicId;
         this.userId = userId;
+        this.isAllowed = isAllowed;
+    }
+
+    public int getIsAllowed() {
+        return isAllowed;
+    }
+
+    public void setIsAllowed(int isAllowed) {
+        this.isAllowed = isAllowed;
     }
 
     public long getId() {

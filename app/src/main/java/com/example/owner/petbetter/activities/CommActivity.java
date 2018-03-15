@@ -80,6 +80,13 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onResume() {
         super.onResume();
+        if(currFragment==1){
+            btnCommunity.performClick();
+        }
+        if(currFragment==2){
+            btnHome.performClick();
+        }
+
         CommActivity.this.registerReceiver(this.notifReceiver, new IntentFilter(Intent.ACTION_ATTACH_DATA));
         CommActivity.this.registerReceiver(this.notifReceiver2, new IntentFilter("com.example.ACTION_LOGOUT"));
         onResult();
@@ -250,7 +257,11 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(MenuItem item){
         int id = item.getItemId();
 
-        if(id == R.id.home){
+        if (id == R.id.search_drawer) {
+            Intent intent = new Intent(this, com.example.owner.petbetter.activities.SearchActivity.class);
+            startActivity(intent);
+        }
+        else if(id == R.id.home){
             if(user.getUserType()==1){
                 Intent intent = new Intent(this, com.example.owner.petbetter.activities.VeterinarianHomeActivity.class);
                 startActivity(intent);
@@ -261,7 +272,7 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
             }
         }
         else if(id == R.id.community2){
-            Intent intent = new Intent(this, com.example.owner.petbetter.activities.HomeActivity.class);
+            Intent intent = new Intent(this, com.example.owner.petbetter.activities.CommActivity.class);
             startActivity(intent);
         }
         else if(id == R.id.community){
@@ -436,6 +447,7 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
 
         return result;
     }
+
 
     @Override
     public void onResult() {

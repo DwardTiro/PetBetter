@@ -17,6 +17,7 @@ import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.classes.Follower;
 import com.example.owner.petbetter.classes.Message;
+import com.example.owner.petbetter.classes.Notifications;
 import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.Topic;
 import com.example.owner.petbetter.classes.User;
@@ -112,17 +113,36 @@ public class TopicContentActivity extends AppCompatActivity {
 
         if(checkIfFollower((int) topicItem.getId(), (int) user.getUserId())==true){
             followButton.setBackgroundColor(getResources().getColor(R.color.amazonite));
+            Follower check = getFollowerWithTopicUser(topicItem.getId(), user.getUserId());
+            if(check.getIsAllowed()==1){
+                //followButton.setBackgroundResource(R.mipmap.ic_check_black_24dp);
+                followButton.setText("Approved");
+            }
+            else{
+               //followButton.setBackgroundResource(R.mipmap.ic_access_time_black_24dp);
+                followButton.setText("Requested");
+            }
         }
         else{
             followButton.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+            followButton.setText("Follow");
         }
 
 
         followButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                followButton.setEnabled(false);
+                followButton.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        followButton.setEnabled(true);
+                    }
+                }, 500);
                 if(checkIfFollower((int) topicItem.getId(),(int) user.getUserId())==true){
-                    followButton.setBackgroundColor(getResources().getColor(R.color.amazonite));
+                    followButton.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+                    followButton.setText("Follow");
                     deleteFollower((int)topicItem.getId(), (int) user.getUserId());
 
                     service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
@@ -143,11 +163,34 @@ public class TopicContentActivity extends AppCompatActivity {
                             Log.d("onFailure", t.getLocalizedMessage());
                         }
                     });
+
+                    final Call<Void> call2 = service2.deleteNotification(topicItem.getId(), user.getUserId(), 4);
+                    call2.enqueue(new Callback<Void>() {
+                        @Override
+                        public void onResponse(Call<Void> call, Response<Void> response) {
+
+                        }
+
+                        @Override
+                        public void onFailure(Call<Void> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+                        }
+                    });
+
                 }
                 else{
-                    followButton.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+                    //followButton.setBackgroundResource(R.mipmap.ic_access_time_black_24dp);
+                    followButton.setBackgroundColor(getResources().getColor(R.color.amazonite));
+
                     int fId = generateFollowerId();
-                    addFollower(fId, (int) topicItem.getId(), (int) user.getUserId(), 0);
+                    if(topicItem.getCreatorId()==user.getUserId()){
+                        addFollower(fId, (int) topicItem.getId(), (int) user.getUserId(), 1, 0);
+                        followButton.setText("Approved");
+                    }
+                    else{
+                        addFollower(fId, (int) topicItem.getId(), (int) user.getUserId(), 0, 0);
+                        followButton.setText("Requested");
+                    }
                     uploadFollower(getUnsyncedFollowers());
 
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
@@ -155,17 +198,42 @@ public class TopicContentActivity extends AppCompatActivity {
                     timeStamp = sdf.format(new Date());
                     nId = generateNotifsId();
                     notifyFollower(nId, topicItem.getCreatorId(), user.getUserId(),0, 4, timeStamp, (int) topicItem.getId(), 0);
+                    uploadNotification();
+
                 }
 
             }
         });
     }
 
-    public void viewPostBackButtonClicked(View view){
-        finish();
+    public void uploadNotification(){
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+        ArrayList<Notifications> unsyncedNotifs = getUnsyncedNotifications();
+        System.out.println("UNSYNCED NOTIFS: "+unsyncedNotifs.size());
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String jsonArray = gson.toJson(unsyncedNotifs);
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.addNotifications(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    System.out.println("NOTIFICATIONS ADDED YEY");
+                    dataSynced(7);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
     }
 
-    private long addFollower(int followerId, int topicId, int userId, int isSynced){
+    private ArrayList<Notifications> getUnsyncedNotifications(){
 
         try {
             petBetterDb.openDatabase();
@@ -173,7 +241,25 @@ public class TopicContentActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        long result = petBetterDb.addFollower(followerId, topicId, userId, isSynced);
+        ArrayList<Notifications> result = petBetterDb.getUnsyncedNotifications();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    public void viewPostBackButtonClicked(View view){
+        finish();
+    }
+
+    private long addFollower(int followerId, int topicId, int userId, int isAllowed, int isSynced){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        long result = petBetterDb.addFollower(followerId, topicId, userId, isAllowed, isSynced);
         petBetterDb.closeDatabase();
 
         return result;
@@ -311,6 +397,20 @@ public class TopicContentActivity extends AppCompatActivity {
         }
 
         boolean result = petBetterDb.checkIfFollower(topicId,userId);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private Follower getFollowerWithTopicUser(long topicId, long userId){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        Follower result = petBetterDb.getFollowerWithTopicUser(topicId,userId);
         petBetterDb.closeDatabase();
 
         return result;

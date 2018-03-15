@@ -229,7 +229,12 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
-        if(id == R.id.home){
+        if (id == R.id.search_drawer) {
+            Intent intent = new Intent(this, com.example.owner.petbetter.activities.SearchActivity.class);
+            startActivity(intent);
+        }
+
+        else if(id == R.id.home){
             if(user.getUserType()==1){
                 Intent intent = new Intent(this, com.example.owner.petbetter.activities.VeterinarianHomeActivity.class);
                 startActivity(intent);
@@ -240,7 +245,7 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
             }
         }
         else if(id == R.id.community2){
-            Intent intent = new Intent(this, com.example.owner.petbetter.activities.HomeActivity.class);
+            Intent intent = new Intent(this, com.example.owner.petbetter.activities.CommActivity.class);
             startActivity(intent);
         }
         else if(id == R.id.community){

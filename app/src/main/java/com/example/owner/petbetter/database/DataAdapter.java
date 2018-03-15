@@ -238,7 +238,26 @@ public class DataAdapter {
 
         Follower result = new Follower(c.getLong(c.getColumnIndexOrThrow("_id")),
                 c.getLong(c.getColumnIndexOrThrow("topic_id")),
-                c.getLong(c.getColumnIndexOrThrow("user_id")));
+                c.getLong(c.getColumnIndexOrThrow("user_id")),
+                c.getInt(c.getColumnIndexOrThrow("is_allowed")));
+
+        c.close();
+        return result;
+    }
+
+    public Follower getFollowerWithTopicUser(long topicId, long userId){
+
+        String sql = "SELECT * FROM "+FOLLOWER_TABLE+" WHERE user_id = '" + userId + "' AND topic_id = '"+topicId+"'";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        Log.e("cursor", c.getCount() + "");
+
+        c.moveToFirst();
+
+        Follower result = new Follower(c.getLong(c.getColumnIndexOrThrow("_id")),
+                c.getLong(c.getColumnIndexOrThrow("topic_id")),
+                c.getLong(c.getColumnIndexOrThrow("user_id")),
+                c.getInt(c.getColumnIndexOrThrow("is_allowed")));
 
         c.close();
         return result;
@@ -921,9 +940,10 @@ public class DataAdapter {
         Cursor c = petBetterDb.rawQuery(sql, null);
 
         while(c.moveToNext()) {
-            Follower follower = new Follower(c.getInt(c.getColumnIndexOrThrow("_id")),
+            Follower follower = new Follower(c.getLong(c.getColumnIndexOrThrow("_id")),
                     c.getLong(c.getColumnIndexOrThrow("topic_id")),
-                    c.getLong(c.getColumnIndexOrThrow("user_id")));
+                    c.getLong(c.getColumnIndexOrThrow("user_id")),
+                    c.getInt(c.getColumnIndexOrThrow("is_allowed")));
             results.add(follower);
         }
 
@@ -1130,9 +1150,10 @@ public class DataAdapter {
         Cursor c = petBetterDb.rawQuery(sql, null);
 
         while(c.moveToNext()) {
-            Follower follower = new Follower(c.getInt(c.getColumnIndexOrThrow("_id")),
+            Follower follower = new Follower(c.getLong(c.getColumnIndexOrThrow("_id")),
                     c.getLong(c.getColumnIndexOrThrow("topic_id")),
-                    c.getLong(c.getColumnIndexOrThrow("user_id")));
+                    c.getLong(c.getColumnIndexOrThrow("user_id")),
+                    c.getInt(c.getColumnIndexOrThrow("is_allowed")));
             results.add(follower);
         }
 
@@ -1859,13 +1880,14 @@ public class DataAdapter {
         return ids;
     }
 
-    public long addFollower(int followerId, int topicId, int userId, int isSynced){
+    public long addFollower(int followerId, int topicId, int userId, int isAllowed, int isSynced){
         long result;
 
         ContentValues cv = new ContentValues();
         cv.put("_id", followerId);
         cv.put("topic_id", topicId);
         cv.put("user_id", userId);
+        cv.put("is_allowed", isAllowed);
         cv.put("is_synced", isSynced);
 
         result = petBetterDb.insert(FOLLOWER_TABLE, null, cv);
@@ -1988,9 +2010,10 @@ public class DataAdapter {
         Cursor c = petBetterDb.rawQuery(sql, null);
 
         while(c.moveToNext()) {
-            Follower follower= new Follower(c.getInt(c.getColumnIndexOrThrow("_id")),
+            Follower follower = new Follower(c.getLong(c.getColumnIndexOrThrow("_id")),
                     c.getLong(c.getColumnIndexOrThrow("topic_id")),
-                    c.getLong(c.getColumnIndexOrThrow("user_id")));
+                    c.getLong(c.getColumnIndexOrThrow("user_id")),
+                    c.getInt(c.getColumnIndexOrThrow("is_allowed")));
             results.add(follower);
         }
 
@@ -2073,6 +2096,18 @@ public class DataAdapter {
     }
 
     public long deleteTopic(long topicId){
+        ContentValues cv = new ContentValues();
+        cv.put("is_deleted",1);
+        cv.put("is_synced", 0);
+
+        String[] whereArgs = new String[]{String.valueOf(topicId)};
+        long result = petBetterDb.update(TOPIC_TABLE,cv,"_id=?", whereArgs);
+        petBetterDb.close();
+
+        return result;
+    }
+
+    public long deleteNotification(long topicId){
         ContentValues cv = new ContentValues();
         cv.put("is_deleted",1);
         cv.put("is_synced", 0);
