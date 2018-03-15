@@ -44,6 +44,7 @@
                     android:onClick="vetButtonClicked"
                     android:scaleType="fitCenter"
                     android:text="Veterinarians"
+                    android:textAllCaps="false"
                     android:textColor="@color/colorWhite" />
 
                 <Button
@@ -57,6 +58,7 @@
                     android:onClick="petCareButtonClicked"
                     android:scaleType="fitCenter"
                     android:text="Pet Care"
+                    android:textAllCaps="false"
                     android:textColor="@color/colorWhite" />
 
             </LinearLayout>

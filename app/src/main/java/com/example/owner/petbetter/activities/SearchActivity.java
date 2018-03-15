@@ -129,10 +129,14 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
     public void vetSearchClicked(View v){
 
         currFragment = 1;
-        vetSearchButton.setBackgroundResource(R.color.myrtle_green);
+        vetSearchButton.setBackgroundResource(R.color.main_White);
+        vetSearchButton.setTextColor(getResources().getColor(R.color.myrtle_green));
         petSearchButton.setBackgroundResource(R.color.medTurquoise);
+        petSearchButton.setTextColor(getResources().getColor(R.color.colorWhite));
         topicSearchButton.setBackgroundResource(R.color.medTurquoise);
+        topicSearchButton.setTextColor(getResources().getColor(R.color.colorWhite));
         postSearchButton.setBackgroundResource(R.color.medTurquoise);
+        postSearchButton.setTextColor(getResources().getColor(R.color.colorWhite));
 
         service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
@@ -219,9 +223,13 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
     public void petSearchClicked(View v){
         currFragment = 2;
         vetSearchButton.setBackgroundResource(R.color.medTurquoise);
-        petSearchButton.setBackgroundResource(R.color.myrtle_green);
+        vetSearchButton.setTextColor(getResources().getColor(R.color.colorWhite));
+        petSearchButton.setBackgroundResource(R.color.main_White);
+        petSearchButton.setTextColor(getResources().getColor(R.color.myrtle_green));
         topicSearchButton.setBackgroundResource(R.color.medTurquoise);
+        topicSearchButton.setTextColor(getResources().getColor(R.color.colorWhite));
         postSearchButton.setBackgroundResource(R.color.medTurquoise);
+        postSearchButton.setTextColor(getResources().getColor(R.color.colorWhite));
 
         service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
@@ -297,9 +305,13 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
     public void topicSearchClicked(View v){
         currFragment = 3;
         vetSearchButton.setBackgroundResource(R.color.medTurquoise);
+        vetSearchButton.setTextColor(getResources().getColor(R.color.colorWhite));
         petSearchButton.setBackgroundResource(R.color.medTurquoise);
-        topicSearchButton.setBackgroundResource(R.color.myrtle_green);
+        petSearchButton.setTextColor(getResources().getColor(R.color.colorWhite));
+        topicSearchButton.setBackgroundResource(R.color.main_White);
+        topicSearchButton.setTextColor(getResources().getColor(R.color.myrtle_green));
         postSearchButton.setBackgroundResource(R.color.medTurquoise);
+        postSearchButton.setTextColor(getResources().getColor(R.color.colorWhite));
 
         service3 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
@@ -375,9 +387,13 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
     public void postSearchClicked(View v){
         currFragment = 4;
         vetSearchButton.setBackgroundResource(R.color.medTurquoise);
+        vetSearchButton.setTextColor(getResources().getColor(R.color.colorWhite));
         petSearchButton.setBackgroundResource(R.color.medTurquoise);
+        petSearchButton.setTextColor(getResources().getColor(R.color.colorWhite));
         topicSearchButton.setBackgroundResource(R.color.medTurquoise);
-        postSearchButton.setBackgroundResource(R.color.myrtle_green);
+        topicSearchButton.setTextColor(getResources().getColor(R.color.colorWhite));
+        postSearchButton.setBackgroundResource(R.color.main_White);
+        postSearchButton.setTextColor(getResources().getColor(R.color.myrtle_green));
 
         service4 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
