@@ -103,7 +103,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         nToggle.syncState();
 
 
-
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -112,9 +111,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         petCareButton = (Button) findViewById(R.id.petCareButton);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refreshHome);
         notifButton = (ImageView) findViewById(R.id.imageview_notifs);
-
-
-
 
         View headerView = navigationView.getHeaderView(0);
 
@@ -186,6 +182,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+        hideItems();
     }
     @Override
     protected void onResume(){
@@ -459,6 +456,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public void commButtonClicked(View view){
     }
 
+    /*
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.nav_bar,menu);
@@ -477,13 +475,17 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
         return super.onOptionsItemSelected(item);
     }
-
+    */
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item){
         int id = item.getItemId();
 
-        if(id == R.id.home){
+        if (id == R.id.search_drawer) {
+            Intent intent = new Intent(this, com.example.owner.petbetter.activities.SearchActivity.class);
+            startActivity(intent);
+        }
+        else if(id == R.id.home){
             if(user.getUserType()==1){
                 Intent intent = new Intent(this, com.example.owner.petbetter.activities.VeterinarianHomeActivity.class);
                 startActivity(intent);

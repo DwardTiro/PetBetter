@@ -292,13 +292,21 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
             menu.findItem(R.id.bookmarks).setVisible(false);
             menu.findItem(R.id.community).setVisible(false);
         }
+        if(user.getUserType()==2){
+            menu.findItem(R.id.community2).setVisible(false);
+        }
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.home) {
+        if (id == R.id.search_drawer) {
+            Intent intent = new Intent(this, com.example.owner.petbetter.activities.SearchActivity.class);
+            startActivity(intent);
+        }
+
+        else if (id == R.id.home) {
             if(user.getUserType()==1){
                 Intent intent = new Intent(this, com.example.owner.petbetter.activities.VeterinarianHomeActivity.class);
                 startActivity(intent);
