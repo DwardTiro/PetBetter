@@ -80,6 +80,13 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onResume() {
         super.onResume();
+        if(currFragment==1){
+            btnCommunity.performClick();
+        }
+        if(currFragment==2){
+            btnHome.performClick();
+        }
+
         CommActivity.this.registerReceiver(this.notifReceiver, new IntentFilter(Intent.ACTION_ATTACH_DATA));
         CommActivity.this.registerReceiver(this.notifReceiver2, new IntentFilter("com.example.ACTION_LOGOUT"));
         onResult();
@@ -436,6 +443,7 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
 
         return result;
     }
+
 
     @Override
     public void onResult() {
