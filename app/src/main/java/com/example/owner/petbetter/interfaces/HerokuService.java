@@ -299,6 +299,10 @@ public interface HerokuService {
     Call<Void> deleteFollower(@Field("topic_id") long topicId, @Field("user_id") long userId);
 
     @FormUrlEncoded
+    @POST("deleteNotification.php")
+    Call<Void> deleteNotification(@Field("source_id") long sourceId, @Field("doer_id") long doerId, @Field("type") int type);
+
+    @FormUrlEncoded
     @POST("updateRating.php")
     Call<Void> updateRating(@Field("_id") long id, @Field("value") float value, @Field("type") int type);
 

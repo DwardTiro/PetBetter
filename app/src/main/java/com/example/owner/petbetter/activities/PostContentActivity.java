@@ -225,7 +225,7 @@ public class PostContentActivity extends AppCompatActivity {
                         upPostButton.setEnabled(true);
                         downPostButton.setEnabled(true);
                     }
-                }, 1500);
+                }, 500);
 
                 if(vote==null){//0
                     int id = generateUpvoteId();
