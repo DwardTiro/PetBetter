@@ -13,7 +13,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 	if($stmt = $mysqli->prepare("SELECT * FROM followers")){
 		
 		$stmt->execute();
-		$stmt->bind_result($_id, $topic_id, $user_id);
+		$stmt->bind_result($_id, $topic_id, $user_id, $is_allowed);
 		$stmt->store_result();
 	
 		if($stmt->fetch()){
@@ -21,7 +21,8 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 			do{
 				array_push($response, array('_id'=>$_id,
 				'topic_id'=>$topic_id,
-				'user_id'=>$user_id));
+				'user_id'=>$user_id,
+				'is_allowed'=>$is_allowed));
 			}while($stmt->fetch());
 			
 			

@@ -238,7 +238,8 @@ public class DataAdapter {
 
         Follower result = new Follower(c.getLong(c.getColumnIndexOrThrow("_id")),
                 c.getLong(c.getColumnIndexOrThrow("topic_id")),
-                c.getLong(c.getColumnIndexOrThrow("user_id")));
+                c.getLong(c.getColumnIndexOrThrow("user_id")),
+                c.getInt(c.getColumnIndexOrThrow("is_allowed")));
 
         c.close();
         return result;
@@ -921,9 +922,10 @@ public class DataAdapter {
         Cursor c = petBetterDb.rawQuery(sql, null);
 
         while(c.moveToNext()) {
-            Follower follower = new Follower(c.getInt(c.getColumnIndexOrThrow("_id")),
+            Follower follower = new Follower(c.getLong(c.getColumnIndexOrThrow("_id")),
                     c.getLong(c.getColumnIndexOrThrow("topic_id")),
-                    c.getLong(c.getColumnIndexOrThrow("user_id")));
+                    c.getLong(c.getColumnIndexOrThrow("user_id")),
+                    c.getInt(c.getColumnIndexOrThrow("is_allowed")));
             results.add(follower);
         }
 
@@ -1130,9 +1132,10 @@ public class DataAdapter {
         Cursor c = petBetterDb.rawQuery(sql, null);
 
         while(c.moveToNext()) {
-            Follower follower = new Follower(c.getInt(c.getColumnIndexOrThrow("_id")),
+            Follower follower = new Follower(c.getLong(c.getColumnIndexOrThrow("_id")),
                     c.getLong(c.getColumnIndexOrThrow("topic_id")),
-                    c.getLong(c.getColumnIndexOrThrow("user_id")));
+                    c.getLong(c.getColumnIndexOrThrow("user_id")),
+                    c.getInt(c.getColumnIndexOrThrow("is_allowed")));
             results.add(follower);
         }
 
@@ -1988,9 +1991,10 @@ public class DataAdapter {
         Cursor c = petBetterDb.rawQuery(sql, null);
 
         while(c.moveToNext()) {
-            Follower follower= new Follower(c.getInt(c.getColumnIndexOrThrow("_id")),
+            Follower follower = new Follower(c.getLong(c.getColumnIndexOrThrow("_id")),
                     c.getLong(c.getColumnIndexOrThrow("topic_id")),
-                    c.getLong(c.getColumnIndexOrThrow("user_id")));
+                    c.getLong(c.getColumnIndexOrThrow("user_id")),
+                    c.getInt(c.getColumnIndexOrThrow("is_allowed")));
             results.add(follower);
         }
 

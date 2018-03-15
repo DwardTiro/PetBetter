@@ -494,7 +494,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             }
         }
         else if(id == R.id.community2){
-            Intent intent = new Intent(this, com.example.owner.petbetter.activities.HomeActivity.class);
+            Intent intent = new Intent(this, com.example.owner.petbetter.activities.CommActivity.class);
             startActivity(intent);
         }
         else if(id == R.id.community){
