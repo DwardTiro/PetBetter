@@ -181,6 +181,9 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
             menu.findItem(R.id.bookmarks).setVisible(false);
             menu.findItem(R.id.community).setVisible(false);
         }
+        if(user.getUserType()==2){
+            menu.findItem(R.id.community2).setVisible(false);
+        }
     }
 
 
@@ -235,6 +238,10 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
                 Intent intent = new Intent(this, com.example.owner.petbetter.activities.CommActivity.class);
                 startActivity(intent);
             }
+        }
+        else if(id == R.id.community2){
+            Intent intent = new Intent(this, com.example.owner.petbetter.activities.HomeActivity.class);
+            startActivity(intent);
         }
         else if(id == R.id.community){
             Intent intent = new Intent(this, com.example.owner.petbetter.activities.HomeActivity.class);

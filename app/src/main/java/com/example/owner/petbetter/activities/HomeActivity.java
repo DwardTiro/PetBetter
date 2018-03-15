@@ -213,6 +213,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             menu.findItem(R.id.bookmarks).setVisible(false);
             menu.findItem(R.id.community).setVisible(false);
         }
+        if(user.getUserType()==2){
+            menu.findItem(R.id.community2).setVisible(false);
+        }
     }
 
     public void syncClinicChanges(){
@@ -489,6 +492,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 Intent intent = new Intent(this, com.example.owner.petbetter.activities.CommActivity.class);
                 startActivity(intent);
             }
+        }
+        else if(id == R.id.community2){
+            Intent intent = new Intent(this, com.example.owner.petbetter.activities.HomeActivity.class);
+            startActivity(intent);
         }
         else if(id == R.id.community){
             Intent intent = new Intent(this, com.example.owner.petbetter.activities.HomeActivity.class);

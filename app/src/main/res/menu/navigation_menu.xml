@@ -4,6 +4,12 @@
         android:icon="@mipmap/ic_home_white_24dp"
         android:title="Home"
         />
+
+    <item android:id="@+id/community2"
+        android:icon="@mipmap/ic_people_black_24dp"
+        android:title="Community"
+        />
+
     <item android:id="@+id/community"
         android:icon="@drawable/ic_local_hospital_black_24dp"
         android:title="Pet Services"/>
