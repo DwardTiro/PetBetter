@@ -127,8 +127,14 @@ public class FragmentNotifs extends Fragment implements CheckUpdates {
                 if(item.getType()==4){
                     Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.TopicContentActivity.class);
 
-                    Follower follower = getFollowerWithId(item.getSourceId());
-                    topicItem = getTopic(follower.getTopicId());
+                    topicItem = getTopic(item.getSourceId());
+                    intent.putExtra("thisTopic", new Gson().toJson(topicItem));
+                    startActivity(intent);
+                }
+                if(item.getType()==5){
+                    Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.TopicContentActivity.class);
+
+                    topicItem = getTopic(item.getSourceId());
                     intent.putExtra("thisTopic", new Gson().toJson(topicItem));
                     startActivity(intent);
                 }

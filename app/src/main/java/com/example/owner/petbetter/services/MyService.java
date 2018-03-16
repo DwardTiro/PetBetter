@@ -84,7 +84,6 @@ public class MyService extends Service {
 
         userId = sharedPreferences.getLong(KEY_ID,0);
 
-        System.out.println("THIS SHOULD ONLY GO OUT ONCE"+sharedPreferences.getLong(KEY_ID,0));
 
         appNotif = new NotificationCompat.Builder(this);
         appNotif.setAutoCancel(true);
@@ -223,13 +222,25 @@ public class MyService extends Service {
                                         appNotif.setContentIntent(pendingIntent);
                                     }
                                     if(notifArray.get(val).getType()==4){
-                                        Follower follower = getFollowerWithId(notifArray.get(val).getSourceId());
-                                        Topic topic = getTopic(follower.getTopicId());
+                                        Topic topic = getTopic(notifArray.get(val).getSourceId());
 
                                         appNotif.setSmallIcon(R.drawable.app_icon)
-                                                .setTicker(notifArray.get(val).getDoerName()+" want to follow your topic ")
+                                                .setTicker(notifArray.get(val).getDoerName()+" wants to follow your topic ")
                                                 .setWhen(System.currentTimeMillis()).setContentTitle(notifArray.get(val).getDoerName())
                                                 .setContentText(" has requested to follow "+topic.getTopicName());
+
+                                        Intent intentNotif = new Intent(MyService.this, TopicContentActivity.class);
+                                        intentNotif.putExtra("thisTopic", new Gson().toJson(topic));
+                                        PendingIntent pendingIntent = PendingIntent.getActivity(MyService.this, 0, intentNotif, PendingIntent.FLAG_UPDATE_CURRENT);
+                                        appNotif.setContentIntent(pendingIntent);
+                                    }
+                                    if(notifArray.get(val).getType()==5){
+                                        Topic topic = getTopic(notifArray.get(val).getSourceId());
+
+                                        appNotif.setSmallIcon(R.drawable.app_icon)
+                                                .setTicker("Congratulations! ")
+                                                .setWhen(System.currentTimeMillis()).setContentTitle(notifArray.get(val).getDoerName())
+                                                .setContentText(" has approved your follow request in "+topic.getTopicName());
 
                                         Intent intentNotif = new Intent(MyService.this, TopicContentActivity.class);
                                         intentNotif.putExtra("thisTopic", new Gson().toJson(topic));
