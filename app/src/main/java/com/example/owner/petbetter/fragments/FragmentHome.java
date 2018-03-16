@@ -1,5 +1,6 @@
 package com.example.owner.petbetter.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -53,8 +54,19 @@ public class FragmentHome extends Fragment implements CheckUpdates, PlaceInfoLis
     private String email;
     private NotificationReceiver notifReceiver = new NotificationReceiver(this);
     private PopupWindow popUpConfirmationWindow;
+    private long topicId;
+    private int type = 1;
 
     HerokuService service;
+
+    public FragmentHome() {
+    }
+
+    @SuppressLint("ValidFragment")
+    public FragmentHome(ArrayList<Post> postList) {
+        this.postList = postList;
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -87,9 +99,30 @@ public class FragmentHome extends Fragment implements CheckUpdates, PlaceInfoLis
         email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
         user = getUser(email);
 
+        Bundle bundle = this.getArguments();
+
+        try{
+            if(postList==null){
+                if(bundle.isEmpty()){
+                    postList = getPosts();
+                    type = 2;
+                }
+                else{
+                    topicId = bundle.getLong("topicId");
+                    postList = getTopicPosts(topicId);
+                    type = 3;
+                }
+            }
+        }catch(NullPointerException npe){
+            postList = getPosts();
+            type = 2;
+        }
+
+
+
 
         recyclerView = (RecyclerView) view.findViewById(R.id.postListing);
-        postList = getPosts();
+
         System.out.println("Size of postList "+postList.size());
 
         homeAdapter = new HomeAdapter(getActivity(), postList, user, new HomeAdapter.OnItemClickListener() {
@@ -100,7 +133,7 @@ public class FragmentHome extends Fragment implements CheckUpdates, PlaceInfoLis
                 intent.putExtra("thisPost", new Gson().toJson(item));
                 startActivity(intent);
             }
-        }, this);
+        },this);
         //homeAdapter = new HomeAdapter(getActivity(), postList);
         homeAdapter.notifyItemRangeChanged(0, homeAdapter.getItemCount());
         recyclerView.setAdapter(homeAdapter);
@@ -108,6 +141,20 @@ public class FragmentHome extends Fragment implements CheckUpdates, PlaceInfoLis
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         return view;
+    }
+
+    public ArrayList<Post> getTopicPosts(long topicId){
+
+        //modify this method in such a way that it only gets bookmarks tagged by user. Separate from facilities.
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Post> result = petBetterDb.getTopicPosts(topicId);
+        petBetterDb.closeDatabase();
+        return result;
     }
 
     private void initializeDatabase() {
@@ -157,6 +204,7 @@ public class FragmentHome extends Fragment implements CheckUpdates, PlaceInfoLis
             homeAdapter.updateList(postList);
         }
     }
+
 
     @Override
     public void onPopupMenuClicked(final View view, final int pos) {
@@ -226,6 +274,7 @@ public class FragmentHome extends Fragment implements CheckUpdates, PlaceInfoLis
 
         options.show();
     }
+
 
     private long deletePost(long postId){
         try {

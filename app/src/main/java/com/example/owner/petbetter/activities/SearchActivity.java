@@ -32,6 +32,7 @@ import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.fragments.FragmentCommunity;
+import com.example.owner.petbetter.fragments.FragmentHome;
 import com.example.owner.petbetter.fragments.FragmentPetClinicListing;
 import com.example.owner.petbetter.fragments.FragmentPosts;
 import com.example.owner.petbetter.fragments.FragmentVetListing;
@@ -404,7 +405,7 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
             public void onResponse(Call<ArrayList<Post>> call, Response<ArrayList<Post>> response) {
                 ArrayList<Post> postList = response.body();
 
-                FragmentPosts fragment1 = new FragmentPosts(postList);
+                FragmentHome fragment1 = new FragmentHome(postList);
                 getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment1).
                         addToBackStack(null).commitAllowingStateLoss();
                 //ArrayAdapter<Veterinarian> adapter = new ArrayAdapter<Veterinarian>(this,R.layout.,vetList);
@@ -442,7 +443,7 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
                         public void onResponse(Call<ArrayList<Post>> call, Response<ArrayList<Post>> response) {
                             ArrayList<Post> postList = response.body();
 
-                            FragmentPosts fragment1 = new FragmentPosts(postList);
+                            FragmentHome fragment1 = new FragmentHome(postList);
                             getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment1).
                                     addToBackStack(null).commitAllowingStateLoss();
                             //ArrayAdapter<Veterinarian> adapter = new ArrayAdapter<Veterinarian>(this,R.layout.,vetList);

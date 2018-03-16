@@ -2641,6 +2641,7 @@ public class DataAdapter {
             cv.put("_id", follower.getId());
             cv.put("topic_id", follower.getTopicId());
             cv.put("user_id", follower.getUserId());
+            cv.put("is_allowed", follower.getIsAllowed());
             result = petBetterDb.insert(FOLLOWER_TABLE, null, cv);
         }
         System.out.println("2ND REAL NUM OF FOLLOWERS "+getFollowers().size());
