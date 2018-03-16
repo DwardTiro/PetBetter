@@ -380,8 +380,8 @@ public class DataAdapter {
         ArrayList<Post> results = new ArrayList<>();
 
         String sql = "SELECT p._id AS _id, p.user_id, p.topic_name AS topic_name, p.topic_content AS topic_content, " +
-                "p.date_created AS date_created, u.first_name AS first_name, u.last_name AS last_name, p.is_deleted AS is_deleted" +
-                " FROM posts AS p INNER JOIN users u ON p.user_id = u._id WHERE p.is_deleted != 1";
+                "p.date_created AS date_created, u.first_name AS first_name, u.last_name AS last_name, p.is_deleted AS is_deleted," +
+                " p.post_photo AS post_photo, p.faci_link AS faci_link FROM posts AS p INNER JOIN users u ON p.user_id = u._id WHERE p.is_deleted != 1";
         Cursor c = petBetterDb.rawQuery(sql, null);
 
         while(c.moveToNext()) {
@@ -393,6 +393,8 @@ public class DataAdapter {
                     c.getString(c.getColumnIndexOrThrow("date_created")),
                     c.getString(c.getColumnIndexOrThrow("first_name")),
                     c.getString(c.getColumnIndexOrThrow("last_name")),
+                    c.getString(c.getColumnIndexOrThrow("post_photo")),
+                    c.getInt(c.getColumnIndexOrThrow("faci_link")),
                     c.getInt(c.getColumnIndexOrThrow("is_deleted")));
             results.add(post);
         }
@@ -550,6 +552,7 @@ public class DataAdapter {
                     c.getInt(c.getColumnIndexOrThrow("parent_id")),
                     c.getString(c.getColumnIndexOrThrow("rep_content")),
                     c.getString(c.getColumnIndexOrThrow("date_performed")),
+                    c.getString(c.getColumnIndexOrThrow("postrep_photo")),
                     c.getInt(c.getColumnIndexOrThrow("is_deleted")));
             results.add(postrep);
         }
@@ -785,6 +788,8 @@ public class DataAdapter {
                     c.getString(c.getColumnIndexOrThrow("topic_content")),
                     c.getLong(c.getColumnIndexOrThrow("topic_id")),
                     c.getString(c.getColumnIndexOrThrow("date_created")),
+                    c.getString(c.getColumnIndexOrThrow("post_photo")),
+                    c.getInt(c.getColumnIndexOrThrow("faci_link")),
                     c.getInt(c.getColumnIndexOrThrow("is_deleted")));
             results.add(post);
         }
@@ -853,6 +858,7 @@ public class DataAdapter {
                     c.getInt(c.getColumnIndexOrThrow("parent_id")),
                     c.getString(c.getColumnIndexOrThrow("rep_content")),
                     c.getString(c.getColumnIndexOrThrow("date_performed")),
+                    c.getString(c.getColumnIndexOrThrow("postrep_photo")),
                     c.getInt(c.getColumnIndexOrThrow("is_deleted")));
             results.add(postrep);
         }
@@ -1366,7 +1372,7 @@ public class DataAdapter {
 
         String sql = "SELECT pr._id AS _id, pr.user_id AS user_id, pr.post_id AS post_id, pr.parent_id AS parent_id, " +
                 "pr.rep_content AS rep_content, pr.date_performed as date_performed, " +
-                "pr.is_deleted AS is_deleted, u.first_name AS first_name, u.last_name AS last_name " +
+                "pr.is_deleted AS is_deleted, u.first_name AS first_name, u.last_name AS last_name, pr.postrep_photo AS postrep_photo " +
                 "FROM postreps AS pr INNER JOIN users AS u ON pr.user_id = u._id WHERE pr.post_id = '" + postId + "' AND " +
                 "pr.is_deleted != 1 AND pr.parent_id = 0";
 
@@ -1381,7 +1387,8 @@ public class DataAdapter {
                     c.getString(c.getColumnIndexOrThrow("date_performed")),
                     c.getInt(c.getColumnIndexOrThrow("is_deleted")),
                     c.getString(c.getColumnIndexOrThrow("first_name")),
-                    c.getString(c.getColumnIndexOrThrow("last_name")));
+                    c.getString(c.getColumnIndexOrThrow("last_name")),
+                    c.getString(c.getColumnIndexOrThrow("postrep_photo")));
             results.add(postrep);
         }
 
@@ -1608,8 +1615,8 @@ public class DataAdapter {
 
 
         String sql = "SELECT p._id AS _id, p.user_id, p.topic_name AS topic_name, p.topic_content AS topic_content, " +
-                "p.date_created AS date_created, u.first_name AS first_name, u.last_name AS last_name, p.is_deleted AS is_deleted" +
-                " FROM posts AS p INNER JOIN users u ON p.user_id = u._id INNER JOIN topics t " +
+                "p.date_created AS date_created, u.first_name AS first_name, u.last_name AS last_name, p.is_deleted AS is_deleted, " +
+                "p.post_photo AS post_photo, p.faci_link AS faci_link FROM posts AS p INNER JOIN users u ON p.user_id = u._id INNER JOIN topics t " +
                 "ON p.topic_id = t._id WHERE p.topic_id = '" + topicId + "' AND p.is_deleted != 1";
         Cursor c = petBetterDb.rawQuery(sql, null);
 
@@ -1622,6 +1629,8 @@ public class DataAdapter {
                     c.getString(c.getColumnIndexOrThrow("date_created")),
                     c.getString(c.getColumnIndexOrThrow("first_name")),
                     c.getString(c.getColumnIndexOrThrow("last_name")),
+                    c.getString(c.getColumnIndexOrThrow("post_photo")),
+                    c.getInt(c.getColumnIndexOrThrow("faci_link")),
                     c.getInt(c.getColumnIndexOrThrow("is_deleted")));
             results.add(post);
         }
@@ -1669,8 +1678,8 @@ public class DataAdapter {
 
 
         String sql = "SELECT p._id AS _id, p.user_id, p.topic_name AS topic_name, p.topic_content AS topic_content, " +
-                "p.date_created AS date_created, u.first_name AS first_name, u.last_name AS last_name, p.is_deleted AS is_deleted" +
-                " FROM posts AS p INNER JOIN users u ON p.user_id = u._id INNER JOIN topics t " +
+                "p.date_created AS date_created, u.first_name AS first_name, u.last_name AS last_name, p.post_photo AS post_photo, " +
+                "p.faci_link AS faci_link, p.is_deleted AS is_deleted FROM posts AS p INNER JOIN users u ON p.user_id = u._id INNER JOIN topics t " +
                 "ON p.topic_id = t._id WHERE p.user_id = '" + userId + "' AND p.is_deleted != 1";
         Cursor c = petBetterDb.rawQuery(sql, null);
 
@@ -1683,6 +1692,8 @@ public class DataAdapter {
                     c.getString(c.getColumnIndexOrThrow("date_created")),
                     c.getString(c.getColumnIndexOrThrow("first_name")),
                     c.getString(c.getColumnIndexOrThrow("last_name")),
+                    c.getString(c.getColumnIndexOrThrow("post_photo")),
+                    c.getInt(c.getColumnIndexOrThrow("faci_link")),
                     c.getInt(c.getColumnIndexOrThrow("is_deleted")));
             results.add(post);
         }
@@ -2355,6 +2366,8 @@ public class DataAdapter {
             cv.put("topic_content", post.getTopicContent());
             cv.put("topic_id", post.getTopicId());
             cv.put("date_created", post.getDateCreated());
+            cv.put("post_photo", post.getPostPhoto());
+            cv.put("faci_link", post.getFaciLink());
             cv.put("is_deleted", post.getIsDeleted());
             result = petBetterDb.insert(POST_TABLE, null, cv);
         }
@@ -2475,6 +2488,7 @@ public class DataAdapter {
             cv.put("parent_id", postrep.getParentId());
             cv.put("rep_content", postrep.getRepContent());
             cv.put("date_performed", postrep.getDatePerformed());
+            cv.put("postrep_photo", postrep.getPostRepPhoto());
             cv.put("is_deleted", postrep.getIsDeleted());
             result = petBetterDb.insert(POST_REP_TABLE, null, cv);
         }
@@ -2687,8 +2701,8 @@ public class DataAdapter {
 
         ArrayList<PostRep> results = new ArrayList<>();
         String sql = "SELECT pr._id AS _id, pr.user_id AS user_id, pr.post_id AS post_id, pr.parent_id AS parent_id, pr.rep_content AS rep_content,\n" +
-                "pr.date_performed AS date_performed, pr.is_deleted AS is_deleted, u.first_name AS first_name, u.last_name AS last_name \n" +
-                "FROM postreps AS pr INNER JOIN users AS u ON pr.user_id = u._id WHERE pr.parent_id = '" + parentId + "' AND pr.is_deleted != 1";
+                "pr.date_performed AS date_performed, pr.is_deleted AS is_deleted, u.first_name AS first_name, u.last_name AS last_name, \n" +
+                "pr.postrep_photo AS postrep_photo FROM postreps AS pr INNER JOIN users AS u ON pr.user_id = u._id WHERE pr.parent_id = '" + parentId + "' AND pr.is_deleted != 1";
         //String sql = "SELECT * FROM " + POST_REP_TABLE + " WHERE _id = '" + postRepId + "' AND is_deleted != 1";
         Cursor c = petBetterDb.rawQuery(sql, null);
 
@@ -2702,7 +2716,8 @@ public class DataAdapter {
                     c.getString(c.getColumnIndexOrThrow("date_performed")),
                     c.getInt(c.getColumnIndexOrThrow("is_deleted")),
                     c.getString(c.getColumnIndexOrThrow("first_name")),
-                    c.getString(c.getColumnIndexOrThrow("last_name")));
+                    c.getString(c.getColumnIndexOrThrow("last_name")),
+                    c.getString(c.getColumnIndexOrThrow("postrep_photo")));
             results.add(postrep);
         }
 
@@ -2713,8 +2728,8 @@ public class DataAdapter {
 
     public PostRep getPostRepFromId(long postRepId){
         String sql = "SELECT pr._id AS _id, pr.user_id AS user_id, pr.post_id AS post_id, pr.parent_id AS parent_id, pr.rep_content AS rep_content,\n" +
-                "pr.date_performed AS date_performed, pr.is_deleted AS is_deleted, u.first_name AS first_name, u.last_name AS last_name \n" +
-                "FROM postreps AS pr INNER JOIN users AS u ON pr.user_id = u._id WHERE pr._id = '"+postRepId+"' AND pr.is_deleted != 1";
+                "pr.date_performed AS date_performed, pr.is_deleted AS is_deleted, u.first_name AS first_name, u.last_name AS last_name, \n" +
+                "pr.postrep_photo AS postrep_photo FROM postreps AS pr INNER JOIN users AS u ON pr.user_id = u._id WHERE pr._id = '"+postRepId+"' AND pr.is_deleted != 1";
         Cursor c = petBetterDb.rawQuery(sql, null);
 
         Log.e("cursor", c.getCount() + "");
@@ -2729,7 +2744,8 @@ public class DataAdapter {
                 c.getString(c.getColumnIndexOrThrow("date_performed")),
                 c.getInt(c.getColumnIndexOrThrow("is_deleted")),
                 c.getString(c.getColumnIndexOrThrow("first_name")),
-                c.getString(c.getColumnIndexOrThrow("last_name")));
+                c.getString(c.getColumnIndexOrThrow("last_name")),
+                c.getString(c.getColumnIndexOrThrow("postrep_photo")));
 
         c.close();
         return result;

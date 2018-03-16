@@ -26,23 +26,28 @@ public class PostRep {
     @SerializedName("date_performed")
     private String datePerformed;
 
+    @SerializedName("postrep_photo")
+    private String postRepPhoto;
+
     @SerializedName("is_deleted")
     private int isDeleted;
 
     private String userName;
 
-    public PostRep(long id, long userId, int postId, int parentId, String repContent, String datePerformed, int isDeleted) {
+    public PostRep(long id, long userId, int postId, int parentId, String repContent, String datePerformed,
+                   String postRepPhoto, int isDeleted) {
         this.id = id;
         this.userId = userId;
         this.postId = postId;
         this.parentId = parentId;
         this.repContent = repContent;
         this.datePerformed = datePerformed;
+        this.postRepPhoto = postRepPhoto;
         this.isDeleted = isDeleted;
     }
 
     public PostRep(long id, long userId, int postId, int parentId, String repContent, String datePerformed, int isDeleted,
-                   String firstName, String lastName) {
+                   String firstName, String lastName, String postRepPhoto) {
         this.id = id;
         this.userId = userId;
         this.postId = postId;
@@ -51,6 +56,15 @@ public class PostRep {
         this.datePerformed = datePerformed;
         this.isDeleted = isDeleted;
         this.userName = firstName +" "+ lastName;
+        this.postRepPhoto = postRepPhoto;
+    }
+
+    public String getPostRepPhoto() {
+        return postRepPhoto;
+    }
+
+    public void setPostRepPhoto(String postRepPhoto) {
+        this.postRepPhoto = postRepPhoto;
     }
 
     public String getUserName() {

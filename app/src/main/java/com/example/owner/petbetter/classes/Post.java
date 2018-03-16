@@ -29,6 +29,12 @@ public class Post {
     @SerializedName("date_created")
     private String dateCreated;
 
+    @SerializedName("post_photo")
+    private String postPhoto;
+
+    @SerializedName("faci_link")
+    private int faciLink;
+
     @SerializedName("is_deleted")
     private int isDeleted;
 
@@ -41,13 +47,16 @@ public class Post {
         this.topicId = topicId;
     }
 
-    public Post(long id, long userId, String topicName, String topicContent, long topicId, String dateCreated, int isDeleted) {
+    public Post(long id, long userId, String topicName, String topicContent, long topicId, String dateCreated,
+                String postPhoto, int faciLink, int isDeleted) {
         this.id = id;
         this.userId = userId;
         this.topicName = topicName;
         this.topicContent = topicContent;
         this.topicId = topicId;
         this.dateCreated = dateCreated;
+        this.postPhoto = postPhoto;
+        this.faciLink = faciLink;
         this.isDeleted = isDeleted;
     }
 
@@ -59,14 +68,32 @@ public class Post {
     }
 
     public Post(long id, long userId, String topicName, String topicContent, String dateCreated, String firstName, String lastName,
-                int isDeleted) {
+                String postPhoto, int faciLink, int isDeleted) {
         this.id = id;
         this.userId = userId;
         this.topicName = topicName;
         this.topicContent = topicContent;
         this.dateCreated = dateCreated;
         this.topicUser = firstName +" "+ lastName;
+        this.postPhoto = postPhoto;
+        this.faciLink = faciLink;
         this.isDeleted = isDeleted;
+    }
+
+    public String getPostPhoto() {
+        return postPhoto;
+    }
+
+    public void setPostPhoto(String postPhoto) {
+        this.postPhoto = postPhoto;
+    }
+
+    public int getFaciLink() {
+        return faciLink;
+    }
+
+    public void setFaciLink(int faciLink) {
+        this.faciLink = faciLink;
     }
 
     public void setId(long id) {
