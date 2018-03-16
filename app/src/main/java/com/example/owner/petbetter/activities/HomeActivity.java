@@ -403,8 +403,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public void vetButtonClicked(View view){
 
         currFragment = 1;
-        vetButton.setBackgroundResource(R.color.myrtle_green);
+        vetButton.setBackgroundResource(R.color.main_White);
+        vetButton.setTextColor(getResources().getColor(R.color.myrtle_green));
         petCareButton.setBackgroundResource(R.color.medTurquoise);
+        petCareButton.setTextColor(getResources().getColor(R.color.colorWhite));
         //FragmentVetListing fragment = (FragmentVetListing) getSupportFragmentManager().findFragmentById(R.id.frame_container);
         vetList = getVeterinarians();
 
@@ -446,8 +448,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 */
     public void petCareButtonClicked(View view){
         currFragment = 2;
-        petCareButton.setBackgroundResource(R.color.myrtle_green);
+        petCareButton.setBackgroundResource(R.color.main_White);
+        petCareButton.setTextColor(getResources().getColor(R.color.myrtle_green));
         vetButton.setBackgroundResource(R.color.medTurquoise);
+        vetButton.setTextColor(getResources().getColor(R.color.colorWhite));
         FragmentPetClinicListing fragment = new FragmentPetClinicListing();
 
         getSupportFragmentManager().beginTransaction().add(R.id.frame_container,fragment).commit();

@@ -35,4 +35,11 @@
         <item name="android:typeface">serif</item>
     </style>
 
+    <style name="CustomTabItem" parent="Widget.Design.TabLayout">
+        <item name="textAllCaps">false</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:typeface">serif</item>
+
+    </style>
+
 </resources>

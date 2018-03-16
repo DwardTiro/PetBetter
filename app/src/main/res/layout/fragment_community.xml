@@ -15,6 +15,19 @@
         android:layout_alignParentTop="true"
         android:layout_marginBottom="10dp"
         android:scrollbars="vertical"/>
+    <Button
+        android:id="@+id/addTopicButton"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:text="Add Topic"
+        android:textAllCaps="false"
+        android:textColor="@color/colorWhite"
+        android:background="@color/amazonite"
+        android:textSize="15dp"
+        />
 
 
 </RelativeLayout>
