@@ -17,11 +17,11 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 	//$query = "%{$_POST['query']}%";
 	$query = "%{$queryjson}%";
 
-	if($stmt = $mysqli->prepare("SELECT * FROM posts WHERE is_deleted = 0 AND topic_name LIKE ? OR topic_name LIKE ?")){
+	if($stmt = $mysqli->prepare("SELECT * FROM posts WHERE is_deleted = 0 AND topic_name LIKE ?")){
 		//query might cause error
-		$stmt->bind_param("ss", $query, $query);
+		$stmt->bind_param("s", $query);
 		$stmt->execute();
-		$stmt->bind_result($_id, $user_id, $topic_name, $topic_content, $topic_id, $date_created, $is_deleted);
+		$stmt->bind_result($_id, $user_id, $topic_name, $topic_content, $topic_id, $date_created, $post_photo, $faci_link, $is_deleted);
 		$stmt->store_result();
 	
 		if($stmt->fetch()){
@@ -33,6 +33,8 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 				'topic_content'=>$topic_content,
 				'topic_id'=>$topic_id,
 				'date_created'=>$date_created,
+				'post_photo'=>$post_photo,
+				'faci_link'=>$faci_link,
 				'is_deleted'=>$is_deleted));
 			}while($stmt->fetch());
 			

@@ -18,9 +18,9 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 	//echo $notiflist[$i]['_id'];
 	
 	while($i<$n){
-		if($stmt = $mysqli->prepare("INSERT INTO postreps (user_id, post_id, parent_id, rep_content, date_performed, is_deleted) VALUES (?,?,?,?,?,?)")){
-			$stmt->bind_param("ssssss", $postreplist[$i]['user_id'], $postreplist[$i]['post_id'], $postreplist[$i]['parent_id'], $postreplist[$i]['rep_content'], $postreplist[$i]['date_performed'], 
-				$postreplist[$i]['is_deleted']);
+		if($stmt = $mysqli->prepare("INSERT INTO postreps (user_id, post_id, parent_id, rep_content, date_performed, postrep_photo, is_deleted) VALUES (?,?,?,?,?,?,?)")){
+			$stmt->bind_param("sssssss", $postreplist[$i]['user_id'], $postreplist[$i]['post_id'], $postreplist[$i]['parent_id'], $postreplist[$i]['rep_content'], $postreplist[$i]['date_performed'], 
+				$postreplist[$i]['postrep_photo'], $postreplist[$i]['is_deleted']);
 			$stmt->execute();
 			$stmt->close();
 			$i = $i + 1;

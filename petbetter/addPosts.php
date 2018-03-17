@@ -18,8 +18,9 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 	//echo $notiflist[$i]['_id'];
 	
 	while($i<$n){
-		if($stmt = $mysqli->prepare("INSERT INTO posts (user_id, topic_name, topic_content, topic_id, date_created, is_deleted) VALUES (?,?,?,?,?,?)")){
-			$stmt->bind_param("ssssss", $postlist[$i]['user_id'], $postlist[$i]['topic_name'], $postlist[$i]['topic_content'], $postlist[$i]['topic_id'], $postlist[$i]['date_created'], $postlist[$i]['is_deleted']);
+		if($stmt = $mysqli->prepare("INSERT INTO posts (user_id, topic_name, topic_content, topic_id, date_created, post_photo, faci_link, is_deleted) VALUES (?,?,?,?,?,?,?,?)")){
+			$stmt->bind_param("ssssssss", $postlist[$i]['user_id'], $postlist[$i]['topic_name'], $postlist[$i]['topic_content'], $postlist[$i]['topic_id'], $postlist[$i]['date_created'], 
+				$postlist[$i]['post_photo'], $postlist[$i]['faci_link'], $postlist[$i]['is_deleted']);
 			$stmt->execute();
 			$stmt->close();
 			$i = $i + 1;

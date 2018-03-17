@@ -13,7 +13,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 	if($stmt = $mysqli->prepare("SELECT * FROM postreps WHERE is_deleted = 0")){
 		
 		$stmt->execute();
-		$stmt->bind_result($_id, $user_id, $post_id, $parent_id, $rep_content, $date_performed, $is_deleted);
+		$stmt->bind_result($_id, $user_id, $post_id, $parent_id, $rep_content, $date_performed, $postrep_photo, $is_deleted);
 		$stmt->store_result();
 	
 		if($stmt->fetch()){
@@ -25,6 +25,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 				'parent_id'=>$parent_id,
 				'rep_content'=>$rep_content,
 				'date_performed'=>$date_performed,
+				'postrep_photo'=>$postrep_photo,
 				'is_deleted'=>$is_deleted));
 			}while($stmt->fetch());
 			

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 17, 2018 at 03:39 AM
+-- Generation Time: Mar 15, 2018 at 05:00 AM
 -- Server version: 10.1.10-MariaDB
 -- PHP Version: 7.0.3
 
@@ -66,10 +66,14 @@ CREATE TABLE `followers` (
 
 INSERT INTO `followers` (`_id`, `topic_id`, `user_id`, `is_allowed`) VALUES
 (163, 1, 3, 1),
+(165, 2, 1, 1),
+(166, 1, 3, 1),
 (168, 2, 3, 1),
-(361, 2, 1, 0),
-(367, 2, 2, 0),
-(368, 3, 2, 0);
+(169, 1, 3, 1),
+(341, 1, 3, 1),
+(342, 1, 1, 1),
+(343, 2, 1, 1),
+(344, 1, 3, 1);
 
 -- --------------------------------------------------------
 
@@ -185,7 +189,8 @@ CREATE TABLE `messages` (
 
 INSERT INTO `messages` (`_id`, `user_one`, `user_two`) VALUES
 (1, 3, 1),
-(10, 1, 2);
+(10, 1, 2),
+(11, 2, 1);
 
 -- --------------------------------------------------------
 
@@ -211,10 +216,7 @@ INSERT INTO `notifications` (`_id`, `user_id`, `doer_id`, `is_read`, `type`, `da
 (1, 1, 2, 1, 2, '', 2),
 (181, 1, 2, 0, 2, '2018-03-14T14:34:15Z', 10),
 (182, 1, 2, 0, 2, '2018-03-14T14:34:58Z', 10),
-(183, 1, 2, 0, 2, '2018-03-14T14:39:50Z', 10),
-(192, 1, 2, 1, 4, '2018-03-15T16:37:47Z', 2),
-(193, 1, 2, 1, 4, '2018-03-15T16:37:47Z', 2),
-(194, 3, 2, 0, 4, '2018-03-17T00:38:14Z', 3);
+(183, 1, 2, 0, 2, '2018-03-14T14:39:50Z', 10);
 
 -- --------------------------------------------------------
 
@@ -253,7 +255,6 @@ CREATE TABLE `postreps` (
   `parent_id` int(11) DEFAULT NULL,
   `rep_content` text,
   `date_performed` text,
-  `postrep_photo` text,
   `is_deleted` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -261,21 +262,21 @@ CREATE TABLE `postreps` (
 -- Dumping data for table `postreps`
 --
 
-INSERT INTO `postreps` (`_id`, `user_id`, `post_id`, `parent_id`, `rep_content`, `date_performed`, `postrep_photo`, `is_deleted`) VALUES
-(1, 2, 1, 0, 'Ok I will when I have the time.', '', NULL, 0),
-(2, 3, 2, 0, 'I''m a doctor! :)', '', NULL, 0),
-(3, 2, 1, 1, 'We give free treats~', '', NULL, 0),
-(4, 1, 1, 1, 'Loking forward to this. :D', '', NULL, 0),
-(5, 1, 2, 1, 'Yay~', '', NULL, 1),
-(14, 1, 3, 0, 'hi', '2018-03-04T01:36:00Z', NULL, 0),
-(15, 1, 3, 5, 'hello\n', '2018-03-04T01:37:10Z', NULL, 1),
-(16, 2, 12, 0, 'wazzap\r\n', '2018-03-04T01:37:10Z', NULL, 0),
-(17, 2, 12, 0, 'wazzap boi\r\n', '2018-03-04T01:37:10Z', NULL, 0),
-(18, 1, 12, 0, 'ye buiiii', '2018-03-05T01:54:23Z', NULL, 1),
-(19, 1, 12, 0, 'weird stuff', '2018-03-05T01:57:04Z', NULL, 0),
-(20, 1, 12, 0, 'tell me about it', '2018-03-05T01:57:04Z', NULL, 0),
-(21, 1, 12, 0, 'o rly?', '2018-03-05T01:57:04Z', NULL, 0),
-(22, 2, 12, 0, 'yuh', '2018-03-05T01:57:04Z', NULL, 0);
+INSERT INTO `postreps` (`_id`, `user_id`, `post_id`, `parent_id`, `rep_content`, `date_performed`, `is_deleted`) VALUES
+(1, 2, 1, 0, 'Ok I will when I have the time.', '', 0),
+(2, 3, 2, 0, 'I''m a doctor! :)', '', 0),
+(3, 2, 1, 1, 'We give free treats~', '', 0),
+(4, 1, 1, 1, 'Loking forward to this. :D', '', 0),
+(5, 1, 2, 1, 'Yay~', '', 1),
+(14, 1, 3, 0, 'hi', '2018-03-04T01:36:00Z', 0),
+(15, 1, 3, 5, 'hello\n', '2018-03-04T01:37:10Z', 1),
+(16, 2, 12, 0, 'wazzap\r\n', '2018-03-04T01:37:10Z', 0),
+(17, 2, 12, 0, 'wazzap boi\r\n', '2018-03-04T01:37:10Z', 0),
+(18, 1, 12, 0, 'ye buiiii', '2018-03-05T01:54:23Z', 1),
+(19, 1, 12, 0, 'weird stuff', '2018-03-05T01:57:04Z', 0),
+(20, 1, 12, 0, 'tell me about it', '2018-03-05T01:57:04Z', 0),
+(21, 1, 12, 0, 'o rly?', '2018-03-05T01:57:04Z', 0),
+(22, 2, 12, 0, 'yuh', '2018-03-05T01:57:04Z', 0);
 
 -- --------------------------------------------------------
 
@@ -290,8 +291,6 @@ CREATE TABLE `posts` (
   `topic_content` text,
   `topic_id` int(11) DEFAULT NULL,
   `date_created` text,
-  `post_photo` text,
-  `faci_link` int(11) DEFAULT NULL,
   `is_deleted` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -299,11 +298,11 @@ CREATE TABLE `posts` (
 -- Dumping data for table `posts`
 --
 
-INSERT INTO `posts` (`_id`, `user_id`, `topic_name`, `topic_content`, `topic_id`, `date_created`, `post_photo`, `faci_link`, `is_deleted`) VALUES
-(1, 3, 'Come visit my clinic!', 'Hi guys! I''m John Ivanhoe. If you are a pet owner you may want to visit my clinic for regular check ups.', 1, '', 'h', NULL, 0),
-(2, 1, 'Hi guys! Looking for a doctor to treat my dog.', 'Could I get suggestions as to who I could contact or where to go?', 1, '', 'e', NULL, 0),
-(3, 1, 'I love dogs', 'Hi guys! I love dogs', 2, '', 'l', NULL, 0),
-(4, 2, 'Hey!', 'Hi!', 2, '', 'p', NULL, 1);
+INSERT INTO `posts` (`_id`, `user_id`, `topic_name`, `topic_content`, `topic_id`, `date_created`, `is_deleted`) VALUES
+(1, 3, 'Come visit my clinic!', 'Hi guys! I''m John Ivanhoe. If you are a pet owner you may want to visit my clinic for regular check ups.', 1, '', 0),
+(2, 1, 'Hi guys! Looking for a doctor to treat my dog.', 'Could I get suggestions as to who I could contact or where to go?', 1, '', 0),
+(3, 1, 'I love dogs', 'Hi guys! I love dogs', 2, '', 0),
+(4, 2, 'Hey!', 'Hi!', 2, '', 1);
 
 -- --------------------------------------------------------
 
@@ -560,7 +559,7 @@ ALTER TABLE `facilities`
 -- AUTO_INCREMENT for table `followers`
 --
 ALTER TABLE `followers`
-  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=369;
+  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=345;
 --
 -- AUTO_INCREMENT for table `markers`
 --
@@ -575,12 +574,12 @@ ALTER TABLE `messagereps`
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 --
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=195;
+  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=184;
 --
 -- AUTO_INCREMENT for table `pets`
 --
