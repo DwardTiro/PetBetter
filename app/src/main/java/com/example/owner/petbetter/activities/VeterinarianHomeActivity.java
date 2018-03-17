@@ -18,6 +18,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -29,13 +30,18 @@ import com.bumptech.glide.Glide;
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
+import com.example.owner.petbetter.classes.Facility;
 import com.example.owner.petbetter.classes.Notifications;
 import com.example.owner.petbetter.classes.User;
+import com.example.owner.petbetter.classes.Veterinarian;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.fragments.FragmentNotifs;
+import com.example.owner.petbetter.fragments.FragmentPetClinicListing;
 import com.example.owner.petbetter.services.MyService;
 import com.example.owner.petbetter.services.NotificationReceiver;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -45,6 +51,11 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
+
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.example.owner.petbetter.ServiceGenerator.BASE_URL;
 
@@ -64,6 +75,8 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
     private ImageView notifButton;
     private NotificationReceiver notifReceiver = new NotificationReceiver();
     private ImageView imageViewDrawer;
+    private ArrayList<Facility> faciList;
+    private Veterinarian thisVet;
 
     AlarmManager alarmManager;
     PendingIntent pendingIntent;
@@ -130,6 +143,7 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
 
             imageViewDrawer.setVisibility(View.VISIBLE);
         }
+
         notifButton = (ImageView) findViewById(R.id.imageview_notifs);
 
         if(!getUnsyncedNotifications().isEmpty())
@@ -168,6 +182,97 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
         });
 
         hideItems();
+
+        getVetChanges();
+        getClinicChanges();
+
+        if(user.getUserType()==1){
+            thisVet = getVeterinarianWithId(user.getUserId());
+            faciList = getFacilitiesByVetId(thisVet.getId());
+            if(faciList.size()>0){
+                FragmentPetClinicListing fragment = new FragmentPetClinicListing(faciList);
+                getSupportFragmentManager().beginTransaction().replace(R.id.vethome_container,fragment).commitAllowingStateLoss();
+            }
+        }
+    }
+
+    public void getClinicChanges(){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+        final Call<ArrayList<Facility>> call = service.getClinics();
+        call.enqueue(new Callback<ArrayList<Facility>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Facility>> call, Response<ArrayList<Facility>> response) {
+                if(response.isSuccessful()){
+                    setFacilities(response.body());
+                    dataSynced(2);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Facility>> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
+    public void getVetChanges(){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+        final Call<ArrayList<Veterinarian>> call = service.getVeterinarians();
+        call.enqueue(new Callback<ArrayList<Veterinarian>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Veterinarian>> call, Response<ArrayList<Veterinarian>> response) {
+                if(response.isSuccessful()){
+                    setVeterinarians(response.body());
+                    dataSynced(1);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Veterinarian>> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
+    private void dataSynced(int n){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        petBetterDb.dataSynced(n);
+        petBetterDb.closeDatabase();
+
+    }
+
+    public long setVeterinarians(ArrayList<Veterinarian> vetList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setVeterinarians(vetList);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    public long setFacilities(ArrayList<Facility> faciList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setFacilities(faciList);
+        petBetterDb.closeDatabase();
+
+        return result;
     }
 
     public void hideItems(){
@@ -265,6 +370,34 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
         }
 
         User result = petBetterDb.getUser(email);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private Veterinarian getVeterinarianWithId(long userId) {
+
+        try {
+            petBetterDb.openDatabase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        Veterinarian result = petBetterDb.getVeterinarianWithId(userId);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<Facility> getFacilitiesByVetId(long vetId) {
+
+        try {
+            petBetterDb.openDatabase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Facility> result = petBetterDb.getFacilitiesByVetId(vetId);
         petBetterDb.closeDatabase();
 
         return result;

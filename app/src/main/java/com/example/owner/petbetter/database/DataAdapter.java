@@ -287,8 +287,8 @@ public class DataAdapter {
         return result;
     }
 
-    public Veterinarian getVeterinarianWithId(int user_id){
-        User user = getUserWithId(user_id);
+    public Veterinarian getVeterinarianWithId(long user_id){
+        User user = getUserWithId((int) user_id);
         String sql = "SELECT * FROM " + VET_TABLE + " WHERE user_id = '" + user_id + "'";
 
         Cursor c = petBetterDb.rawQuery(sql, null);
@@ -1798,6 +1798,31 @@ public class DataAdapter {
         c.close();
         return ids;
     }*/
+
+    public ArrayList<Facility> getFacilitiesByVetId(long vetId){
+        ArrayList<Facility> results = new ArrayList<>();
+
+        String sql = "SELECT * FROM " + FACI_TABLE + " WHERE vet_id = '" + vetId + "'";
+        //String sql = "SELECT * FROM " + FACI_TABLE;
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            Facility facility = new Facility(c.getInt(c.getColumnIndexOrThrow("_id")),
+                    c.getString(c.getColumnIndexOrThrow("faci_name")),
+                    c.getString(c.getColumnIndexOrThrow("location")),
+                    c.getString(c.getColumnIndexOrThrow("hours_open")),
+                    c.getString(c.getColumnIndexOrThrow("hours_close")),
+                    c.getString(c.getColumnIndexOrThrow("contact_info")),
+                    c.getInt(c.getColumnIndexOrThrow("vet_id")),
+                    c.getFloat(c.getColumnIndexOrThrow("rating")),
+                    c.getString(c.getColumnIndexOrThrow("faci_photo")));
+            results.add(facility);
+        }
+
+        c.close();
+        return results;
+    }
+
     public ArrayList<Float> getVeterinarianRatings(long vet_id){
 
         ArrayList<Float> ratings = new ArrayList<>();

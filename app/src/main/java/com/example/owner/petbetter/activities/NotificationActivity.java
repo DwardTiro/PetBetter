@@ -19,6 +19,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
@@ -34,6 +35,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static com.example.owner.petbetter.ServiceGenerator.BASE_URL;
+
 public class NotificationActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private DataAdapter petBetterDb;
@@ -46,7 +49,7 @@ public class NotificationActivity extends AppCompatActivity implements Navigatio
     private User user;
     private ImageView notifButton;
     private NotificationReceiver notifReceiver = new NotificationReceiver();
-
+    private ImageView imageViewDrawer;
     HerokuService service;
 
     @Override
@@ -92,9 +95,25 @@ public class NotificationActivity extends AppCompatActivity implements Navigatio
         String email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
         textNavEmail = (TextView) headerView.findViewById(R.id.textNavEmail);
         textNavUser = (TextView) headerView.findViewById(R.id.textNavUser);
+
         textNavEmail.setText(email);
         user = getUser(email);
         textNavUser.setText(user.getName());
+
+        imageViewDrawer = (ImageView) headerView.findViewById(R.id.imageViewDrawer);
+        if(user.getUserPhoto()!=null){
+
+            String newFileName = BASE_URL + user.getUserPhoto();
+            System.out.println(newFileName);
+            //String newFileName = "http://192.168.0.19/petbetter/"+thisMessageRep.getMessagePhoto();
+            Glide.with(NotificationActivity.this).load(newFileName).error(R.drawable.back_button).into(imageViewDrawer);
+            /*
+            Picasso.with(inflater.getContext()).load("http://".concat(newFileName))
+                    .error(R.drawable.back_button).into(holder.messageRepImage);*/
+            //setImage(holder.messageRepImage, newFileName);
+
+            imageViewDrawer.setVisibility(View.VISIBLE);
+        }
 
         container = (FrameLayout) findViewById(R.id.notification_container);
         notifButton = (ImageView) findViewById(R.id.imageview_notifs);
@@ -119,9 +138,20 @@ public class NotificationActivity extends AppCompatActivity implements Navigatio
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
-        if(id == R.id.home){
-            Intent intent = new Intent(this, com.example.owner.petbetter.activities.CommActivity.class);
+        if (id == R.id.search_drawer) {
+            Intent intent = new Intent(this, com.example.owner.petbetter.activities.SearchActivity.class);
             startActivity(intent);
+        }
+
+        else if(id == R.id.home){
+            if(user.getUserType()==1){
+                Intent intent = new Intent(this, com.example.owner.petbetter.activities.VeterinarianHomeActivity.class);
+                startActivity(intent);
+            }
+            else{
+                Intent intent = new Intent(this, com.example.owner.petbetter.activities.CommActivity.class);
+                startActivity(intent);
+            }
         }
         else if(id == R.id.community){
             Intent intent = new Intent(this, com.example.owner.petbetter.activities.HomeActivity.class);
