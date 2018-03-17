@@ -16,8 +16,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/createPostIncludeToolbar"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_below="@+id/createPostIncludeToolbar"
+        android:layout_alignParentStart="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -50,14 +51,56 @@
 
         <EditText
             android:id="@+id/newPostDesc"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
+            android:layout_gravity="left"
             android:layout_marginEnd="10dp"
             android:layout_marginStart="3dp"
             android:layout_marginTop="24dp"
             android:background="@drawable/custom_edittext_white"
             android:hint="Write something about your post."
             android:textColorHint="@color/timestamp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/main_White"
+            android:orientation="horizontal">
+
+
+
+            <ImageButton
+                android:id="@+id/postAddImage"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@mipmap/ic_add_a_photo_black_24dp"
+                android:background="@color/main_White"
+                />
+            <ImageButton
+                android:id="@+id/postaddFacility"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginLeft="5dp"
+                android:src="@mipmap/ic_add_location_black_24dp"
+                android:background="@color/main_White"
+                />
+
+            <TextView
+                android:id="@+id/newPostLocationName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="0dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:text="Ivanhoe Veterinary Clinic"
+                android:textColor="@color/black"
+                android:textSize="20dp" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/newPostImage"
+            android:layout_width="wrap_content"
+            android:layout_height="250dp"
+            />
     </LinearLayout>
 </RelativeLayout>

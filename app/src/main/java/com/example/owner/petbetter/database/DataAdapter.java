@@ -1654,7 +1654,8 @@ public class DataAdapter {
         return ids;
     }
 
-    public long createPost(int pId, long userId, String postTitle, String postDesc, long topicId, String timeStamp, int isDeleted, int isSynced){
+    public long createPost(int pId, long userId, String postTitle, String postDesc, long topicId, String timeStamp,
+                           String postPhoto, int faciLink, int isDeleted, int isSynced){
         long result;
 
         ContentValues cv = new ContentValues();
@@ -1664,6 +1665,8 @@ public class DataAdapter {
         cv.put("topic_content", postDesc);
         cv.put("topic_id", topicId);
         cv.put("date_created", timeStamp);
+        cv.put("post_photo", postPhoto);
+        cv.put("faci_link", faciLink);
         cv.put("is_deleted", isDeleted);
         cv.put("is_synced", isSynced);
 
@@ -2328,19 +2331,23 @@ public class DataAdapter {
 
         Log.e("cursor", c.getCount() + "");
 
-        c.moveToFirst();
+        try{
+            c.moveToFirst();
 
-        Facility result = new Facility(c.getInt(c.getColumnIndexOrThrow("_id")),
-                c.getString(c.getColumnIndexOrThrow("faci_name")),
-                c.getString(c.getColumnIndexOrThrow("location")),
-                c.getString(c.getColumnIndexOrThrow("hours_open")),
-                c.getString(c.getColumnIndexOrThrow("hours_close")),
-                c.getString(c.getColumnIndexOrThrow("contact_info")),
-                c.getInt(c.getColumnIndexOrThrow("vet_id")),
-                c.getFloat(c.getColumnIndexOrThrow("rating")));
+            Facility result = new Facility(c.getInt(c.getColumnIndexOrThrow("_id")),
+                    c.getString(c.getColumnIndexOrThrow("faci_name")),
+                    c.getString(c.getColumnIndexOrThrow("location")),
+                    c.getString(c.getColumnIndexOrThrow("hours_open")),
+                    c.getString(c.getColumnIndexOrThrow("hours_close")),
+                    c.getString(c.getColumnIndexOrThrow("contact_info")),
+                    c.getInt(c.getColumnIndexOrThrow("vet_id")),
+                    c.getFloat(c.getColumnIndexOrThrow("rating")));
 
-        c.close();
-        return result;
+            c.close();
+            return result;
+        }catch(CursorIndexOutOfBoundsException cpe){
+            return null;
+        }
     }
 
     public long addVet(int vetId, int userId, int rating){

@@ -18,9 +18,19 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 	//echo $notiflist[$i]['_id'];
 	
 	while($i<$n){
+		$title = substr(md5(rand()), 0, 7);
+		$upload_path = "uploads/posts/$title.jpg";
+		
+		if(!($postlist[$i]['post_photo']==null)){
+			file_put_contents($upload_path, base64_decode($postlist['post_photo']));
+		}
+		else{
+			$upload_path = null;
+		}
+		
 		if($stmt = $mysqli->prepare("INSERT INTO posts (user_id, topic_name, topic_content, topic_id, date_created, post_photo, faci_link, is_deleted) VALUES (?,?,?,?,?,?,?,?)")){
 			$stmt->bind_param("ssssssss", $postlist[$i]['user_id'], $postlist[$i]['topic_name'], $postlist[$i]['topic_content'], $postlist[$i]['topic_id'], $postlist[$i]['date_created'], 
-				$postlist[$i]['post_photo'], $postlist[$i]['faci_link'], $postlist[$i]['is_deleted']);
+				$upload_path, $postlist[$i]['faci_link'], $postlist[$i]['is_deleted']);
 			$stmt->execute();
 			$stmt->close();
 			$i = $i + 1;

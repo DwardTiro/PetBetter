@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -55,6 +56,7 @@ public class PetClinicProfileActivity extends AppCompatActivity {
     private Facility faciItem;
     private int mId;
     private double longitude, latitude;
+    private Toolbar toolbar;
 
     @Override
     public void onCreate(Bundle savedInstance){
@@ -75,7 +77,7 @@ public class PetClinicProfileActivity extends AppCompatActivity {
 
         //petClinicBookmarkButton.setVisibility(View.GONE);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.viewPostToolbar);
+        toolbar = (Toolbar) findViewById(R.id.viewPostToolbar);
         setSupportActionBar(toolbar);
         final TextView activityTitle = (TextView) findViewById(R.id.activity_title);
         activityTitle.setText("View Pet Facility Profile");
@@ -126,6 +128,14 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         syncRatingChanges();
 
         //Toast.makeText(this, "Facility's Name: "+faciItem.getFaciName() + ". Delete this toast. Just to help you see where vet variable is", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        View item = toolbar.findViewById(R.id.topicNewPost);
+        item.setVisibility(View.GONE);
+        item.setEnabled(false);
+        return super.onCreateOptionsMenu(menu);
     }
 
     public void syncRatingChanges(){

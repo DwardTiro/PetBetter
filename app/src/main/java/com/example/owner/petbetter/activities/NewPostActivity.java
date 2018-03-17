@@ -1,18 +1,29 @@
 package com.example.owner.petbetter.activities;
 
+import android.Manifest;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
+import com.example.owner.petbetter.classes.Facility;
 import com.example.owner.petbetter.classes.Follower;
 import com.example.owner.petbetter.classes.Notifications;
 import com.example.owner.petbetter.classes.Post;
@@ -23,6 +34,8 @@ import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -38,11 +51,17 @@ import retrofit2.Response;
 
 public class NewPostActivity extends AppCompatActivity {
 
-    EditText newPostTitle;
-    EditText newPostDesc;
-    Button newPostButton;
-    HerokuService service;
-
+    private ImageView newPostImage;
+    private TextView newPostLocationName;
+    private ImageButton postAddImage;
+    private ImageButton postAddFacility;
+    private EditText newPostTitle;
+    private EditText newPostDesc;
+    private Button newPostButton;
+    private HerokuService service;
+    private static final int IMG_REQUEST = 777;
+    private Bitmap bitmap;
+    private long faciId;
 
     private DataAdapter petBetterDb;
     private SystemSessionManager systemSessionManager;
@@ -76,6 +95,13 @@ public class NewPostActivity extends AppCompatActivity {
         newPostDesc = (EditText) findViewById(R.id.newPostDesc);
         newPostButton = (Button) findViewById(R.id.createPostButton);
 
+        newPostImage = (ImageView) findViewById(R.id.newPostImage);
+        newPostLocationName = (TextView) findViewById(R.id.newPostLocationName);
+        postAddImage = (ImageButton) findViewById(R.id.postAddImage);
+        postAddFacility = (ImageButton) findViewById(R.id.postaddFacility);
+
+        newPostLocationName.setText("");
+
         Bundle extras = getIntent().getExtras();
         topicId = extras.getLong("thisTopicId");
         //topicId = new Gson().fromJson(jsonMyObject, long);
@@ -85,6 +111,8 @@ public class NewPostActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(newPostTitle.getText().toString()!=""&&newPostDesc.getText().toString()!=""){
 
+                    String image = imageToString();
+
                     pId = generatePostId();
 
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
@@ -92,10 +120,9 @@ public class NewPostActivity extends AppCompatActivity {
                     timeStamp = sdf.format(new Date());
 
                     createPost(pId,user.getUserId(), newPostTitle.getText().toString(), newPostDesc.getText().toString(),
-                            topicId, timeStamp, 0, 0);
-
+                            topicId, timeStamp, image, (int) faciId, 0, 0);
+                    //add faci_id
                     uploadPost(getUnsyncedPosts());
-
                     //notifyMessage(nId, messageItem.getFromId(), user.getUserId(), 0, 2, timeStamp, sourceId);
 
                     topicFollowers = getTopicFollowers(topicId);
@@ -106,6 +133,80 @@ public class NewPostActivity extends AppCompatActivity {
                 }
             }
         });
+
+        postAddImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectImage();
+            }
+        });
+
+        postAddFacility.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(NewPostActivity.this, com.example.owner.petbetter.activities.SearchActivity.class);
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(intent, 111);
+            }
+        });
+    }
+
+    private void selectImage(){
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, IMG_REQUEST);
+        ActivityCompat.requestPermissions(NewPostActivity.this,
+                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},1);
+
+    }
+
+    private String imageToString(){
+        try{
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG,100,byteArrayOutputStream);
+            byte[] imgByte = byteArrayOutputStream.toByteArray();
+
+            return Base64.encodeToString(imgByte,Base64.DEFAULT);
+        }catch(NullPointerException npe){
+            return null;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == IMG_REQUEST && resultCode == RESULT_OK && data!=null){
+            Uri path = data.getData();
+            try {
+
+
+                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), path);
+                /*
+                if(bitmap.getHeight()>250||bitmap.getWidth()>250){
+                    bitmap = Bitmap.createScaledBitmap(bitmap,250,250,false);
+                }*/
+                newPostImage.setImageBitmap(bitmap);
+
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        if(requestCode==111 && resultCode == RESULT_OK){
+            System.out.println("REQUEST CODE 111");
+            Bundle bundle = data.getExtras();
+            faciId = bundle.getLong("faciId");
+            System.out.println("REQUEST CODE 111 ID: " + faciId);
+            Facility facility = getFacility(faciId);
+            if(facility!=null){
+                newPostLocationName.setVisibility(View.VISIBLE);
+                newPostLocationName.setText(facility.getFaciName());
+                System.out.println("FACI NAME POST "+facility.getFaciName());
+            }
+
+        }
     }
 
     public void syncNotifChanges(final long userId){
@@ -164,6 +265,20 @@ public class NewPostActivity extends AppCompatActivity {
         }
 
         ArrayList<Notifications> result = petBetterDb.getUnsyncedNotifications();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private Facility getFacility(long faciId){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        Facility result = petBetterDb.getFacility((int) faciId);
         petBetterDb.closeDatabase();
 
         return result;
@@ -287,7 +402,7 @@ public class NewPostActivity extends AppCompatActivity {
     * */
 
     private long createPost(int pId, long userId, String postTitle, String postDesc, long topicId, String timeStamp,
-                            int isDeleted, int isSynced){
+                            String postPhoto, int faciLink, int isDeleted, int isSynced){
         long  result;
 
         try {
@@ -296,7 +411,7 @@ public class NewPostActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        result = petBetterDb.createPost(pId, userId, postTitle, postDesc, topicId, timeStamp, isDeleted, isSynced);
+        result = petBetterDb.createPost(pId, userId, postTitle, postDesc, topicId, timeStamp, postPhoto, faciLink, isDeleted, isSynced);
         petBetterDb.closeDatabase();
 
 

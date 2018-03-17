@@ -92,6 +92,7 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
     private String TOPIC_TAG = "Topics";
     private String POST_TAG = "Posts";
 
+    private boolean isLinked = false;
 
     @Override
     public void onCreate(Bundle savedInstance) {
@@ -241,9 +242,17 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
             public void onResponse(Call<ArrayList<Facility>> call, Response<ArrayList<Facility>> response) {
                 ArrayList<Facility> faciList = response.body();
 
-                FragmentPetClinicListing fragment1 = new FragmentPetClinicListing(faciList);
-                getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment1).
-                        addToBackStack(null).commitAllowingStateLoss();
+                if(isLinked){
+                    FragmentPetClinicListing fragment1 = new FragmentPetClinicListing(faciList, isLinked);
+                    getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment1).
+                            addToBackStack(null).commitAllowingStateLoss();
+                }
+                else{
+                    FragmentPetClinicListing fragment1 = new FragmentPetClinicListing(faciList);
+                    getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment1).
+                            addToBackStack(null).commitAllowingStateLoss();
+                }
+
                 //ArrayAdapter<Veterinarian> adapter = new ArrayAdapter<Veterinarian>(this,R.layout.,vetList);
 
             }
@@ -279,9 +288,16 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
                         public void onResponse(Call<ArrayList<Facility>> call, Response<ArrayList<Facility>> response) {
                             ArrayList<Facility> faciList = response.body();
 
-                            fragment2 = new FragmentPetClinicListing(faciList);
-                            getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment2).
-                                    addToBackStack(null).commitAllowingStateLoss();
+                            if(isLinked){
+                                fragment2 = new FragmentPetClinicListing(faciList, isLinked);
+                                getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment2).
+                                        addToBackStack(null).commitAllowingStateLoss();
+                            }
+                            else{
+                                fragment2 = new FragmentPetClinicListing(faciList);
+                                getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment2).
+                                        addToBackStack(null).commitAllowingStateLoss();
+                            }
                             //ArrayAdapter<Veterinarian> adapter = new ArrayAdapter<Veterinarian>(this,R.layout.,vetList);
 
                         }
@@ -598,6 +614,14 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
             }
         }
 
+        Intent intent = getIntent();
+        if(intent.getAction()==Intent.ACTION_GET_CONTENT){
+            petSearchClicked(this.findViewById(android.R.id.content));
+            vetSearchButton.setEnabled(false);
+            topicSearchButton.setEnabled(false);
+            postSearchButton.setEnabled(false);
+            isLinked = true;
+        }
     }
 
     @Override

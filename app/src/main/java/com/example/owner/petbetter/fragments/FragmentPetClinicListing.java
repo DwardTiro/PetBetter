@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.owner.petbetter.R;
+import com.example.owner.petbetter.activities.SearchActivity;
 import com.example.owner.petbetter.activities.VeterinarianHomeActivity;
 import com.example.owner.petbetter.adapters.ClinicListingAdapter;
 import com.example.owner.petbetter.classes.Facility;
@@ -40,6 +41,7 @@ public class FragmentPetClinicListing extends Fragment {
     private DataAdapter petBetterDb;
     private SystemSessionManager systemSessionManager;
     private User user;
+    private boolean isLinked = false;
 
     public FragmentPetClinicListing() {
     }
@@ -47,6 +49,12 @@ public class FragmentPetClinicListing extends Fragment {
     @SuppressLint("ValidFragment")
     public FragmentPetClinicListing(ArrayList<Facility> faciList) {
         this.faciList = faciList;
+    }
+
+    @SuppressLint("ValidFragment")
+    public FragmentPetClinicListing(ArrayList<Facility> faciList, boolean isLinked) {
+        this.faciList = faciList;
+        this.isLinked = true;
     }
 
     @Override
@@ -60,9 +68,19 @@ public class FragmentPetClinicListing extends Fragment {
             faciList = getClinics();
         }
 
-
-
-
+        if(isLinked&&(getActivity() instanceof SearchActivity)){
+            clinicListingAdapter = new ClinicListingAdapter(getActivity(), faciList, new ClinicListingAdapter.OnItemClickListener() {
+                @Override public void onItemClick(Facility item) {
+                    Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.NewPostActivity.class);
+                    //System.out.println("REQUEST CODE ID BEFORE PASSING "+item.getId());
+                    //intent.putExtra("faciId", new Gson().toJson(item.getId()));
+                    intent.putExtra("faciId", item.getId());
+                    getActivity().setResult(getActivity().RESULT_OK, intent);
+                    getActivity().finish();
+                    //startActivity(intent);
+                }
+            });
+        }
         //System.out.println("Rating is "+vetList.get(0).getRating());
         if(getActivity() instanceof  VeterinarianHomeActivity){
             clinicListingAdapter = new ClinicListingAdapter(getActivity(), faciList, new ClinicListingAdapter.OnItemClickListener() {
@@ -73,7 +91,7 @@ public class FragmentPetClinicListing extends Fragment {
                 }
             });
         }
-        else{
+        if(isLinked==false){
             clinicListingAdapter = new ClinicListingAdapter(getActivity(), faciList, new ClinicListingAdapter.OnItemClickListener() {
                 @Override public void onItemClick(Facility item) {
 
