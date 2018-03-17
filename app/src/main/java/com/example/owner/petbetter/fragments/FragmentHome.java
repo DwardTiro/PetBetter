@@ -42,7 +42,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class FragmentHome extends Fragment implements CheckUpdates, PlaceInfoListener {
+public class FragmentHome extends Fragment implements CheckUpdates {
     private HomeAdapter homeAdapter;
     private RecyclerView recyclerView;
     private ArrayList<Post> postList;
@@ -133,7 +133,7 @@ public class FragmentHome extends Fragment implements CheckUpdates, PlaceInfoLis
                 intent.putExtra("thisPost", new Gson().toJson(item));
                 startActivity(intent);
             }
-        },this);
+        });
         //homeAdapter = new HomeAdapter(getActivity(), postList);
         homeAdapter.notifyItemRangeChanged(0, homeAdapter.getItemCount());
         recyclerView.setAdapter(homeAdapter);
@@ -206,74 +206,7 @@ public class FragmentHome extends Fragment implements CheckUpdates, PlaceInfoLis
     }
 
 
-    @Override
-    public void onPopupMenuClicked(final View view, final int pos) {
-        final Post thisPost = postList.get(pos);
-        PopupMenu options = new PopupMenu(this.getContext(), view);
-        MenuInflater inflater = options.getMenuInflater();
-        inflater.inflate(R.menu.post_topic_menu, options.getMenu());
-        System.out.println("Options menu clicked in home");
 
-        options.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                switch(menuItem.getItemId()){
-                    case R.id.menu_delete_post_topic:
-                        LayoutInflater inflater = (LayoutInflater) view.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                        View popUpConfirmation = inflater.inflate(R.layout.popup_confirmation_delete_post, null);
-
-                        popUpConfirmation.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-
-                        popUpConfirmationWindow = new PopupWindow(popUpConfirmation, 750, 360, true);
-                        popUpConfirmationWindow.showAtLocation(popUpConfirmation, Gravity.CENTER, 0, 0);
-
-                        Button cancelButton = (Button) popUpConfirmationWindow.getContentView().findViewById(R.id.popUpPostCancelButton);
-
-                        Button deleteButton = (Button) popUpConfirmationWindow.getContentView().findViewById(R.id.popUpPostDeleteButton);
-                        cancelButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                popUpConfirmationWindow.dismiss();
-                            }
-                        });
-                        deleteButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-
-                                deletePost(thisPost.getId());
-
-                                service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
-                                final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
-
-                                final Call<Void> call = service.deletePost(thisPost.getUserId(), thisPost.getDateCreated());
-                                call.enqueue(new Callback<Void>() {
-                                    @Override
-                                    public void onResponse(Call<Void> call, Response<Void> response) {
-                                        //User thisUser = response.body();
-                                        if(response.isSuccessful()){
-                                            dataSynced(9);
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onFailure(Call<Void> call, Throwable t) {
-                                        Log.d("onFailure", t.getLocalizedMessage());
-                                    }
-                                });
-
-                                update(pos);
-                                popUpConfirmationWindow.dismiss();
-                            }
-                        });
-                        return true;
-                    default:
-                    return false;
-                }
-            }
-        });
-
-        options.show();
-    }
 
 
     private long deletePost(long postId){

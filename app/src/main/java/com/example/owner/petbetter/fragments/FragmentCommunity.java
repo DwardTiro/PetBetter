@@ -116,7 +116,7 @@ public class FragmentCommunity extends Fragment implements CheckUpdates, PlaceIn
                 startActivity(intent);
 
             }
-        }, this);
+        });
         //homeAdapter = new HomeAdapter(getActivity(), postList);
         communityAdapter.notifyItemRangeChanged(0, communityAdapter.getItemCount());
         recyclerView.setAdapter(communityAdapter);

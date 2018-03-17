@@ -4,33 +4,47 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.view.View.MeasureSpec;
 import android.view.Gravity;
 
+import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
+import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.Topic;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.interfaces.PlaceInfoListener;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.w3c.dom.Text;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 /**
  * Created by owner on 2/10/2017.
  */
 
-public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.CommunityViewHolder> {
+public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.CommunityViewHolder> implements PlaceInfoListener {
+
     public interface OnItemClickListener {
         void onItemClick(Topic item);
     }
@@ -45,13 +59,13 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
     private PopupWindow popUpConfirmationWindow;
     private PlaceInfoListener placeInfoListener;
 
-    public CommunityAdapter(Context context, ArrayList<Topic> topicList, User user, OnItemClickListener listener, PlaceInfoListener placeInfoListener) {
+    public CommunityAdapter(Context context, ArrayList<Topic> topicList, User user, OnItemClickListener listener) {
         inflater = LayoutInflater.from(context);
         this.context = context;
         this.topicList = topicList;
         this.listener = listener;
         this.user = user;
-        this.placeInfoListener = placeInfoListener;
+        this.placeInfoListener = this;
     }
 
     @Override
@@ -194,6 +208,223 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
         petBetterDb.closeDatabase();
 
         return result;
+    }
+
+
+    public long setPosts(ArrayList<Post> postList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setPosts(postList);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    public long setTopics(ArrayList<Topic> topicList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setTopics(topicList);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+
+    public void deletePosts(){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        System.out.println("WE HERE BOOIII");
+        ArrayList<Post> unsyncedPosts = getUnsyncedPosts();
+
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String jsonArray = gson.toJson(unsyncedPosts);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.deletePosts(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    dataSynced(9);
+
+                    final Call<ArrayList<Post>> call2 = service2.getPosts();
+                    call2.enqueue(new Callback<ArrayList<Post>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<Post>> call, Response<ArrayList<Post>> response) {
+                            if(response.isSuccessful()){
+                                setPosts(response.body());
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<Post>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
+
+    private ArrayList<Topic> getUnsyncedTopics(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Topic> result = petBetterDb.getUnsyncedTopics();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<Post> getUnsyncedPosts(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Post> result = petBetterDb.getUnsyncedPosts();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private void dataSynced(int n){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        petBetterDb.dataSynced(n);
+        petBetterDb.closeDatabase();
+
+    }
+
+
+
+    public void deleteTopics(){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        System.out.println("WE HERE BOOIII");
+        ArrayList<Topic> unsyncedTopics = getUnsyncedTopics();
+
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String jsonArray = gson.toJson(unsyncedTopics);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.deleteTopics(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    dataSynced(13);
+
+                    final Call<ArrayList<Topic>> call2 = service2.getTopics();
+                    call2.enqueue(new Callback<ArrayList<Topic>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<Topic>> call, Response<ArrayList<Topic>> response) {
+                            if(response.isSuccessful()){
+                                setTopics(response.body());
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<Topic>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
+
+    @Override
+    public void onPopupMenuClicked(final View view, final int pos) {
+        final Topic thisTopic = topicList.get(pos);
+        PopupMenu options = new PopupMenu(view.getContext(), view);
+        MenuInflater inflater = options.getMenuInflater();
+        inflater.inflate(R.menu.post_topic_menu, options.getMenu());
+        System.out.println("Options menu clicked");
+        options.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                switch (menuItem.getItemId()){
+                    case R.id.menu_delete_post_topic:
+                        LayoutInflater layoutInflater = (LayoutInflater) view.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                        View popUpConfirmation = layoutInflater.inflate(R.layout.popup_confirmation_delete_topic, null);
+
+                        popUpConfirmation.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+
+
+                        popUpConfirmationWindow = new PopupWindow(popUpConfirmation, 750, 360, true);
+                        popUpConfirmationWindow.showAtLocation(popUpConfirmation, Gravity.CENTER, 0, 0);
+
+                        Button cancelButton = (Button) popUpConfirmationWindow.getContentView().findViewById(R.id.popUpTopicCancelButton);
+
+                        Button deleteButton = (Button) popUpConfirmationWindow.getContentView().findViewById(R.id.popUpTopicDeleteButton);
+
+                        cancelButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                popUpConfirmationWindow.dismiss();
+                            }
+                        });
+
+                        deleteButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                initializeDatabase();
+                                topicPosts = getTopicPosts(thisTopic.getId());
+                                deleteTopic(thisTopic.getId());
+                                deleteTopics();
+                                for (int i = 0; i < topicPosts.size(); i++) {
+                                    //deletePost(topicPosts.get(i).getId());
+                                }
+                                update(pos);
+                                deletePosts();
+                                popUpConfirmationWindow.dismiss();
+
+                            }
+                        });
+                        return true;
+
+                    default: return false;
+                }
+
+            }
+        });
+
+        options.show();
+
     }
 
     @Override
