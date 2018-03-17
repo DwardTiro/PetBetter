@@ -17,7 +17,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 	//$query = "%{$_POST['query']}%";
 	$query = "%{$queryjson}%";
 
-	if($stmt = $mysqli->prepare("SELECT * FROM topics WHERE is_deleted = 0 AND topic_name LIKE ? OR topic_name LIKE ?")){
+	if($stmt = $mysqli->prepare("SELECT * FROM topics WHERE is_deleted = 0 AND topic_name LIKE ?")){
 		//query might cause error
 		$stmt->bind_param("ss", $query, $query);
 		$stmt->execute();
