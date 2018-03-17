@@ -333,6 +333,9 @@ public interface HerokuService {
     @POST("editProfile.php")
     Call<Void> editProfile(@Body RequestBody userList);
 
+    @POST("editFacilities.php")
+    Call<Void> editFacilities(@Body RequestBody faciList);
+
     @FormUrlEncoded
     @POST("getMessageId.php")
     Call<Integer> getMessageId(@Field("from_id") long fromId, @Field("to_id") long toId);

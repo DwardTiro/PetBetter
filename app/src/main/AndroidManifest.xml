@@ -126,7 +126,7 @@
             android:name=".activities.BookmarksActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
-                <action android:name="com.package.ACTION_LOGOUT"></action>
+                <action android:name="com.package.ACTION_LOGOUT" />
             </intent-filter>
         </activity>
         <activity android:name=".fragments.FragmentBookmarkListing" />
@@ -171,25 +171,26 @@
         <activity android:name=".activities.AddFacilityActivity" />
         <activity android:name=".activities.UserProfileActivity" />
         <activity android:name=".activities.MessagesActivity" />
-        <activity android:name=".activities.VeterinarianHomeActivity" >
+        <activity android:name=".activities.VeterinarianHomeActivity">
             <intent-filter>
-                <action android:name="com.package.ACTION_LOGOUT"></action>
+                <action android:name="com.package.ACTION_LOGOUT" />
             </intent-filter>
         </activity>
 
-        <service android:name=".services.MyService"/>
+        <service android:name=".services.MyService" />
 
         <receiver android:name=".services.NotificationReceiver">
             <intent-filter>
-                <action android:name="com.package.ACTION_LOGOUT"></action>
+                <action android:name="com.package.ACTION_LOGOUT" />
             </intent-filter>
             <intent-filter>
-                <action android:name="START_BROADCAST"></action>
+                <action android:name="START_BROADCAST" />
             </intent-filter>
         </receiver>
 
-        <activity android:name=".activities.NotificationActivity"/>
-        <activity android:name=".activities.ShowLocationActivity"/>
+        <activity android:name=".activities.NotificationActivity" />
+        <activity android:name=".activities.ShowLocationActivity" />
+        <activity android:name=".activities.EditFacilityActivity"></activity>
     </application>
 
 </manifest>

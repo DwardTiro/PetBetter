@@ -2174,6 +2174,29 @@ public class DataAdapter {
 
     }
 
+    public void editFacility(long _id, String faciName, String location, String hoursOpen,String hoursClose,
+                            String contactInfo, long vetId, float rating, String faciPhoto){
+
+
+        ContentValues cv = new ContentValues();
+        cv.put("_id",_id);
+        cv.put("faci_name",faciName);
+        cv.put("location", location);
+        cv.put("hours_open", hoursOpen);
+        cv.put("hours_close",hoursClose);
+        cv.put("contact_info", contactInfo);
+        cv.put("vet_id", vetId);
+        cv.put("rating", rating);
+        cv.put("faci_photo", faciPhoto);
+        cv.put("is_synced", 0);
+
+        String[] whereArgs= new String[]{String.valueOf(_id)};
+        petBetterDb.update(FACI_TABLE,cv,"_id=?", whereArgs);
+        petBetterDb.close();
+
+
+    }
+
     public long getMessageId(long fromId, long toId){
 
         long result;

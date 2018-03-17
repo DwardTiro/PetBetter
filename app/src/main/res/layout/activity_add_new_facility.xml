@@ -40,6 +40,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:adjustViewBounds="true"
+                android:scaleType="fitXY"
                 android:background="@drawable/sample_vet_clinic" />
 
             <ImageView
@@ -160,6 +161,7 @@
                     android:padding="5dp" />
 
                 <TextView
+                    android:id="@+id/textViewAddress"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"

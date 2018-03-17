@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.owner.petbetter.R;
+import com.example.owner.petbetter.activities.VeterinarianHomeActivity;
 import com.example.owner.petbetter.adapters.ClinicListingAdapter;
 import com.example.owner.petbetter.classes.Facility;
 import com.example.owner.petbetter.classes.User;
@@ -63,14 +64,26 @@ public class FragmentPetClinicListing extends Fragment {
 
 
         //System.out.println("Rating is "+vetList.get(0).getRating());
-        clinicListingAdapter = new ClinicListingAdapter(getActivity(), faciList, new ClinicListingAdapter.OnItemClickListener() {
-            @Override public void onItemClick(Facility item) {
+        if(getActivity() instanceof  VeterinarianHomeActivity){
+            clinicListingAdapter = new ClinicListingAdapter(getActivity(), faciList, new ClinicListingAdapter.OnItemClickListener() {
+                @Override public void onItemClick(Facility item) {
+                    Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.EditFacilityActivity.class);
+                    intent.putExtra("thisClinic", new Gson().toJson(item));
+                    startActivity(intent);
+                }
+            });
+        }
+        else{
+            clinicListingAdapter = new ClinicListingAdapter(getActivity(), faciList, new ClinicListingAdapter.OnItemClickListener() {
+                @Override public void onItemClick(Facility item) {
 
-                Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.PetClinicProfileActivity.class);
-                intent.putExtra("thisClinic", new Gson().toJson(item));
-                startActivity(intent);
-            }
-        });
+                    Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.PetClinicProfileActivity.class);
+                    intent.putExtra("thisClinic", new Gson().toJson(item));
+                    startActivity(intent);
+                }
+            });
+        }
+
         recyclerView.setAdapter(clinicListingAdapter);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
