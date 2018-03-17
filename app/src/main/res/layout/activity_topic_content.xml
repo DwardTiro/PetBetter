@@ -27,12 +27,11 @@
                 android:id="@+id/topicContentName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
                 android:layout_marginStart="17dp"
                 android:layout_marginTop="17dp"
                 android:text="Topic Content Name"
-                android:textSize="30dp" />
+                android:textSize="30sp" />
 
 
             <Button
@@ -44,14 +43,50 @@
                 android:layout_marginStart="22dp"
                 android:background="@drawable/rounded_button"
                 android:drawablePadding="3dp"
+                android:drawableStart="@mipmap/ic_add_black_24dp"
+                android:gravity="start|center_vertical"
                 android:paddingStart="8dp"
-                android:gravity="center"
-                android:textAllCaps="false"
                 android:text="Follow"
+                android:textAllCaps="false"
                 android:textColor="@color/black"
                 android:textSize="15sp"
 
                 />
+
+            <LinearLayout
+                android:id="@+id/topicButtonBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/followButton"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/postsButton"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/medTurquoise"
+                    android:text="Posts"
+                    android:textAllCaps="false"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="15sp" />
+
+                <Button
+                    android:id="@+id/followersButton"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/medTurquoise"
+                    android:text="Followers"
+                    android:textAllCaps="false"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="15sp" />
+
+
+            </LinearLayout>
 
             <FrameLayout
                 android:id="@+id/topic_container"
@@ -60,9 +95,10 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentStart="true"
-                android:layout_below="@+id/followButton"
+                android:layout_below="@+id/topicButtonBar"
                 tools:layout_editor_absoluteX="8dp"
                 tools:layout_editor_absoluteY="18dp" />
+
         </RelativeLayout>
     </RelativeLayout>
 

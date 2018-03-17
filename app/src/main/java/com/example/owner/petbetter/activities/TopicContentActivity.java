@@ -2,6 +2,7 @@ package com.example.owner.petbetter.activities;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.fragments.FragmentHome;
 import com.example.owner.petbetter.fragments.FragmentPosts;
+import com.example.owner.petbetter.fragments.FragmentTopicFollowers;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.google.android.gms.vision.text.Text;
 import com.google.gson.Gson;
@@ -59,6 +61,10 @@ public class TopicContentActivity extends AppCompatActivity {
     private SwipeRefreshLayout refreshTopicContent;
     private FragmentPosts fragment3;
     private Bundle bundle;
+
+    private Button followersButton;
+    private Button postsButton;
+
     HerokuService service;
 
     @Override
@@ -69,12 +75,16 @@ public class TopicContentActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.viewPostToolbar);
         setSupportActionBar(toolbar);
-
         final TextView activityTitle = (TextView) findViewById(R.id.activity_title);
+        activityTitle.setText("View Topic");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         topicContentName = (TextView) findViewById(R.id.topicContentName);
         followButton = (Button) findViewById(R.id.followButton);
         refreshTopicContent = (SwipeRefreshLayout) findViewById(R.id.refreshTopicContent);
+        followersButton = (Button) findViewById(R.id.followersButton);
+        postsButton = (Button) findViewById(R.id.postsButton);
+
 
         refreshTopicContent.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -85,8 +95,42 @@ public class TopicContentActivity extends AppCompatActivity {
             }
         });
 
-        activityTitle.setText("View Topic");
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        followersButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                followersButton.setTextColor(getResources().getColor(R.color.myrtle_green));
+                followersButton.setBackgroundResource(R.color.main_White);
+                postsButton.setTextColor(getResources().getColor(R.color.colorWhite));
+                postsButton.setBackgroundResource(R.color.medTurquoise);
+
+                Fragment followersFragment = new FragmentTopicFollowers();
+                getSupportFragmentManager().beginTransaction().replace(R.id.topic_container, followersFragment).commit();
+            }
+        });
+        postsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                postsButton.setTextColor(getResources().getColor(R.color.myrtle_green));
+                postsButton.setBackgroundResource(R.color.main_White);
+                followersButton.setTextColor(getResources().getColor(R.color.colorWhite));
+                followersButton.setBackgroundResource(R.color.medTurquoise);
+
+                String jsonMyObject;
+                Bundle extras = getIntent().getExtras();
+                jsonMyObject = extras.getString("thisTopic");
+                topicItem = new Gson().fromJson(jsonMyObject, Topic.class);
+
+                topicContentName.setText(topicItem.getTopicName());
+                bundle = new Bundle();
+                bundle.putLong("topicId", topicItem.getId());
+
+                Fragment postsFragment = new FragmentPosts();
+                postsFragment.setArguments(bundle);
+                getSupportFragmentManager().beginTransaction().replace(R.id.topic_container, postsFragment).commit();
+            }
+        });
+
+
 
 
         systemSessionManager = new SystemSessionManager(this);
@@ -205,6 +249,7 @@ public class TopicContentActivity extends AppCompatActivity {
 
             }
         });
+
     }
 
     public void uploadNotification(){
