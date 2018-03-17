@@ -8,6 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -73,6 +76,7 @@ public class PostContentActivity extends AppCompatActivity {
     private SwipeRefreshLayout refreshPostContent;
     private FragmentPostReps fragment;
     HerokuService service;
+    private Toolbar toolbar;
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -94,7 +98,7 @@ public class PostContentActivity extends AppCompatActivity {
         super.onCreate(SavedInstance);
         setContentView(R.layout.activity_post_content);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.viewPostToolbar);
+        toolbar = (Toolbar) findViewById(R.id.viewPostToolbar);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -321,7 +325,14 @@ public class PostContentActivity extends AppCompatActivity {
 
             }
         });
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        View item = toolbar.findViewById(R.id.topicNewPost);
+        item.setVisibility(View.GONE);
+        item.setEnabled(false);
+        return super.onCreateOptionsMenu(menu);
     }
 
     public void viewPostBackButtonClicked(View view){

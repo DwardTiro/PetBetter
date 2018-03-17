@@ -1,5 +1,6 @@
 package com.example.owner.petbetter.activities;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -249,6 +250,13 @@ public class TopicContentActivity extends AppCompatActivity {
 
     public void viewPostBackButtonClicked(View view){
         finish();
+    }
+
+    public void topicNewPostClicked(View view){
+
+        Intent intent = new Intent(TopicContentActivity.this, com.example.owner.petbetter.activities.NewPostActivity.class);
+        intent.putExtra("thisTopicId", topicItem.getId());
+        startActivity(intent);
     }
 
     private long addFollower(int followerId, int topicId, int userId, int isAllowed, int isSynced){

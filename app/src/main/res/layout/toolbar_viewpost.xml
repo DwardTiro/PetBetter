@@ -35,6 +35,16 @@
             android:textColor="@color/colorAccent"
             />
 
+        <ImageButton
+            android:id="@+id/topicNewPost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="24dp"
+            android:src="@mipmap/ic_note_add_black_24dp"
+            android:background="@color/medTurquoise"
+            android:layout_gravity="right"
+            android:onClick="topicNewPostClicked"
+            />
     </android.support.v7.widget.Toolbar>
 
 
