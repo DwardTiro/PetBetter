@@ -32,7 +32,7 @@ import java.util.HashMap;
  * Created by owner on 19/10/2017.
  */
 
-public class FragmentUserPosts extends Fragment implements PlaceInfoListener {
+public class FragmentUserPosts extends Fragment {
     private HomeAdapter homeAdapter;
     private RecyclerView recyclerView;
     private ArrayList<Post> postList;
@@ -72,7 +72,7 @@ public class FragmentUserPosts extends Fragment implements PlaceInfoListener {
                 intent.putExtra("thisPost", new Gson().toJson(item));
                 startActivity(intent);
             }
-        }, this);
+        });
         //messageAdapter = new MessageAdapter(getActivity(), messageList);
         homeAdapter.notifyItemRangeChanged(0, homeAdapter.getItemCount());
         recyclerView.setAdapter(homeAdapter);
@@ -125,8 +125,5 @@ public class FragmentUserPosts extends Fragment implements PlaceInfoListener {
         return result;
     }
 
-    @Override
-    public void onPopupMenuClicked(View view, int pos) {
-        System.out.println("Inside User Posts");
-    }
+
 }
