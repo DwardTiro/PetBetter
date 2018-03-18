@@ -400,9 +400,7 @@ public class PetClinicProfileActivity extends AppCompatActivity {
 
 
     public void viewPostBackButtonClicked(View view){
-
-        Intent intent = new Intent(this, com.example.owner.petbetter.activities.HomeActivity.class);
-        startActivity(intent);
+       finish();
     }
     public void onFacilityLocationClicked(View view){
         System.out.println("This faciId in pet profile: "+ faciItem.getId());
