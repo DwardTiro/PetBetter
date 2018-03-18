@@ -118,6 +118,9 @@ public interface HerokuService {
     @POST("getFollowers.php")
     Call<ArrayList<Follower>> getFollowers();
 
+    @FormUrlEncoded
+    @POST("getPendingFollowers.php")
+    Call<ArrayList<Follower>> getPendingFollowers(@Field("topic_id") long topicId);
 
     @POST("addUser.php")
     Call<Void> addUser(@Body RequestBody user);
@@ -414,6 +417,9 @@ public interface HerokuService {
 
     @POST("addFollowers.php")
     Call<Void> addFollowers(@Body RequestBody followerList);
+
+    @POST("editFollowers.php")
+    Call<Void> editFollowers(@Body RequestBody follower);
 
     @POST("addMessages.php")
     Call<Void> addMessages(@Body RequestBody messageList);

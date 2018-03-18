@@ -47,7 +47,7 @@ import retrofit2.Response;
 
 public class TopicContentActivity extends AppCompatActivity {
 
-    Topic topicItem;
+    private Topic topicItem;
 
     private DataAdapter petBetterDb;
     private SystemSessionManager systemSessionManager;
@@ -95,18 +95,7 @@ public class TopicContentActivity extends AppCompatActivity {
             }
         });
 
-        followersButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                followersButton.setTextColor(getResources().getColor(R.color.myrtle_green));
-                followersButton.setBackgroundResource(R.color.main_White);
-                postsButton.setTextColor(getResources().getColor(R.color.colorWhite));
-                postsButton.setBackgroundResource(R.color.medTurquoise);
 
-                Fragment followersFragment = new FragmentTopicFollowers();
-                getSupportFragmentManager().beginTransaction().replace(R.id.topic_container, followersFragment).commit();
-            }
-        });
         postsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -152,9 +141,25 @@ public class TopicContentActivity extends AppCompatActivity {
         topicContentName.setText(topicItem.getTopicName());
         bundle = new Bundle();
         bundle.putLong("topicId", topicItem.getId());
+        postsButton.callOnClick();
+        /*
         fragment3 = new FragmentPosts();
         fragment3.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().add(R.id.topic_container,fragment3).commitAllowingStateLoss();
+        */
+
+        followersButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                followersButton.setTextColor(getResources().getColor(R.color.myrtle_green));
+                followersButton.setBackgroundResource(R.color.main_White);
+                postsButton.setTextColor(getResources().getColor(R.color.colorWhite));
+                postsButton.setBackgroundResource(R.color.medTurquoise);
+
+                Fragment followersFragment = new FragmentTopicFollowers(topicItem.getId());
+                getSupportFragmentManager().beginTransaction().replace(R.id.topic_container, followersFragment).commit();
+            }
+        });
 
         if(checkIfFollower((int) topicItem.getId(), (int) user.getUserId())==true){
             followButton.setBackgroundColor(getResources().getColor(R.color.amazonite));
