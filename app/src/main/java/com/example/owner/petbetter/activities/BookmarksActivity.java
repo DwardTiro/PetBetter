@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -44,8 +45,8 @@ import static com.example.owner.petbetter.ServiceGenerator.BASE_URL;
 public class BookmarksActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DataAdapter petBetterDb;
-    private ImageButton btnBookmarks;
-    private ImageButton btnFaci;
+    private Button faciBookmarks;
+    private Button postBookmarks;
     private FrameLayout container;
     private NavigationView navigationView;
     private SystemSessionManager systemSessionManager;
@@ -125,41 +126,43 @@ public class BookmarksActivity extends AppCompatActivity implements NavigationVi
 
         textNavUser = (TextView) headerView.findViewById(R.id.textNavUser);
         textNavUser.setText(user.getName());
-        btnBookmarks = (ImageButton) findViewById(R.id.bookmarkMapsButton);
-        btnFaci = (ImageButton) findViewById(R.id.faciMapsButton);
+        faciBookmarks = (Button) findViewById(R.id.facilityBookmarkButton);
+        postBookmarks = (Button) findViewById(R.id.postBookmarkButton);
         container = (FrameLayout) findViewById(R.id.bookmark_container);
 
-        btnBookmarks.setBackgroundColor(Color.WHITE);
-        btnBookmarks.setImageResource(R.mipmap.ic_bookmark_border_black_24dp);
-        btnFaci.setBackgroundResource(R.color.medTurquoise);
-        btnFaci.setImageResource(R.mipmap.ic_pets_white_24dp);
-        FragmentBookmarkListing fragment = new FragmentBookmarkListing();
-        getSupportFragmentManager().beginTransaction().add(R.id.bookmark_container,fragment).commitAllowingStateLoss();
+        faciBookmarks.setBackgroundResource(R.color.colorWhite);
+        faciBookmarks.setTextColor(getResources().getColor(R.color.myrtle_green));
+        postBookmarks.setBackgroundResource(R.color.medTurquoise);
+        postBookmarks.setTextColor(getResources().getColor(R.color.colorWhite));
+        FragmentPetClinicListing fragment1 = new FragmentPetClinicListing();
+        getSupportFragmentManager().beginTransaction().add(R.id.bookmark_container,fragment1).commitAllowingStateLoss();
 
-        btnBookmarks.setOnClickListener(new View.OnClickListener() {
+
+
+        faciBookmarks.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 System.out.println("Fragment 1");
-                btnBookmarks.setBackgroundColor(Color.WHITE);
-                btnBookmarks.setImageResource(R.mipmap.ic_bookmark_border_black_24dp);
-                btnFaci.setBackgroundResource(R.color.medTurquoise);
-                btnFaci.setImageResource(R.mipmap.ic_pets_white_24dp);
+                faciBookmarks.setBackgroundResource(R.color.colorWhite);
+                faciBookmarks.setTextColor(getResources().getColor(R.color.myrtle_green));
+                postBookmarks.setBackgroundResource(R.color.medTurquoise);
+                postBookmarks.setTextColor(getResources().getColor(R.color.colorWhite));
                 container.removeAllViews();
-                FragmentBookmarkListing fragment1 = new FragmentBookmarkListing();
-                getSupportFragmentManager().beginTransaction().add(R.id.bookmark_container,fragment1).commitAllowingStateLoss();
+                FragmentPetClinicListing fragment1 = new FragmentPetClinicListing();
+                getSupportFragmentManager().beginTransaction().replace(R.id.bookmark_container,fragment1).commit();
             }
         });
-        btnFaci.setOnClickListener(new View.OnClickListener() {
+        postBookmarks.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 System.out.println("Fragment 2");
-                btnFaci.setBackgroundColor(Color.WHITE);
-                btnFaci.setImageResource(R.mipmap.ic_pets_black_24dp);
-                btnBookmarks.setBackgroundResource(R.color.medTurquoise);
-                btnBookmarks.setImageResource(R.mipmap.ic_bookmark_border_white_24dp);
+                postBookmarks.setBackgroundResource(R.color.colorWhite);
+                postBookmarks.setTextColor(getResources().getColor(R.color.myrtle_green));
+                faciBookmarks.setBackgroundResource(R.color.medTurquoise);
+                faciBookmarks.setTextColor(getResources().getColor(R.color.colorWhite));
                 container.removeAllViews();
                 FragmentFacilityListing fragment = new FragmentFacilityListing();
-                getSupportFragmentManager().beginTransaction().add(R.id.bookmark_container,fragment).commitAllowingStateLoss();
+                getSupportFragmentManager().beginTransaction().replace(R.id.bookmark_container,fragment).commit();
             }
         });
 

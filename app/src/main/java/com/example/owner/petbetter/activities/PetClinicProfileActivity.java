@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
+import com.example.owner.petbetter.classes.Bookmark;
 import com.example.owner.petbetter.classes.Facility;
 import com.example.owner.petbetter.classes.LocationMarker;
 import com.example.owner.petbetter.classes.Rating;
@@ -48,6 +49,7 @@ public class PetClinicProfileActivity extends AppCompatActivity {
     private ImageView clinicProfileImage;
 
     private Button petClinicRateButton;
+    private Button bookMarkButton;
 
     private DataAdapter petBetterDb;
     private SystemSessionManager systemSessionManager;
@@ -70,6 +72,7 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         petClinicCloseTime = (TextView) findViewById(R.id.closeTimeTextField);
         petClinicRating = (TextView) findViewById(R.id.clinicRatingNumerator);
         clinicProfileImage = (ImageView) findViewById(R.id.clinicProfileImage);
+        bookMarkButton = (Button) findViewById(R.id.bookmarkClinicButton);
 
 
         petClinicRateButton = (Button) findViewById(R.id.rateClinicButton);
@@ -95,6 +98,8 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
         user = getUser(email);
 
+
+
         final String jsonMyObject;
         Bundle extras = getIntent().getExtras();
         jsonMyObject = extras.getString("thisClinic");
@@ -115,6 +120,37 @@ public class PetClinicProfileActivity extends AppCompatActivity {
                 Intent intent = new Intent(view.getContext(),RateFacilityActivity.class);
                 intent.putExtra("thisClinic",jsonMyObject);
                 startActivity(intent);
+            }
+        });
+
+        bookMarkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final HerokuService bookMarkService = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+                Bookmark bookmark = new Bookmark(1, faciItem.getId(), 1, user.getUserId());
+                Gson gson = new GsonBuilder().serializeNulls().create();
+                String jsonArray = gson.toJson(bookmark);
+                RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray);
+
+                Call<Void> call = bookMarkService.addBookmark(body);
+                call.enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        System.out.println("New bookmark added");
+                        if(response.isSuccessful())
+                        {
+                            bookMarkButton.setText("Bookmarked");
+                            bookMarkButton.setBackgroundResource(R.color.myrtle_green);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        System.out.println("Bookmark not added");
+                    }
+                });
+
+
             }
         });
 

@@ -3,6 +3,7 @@ package com.example.owner.petbetter;
 /**
  * Created by owner on 12/11/2017.
  */
+import com.example.owner.petbetter.classes.Bookmark;
 import com.example.owner.petbetter.classes.Facility;
 import com.example.owner.petbetter.classes.Follower;
 import com.example.owner.petbetter.classes.LocationMarker;
@@ -57,6 +58,10 @@ public interface HerokuService {
 
     @POST("getPosts.php")
     Call<ArrayList<Post>> getPosts();
+
+    @FormUrlEncoded
+    @POST("getFacilityBookmarks.php")
+    Call<ArrayList<Facility>> getFacilityBookmarks(@Field("user_id") long userId);
 
     @POST("getServices.php")
     Call<ArrayList<Services>> getServices();
@@ -397,6 +402,9 @@ public interface HerokuService {
 
     @POST("addUpvotes.php")
     Call<Void> addUpvotes(@Body RequestBody upvoteList);
+
+    @POST("addBookmark.php")
+    Call<Void> addBookmark(@Body RequestBody bookmark);
 
     @POST("addPostReps.php")
     Call<Void> addPostReps(@Body RequestBody postRepList);

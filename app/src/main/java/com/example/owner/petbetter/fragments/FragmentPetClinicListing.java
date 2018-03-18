@@ -12,10 +12,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
+import com.example.owner.petbetter.ServiceGenerator;
+import com.example.owner.petbetter.activities.BookmarksActivity;
 import com.example.owner.petbetter.activities.SearchActivity;
 import com.example.owner.petbetter.activities.VeterinarianHomeActivity;
 import com.example.owner.petbetter.adapters.ClinicListingAdapter;
+import com.example.owner.petbetter.classes.Bookmark;
 import com.example.owner.petbetter.classes.Facility;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
@@ -25,6 +29,11 @@ import com.google.gson.Gson;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Kristian on 8/8/2017.
@@ -41,7 +50,10 @@ public class FragmentPetClinicListing extends Fragment {
     private DataAdapter petBetterDb;
     private SystemSessionManager systemSessionManager;
     private User user;
+    private String email;
+    private ArrayList<Bookmark> bookMarkList;
     private boolean isLinked = false;
+    private ArrayList<Long> bookMarkIds;
 
     public FragmentPetClinicListing() {
     }
@@ -61,10 +73,17 @@ public class FragmentPetClinicListing extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance){
         View view =  inflater.inflate(R.layout.fragment_petcare_listing,container, false);
 
+        systemSessionManager = new SystemSessionManager(getActivity());
+        if(systemSessionManager.checkLogin())
+            getActivity();
+        HashMap<String,String> userIn = systemSessionManager.getUserDetails();
+
         initializeDatabase();
+        email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
+        user = getUser(email);
         recyclerView = (RecyclerView) view.findViewById(R.id.petCareListing);
 
-        if(faciList==null){
+        if(faciList==null && !(getActivity() instanceof BookmarksActivity)){
             faciList = getClinics();
         }
 
@@ -90,6 +109,35 @@ public class FragmentPetClinicListing extends Fragment {
                     startActivity(intent);
                 }
             });
+        }
+        if(getActivity() instanceof BookmarksActivity){
+            final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+            Call<ArrayList<Facility>> call = service.getFacilityBookmarks(user.getUserId());
+            call.enqueue(new Callback<ArrayList<Facility>>() {
+                @Override
+                public void onResponse(Call<ArrayList<Facility>> call, Response<ArrayList<Facility>> response) {
+                    if(response.isSuccessful())
+                    {
+                        ArrayList<Facility> bookMarkList = response.body();
+                        //faciList = response.body();
+                        System.out.println("Facilist size is" + bookMarkList.size());
+                        clinicListingAdapter = new ClinicListingAdapter(getActivity(), bookMarkList, new ClinicListingAdapter.OnItemClickListener() {
+                            @Override public void onItemClick(Facility item) {
+                                Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.PetClinicProfileActivity.class);
+                                intent.putExtra("thisClinic", new Gson().toJson(item));
+                                startActivity(intent);
+                            }
+                        });
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ArrayList<Facility>> call, Throwable t) {
+
+                }
+            });
+
+
         }
         if(isLinked==false){
             clinicListingAdapter = new ClinicListingAdapter(getActivity(), faciList, new ClinicListingAdapter.OnItemClickListener() {
@@ -131,6 +179,20 @@ public class FragmentPetClinicListing extends Fragment {
 
         ArrayList<Facility> result = petBetterDb.getClinics();
         petBetterDb.closeDatabase();
+        return result;
+    }
+
+    private User getUser(String email){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        User result = petBetterDb.getUser(email);
+        petBetterDb.closeDatabase();
+
         return result;
     }
 

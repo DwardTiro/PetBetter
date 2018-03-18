@@ -18,12 +18,34 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <include
+        <LinearLayout
             android:id="@+id/toolbarBook"
-            layout="@layout/bookmark_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_below="@+id/bookmarkToolbar" />
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/bookmarkToolbar"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/facilityBookmarkButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/medTurquoise"
+                android:text="Pet Facilities"
+                android:textAllCaps="false"
+                android:textColor="@color/colorWhite" />
+
+            <Button
+                android:id="@+id/postBookmarkButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/medTurquoise"
+                android:text="Posts"
+                android:textAllCaps="false"
+                android:textColor="@color/colorWhite" />
+
+        </LinearLayout>
 
         <FrameLayout
             android:id="@+id/bookmark_container"
