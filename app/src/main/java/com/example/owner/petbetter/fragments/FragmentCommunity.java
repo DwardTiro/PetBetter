@@ -26,6 +26,7 @@ import android.widget.TextView;
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
+import com.example.owner.petbetter.activities.SearchActivity;
 import com.example.owner.petbetter.adapters.CommunityAdapter;
 import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.Topic;
@@ -210,7 +211,7 @@ public class FragmentCommunity extends Fragment implements CheckUpdates, PlaceIn
 
     @Override
     public void onResult() {
-        if(topicList.size()!=getTopics().size()){
+        if(topicList.size()!=getTopics().size()&&(!(getActivity() instanceof SearchActivity))){
             topicList = getTopics();
             communityAdapter.updateList(topicList);
 

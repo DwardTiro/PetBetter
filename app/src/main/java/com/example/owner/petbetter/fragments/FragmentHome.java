@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
+import com.example.owner.petbetter.activities.SearchActivity;
 import com.example.owner.petbetter.adapters.HomeAdapter;
 import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.User;
@@ -199,7 +200,7 @@ public class FragmentHome extends Fragment implements CheckUpdates {
 
     @Override
     public void onResult() {
-        if(postList.size()!=getPosts().size()){
+        if(postList.size()!=getPosts().size()&&(!(getActivity() instanceof SearchActivity))){
             postList = getPosts();
             homeAdapter.updateList(postList);
         }
