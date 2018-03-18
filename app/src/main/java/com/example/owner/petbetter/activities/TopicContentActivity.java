@@ -64,6 +64,7 @@ public class TopicContentActivity extends AppCompatActivity {
 
     private Button followersButton;
     private Button postsButton;
+    private TextView requestsTextView;
 
     HerokuService service;
 
@@ -84,6 +85,7 @@ public class TopicContentActivity extends AppCompatActivity {
         refreshTopicContent = (SwipeRefreshLayout) findViewById(R.id.refreshTopicContent);
         followersButton = (Button) findViewById(R.id.followersButton);
         postsButton = (Button) findViewById(R.id.postsButton);
+        requestsTextView = (TextView) findViewById(R.id.requestsTextView);
 
 
         refreshTopicContent.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -134,7 +136,7 @@ public class TopicContentActivity extends AppCompatActivity {
 
 
         String jsonMyObject;
-        Bundle extras = getIntent().getExtras();
+        final Bundle extras = getIntent().getExtras();
         jsonMyObject = extras.getString("thisTopic");
         topicItem = new Gson().fromJson(jsonMyObject, Topic.class);
 
@@ -186,29 +188,29 @@ public class TopicContentActivity extends AppCompatActivity {
                 followButton.setEnabled(false);
                 followButton.postDelayed(new Runnable() {
                     @Override
-                    public void run() {
-                        followButton.setEnabled(true);
-                    }
-                }, 500);
-                if(checkIfFollower((int) topicItem.getId(),(int) user.getUserId())==true){
-                    followButton.setBackgroundColor(getResources().getColor(R.color.colorWhite));
-                    followButton.setText("Follow");
-                    deleteFollower((int)topicItem.getId(), (int) user.getUserId());
-
-                    service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
-                    final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
-
-                    final Call<Void> call = service.deleteFollower(topicItem.getId(), user.getUserId());
-                    call.enqueue(new Callback<Void>() {
-                        @Override
-                        public void onResponse(Call<Void> call, Response<Void> response) {
-                            //User thisUser = response.body();
-                            if(response.isSuccessful()){
-                                dataSynced(3);
-                            }
+                        public void run() {
+                            followButton.setEnabled(true);
                         }
+                    }, 500);
+                    if(checkIfFollower((int) topicItem.getId(),(int) user.getUserId())){
+                        followButton.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+                        followButton.setText("Follow");
+                        deleteFollower((int)topicItem.getId(), (int) user.getUserId());
 
-                        @Override
+                        service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+                        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+                        final Call<Void> call = service.deleteFollower(topicItem.getId(), user.getUserId());
+                        call.enqueue(new Callback<Void>() {
+                            @Override
+                            public void onResponse(Call<Void> call, Response<Void> response) {
+                                //User thisUser = response.body();
+                                if(response.isSuccessful()){
+                                    dataSynced(3);
+                                }
+                            }
+
+                            @Override
                         public void onFailure(Call<Void> call, Throwable t) {
                             Log.d("onFailure", t.getLocalizedMessage());
                         }
@@ -254,6 +256,24 @@ public class TopicContentActivity extends AppCompatActivity {
 
             }
         });
+
+        if (topicItem.getCreatorId() == user.getUserId()) {
+            requestsTextView.setVisibility(View.VISIBLE);
+            followButton.setVisibility(View.INVISIBLE);
+
+            requestsTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(TopicContentActivity.this, com.example.owner.petbetter.activities.FollowerRequestsActivity.class);
+                    intent.putExtras(extras);
+                    startActivity(intent);
+                }
+            });
+        }
+        else{
+            requestsTextView.setVisibility(View.INVISIBLE);
+            followButton.setVisibility(View.VISIBLE);
+        }
 
     }
 

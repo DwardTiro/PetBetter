@@ -30,34 +30,53 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginStart="17dp"
                 android:layout_marginTop="17dp"
+                android:maxLines="1"
                 android:text="Topic Content Name"
                 android:textSize="30sp" />
 
-
-            <Button
-                android:id="@+id/followButton"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
+            <RelativeLayout
+                android:id="@+id/followOptionsLayout"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
                 android:layout_below="@+id/topicContentName"
-                android:layout_centerHorizontal="true"
-                android:layout_marginStart="22dp"
-                android:background="@drawable/rounded_button"
-                android:drawablePadding="3dp"
-                android:drawableStart="@mipmap/ic_add_black_24dp"
-                android:gravity="start|center_vertical"
-                android:paddingStart="8dp"
-                android:text="Follow"
-                android:textAllCaps="false"
-                android:textColor="@color/black"
-                android:textSize="15sp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp">
 
-                />
+                <Button
+                    android:id="@+id/followButton"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="22dp"
+                    android:background="@drawable/rounded_button"
+                    android:drawablePadding="3dp"
+                    android:drawableStart="@mipmap/ic_add_black_24dp"
+                    android:gravity="start|center_vertical"
+                    android:paddingStart="15dp"
+                    android:text="Follow"
+                    android:textAllCaps="false"
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
+                <TextView
+                    android:id="@+id/requestsTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="See Follow Requests"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/teal_blue"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:visibility="invisible"
+                    />
+
+            </RelativeLayout>
 
             <LinearLayout
                 android:id="@+id/topicButtonBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/followButton"
+                android:layout_below="@+id/followOptionsLayout"
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 

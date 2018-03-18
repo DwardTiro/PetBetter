@@ -1,25 +1,24 @@
-package com.example.owner.petbetter.fragments;
+package com.example.owner.petbetter.activities;
 
-import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.adapters.FollowerAdapter;
 import com.example.owner.petbetter.classes.Follower;
+import com.example.owner.petbetter.classes.Topic;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
-import com.example.owner.petbetter.interfaces.CheckUpdates;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.google.gson.Gson;
 
@@ -32,10 +31,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Created by Kristian on 3/17/2018.
+ * Created by Kristian on 3/18/2018.
  */
 
-public class FragmentTopicFollowers extends Fragment implements CheckUpdates{
+public class FollowerRequestsActivity extends AppCompatActivity {
+
 
     private User user;
     private String email;
@@ -44,25 +44,30 @@ public class FragmentTopicFollowers extends Fragment implements CheckUpdates{
     private RecyclerView recyclerView;
     private ArrayList<Follower> followerList;
     private FollowerAdapter followerAdapter;
+    private ImageButton newTopicButton;
     private long topicId;
+
+    private Topic topicItem;
     private HerokuService service;
 
-
-    public FragmentTopicFollowers() {
-    }
-
-    @SuppressLint("ValidFragment")
-    public FragmentTopicFollowers(long topicId) {
-        this.topicId = topicId;
-    }
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container , Bundle savedInstance){
-        View view = inflater.inflate(R.layout.fragment_topic_followers, container, false);
+    public void onCreate(Bundle savedInstance){
+        super.onCreate(savedInstance);
+        setContentView(R.layout.activity_follower_requests);
 
-        systemSessionManager = new SystemSessionManager(getActivity());
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        final TextView activityTitle = (TextView) findViewById(R.id.activity_title);
+        activityTitle.setText("Follower Requests");
+
+
+        recyclerView = (RecyclerView) findViewById(R.id.followerListing);
+        newTopicButton = (ImageButton) findViewById(R.id.topicNewPost);
+        newTopicButton.setVisibility(View.INVISIBLE);
+
+        systemSessionManager = new SystemSessionManager(FollowerRequestsActivity.this);
         if(systemSessionManager.checkLogin())
-            getActivity().finish();
+            finish();
         HashMap<String, String> userIn = systemSessionManager.getUserDetails();
 
         initializeDatabase();
@@ -70,41 +75,13 @@ public class FragmentTopicFollowers extends Fragment implements CheckUpdates{
         email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
         user = getUser(email);
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.followerListing);
-        getFollowers(topicId);
-        //getPendingFollowers(topicId);
+        String jsonMyObject;
+        final Bundle extras = getIntent().getExtras();
+        jsonMyObject = extras.getString("thisTopic");
+        topicItem = new Gson().fromJson(jsonMyObject, Topic.class);
 
-        return view;
+        getPendingFollowers(topicItem.getId());
 
-    }
-
-    public void getFollowers(long topicId){
-        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
-        final Call<ArrayList<Follower>> call = service.getAcceptedFollowers(topicId);
-        call.enqueue(new Callback<ArrayList<Follower>>() {
-            @Override
-            public void onResponse(Call<ArrayList<Follower>> call, Response<ArrayList<Follower>> response) {
-                if(response.isSuccessful()){
-                    followerList = response.body();
-                    followerAdapter = new FollowerAdapter(getActivity(), followerList, new FollowerAdapter.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(Follower item) {
-
-                        }
-                    });
-                    followerAdapter.notifyItemRangeChanged(0, followerAdapter.getItemCount());
-                    recyclerView.setAdapter(followerAdapter);
-                    recyclerView.setItemAnimator(new DefaultItemAnimator());
-                    recyclerView.setHasFixedSize(true);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ArrayList<Follower>> call, Throwable t) {
-                Log.d("onFailure", t.getLocalizedMessage());
-            }
-        });
     }
 
     public void getPendingFollowers(long topicId){
@@ -117,7 +94,7 @@ public class FragmentTopicFollowers extends Fragment implements CheckUpdates{
                     //get back here boys
                     followerList = response.body();
 
-                    followerAdapter = new FollowerAdapter(getActivity(), followerList,new FollowerAdapter.OnItemClickListener() {
+                    followerAdapter = new FollowerAdapter(FollowerRequestsActivity.this, followerList,new FollowerAdapter.OnItemClickListener() {
                         @Override public void onItemClick(Follower item) {
                             //Execute command here
                         }
@@ -126,7 +103,7 @@ public class FragmentTopicFollowers extends Fragment implements CheckUpdates{
                     recyclerView.setAdapter(followerAdapter);
                     recyclerView.setItemAnimator(new DefaultItemAnimator());
                     recyclerView.setHasFixedSize(true);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                    recyclerView.setLayoutManager(new LinearLayoutManager(FollowerRequestsActivity.this));
                 }
             }
 
@@ -137,10 +114,9 @@ public class FragmentTopicFollowers extends Fragment implements CheckUpdates{
             }
         });
     }
-
     private void initializeDatabase() {
 
-        petBetterDb = new DataAdapter(getActivity());
+        petBetterDb = new DataAdapter(this);
 
         try {
             petBetterDb.createDatabase();
@@ -163,8 +139,8 @@ public class FragmentTopicFollowers extends Fragment implements CheckUpdates{
         return result;
     }
 
-    @Override
-    public void onResult() {
-
+    public void viewPostBackButtonClicked(View view){
+        finish();
     }
+
 }

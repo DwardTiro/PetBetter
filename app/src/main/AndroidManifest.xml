@@ -190,7 +190,8 @@
 
         <activity android:name=".activities.NotificationActivity" />
         <activity android:name=".activities.ShowLocationActivity" />
-        <activity android:name=".activities.EditFacilityActivity"></activity>
+        <activity android:name=".activities.EditFacilityActivity"/>
+        <activity android:name=".activities.FollowerRequestsActivity"/>
     </application>
 
 </manifest>

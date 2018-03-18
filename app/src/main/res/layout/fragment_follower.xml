@@ -41,16 +41,15 @@
 
     <Button
         android:id="@+id/acceptButton"
-        android:layout_width="80dp"
+        android:layout_width="35dp"
         android:layout_height="36dp"
-        android:layout_toEndOf="@+id/followerName"
+        android:layout_toStartOf="@+id/rejectButton"
         android:background="@drawable/rounded_button_green"
         android:drawableStart="@drawable/ic_check_white_18dp"
         android:gravity="start|center_vertical"
         android:layout_centerVertical="true"
         android:layout_marginStart="17dp"
-        android:padding="10dp"
-        android:text="Accept"
+        android:padding="8dp"
         android:textAllCaps="false"
         android:textColor="@color/colorWhite"
 
@@ -58,18 +57,18 @@
 
     <Button
         android:id="@+id/rejectButton"
-        android:layout_width="80dp"
+        android:layout_width="35dp"
         android:layout_height="36dp"
-        android:layout_toEndOf="@+id/acceptButton"
+        android:layout_alignParentEnd="true"
         android:background="@drawable/rounded_button_red"
         android:drawableStart="@drawable/ic_close_white_18dp"
-        android:gravity="start|center_vertical"
-        android:padding="10dp"
-        android:text="Reject"
+        android:gravity="center_vertical"
+        android:padding="8dp"
         android:textAllCaps="false"
         android:layout_centerVertical="true"
         android:textColor="@color/colorWhite"
-        android:layout_marginStart="3dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
 
         android:textSize="12sp" />
 

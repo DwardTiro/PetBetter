@@ -72,7 +72,7 @@ public class FollowerAdapter extends RecyclerView.Adapter<FollowerAdapter.Follow
             String newFileName = BASE_URL + user.getUserPhoto();
             System.out.println(newFileName);
             //String newFileName = "http://192.168.0.19/petbetter/"+thisMessageRep.getMessagePhoto();
-            Glide.with(inflater.getContext()).load(newFileName).error(R.drawable.back_button).into(holder.followerProfilePic);
+            Glide.with(inflater.getContext()).load(newFileName).error(R.drawable.app_icon_yellow).into(holder.followerProfilePic);
             /*
             Picasso.with(inflater.getContext()).load("http://".concat(newFileName))
                     .error(R.drawable.back_button).into(holder.messageRepImage);*/
@@ -80,23 +80,31 @@ public class FollowerAdapter extends RecyclerView.Adapter<FollowerAdapter.Follow
 
             holder.followerProfilePic.setVisibility(View.VISIBLE);
         }
-        holder.acceptButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                approveRequest(thisFollower.getId());
-                syncFollowerChanges(thisFollower.getId());
-                updateList(getPendingFollowers(thisFollower.getTopicId()));
-            }
-        });
 
-        holder.rejectButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deleteFollower((int) thisFollower.getTopicId(), (int) thisFollower.getUserId());
-                removeFollower(thisFollower.getTopicId(), thisFollower.getUserId());
-                updateList(getPendingFollowers(thisFollower.getTopicId()));
-            }
-        });
+        if(thisFollower.getIsAllowed() == 1){
+            holder.acceptButton.setVisibility(View.INVISIBLE);
+            holder.rejectButton.setVisibility(View.INVISIBLE);
+
+        }
+        else {
+            holder.acceptButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    approveRequest(thisFollower.getId());
+                    syncFollowerChanges(thisFollower.getId());
+                    updateList(getPendingFollowers(thisFollower.getTopicId()));
+                }
+            });
+
+            holder.rejectButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    deleteFollower((int) thisFollower.getTopicId(), (int) thisFollower.getUserId());
+                    removeFollower(thisFollower.getTopicId(), thisFollower.getUserId());
+                    updateList(getPendingFollowers(thisFollower.getTopicId()));
+                }
+            });
+        }
         //get user and set UI based on it.
     }
 
