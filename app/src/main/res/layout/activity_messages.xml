@@ -25,11 +25,49 @@
             android:layout_height="wrap_content"
             />
 
+        <LinearLayout
+            android:id="@+id/messagesButtonBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/messagesToolbar"
+            android:orientation="horizontal"
+            tools:layout_constraintTop_creator="1">
+
+            <Button
+                android:id="@+id/messagesButton"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:background="@color/myrtle_green"
+                android:onClick="messagesButtonClicked"
+                android:scaleType="fitCenter"
+                android:text="Messages"
+                android:textAllCaps="false"
+                android:textColor="@color/colorWhite" />
+
+            <Button
+                android:id="@+id/messageReqButton"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:background="@color/myrtle_green"
+                android:onClick="messageReqButtonClicked"
+                android:scaleType="fitCenter"
+                android:text="Message Requests"
+                android:textAllCaps="false"
+                android:textColor="@color/colorWhite" />
+
+        </LinearLayout>
+
         <FrameLayout
             android:id="@+id/messages_container"
             android:layout_width="match_parent"
             android:layout_height="510dp"
-            android:layout_below="@id/messagesToolbar"
+            android:layout_below="@id/messagesButtonBar"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_alignParentEnd="true">

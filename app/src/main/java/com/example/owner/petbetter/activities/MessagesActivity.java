@@ -23,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -80,6 +81,9 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
     private ImageView notifButton;
     private AutoCompleteTextView actvMessage;
     private ImageView imageViewDrawer;
+    private int currFragment = 1;
+    private Button messagesButton;
+    private Button messageReqButton;
 
     HerokuService service;
 
@@ -143,6 +147,8 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
         service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         notifButton = (ImageView) findViewById(R.id.imageview_notifs);
         actvMessage = (AutoCompleteTextView) findViewById(R.id.actvMesaage);
+        messagesButton = (Button) findViewById(R.id.messagesButton);
+        messageReqButton = (Button) findViewById(R.id.messageReqButton);
 
         if(!getUnsyncedNotifications().isEmpty())
             notifButton.setImageResource(R.mipmap.ic_notifications_active_black_24dp);
@@ -170,9 +176,7 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
         textNavUser = (TextView) headerView.findViewById(R.id.textNavUser);
         textNavUser.setText(user.getName());
 
-        fragment1 = new FragmentMessages();
-        getSupportFragmentManager().beginTransaction().add(R.id.messages_container,fragment1).commitAllowingStateLoss();
-
+        messagesButtonClicked(this.findViewById(android.R.id.content));
         /*
         messagesRecyclerView = (RecyclerView) findViewById(R.id.messagesRecyclerView);
         messageList = getMessages(user.getUserId());
@@ -215,35 +219,40 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
                     startActivity(intent);
                 }
                 else{
-                    service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+                    if(currFragment == 1){
+                        service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
-                    //query the substring to server data
-                    final Call<ArrayList<Message>> call = service.queryMessages(actvMessage.getText().toString(), user.getUserId());
-                    call.enqueue(new Callback<ArrayList<Message>>() {
-                        @Override
-                        public void onResponse(Call<ArrayList<Message>> call, Response<ArrayList<Message>> response) {
-                            ArrayList<Message> messageList = response.body();
+                        //query the substring to server data
+                        final Call<ArrayList<Message>> call = service.queryMessages(actvMessage.getText().toString(), user.getUserId());
+                        call.enqueue(new Callback<ArrayList<Message>>() {
+                            @Override
+                            public void onResponse(Call<ArrayList<Message>> call, Response<ArrayList<Message>> response) {
+                                ArrayList<Message> messageList = response.body();
 
-                            for(Message message : messageList){
-                                User mUser = getUserWithId(message.getUserId());
-                                message.setFromName(mUser.getName());
+                                for(Message message : messageList){
+                                    User mUser = getUserWithId(message.getUserId());
+                                    message.setFromName(mUser.getName());
+                                }
+                                fragment1 = new FragmentMessages(messageList, true);
+                                //replace frame_se
+
+
+                                getSupportFragmentManager().beginTransaction().replace(R.id.messages_container,fragment1).
+                                        addToBackStack(null).commitAllowingStateLoss();
+                                //ArrayAdapter<Veterinarian> adapter = new ArrayAdapter<Veterinarian>(this,R.layout.,vetList);
+
                             }
-                            fragment1 = new FragmentMessages(messageList, true);
-                            //replace frame_se
 
+                            @Override
+                            public void onFailure(Call<ArrayList<Message>> call, Throwable t) {
+                                Log.d("onFailure", t.getLocalizedMessage());
+                                Toast.makeText(MessagesActivity.this, "Unable to get vets from server", Toast.LENGTH_LONG);
+                            }
+                        });
+                    }
+                    if(currFragment == 2){
 
-                            getSupportFragmentManager().beginTransaction().replace(R.id.messages_container,fragment1).
-                                    addToBackStack(null).commitAllowingStateLoss();
-                            //ArrayAdapter<Veterinarian> adapter = new ArrayAdapter<Veterinarian>(this,R.layout.,vetList);
-
-                        }
-
-                        @Override
-                        public void onFailure(Call<ArrayList<Message>> call, Throwable t) {
-                            Log.d("onFailure", t.getLocalizedMessage());
-                            Toast.makeText(MessagesActivity.this, "Unable to get vets from server", Toast.LENGTH_LONG);
-                        }
-                    });
+                    }
                 }
 
             }
@@ -255,6 +264,35 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
 
             }
         });
+    }
+
+    public void messagesButtonClicked(View view){
+
+        currFragment = 1;
+        messageReqButton.setBackgroundResource(R.color.main_White);
+        messageReqButton.setTextColor(getResources().getColor(R.color.myrtle_green));
+        messagesButton.setBackgroundResource(R.color.medTurquoise);
+        messagesButton.setTextColor(getResources().getColor(R.color.colorWhite));
+
+        fragment1 = new FragmentMessages();
+        getSupportFragmentManager().beginTransaction().add(R.id.messages_container,fragment1).commitAllowingStateLoss();
+        /*
+        FragmentPetClinicListing fragment = new FragmentPetClinicListing();
+
+        getSupportFragmentManager().beginTransaction().add(R.id.frame_container,fragment).commit();*/
+    }
+
+    public void messageReqButtonClicked(View view){
+
+        currFragment = 2;
+        messageReqButton.setBackgroundResource(R.color.medTurquoise);
+        messageReqButton.setTextColor(getResources().getColor(R.color.main_White));
+        messagesButton.setBackgroundResource(R.color.colorWhite);
+        messagesButton.setTextColor(getResources().getColor(R.color.myrtle_green));
+        /*
+        FragmentPetClinicListing fragment = new FragmentPetClinicListing();
+
+        getSupportFragmentManager().beginTransaction().add(R.id.frame_container,fragment).commit();*/
     }
 
     @Override

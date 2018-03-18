@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 18, 2018 at 10:16 PM
+-- Generation Time: Mar 17, 2018 at 03:39 AM
 -- Server version: 10.1.10-MariaDB
 -- PHP Version: 7.0.3
 
@@ -44,8 +44,8 @@ CREATE TABLE `facilities` (
 
 INSERT INTO `facilities` (`faci_id`, `faci_name`, `location`, `hours_open`, `hours_close`, `contact_info`, `vet_id`, `rating`, `faci_photo`) VALUES
 (1, 'Ivanhoe Veterinary Clinic', 'Solenad 1 Nuvali, Santa Rosa, Laguna ', '8:00', '17:00', '8704421', 1, 0, NULL),
-(2, 'Bookmark', 'Manila', '', '', '', 1, 0, NULL),
-(57, 'Another Clinic', 'Somewhere in Phil', '0:00', '0:00', '87654321', 2, 2, NULL);
+(2, 'Bookmark', 'Manila', '', '', '', 1, 4, NULL),
+(57, 'Another Clinic', 'Somewhere in Phil', '8:00', '17:00', '8765432', 3, 2, 'uploads/facilities/d69bc0b.jpg');
 
 -- --------------------------------------------------------
 
@@ -67,9 +67,9 @@ CREATE TABLE `followers` (
 INSERT INTO `followers` (`_id`, `topic_id`, `user_id`, `is_allowed`) VALUES
 (163, 1, 3, 1),
 (168, 2, 3, 1),
-(361, 2, 1, 1),
-(368, 3, 2, 0),
-(375, 2, 2, 1);
+(361, 2, 1, 0),
+(367, 2, 2, 0),
+(368, 3, 2, 0);
 
 -- --------------------------------------------------------
 
@@ -176,17 +176,16 @@ INSERT INTO `messagereps` (`_id`, `user_id`, `sender_id`, `message_id`, `rep_con
 CREATE TABLE `messages` (
   `_id` int(11) NOT NULL,
   `user_one` int(11) NOT NULL,
-  `user_two` int(11) NOT NULL,
-  `is_allowed` int(11) NOT NULL
+  `user_two` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `messages`
 --
 
-INSERT INTO `messages` (`_id`, `user_one`, `user_two`, `is_allowed`) VALUES
-(1, 3, 1, 1),
-(10, 1, 2, 1);
+INSERT INTO `messages` (`_id`, `user_one`, `user_two`) VALUES
+(1, 3, 1),
+(10, 1, 2);
 
 -- --------------------------------------------------------
 
@@ -215,16 +214,7 @@ INSERT INTO `notifications` (`_id`, `user_id`, `doer_id`, `is_read`, `type`, `da
 (183, 1, 2, 0, 2, '2018-03-14T14:39:50Z', 10),
 (192, 1, 2, 1, 4, '2018-03-15T16:37:47Z', 2),
 (193, 1, 2, 1, 4, '2018-03-15T16:37:47Z', 2),
-(194, 3, 2, 0, 4, '2018-03-17T00:38:14Z', 3),
-(195, NULL, 2, 0, 3, '2018-03-18T01:02:42Z', 1),
-(196, 3, 2, 0, 1, '2018-03-18T12:58:21Z', 1),
-(197, 3, 2, 0, 1, '2018-03-18T12:58:21Z', 1),
-(198, 3, 2, 0, 1, '2018-03-18T12:58:26Z', 1),
-(199, 3, 2, 0, 1, '2018-03-18T12:58:21Z', 1),
-(200, 3, 2, 0, 1, '2018-03-18T12:58:26Z', 1),
-(201, 3, 2, 0, 1, '2018-03-18T14:18:26Z', 1),
-(202, 3, 2, 0, 1, '2018-03-18T14:18:26Z', 1),
-(203, 1, 2, 0, 4, '2018-03-18T17:25:45Z', 2);
+(194, 3, 2, 0, 4, '2018-03-17T00:38:14Z', 3);
 
 -- --------------------------------------------------------
 
@@ -285,10 +275,7 @@ INSERT INTO `postreps` (`_id`, `user_id`, `post_id`, `parent_id`, `rep_content`,
 (19, 1, 12, 0, 'weird stuff', '2018-03-05T01:57:04Z', NULL, 0),
 (20, 1, 12, 0, 'tell me about it', '2018-03-05T01:57:04Z', NULL, 0),
 (21, 1, 12, 0, 'o rly?', '2018-03-05T01:57:04Z', NULL, 0),
-(22, 2, 12, 0, 'yuh', '2018-03-05T01:57:04Z', NULL, 0),
-(23, 2, 1, 0, 'hey', '2018-03-18T12:58:21Z', NULL, 0),
-(24, 2, 1, 0, 'test', '2018-03-18T12:58:26Z', NULL, 0),
-(25, 2, 1, 0, 'eyyy', '2018-03-18T14:18:26Z', NULL, 0);
+(22, 2, 12, 0, 'yuh', '2018-03-05T01:57:04Z', NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -316,8 +303,7 @@ INSERT INTO `posts` (`_id`, `user_id`, `topic_name`, `topic_content`, `topic_id`
 (1, 3, 'Come visit my clinic!', 'Hi guys! I''m John Ivanhoe. If you are a pet owner you may want to visit my clinic for regular check ups.', 1, '', 'h', NULL, 0),
 (2, 1, 'Hi guys! Looking for a doctor to treat my dog.', 'Could I get suggestions as to who I could contact or where to go?', 1, '', 'e', NULL, 0),
 (3, 1, 'I love dogs', 'Hi guys! I love dogs', 2, '', 'l', NULL, 0),
-(4, 2, 'Hey!', 'Hi!', 2, '', 'p', NULL, 1),
-(5, 2, 'hi', 'work pls', 1, '2018-03-18T01:02:42Z', 'uploads/posts/83a368f.jpg', 2, 0);
+(4, 2, 'Hey!', 'Hi!', 2, '', 'p', NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -387,9 +373,7 @@ CREATE TABLE `topics` (
 INSERT INTO `topics` (`_id`, `creator_id`, `topic_name`, `topic_desc`, `date_created`, `is_deleted`) VALUES
 (1, 0, 'General', 'Default', '', 0),
 (2, 1, 'For dog lovers only', 'Basically everything about dogs are welcome.', '', 0),
-(3, 3, 'Another topic', 'For general use', '', 0),
-(4, 1, 'Adding live?', 'For general use', '', 0),
-(5, 1, 'Adding live? 2', 'For general use', '', 0);
+(3, 3, 'Another topic', 'For general use', '', 0);
 
 -- --------------------------------------------------------
 
@@ -440,7 +424,7 @@ INSERT INTO `users` (`user_id`, `first_name`, `last_name`, `mobile_num`, `phone_
 (1, 'Edward', 'Tiro', '9152794135', '123456890', 'edward_tiro@dlsu.edu.ph', '123', 20, 1, NULL),
 (2, 'Kristian', 'Sisayan', '9567761376.', '9876543', 'kristian_sisayan@dlsu.edu.ph', '113', 20, 2, 'uploads/users/f6f7d7b.jpg'),
 (3, 'John', 'Ivanhoe', '', '8704421', 'john_ivanhoe@gmail.com', '1234', 30, 1, NULL),
-(4, 'John', 'Dion', '09152791111', '1234567', 'john_dion@gmail.com', '111', 0, 1, NULL),
+(4, 'John', 'Dion', '09152791111', '1234567', 'john_dion@gmail.com', '111', 0, 2, NULL),
 (5, 'Kristian', 'Sisayan', '', '', 'sisayan.kristian@gmail.com', 'glmrklls', 0, 1, NULL),
 (6, 'John', 'Woa', '', '', 'johnwoa@gmail.com', '123', 0, 2, NULL),
 (19, 'Par', 'Koi', '', '', 'parkoi@gmail.com', '111', 0, 1, NULL);
@@ -467,8 +451,7 @@ INSERT INTO `veterinarians` (`_id`, `user_id`, `specialty`, `rating`, `phone_num
 (1, 3, 'Animal Behaviour', 4, '098654321'),
 (2, 1, 'Veterinary Specialist', 0, '0987654321'),
 (59, 5, 'Veterinary Specialist', 0, '0987654321'),
-(60, 19, 'Anesthesia', 0, ''),
-(61, 4, 'Anesthesia', 0, '');
+(60, 19, 'Anesthesia', 0, '');
 
 --
 -- Indexes for dumped tables
@@ -577,7 +560,7 @@ ALTER TABLE `facilities`
 -- AUTO_INCREMENT for table `followers`
 --
 ALTER TABLE `followers`
-  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=376;
+  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=369;
 --
 -- AUTO_INCREMENT for table `markers`
 --
@@ -597,7 +580,7 @@ ALTER TABLE `messages`
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=204;
+  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=195;
 --
 -- AUTO_INCREMENT for table `pets`
 --
@@ -607,12 +590,12 @@ ALTER TABLE `pets`
 -- AUTO_INCREMENT for table `postreps`
 --
 ALTER TABLE `postreps`
-  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 --
 -- AUTO_INCREMENT for table `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `ratings`
 --
@@ -627,7 +610,7 @@ ALTER TABLE `services`
 -- AUTO_INCREMENT for table `topics`
 --
 ALTER TABLE `topics`
-  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `upvotes`
 --
@@ -642,7 +625,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `veterinarians`
 --
 ALTER TABLE `veterinarians`
-  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
+  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
