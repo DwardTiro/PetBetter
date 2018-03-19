@@ -2,10 +2,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="370dp"
     android:layout_height="90dp"
-    android:background="@drawable/listing_border"
+    android:background="@color/colorWhite"
     android:layout_gravity="center"
     android:onClick="messagesListingClicked"
-    android:weightSum="1">
+    android:weightSum="1"
+    android:layout_marginTop="1dp">
 
     <TextView
         android:id="@+id/messageSender"
@@ -16,7 +17,7 @@
         android:layout_marginStart="14dp"
         android:layout_marginTop="10dp"
         android:text="@string/sample_clinic"
-        android:textColor="@color/darkAccent"
+        android:textColor="@color/black"
         android:textSize="@dimen/listing_font_size" />
 
     <TextView
