@@ -83,7 +83,7 @@ public class FragmentPetClinicListing extends Fragment {
         user = getUser(email);
         recyclerView = (RecyclerView) view.findViewById(R.id.petCareListing);
 
-        if(faciList==null && !(getActivity() instanceof BookmarksActivity)){
+        if(faciList==null ){
             faciList = getClinics();
         }
 
@@ -101,7 +101,7 @@ public class FragmentPetClinicListing extends Fragment {
             });
         }
         //System.out.println("Rating is "+vetList.get(0).getRating());
-        if(getActivity() instanceof  VeterinarianHomeActivity){
+        else if(getActivity() instanceof  VeterinarianHomeActivity){
             clinicListingAdapter = new ClinicListingAdapter(getActivity(), faciList, new ClinicListingAdapter.OnItemClickListener() {
                 @Override public void onItemClick(Facility item) {
                     Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.EditFacilityActivity.class);
@@ -110,13 +110,13 @@ public class FragmentPetClinicListing extends Fragment {
                 }
             });
         }
-        if(getActivity() instanceof BookmarksActivity){
-            final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
-            Call<ArrayList<Facility>> call = service.getFacilityBookmarks(user.getUserId());
+        else if(getActivity() instanceof BookmarksActivity){
+            final HerokuService bookmarkService = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+            Call<ArrayList<Facility>> call = bookmarkService.getFacilityBookmarks(user.getUserId());
             call.enqueue(new Callback<ArrayList<Facility>>() {
                 @Override
                 public void onResponse(Call<ArrayList<Facility>> call, Response<ArrayList<Facility>> response) {
-                    if(response.isSuccessful())
+                    if(response.isSuccessful() && !(response.body() == null))
                     {
                         ArrayList<Facility> bookMarkList = response.body();
                         //faciList = response.body();
@@ -128,6 +128,9 @@ public class FragmentPetClinicListing extends Fragment {
                                 startActivity(intent);
                             }
                         });
+                        recyclerView.setAdapter(clinicListingAdapter);
+                        recyclerView.setHasFixedSize(true);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                     }
                 }
 
@@ -139,7 +142,7 @@ public class FragmentPetClinicListing extends Fragment {
 
 
         }
-        if(isLinked==false){
+        else if(isLinked==false){
             clinicListingAdapter = new ClinicListingAdapter(getActivity(), faciList, new ClinicListingAdapter.OnItemClickListener() {
                 @Override public void onItemClick(Facility item) {
 
