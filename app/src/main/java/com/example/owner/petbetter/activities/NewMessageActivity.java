@@ -81,6 +81,7 @@ public class NewMessageActivity extends AppCompatActivity {
     private String timeStamp;
     private ArrayList<Message> mList;
     private boolean alreadyExist= false;
+    private ImageView addTopic;
     HerokuService service;
     HerokuService service2;
     HerokuService service3;
@@ -93,6 +94,8 @@ public class NewMessageActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.viewPostToolbar);
         setSupportActionBar(toolbar);
         final TextView activityTitle = (TextView) findViewById(R.id.activity_title);
+        addTopic = (ImageView) findViewById(R.id.topicNewPost);
+        addTopic.setVisibility(View.GONE);
         activityTitle.setText("New Message");
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 

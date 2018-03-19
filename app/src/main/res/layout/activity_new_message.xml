@@ -1,101 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-   <include
-       android:id="@+id/newMessageToolbar"
-       layout="@layout/toolbar_viewpost"
-       android:layout_height="wrap_content"
-       android:layout_width="match_parent"
-       />
+    <include
+        android:id="@+id/newMessageToolbar"
+        layout="@layout/toolbar_viewpost"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 
     <LinearLayout
         android:id="@+id/newMessageLayout"
         android:layout_width="match_parent"
-        android:layout_height="463dp"
-        android:background="@drawable/notifications_border"
-        android:layout_below="@+id/newMessageToolbar">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/newMessageToolbar"
+        android:background="@drawable/notifications_border">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="463dp"
             android:orientation="vertical">
 
-            <AutoCompleteTextView
-                android:id="@+id/newMsgSendTo"
+            <RelativeLayout
+                android:id="@+id/sendToLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:paddingStart="15dp"
-                android:paddingEnd="15dp"
-                android:dropDownHeight="150dp"
-                android:hint="Send a message to"
-                android:textColorHint="@color/timestamp"
-                android:background="@drawable/custom_edittext"/>
+                android:layout_height="40dp"
+                android:background="@drawable/custom_edittext">
+
+                <TextView
+                    android:id="@+id/newMsgTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/custom_edittext"
+                    android:text="Send to:"
+                    android:textSize="15sp" />
+
+                <AutoCompleteTextView
+                    android:id="@+id/newMsgSendTo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="5dp"
+                    android:background="@drawable/custom_edittext"
+                    android:dropDownHeight="150dp"
+                    android:layout_toEndOf="@+id/newMsgTextView"
+                    android:paddingEnd="15dp"
+                    android:paddingStart="15dp"
+                    android:textColorHint="@color/timestamp" />
+            </RelativeLayout>
+            <LinearLayout
+                android:id="@+id/belowSendToLayout"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/myrtle_green"
+                android:layout_below="@+id/sendToLayout"
+                android:orientation="horizontal"
+                />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/messageRecyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="428dp"
-                android:layout_marginBottom="5dp"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/belowSendToLayout"
                 android:layout_marginTop="5dp"
                 >
 
             </android.support.v7.widget.RecyclerView>
 
-        </LinearLayout>
+        </RelativeLayout>
 
 
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-
-        android:orientation="horizontal"
-        android:background="@drawable/notifications_border"
-        android:layout_below="@+id/newMessageLayout"
-        >
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/comment_box">
 
         <ImageButton
             android:id="@+id/newMsgAddPhoto"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="5dp"
-            app:srcCompat="@mipmap/ic_add_a_photo_black_24dp"
-            />
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="15dp"
+            android:background="@color/colorWhite"
+            app:srcCompat="@mipmap/ic_add_a_photo_black_24dp" />
 
         <EditText
             android:id="@+id/newMsgContent"
-            android:layout_width="270dp"
+            android:layout_width="245dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-
-            android:layout_marginEnd="5dp"
-            android:hint="Write a message."
-            android:textColorHint="@color/timestamp"
+            android:layout_marginTop="15dp"
+            android:layout_toEndOf="@+id/newMsgAddPhoto"
             android:background="@drawable/custom_edittext"
+            android:hint="Write a message."
+            android:paddingEnd="10dp"
+            android:paddingStart="10dp"
 
-            />
+            android:textColorHint="@color/timestamp"
+            android:textSize="15sp" />
 
         <Button
             android:id="@+id/newMsgSendBtn"
             style="?android:attr/borderlessButtonStyle"
-            android:layout_width="60dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="5dp"
-            android:background="@color/main_White"
-            android:text="Send"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="2dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginTop="2dp"
+            android:background="@color/colorWhite"
+
+            android:text="Reply"
             android:textAllCaps="false"
-            android:textColor="@color/main_Color"
-            android:textSize="17sp" />
-    </LinearLayout>
+            android:textColor="@color/amazonite"
+            android:textSize="15sp" />
+    </RelativeLayout>
 
 
 </RelativeLayout>
