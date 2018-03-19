@@ -20,20 +20,22 @@
         android:layout_below="@+id/createPostIncludeToolbar"
         android:layout_alignParentStart="true">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/main_White"
-            android:orientation="vertical">
+            android:background="@color/colorWhite"
+            >
 
             <TextView
-                android:layout_width="match_parent"
+                android:id="@+id/postTitleTextView"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="0dp"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="12dp"
                 android:text="Post Title:"
                 android:textColor="@color/black"
+                android:background="@color/colorWhite"
                 android:textSize="15sp" />
 
             <EditText
@@ -44,10 +46,19 @@
                 android:layout_marginEnd="10dp"
                 android:layout_marginStart="3dp"
                 android:layout_marginTop="11dp"
+                android:maxLines="1"
                 android:background="@drawable/custom_edittext"
-                android:hint="What's your post about?"
+                android:layout_toEndOf="@+id/postTitleTextView"
                 android:textColorHint="@color/timestamp" />
-        </LinearLayout>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/greenLine"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/myrtle_green"
+            android:orientation="horizontal"
+            />
 
         <EditText
             android:id="@+id/newPostDesc"
@@ -57,14 +68,22 @@
             android:layout_marginEnd="10dp"
             android:layout_marginStart="3dp"
             android:layout_marginTop="24dp"
+            android:layout_marginBottom="20dp"
             android:background="@drawable/custom_edittext_white"
             android:hint="Write something about your post."
             android:textColorHint="@color/timestamp" />
 
         <LinearLayout
             android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/myrtle_green"
+            android:orientation="horizontal"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/main_White"
+            android:background="@color/colorWhite"
             android:orientation="horizontal">
 
 
@@ -74,7 +93,7 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:src="@mipmap/ic_add_a_photo_black_24dp"
-                android:background="@color/main_White"
+                android:background="@color/colorWhite"
                 />
             <ImageButton
                 android:id="@+id/postaddFacility"
@@ -82,7 +101,7 @@
                 android:layout_height="48dp"
                 android:layout_marginLeft="5dp"
                 android:src="@mipmap/ic_add_location_black_24dp"
-                android:background="@color/main_White"
+                android:background="@color/colorWhite"
                 />
 
             <TextView
