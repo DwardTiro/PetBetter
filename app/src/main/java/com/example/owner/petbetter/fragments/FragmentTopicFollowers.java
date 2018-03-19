@@ -52,8 +52,8 @@ public class FragmentTopicFollowers extends Fragment implements CheckUpdates{
     }
 
     @SuppressLint("ValidFragment")
-    public FragmentTopicFollowers(long topicId) {
-        this.topicId = topicId;
+    public FragmentTopicFollowers(ArrayList<Follower> followerList) {
+        this.followerList = followerList;
     }
 
     @Override
@@ -71,7 +71,16 @@ public class FragmentTopicFollowers extends Fragment implements CheckUpdates{
         user = getUser(email);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.followerListing);
-        getFollowers(topicId);
+        followerAdapter = new FollowerAdapter(getActivity(), followerList,new FollowerAdapter.OnItemClickListener() {
+            @Override public void onItemClick(Follower item) {
+                //Execute command here
+            }
+        });
+        followerAdapter.notifyItemRangeChanged(0, followerAdapter.getItemCount());
+        recyclerView.setAdapter(followerAdapter);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         //getPendingFollowers(topicId);
 
         return view;

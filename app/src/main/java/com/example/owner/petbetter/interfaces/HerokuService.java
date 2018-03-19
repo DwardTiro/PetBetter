@@ -136,6 +136,10 @@ public interface HerokuService {
     @POST("getPendingFollowers.php")
     Call<ArrayList<Follower>> getPendingFollowers(@Field("topic_id") long topicId);
 
+    @FormUrlEncoded
+    @POST("getAllowedFollowers.php")
+    Call<ArrayList<Follower>> getAllowedFollowers(@Field("topic_id") long topicId);
+
     @POST("addUser.php")
     Call<Void> addUser(@Body RequestBody user);
 

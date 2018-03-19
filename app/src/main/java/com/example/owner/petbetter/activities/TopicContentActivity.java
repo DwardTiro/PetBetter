@@ -7,8 +7,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -18,6 +21,7 @@ import android.widget.Toast;
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
+import com.example.owner.petbetter.adapters.FollowerAdapter;
 import com.example.owner.petbetter.classes.Follower;
 import com.example.owner.petbetter.classes.Message;
 import com.example.owner.petbetter.classes.Notifications;
@@ -67,6 +71,11 @@ public class TopicContentActivity extends AppCompatActivity {
     private Button postsButton;
     private TextView requestsTextView;
     private int currFragment;
+    private Follower check;
+    private ImageButton topicNewPost;
+    private Toolbar toolbar;
+    private View toolbarItem;
+    private ArrayList<Follower> topicFollowers;
 
     HerokuService service;
 
@@ -76,7 +85,7 @@ public class TopicContentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_topic_content);
 
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.viewPostToolbar);
+        toolbar = (Toolbar) findViewById(R.id.viewPostToolbar);
         setSupportActionBar(toolbar);
         final TextView activityTitle = (TextView) findViewById(R.id.activity_title);
         activityTitle.setText("View Topic");
@@ -89,6 +98,24 @@ public class TopicContentActivity extends AppCompatActivity {
         postsButton = (Button) findViewById(R.id.postsButton);
         requestsTextView = (TextView) findViewById(R.id.requestsTextView);
 
+        systemSessionManager = new SystemSessionManager(this);
+        if(systemSessionManager.checkLogin())
+            finish();
+        HashMap<String,String> userIn = systemSessionManager.getUserDetails();
+
+        initializeDatabase();
+        email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
+        user = getUser(email);
+
+        String jsonMyObject;
+        final Bundle extras = getIntent().getExtras();
+        jsonMyObject = extras.getString("thisTopic");
+        topicItem = new Gson().fromJson(jsonMyObject, Topic.class);
+
+        topicContentName.setText(topicItem.getTopicName());
+        bundle = new Bundle();
+        bundle.putLong("topicId", topicItem.getId());
+        postsButton.callOnClick();
 
         postsButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,35 +137,20 @@ public class TopicContentActivity extends AppCompatActivity {
                 bundle = new Bundle();
                 bundle.putLong("topicId", topicItem.getId());
 
-                Fragment postsFragment = new FragmentPosts();
-                postsFragment.setArguments(bundle);
-                getSupportFragmentManager().beginTransaction().replace(R.id.topic_container, postsFragment).commit();
+                if(check!=null){
+                    if(check.getIsAllowed()==1){
+                        Fragment postsFragment = new FragmentPosts();
+                        postsFragment.setArguments(bundle);
+                        getSupportFragmentManager().beginTransaction().replace(R.id.topic_container, postsFragment)
+                                .commitAllowingStateLoss();
+                    }
+                }
+
+
             }
         });
 
 
-
-
-        systemSessionManager = new SystemSessionManager(this);
-        if(systemSessionManager.checkLogin())
-            finish();
-        HashMap<String,String> userIn = systemSessionManager.getUserDetails();
-
-        initializeDatabase();
-        email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
-        user = getUser(email);
-
-
-
-        String jsonMyObject;
-        final Bundle extras = getIntent().getExtras();
-        jsonMyObject = extras.getString("thisTopic");
-        topicItem = new Gson().fromJson(jsonMyObject, Topic.class);
-
-        topicContentName.setText(topicItem.getTopicName());
-        bundle = new Bundle();
-        bundle.putLong("topicId", topicItem.getId());
-        postsButton.callOnClick();
         /*
         fragment3 = new FragmentPosts();
         fragment3.setArguments(bundle);
@@ -156,8 +168,9 @@ public class TopicContentActivity extends AppCompatActivity {
                 followersButton.setPaintFlags(followersButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
                 postsButton.setPaintFlags(postsButton.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
 
-                Fragment followersFragment = new FragmentTopicFollowers(topicItem.getId());
-                getSupportFragmentManager().beginTransaction().replace(R.id.topic_container, followersFragment).commit();
+                getTopicFollowers(topicItem.getId());
+
+
             }
         });
 
@@ -165,24 +178,24 @@ public class TopicContentActivity extends AppCompatActivity {
             @Override
             public void onRefresh() {
                 refreshTopicContent.setRefreshing(true);
-                if (currFragment == 1){
-                    syncPostChanges();
-                    String jsonMyObject;
-                    Bundle extras = getIntent().getExtras();
-                    jsonMyObject = extras.getString("thisTopic");
-                    topicItem = new Gson().fromJson(jsonMyObject, Topic.class);
+                if(currFragment==1&&check!=null){
+                    if (check.getIsAllowed()==1){
+                        syncPostChanges();
+                        String jsonMyObject;
+                        Bundle extras = getIntent().getExtras();
+                        jsonMyObject = extras.getString("thisTopic");
+                        topicItem = new Gson().fromJson(jsonMyObject, Topic.class);
 
-                    topicContentName.setText(topicItem.getTopicName());
-                    bundle = new Bundle();
-                    bundle.putLong("topicId", topicItem.getId());
-
-                    Fragment postsFragment = new FragmentPosts();
-                    postsFragment.setArguments(bundle);
-                    getSupportFragmentManager().beginTransaction().replace(R.id.topic_container, postsFragment).commit();
+                        topicContentName.setText(topicItem.getTopicName());
+                        bundle = new Bundle();
+                        bundle.putLong("topicId", topicItem.getId());
+                    }
                 }
                 else if(currFragment == 2){
-                    Fragment followersFragment = new FragmentTopicFollowers(topicItem.getId());
-                    getSupportFragmentManager().beginTransaction().replace(R.id.topic_container, followersFragment).commit();
+                    getTopicFollowers(topicItem.getId());
+                }
+                if(check==null||check.getIsAllowed()!=1){
+                    toolbarItem.setVisibility(View.GONE);
                 }
                 refreshTopicContent.setRefreshing(false);
             }
@@ -190,10 +203,13 @@ public class TopicContentActivity extends AppCompatActivity {
 
         if(checkIfFollower((int) topicItem.getId(), (int) user.getUserId())){
             followButton.setBackgroundColor(getResources().getColor(R.color.amazonite));
-            Follower check = getFollowerWithTopicUser(topicItem.getId(), user.getUserId());
+            check = getFollowerWithTopicUser(topicItem.getId(), user.getUserId());
             if(check.getIsAllowed()==1){
                 //followButton.setBackgroundResource(R.mipmap.ic_check_black_24dp);
                 followButton.setText("Approved");
+                Fragment postsFragment = new FragmentPosts();
+                postsFragment.setArguments(bundle);
+                getSupportFragmentManager().beginTransaction().replace(R.id.topic_container, postsFragment).commitAllowingStateLoss();
             }
             else{
                //followButton.setBackgroundResource(R.mipmap.ic_access_time_black_24dp);
@@ -300,6 +316,40 @@ public class TopicContentActivity extends AppCompatActivity {
             followButton.setVisibility(View.VISIBLE);
         }
 
+    }
+
+    public void getTopicFollowers(long topicId){
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final Call<ArrayList<Follower>> call2 = service.getAllowedFollowers(topicId);
+        call2.enqueue(new Callback<ArrayList<Follower>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Follower>> call, Response<ArrayList<Follower>> response) {
+                if(response.isSuccessful()){
+                    //get back here boys
+                    topicFollowers = response.body();
+
+                    Fragment followersFragment = new FragmentTopicFollowers(topicFollowers);
+                    getSupportFragmentManager().beginTransaction().replace(R.id.topic_container, followersFragment)
+                            .commitAllowingStateLoss();
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Follower>> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+
+            }
+        });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        toolbarItem = toolbar.findViewById(R.id.topicNewPost);
+        if(check==null||check.getIsAllowed()==0){
+            toolbarItem.setVisibility(View.GONE);
+        }
+        return super.onCreateOptionsMenu(menu);
     }
 
     public void uploadNotification(){
@@ -414,12 +464,15 @@ public class TopicContentActivity extends AppCompatActivity {
                     call2.enqueue(new Callback<ArrayList<Post>>() {
                         @Override
                         public void onResponse(Call<ArrayList<Post>> call, Response<ArrayList<Post>> response) {
-                            if(response.isSuccessful()){
-                                setPosts(response.body());
-                                fragment3 = new FragmentPosts();
-                                fragment3.setArguments(bundle);
-                                getSupportFragmentManager().beginTransaction().replace(R.id.topic_container,fragment3).commitAllowingStateLoss();
-                                System.out.println("DO WE REPLACE FRAGMENT AT LEAST??");
+                            if(response.isSuccessful()&&check!=null&&currFragment==1){
+                                if(check.getIsAllowed()==1){
+                                    setPosts(response.body());
+                                    fragment3 = new FragmentPosts();
+                                    fragment3.setArguments(bundle);
+                                    getSupportFragmentManager().beginTransaction().replace(R.id.topic_container,fragment3)
+                                            .commitAllowingStateLoss();
+                                    System.out.println("DO WE REPLACE FRAGMENT AT LEAST??");
+                                }
                             }
                         }
 

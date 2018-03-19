@@ -15,6 +15,8 @@ import com.bumptech.glide.Glide;
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
+import com.example.owner.petbetter.activities.FollowerRequestsActivity;
+import com.example.owner.petbetter.activities.TopicContentActivity;
 import com.example.owner.petbetter.classes.Follower;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
@@ -82,8 +84,8 @@ public class FollowerAdapter extends RecyclerView.Adapter<FollowerAdapter.Follow
         }
 
         if(thisFollower.getIsAllowed() == 1){
-            holder.acceptButton.setVisibility(View.INVISIBLE);
-            holder.rejectButton.setVisibility(View.INVISIBLE);
+            holder.acceptButton.setVisibility(View.GONE);
+            holder.rejectButton.setVisibility(View.GONE);
 
         }
         else {
