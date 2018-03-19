@@ -2100,6 +2100,10 @@ public class DataAdapter {
         petBetterDb.delete(FOLLOWER_TABLE, "user_id = " + userId + " AND topic_id = "+ topicId, null);
     }
 
+    public void deleteMessage (long id) {
+        petBetterDb.delete(MESSAGE_TABLE, "_id = " + id, null);
+    }
+
     public ArrayList<Follower> getTopicFollowers(long topicId){
 
         ArrayList<Follower> results = new ArrayList<>();
@@ -2229,6 +2233,20 @@ public class DataAdapter {
 
         String[] whereArgs= new String[]{String.valueOf(_id)};
         petBetterDb.update(FOLLOWER_TABLE,cv,"_id=?", whereArgs);
+        petBetterDb.close();
+
+
+    }
+
+    public void approveMessage(long _id){
+
+
+        ContentValues cv = new ContentValues();
+        cv.put("is_allowed",1);
+        cv.put("is_synced",0);
+
+        String[] whereArgs= new String[]{String.valueOf(_id)};
+        petBetterDb.update(MESSAGE_TABLE,cv,"_id=?", whereArgs);
         petBetterDb.close();
 
 

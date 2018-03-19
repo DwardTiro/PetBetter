@@ -63,7 +63,7 @@ public class MessageRequestAdapter extends RecyclerView.Adapter<MessageRequestAd
     }
 
     @Override
-    public void onBindViewHolder(final MessageRequestViewHolder holder, int position) {
+    public void onBindViewHolder(final MessageRequestViewHolder holder, final int position) {
         initializeDatabase();
         final Message thisMessage = messageList.get(position);
         User user = getUserWithId((int) thisMessage.getUserId());
@@ -91,37 +91,42 @@ public class MessageRequestAdapter extends RecyclerView.Adapter<MessageRequestAd
             holder.acceptButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    /*
-                    approveRequest(thisMessage.getId());
-                    syncFollowerChanges(thisMessage.getId());
-                    updateList(getPendingMessages(thisMessage.getUserId()));*/
+
+                    syncMessageChanges(thisMessage);
+                    approveMessage(thisMessage.getId());
+                    messageList.remove(position);
+                    notifyDataSetChanged();
+                    //updateList(getPendingMessages(thisMessage.getUserId()));
                 }
             });
 
             holder.rejectButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    /*
-                    deleteFollower((int) thisMessage.getTopicId(), (int) thisMessage.getUserId());
-                    removeFollower(thisMessage.getTopicId(), thisMessage.getUserId());
-                    updateList(getPendingFollowers(thisMessage.getTopicId()));*/
+
+
+                    removeMessage(thisMessage.getId());
+                    deleteMessage(thisMessage.getId());
+                    messageList.remove(position);
+                    notifyDataSetChanged();
+                    //updateList(getPendingMessages(thisMessage.getUserId()));
                 }
             });
         }
         //get user and set UI based on it.
     }
 
-    public void removeFollower(final long topicId, long userId){
+    public void removeMessage(long messageId){
 
         final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
-        final Call<Void> call = service.deleteFollower(topicId, userId);
+        final Call<Void> call = service.deleteMessage(messageId);
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if(response.isSuccessful()){
-                    dataSynced(3);
+                    dataSynced(5);
 
                 }
             }
@@ -133,25 +138,37 @@ public class MessageRequestAdapter extends RecyclerView.Adapter<MessageRequestAd
         });
     }
 
-    public void syncFollowerChanges(final long topicId){
+    private ArrayList<Message> getPendingMessages(long userId){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Message> result = petBetterDb.getPendingMessages(userId);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    public void syncMessageChanges(Message message){
 
         final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         System.out.println("WE HERE BOO");
 
-        Follower follower = getFollowerWithId(topicId);
 
         Gson gson = new GsonBuilder().serializeNulls().create();
-        String jsonArray = gson.toJson(follower);
+        String jsonArray = gson.toJson(message);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
 
-        final Call<Void> call = service.editFollowers(body);
+        final Call<Void> call = service.editMessage(body);
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if(response.isSuccessful()){
-                    System.out.println("Followers EDITED YEY");
-                    dataSynced(3);
+                    dataSynced(5);
 
 
                 }
@@ -229,7 +246,7 @@ public class MessageRequestAdapter extends RecyclerView.Adapter<MessageRequestAd
 
     }
 
-    private void deleteFollower(int topicId, int userId){
+    private void deleteMessage(long id){
 
         try {
             petBetterDb.openDatabase();
@@ -237,7 +254,20 @@ public class MessageRequestAdapter extends RecyclerView.Adapter<MessageRequestAd
             e.printStackTrace();
         }
 
-        petBetterDb.deleteFollower(topicId, userId);
+        petBetterDb.deleteMessage(id);
+        petBetterDb.closeDatabase();
+
+    }
+
+    private void approveMessage(long id){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        petBetterDb.approveMessage(id);
         petBetterDb.closeDatabase();
 
     }

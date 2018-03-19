@@ -307,6 +307,10 @@ public interface HerokuService {
     Call<Integer> checkIfFollower(@Field("topic_id") int topicId, @Field("user_id") int userId);
 
     @FormUrlEncoded
+    @POST("deleteMessage.php")
+    Call<Void> deleteMessage(@Field("_id") long messageId);
+
+    @FormUrlEncoded
     @POST("deleteFollower.php")
     Call<Void> deleteFollower(@Field("topic_id") long topicId, @Field("user_id") long userId);
 
@@ -432,6 +436,9 @@ public interface HerokuService {
 
     @POST("editFollowers.php")
     Call<Void> editFollowers(@Body RequestBody follower);
+
+    @POST("editMessage.php")
+    Call<Void> editMessage(@Body RequestBody message);
 
     @POST("addMessages.php")
     Call<Void> addMessages(@Body RequestBody messageList);

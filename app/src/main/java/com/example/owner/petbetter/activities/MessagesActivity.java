@@ -10,6 +10,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -34,6 +35,7 @@ import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.adapters.MessageAdapter;
 import com.example.owner.petbetter.classes.Message;
+import com.example.owner.petbetter.classes.MessageRep;
 import com.example.owner.petbetter.classes.Notifications;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
@@ -86,6 +88,7 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
     private Button messageReqButton;
     private Toolbar toolbar;
     private ArrayList<Message> pendingMessages;
+    private SwipeRefreshLayout refreshMessages;
 
     HerokuService service;
 
@@ -151,6 +154,7 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
         actvMessage = (AutoCompleteTextView) findViewById(R.id.actvMesaage);
         messagesButton = (Button) findViewById(R.id.messagesButton);
         messageReqButton = (Button) findViewById(R.id.messageReqButton);
+        refreshMessages = (SwipeRefreshLayout) findViewById(R.id.refreshMessages);
 
         if(!getUnsyncedNotifications().isEmpty())
             notifButton.setImageResource(R.mipmap.ic_notifications_active_black_24dp);
@@ -266,6 +270,175 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
 
             }
         });
+
+        refreshMessages.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshMessages.setRefreshing(true);
+                syncMessageChanges(user.getUserId());
+                syncMessageRepChanges();
+                refreshMessages.setRefreshing(false);
+            }
+        });
+    }
+
+    public void syncMessageChanges(final long userId){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+        ArrayList<Message> unsyncedMessages = getUnsyncedMessages();
+        System.out.println("UNSYNCED MESSAGES: "+unsyncedMessages.size());
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String jsonArray = gson.toJson(unsyncedMessages);
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.addMessages(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    System.out.println("MESSAGES ADDED YEY");
+                    dataSynced(5);
+
+                    final Call<ArrayList<Message>> call2 = service2.getMessages(userId);
+                    call2.enqueue(new Callback<ArrayList<Message>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<Message>> call, Response<ArrayList<Message>> response) {
+                            if(response.isSuccessful()){
+                                System.out.println("response size messages "+response.body().size());
+                                setMessages(response.body());
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<Message>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
+    private ArrayList<Message> getUnsyncedMessages(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Message> result = petBetterDb.getUnsyncedMessages();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private void dataSynced(int n){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        petBetterDb.dataSynced(n);
+        petBetterDb.closeDatabase();
+
+    }
+
+    public long setMessages(ArrayList<Message> messageList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setMessages(messageList);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    public void syncMessageRepChanges(){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+        ArrayList<MessageRep> unsyncedMessages = getUnsyncedMessageReps();
+        System.out.println("UNSYNCED MESSAGEREPS: "+unsyncedMessages.size());
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String jsonArray = gson.toJson(unsyncedMessages);
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.addMessageReps(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    System.out.println("MESSAGEREPS ADDED YEY");
+                    dataSynced(6);
+
+                    final Call<ArrayList<MessageRep>> call2 = service2.getMessageReps();
+                    call2.enqueue(new Callback<ArrayList<MessageRep>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<MessageRep>> call, Response<ArrayList<MessageRep>> response) {
+                            if(response.isSuccessful()){
+                                System.out.println("response size messagereps "+response.body().size());
+                                setMessageReps(response.body());
+                                System.out.println("EYY REP: "+response.body().get(6).getRepContent()+" "
+                                        +response.body().get(6).getMessagePhoto());
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<MessageRep>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
+    private ArrayList<MessageRep> getUnsyncedMessageReps(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<MessageRep> result = petBetterDb.getUnsyncedMessageReps();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    public long setMessageReps(ArrayList<MessageRep> messageRepList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setMessageReps(messageRepList);
+        petBetterDb.closeDatabase();
+
+        return result;
     }
 
     public void messagesButtonClicked(View view){
