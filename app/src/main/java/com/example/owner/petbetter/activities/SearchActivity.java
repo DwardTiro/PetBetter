@@ -1,6 +1,7 @@
 package com.example.owner.petbetter.activities;
 
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ActionMenuView;
@@ -112,6 +113,7 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
         String email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
         user = getUser(email);
 
+
         vetSearchButton = (Button) findViewById(R.id.vetSearchButton);
         petSearchButton = (Button) findViewById(R.id.petSearchButton);
         topicSearchButton = (Button) findViewById(R.id.topicSearchButton);
@@ -120,7 +122,12 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
         relativeLayout = (RelativeLayout) findViewById(R.id.relativeSearch);
         relativeLayout.setClickable(true);
 
-        vetSearchClicked(this.findViewById(android.R.id.content));
+        if(user.getUserType() == 1){
+            vetSearchButton.setVisibility(View.GONE);
+            petSearchButton.setVisibility(View.GONE);
+            topicSearchClicked(this.findViewById(android.R.id.content));
+        }else
+            vetSearchClicked(this.findViewById(android.R.id.content));
 
         //  recyclerView = (RecyclerView) findViewById(R.id.recyclerViewSearch);
         // recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -139,6 +146,10 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
         topicSearchButton.setTextColor(getResources().getColor(R.color.colorWhite));
         postSearchButton.setBackgroundResource(R.color.medTurquoise);
         postSearchButton.setTextColor(getResources().getColor(R.color.colorWhite));
+        vetSearchButton.setPaintFlags(vetSearchButton.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
+        petSearchButton.setPaintFlags(petSearchButton.getPaintFlags()&(~Paint.UNDERLINE_TEXT_FLAG));
+        topicSearchButton.setPaintFlags(topicSearchButton.getPaintFlags()&(~Paint.UNDERLINE_TEXT_FLAG));
+        postSearchButton.setPaintFlags(postSearchButton.getPaintFlags()&(~Paint.UNDERLINE_TEXT_FLAG));
 
         service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
@@ -232,6 +243,10 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
         topicSearchButton.setTextColor(getResources().getColor(R.color.colorWhite));
         postSearchButton.setBackgroundResource(R.color.medTurquoise);
         postSearchButton.setTextColor(getResources().getColor(R.color.colorWhite));
+        petSearchButton.setPaintFlags(petSearchButton.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
+        vetSearchButton.setPaintFlags(vetSearchButton.getPaintFlags()&(~Paint.UNDERLINE_TEXT_FLAG));
+        topicSearchButton.setPaintFlags(topicSearchButton.getPaintFlags()&(~Paint.UNDERLINE_TEXT_FLAG));
+        postSearchButton.setPaintFlags(postSearchButton.getPaintFlags()&(~Paint.UNDERLINE_TEXT_FLAG));
 
         service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
@@ -329,6 +344,10 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
         topicSearchButton.setTextColor(getResources().getColor(R.color.myrtle_green));
         postSearchButton.setBackgroundResource(R.color.medTurquoise);
         postSearchButton.setTextColor(getResources().getColor(R.color.colorWhite));
+        topicSearchButton.setPaintFlags(topicSearchButton.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
+        petSearchButton.setPaintFlags(petSearchButton.getPaintFlags()&(~Paint.UNDERLINE_TEXT_FLAG));
+        vetSearchButton.setPaintFlags(vetSearchButton.getPaintFlags()&(~Paint.UNDERLINE_TEXT_FLAG));
+        postSearchButton.setPaintFlags(postSearchButton.getPaintFlags()&(~Paint.UNDERLINE_TEXT_FLAG));
 
         service3 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
@@ -411,6 +430,11 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
         topicSearchButton.setTextColor(getResources().getColor(R.color.colorWhite));
         postSearchButton.setBackgroundResource(R.color.main_White);
         postSearchButton.setTextColor(getResources().getColor(R.color.myrtle_green));
+        postSearchButton.setPaintFlags(postSearchButton.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
+        petSearchButton.setPaintFlags(petSearchButton.getPaintFlags()&(~Paint.UNDERLINE_TEXT_FLAG));
+        topicSearchButton.setPaintFlags(topicSearchButton.getPaintFlags()&(~Paint.UNDERLINE_TEXT_FLAG));
+        vetSearchButton.setPaintFlags(vetSearchButton.getPaintFlags()&(~Paint.UNDERLINE_TEXT_FLAG));
+
 
         service4 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
