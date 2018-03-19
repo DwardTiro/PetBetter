@@ -2,8 +2,8 @@
 
 require 'init.php';
 
-$user_one = $_POST['user_one'];
-$user_two = $_POST['user_two'];
+$message = json_decode(file_get_contents('php://input'),true);
+
 $response = array(); 
 //$sql = "SELECT * FROM users WHERE email = ? AND password = ?";
 //$sql = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
@@ -12,43 +12,19 @@ $response = array();
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
 
-
-	if($stmt = $mysqli->prepare("INSERT INTO messages (user_one, user_two, is_allowed) VALUES (?,?, 0)")){
-		$stmt->bind_param("ss", $user_one, $user_two);
+	if($stmt = $mysqli->prepare("UPDATE messages SET is_allowed = 1 WHERE _id = ?")){
+		
+		$stmt->bind_param("s", $message['_id']);
 		$stmt->execute();
 		$stmt->close();
-		echo 'Message created';
-		
-		//$stmt->bind_result($_id, $first_name, $last_name, $mobile_num, $phone_num, $email,  $password, $age, $user_type);
-		//$stmt->store_result();
-	
-	/*
-		if($stmt->fetch()){
-			
-			$stmt->close();
-			//echo json_encode($response);
-			echo json_encode(array('_id'=>$_id,
-			'first_name'=>$first_name,
-			'last_name'=>$last_name,
-			'mobile_num'=>$mobile_num,
-			'phone_num'=>$phone_num,
-			'email'=>$email,
-			'password'=>$password,
-			'age'=>$age,
-			'user_type'=>$user_type));
-		}
-		else{
-			
-			$stmt->close();
-			echo 'SQL Query Error';
-		}
-		*/
-		//echo json_encode($stmt);
-		//echo json_encode(array('user'=>$response));
 	}
 	else{
-		echo 'SQL Query Error';
+		//echo 'and here?';
+		
 	}
+		
+	
+	
 }
 
 /*

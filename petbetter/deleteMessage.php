@@ -2,8 +2,8 @@
 
 require 'init.php';
 
-$user_one = $_POST['user_one'];
-$user_two = $_POST['user_two'];
+$_id = $_POST['_id'];
+
 $response = array(); 
 //$sql = "SELECT * FROM users WHERE email = ? AND password = ?";
 //$sql = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
@@ -12,12 +12,16 @@ $response = array();
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
 
+	if(!(isset($_POST['_id']))){
+		echo 'Details are lacking';
+		exit(0);
+	}
 
-	if($stmt = $mysqli->prepare("INSERT INTO messages (user_one, user_two, is_allowed) VALUES (?,?, 0)")){
-		$stmt->bind_param("ss", $user_one, $user_two);
+	if($stmt = $mysqli->prepare("DELETE FROM messages WHERE _id = ?")){
+		$stmt->bind_param("s", $_id);
 		$stmt->execute();
 		$stmt->close();
-		echo 'Message created';
+		echo 'Message removed';
 		
 		//$stmt->bind_result($_id, $first_name, $last_name, $mobile_num, $phone_num, $email,  $password, $age, $user_type);
 		//$stmt->store_result();

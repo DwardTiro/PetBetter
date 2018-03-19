@@ -33,14 +33,14 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 	if(count($pieces)==1){
 		$query = "%{$pieces[0]}%";
 		$query2 = "%{$pieces[0]}%";
-		if($stmt = $mysqli->prepare("SELECT DISTINCT m._id AS _id, m.user_one AS user_one, m.user_two AS user_two, u.first_name AS first_name, u.last_name AS last_name FROM messages 
-				AS m INNER JOIN users AS u ON m.user_one = u.user_id WHERE (m.user_one = ? OR m.user_two = ?) AND (u.first_name LIKE ? OR u.last_name LIKE ?) 
+		if($stmt = $mysqli->prepare("SELECT DISTINCT m._id AS _id, m.user_one AS user_one, m.user_two AS user_two, m.is_allowed AS is_allowed, u.first_name AS first_name, u.last_name AS last_name 
+				FROM messages AS m INNER JOIN users AS u ON m.user_one = u.user_id WHERE (m.user_one = ? OR m.user_two = ?) AND (u.first_name LIKE ? OR u.last_name LIKE ?) 
 				UNION 
-				SELECT m._id AS _id, m.user_one AS user_one, m.user_two AS user_two, u.first_name AS first_name, u.last_name AS last_name FROM messages 
+				SELECT m._id AS _id, m.user_one AS user_one, m.user_two AS user_two, m.is_allowed AS is_allowed, u.first_name AS first_name, u.last_name AS last_name FROM messages 
 				AS m INNER JOIN users AS u ON m.user_two = u.user_id WHERE (m.user_one = ? OR m.user_two = ?) AND (u.first_name LIKE ? OR u.last_name LIKE ?)")){
 			$stmt->bind_param("ssssssss", $_id, $_id, $query, $query2, $_id, $_id, $query, $query2);
 			$stmt->execute();
-			$stmt->bind_result($_id, $user_one, $user_two, $first_name, $last_name);
+			$stmt->bind_result($_id, $user_one, $user_two, $is_allowed, $first_name, $last_name);
 			$stmt->store_result();
 		
 			if($stmt->fetch()){
@@ -49,6 +49,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 					array_push($response, array('_id'=>$_id,
 					'user_one'=>$user_one,
 					'user_two'=>$user_two,
+					'is_allowed'=>$is_allowed,
 					'first_name'=>$first_name,
 					'last_name'=>$last_name));
 				}while($stmt->fetch());

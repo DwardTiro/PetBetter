@@ -18,8 +18,8 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 	//echo $messagelist[$i]['_id'];
 	
 	while($i<$n){
-		if($stmt = $mysqli->prepare("INSERT INTO messages (user_one, user_two) VALUES (?,?)")){
-			$stmt->bind_param("ss", $messagelist[$i]['user_one'], $messagelist[$i]['user_two']);
+		if($stmt = $mysqli->prepare("INSERT INTO messages (user_one, user_two, is_allowed) VALUES (?,?,?)")){
+			$stmt->bind_param("sss", $messagelist[$i]['user_one'], $messagelist[$i]['user_two'], $messagelist[$i]['is_allowed']);
 			$stmt->execute();
 			$stmt->close();
 			$i = $i + 1;

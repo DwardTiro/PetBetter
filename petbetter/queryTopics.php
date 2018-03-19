@@ -19,7 +19,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 
 	if($stmt = $mysqli->prepare("SELECT * FROM topics WHERE is_deleted = 0 AND topic_name LIKE ?")){
 		//query might cause error
-		$stmt->bind_param("ss", $query, $query);
+		$stmt->bind_param("s", $query);
 		$stmt->execute();
 		$stmt->bind_result($_id, $creator_id, $topic_name, $topic_desc, $date_created, $is_deleted);
 		$stmt->store_result();

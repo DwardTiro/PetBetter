@@ -155,7 +155,7 @@ public class NewMessageActivity extends AppCompatActivity {
 
                                 String image = imageToString();
 
-                                if(alreadyExist==false){
+                                if(alreadyExist==true){
                                     mrId = generateMessageRepId();
                                     addMessageRep(mrId, (int) usertwo.getUserId(),(int) user.getUserId(), mId,
                                             newMsgContent.getText().toString(), 1, timeStamp, image, 0);

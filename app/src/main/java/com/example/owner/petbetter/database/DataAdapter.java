@@ -494,7 +494,9 @@ public class DataAdapter {
                     c.getString(c.getColumnIndexOrThrow("first_name")),
                     c.getString(c.getColumnIndexOrThrow("last_name")));
             message.setMessageContent(getLatestRep((int) message.getId()));
-            results.add(message);
+            if(!(message.getUserId()==userId)){
+                results.add(message);
+            }
         }
 
         c.close();
@@ -1587,6 +1589,7 @@ public class DataAdapter {
         cv.put("_id", messageId);
         cv.put("user_one", userId);
         cv.put("user_two", toId);
+        cv.put("is_allowed", 0);
         cv.put("is_synced", 0);
 
         result = petBetterDb.insert(MESSAGE_TABLE, null, cv);
