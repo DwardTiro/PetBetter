@@ -89,6 +89,7 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
     private Toolbar toolbar;
     private ArrayList<Message> pendingMessages;
     private SwipeRefreshLayout refreshMessages;
+    private int refChecker = 0;
 
     HerokuService service;
 
@@ -277,7 +278,6 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
                 refreshMessages.setRefreshing(true);
                 syncMessageChanges(user.getUserId());
                 syncMessageRepChanges();
-                refreshMessages.setRefreshing(false);
             }
         });
     }
@@ -308,6 +308,14 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
                             if(response.isSuccessful()){
                                 System.out.println("response size messages "+response.body().size());
                                 setMessages(response.body());
+                                refreshMessages.setRefreshing(false);
+                                if(currFragment==1){
+                                    messagesButtonClicked(findViewById(android.R.id.content));
+                                }
+                                else{
+                                    messageReqButtonClicked(findViewById(android.R.id.content));
+                                }
+
                             }
                         }
 
@@ -393,8 +401,8 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
                             if(response.isSuccessful()){
                                 System.out.println("response size messagereps "+response.body().size());
                                 setMessageReps(response.body());
-                                System.out.println("EYY REP: "+response.body().get(6).getRepContent()+" "
-                                        +response.body().get(6).getMessagePhoto());
+
+
                             }
                         }
 
@@ -467,6 +475,10 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
         messageReqButton.setTextColor(getResources().getColor(R.color.main_White));
         messagesButton.setBackgroundResource(R.color.colorWhite);
         messagesButton.setTextColor(getResources().getColor(R.color.myrtle_green));
+
+        /*
+        actvMessage.setText("");
+        actvMessage.setEnabled(false);*/
 
         pendingMessages = getPendingMessages(user.getUserId());
         FragmentMessages fragment2 = new FragmentMessages(pendingMessages, 2);

@@ -125,7 +125,7 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
         //  recyclerView = (RecyclerView) findViewById(R.id.recyclerViewSearch);
         // recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-
+        onResume();
     }
 
     public void vetSearchClicked(View v){
