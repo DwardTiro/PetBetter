@@ -66,6 +66,7 @@ public class TopicContentActivity extends AppCompatActivity {
     private Button followersButton;
     private Button postsButton;
     private TextView requestsTextView;
+    private int currFragment;
 
     HerokuService service;
 
@@ -89,19 +90,10 @@ public class TopicContentActivity extends AppCompatActivity {
         requestsTextView = (TextView) findViewById(R.id.requestsTextView);
 
 
-        refreshTopicContent.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refreshTopicContent.setRefreshing(true);
-                syncPostChanges();
-                refreshTopicContent.setRefreshing(false);
-            }
-        });
-
-
         postsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                currFragment = 1;
                 postsButton.setTextColor(getResources().getColor(R.color.myrtle_green));
                 postsButton.setBackgroundResource(R.color.main_White);
                 followersButton.setTextColor(getResources().getColor(R.color.colorWhite));
@@ -156,6 +148,7 @@ public class TopicContentActivity extends AppCompatActivity {
         followersButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                currFragment = 2;
                 followersButton.setTextColor(getResources().getColor(R.color.myrtle_green));
                 followersButton.setBackgroundResource(R.color.main_White);
                 postsButton.setTextColor(getResources().getColor(R.color.colorWhite));
@@ -165,6 +158,33 @@ public class TopicContentActivity extends AppCompatActivity {
 
                 Fragment followersFragment = new FragmentTopicFollowers(topicItem.getId());
                 getSupportFragmentManager().beginTransaction().replace(R.id.topic_container, followersFragment).commit();
+            }
+        });
+
+        refreshTopicContent.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshTopicContent.setRefreshing(true);
+                if (currFragment == 1){
+                    syncPostChanges();
+                    String jsonMyObject;
+                    Bundle extras = getIntent().getExtras();
+                    jsonMyObject = extras.getString("thisTopic");
+                    topicItem = new Gson().fromJson(jsonMyObject, Topic.class);
+
+                    topicContentName.setText(topicItem.getTopicName());
+                    bundle = new Bundle();
+                    bundle.putLong("topicId", topicItem.getId());
+
+                    Fragment postsFragment = new FragmentPosts();
+                    postsFragment.setArguments(bundle);
+                    getSupportFragmentManager().beginTransaction().replace(R.id.topic_container, postsFragment).commit();
+                }
+                else if(currFragment == 2){
+                    Fragment followersFragment = new FragmentTopicFollowers(topicItem.getId());
+                    getSupportFragmentManager().beginTransaction().replace(R.id.topic_container, followersFragment).commit();
+                }
+                refreshTopicContent.setRefreshing(false);
             }
         });
 
