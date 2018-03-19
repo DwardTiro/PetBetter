@@ -32,6 +32,7 @@ import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.fragments.FragmentBookmarkListing;
 import com.example.owner.petbetter.fragments.FragmentFacilityListing;
 import com.example.owner.petbetter.fragments.FragmentPetClinicListing;
+import com.example.owner.petbetter.fragments.FragmentPosts;
 import com.example.owner.petbetter.services.MyService;
 import com.example.owner.petbetter.services.NotificationReceiver;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
@@ -161,7 +162,7 @@ public class BookmarksActivity extends AppCompatActivity implements NavigationVi
                 faciBookmarks.setBackgroundResource(R.color.medTurquoise);
                 faciBookmarks.setTextColor(getResources().getColor(R.color.colorWhite));
                 container.removeAllViews();
-                FragmentFacilityListing fragment = new FragmentFacilityListing();
+                FragmentPosts fragment = new FragmentPosts();
                 getSupportFragmentManager().beginTransaction().replace(R.id.bookmark_container,fragment).commit();
             }
         });

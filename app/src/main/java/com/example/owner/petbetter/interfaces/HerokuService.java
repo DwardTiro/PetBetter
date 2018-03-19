@@ -64,6 +64,10 @@ public interface HerokuService {
     @POST("getFacilityBookmarks.php")
     Call<ArrayList<Facility>> getFacilityBookmarks(@Field("user_id") long userId);
 
+    @FormUrlEncoded
+    @POST("getPostBookmarks.php")
+    Call<ArrayList<Post>> getPostBookmarks(@Field("user_id") long userId);
+
     @POST("getServices.php")
     Call<ArrayList<Services>> getServices();
 

@@ -83,7 +83,7 @@ public class FragmentPetClinicListing extends Fragment {
         user = getUser(email);
         recyclerView = (RecyclerView) view.findViewById(R.id.petCareListing);
 
-        if(faciList==null ){
+        if(faciList==null){
             faciList = getClinics();
         }
 
