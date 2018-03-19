@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -56,6 +57,7 @@ public class BookmarksActivity extends AppCompatActivity implements NavigationVi
     private ImageView notifButton;
     private NotificationReceiver notifReceiver = new NotificationReceiver();
     private ImageView imageViewDrawer;
+    private int currFragment = 1;
 
     HerokuService service;
 
@@ -135,6 +137,8 @@ public class BookmarksActivity extends AppCompatActivity implements NavigationVi
         faciBookmarks.setTextColor(getResources().getColor(R.color.myrtle_green));
         postBookmarks.setBackgroundResource(R.color.medTurquoise);
         postBookmarks.setTextColor(getResources().getColor(R.color.colorWhite));
+        faciBookmarks.setPaintFlags(faciBookmarks.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        postBookmarks.setPaintFlags(postBookmarks.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
         FragmentPetClinicListing fragment1 = new FragmentPetClinicListing();
         getSupportFragmentManager().beginTransaction().add(R.id.bookmark_container,fragment1).commitAllowingStateLoss();
 
@@ -144,10 +148,13 @@ public class BookmarksActivity extends AppCompatActivity implements NavigationVi
             @Override
             public void onClick(View v) {
                 System.out.println("Fragment 1");
+
                 faciBookmarks.setBackgroundResource(R.color.colorWhite);
                 faciBookmarks.setTextColor(getResources().getColor(R.color.myrtle_green));
                 postBookmarks.setBackgroundResource(R.color.medTurquoise);
                 postBookmarks.setTextColor(getResources().getColor(R.color.colorWhite));
+                faciBookmarks.setPaintFlags(faciBookmarks.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                postBookmarks.setPaintFlags(postBookmarks.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
                 container.removeAllViews();
                 FragmentPetClinicListing fragment1 = new FragmentPetClinicListing();
                 getSupportFragmentManager().beginTransaction().replace(R.id.bookmark_container,fragment1).commit();
@@ -157,10 +164,13 @@ public class BookmarksActivity extends AppCompatActivity implements NavigationVi
             @Override
             public void onClick(View v) {
                 System.out.println("Fragment 2");
+                currFragment = 2;
                 postBookmarks.setBackgroundResource(R.color.colorWhite);
                 postBookmarks.setTextColor(getResources().getColor(R.color.myrtle_green));
                 faciBookmarks.setBackgroundResource(R.color.medTurquoise);
                 faciBookmarks.setTextColor(getResources().getColor(R.color.colorWhite));
+                postBookmarks.setPaintFlags(faciBookmarks.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                faciBookmarks.setPaintFlags(postBookmarks.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
                 container.removeAllViews();
                 FragmentPosts fragment = new FragmentPosts();
                 getSupportFragmentManager().beginTransaction().replace(R.id.bookmark_container,fragment).commit();

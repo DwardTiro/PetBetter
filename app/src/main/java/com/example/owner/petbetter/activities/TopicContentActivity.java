@@ -2,6 +2,7 @@ package com.example.owner.petbetter.activities;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -105,6 +106,8 @@ public class TopicContentActivity extends AppCompatActivity {
                 postsButton.setBackgroundResource(R.color.main_White);
                 followersButton.setTextColor(getResources().getColor(R.color.colorWhite));
                 followersButton.setBackgroundResource(R.color.medTurquoise);
+                postsButton.setPaintFlags(postsButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                followersButton.setPaintFlags(followersButton.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
 
                 String jsonMyObject;
                 Bundle extras = getIntent().getExtras();
@@ -157,6 +160,8 @@ public class TopicContentActivity extends AppCompatActivity {
                 followersButton.setBackgroundResource(R.color.main_White);
                 postsButton.setTextColor(getResources().getColor(R.color.colorWhite));
                 postsButton.setBackgroundResource(R.color.medTurquoise);
+                followersButton.setPaintFlags(followersButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                postsButton.setPaintFlags(postsButton.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
 
                 Fragment followersFragment = new FragmentTopicFollowers(topicItem.getId());
                 getSupportFragmentManager().beginTransaction().replace(R.id.topic_container, followersFragment).commit();
