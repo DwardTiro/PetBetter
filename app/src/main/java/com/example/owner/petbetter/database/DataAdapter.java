@@ -10,6 +10,7 @@ import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.example.owner.petbetter.classes.Bookmark;
 import com.example.owner.petbetter.classes.Facility;
 import com.example.owner.petbetter.classes.Follower;
 import com.example.owner.petbetter.classes.LocationMarker;
@@ -57,6 +58,7 @@ public class DataAdapter {
     private static final String PET_TABLE = "pets";
     private static final String SERVICE_TABLE = "services";
     private static final String UPVOTE_TABLE = "upvotes";
+    private static final String BOOKMARK_TABLE = "bookmarks";
 
 
 
@@ -430,6 +432,37 @@ public class DataAdapter {
                     c.getString(c.getColumnIndexOrThrow("last_name")));
             message.setMessageContent(getLatestRep((int) message.getId()));
             results.add(message);
+        }
+
+        c.close();
+        return results;
+    }
+
+    public ArrayList<Integer> generateBookmarkIds(){
+        ArrayList<Integer> ids = new ArrayList<>();
+
+        String sql = "SELECT _id FROM " + BOOKMARK_TABLE;
+        Cursor c = petBetterDb.rawQuery(sql, null);
+        while (c.moveToNext()){
+            ids.add(c.getInt(c.getColumnIndexOrThrow("_id")));
+        }
+        c.close();
+
+        return ids;
+    }
+
+    public ArrayList<Bookmark> getUnsyncedBookmarks(){
+        ArrayList<Bookmark> results = new ArrayList<>();
+
+        String sql = "SELECT * FROM "+BOOKMARK_TABLE+" WHERE is_synced = 0";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            Bookmark bookmark = new Bookmark(c.getInt(c.getColumnIndexOrThrow("_id")),
+                    c.getInt(c.getColumnIndexOrThrow("item_id")),
+                    c.getInt(c.getColumnIndexOrThrow("bookmark_type")),
+                    c.getInt(c.getColumnIndexOrThrow("user_id")));
+            results.add(bookmark);
         }
 
         c.close();
@@ -1129,6 +1162,9 @@ public class DataAdapter {
         }
         if(n==15){
             petBetterDb.update(UPVOTE_TABLE,cv,"is_synced=?", whereArgs);
+        }
+        if(n==16){
+            petBetterDb.update(BOOKMARK_TABLE,cv,"is_synced=?", whereArgs);
         }
         petBetterDb.close();
     }
@@ -2455,6 +2491,42 @@ public class DataAdapter {
         result = petBetterDb.insert(VET_TABLE, null, cv);
 
         return result;
+    }
+
+    public long addFacilityBookmark(long _id, long item_id, long user_id){
+        long result;
+
+        ContentValues cv = new ContentValues();
+        cv.put("_id", _id);
+        cv.put("item_id", item_id);
+        cv.put("bookmark_type", 1);
+        cv.put("is_synced", 0);
+        cv.put("user_id", user_id);
+
+        result = petBetterDb.insert(BOOKMARK_TABLE, null, cv);
+        return result;
+    }
+
+    public long addPostBookmark(long _id, long item_id, long user_id){
+        long result;
+
+        ContentValues cv = new ContentValues();
+        cv.put("_id", _id);
+        cv.put("item_id", item_id);
+        cv.put("bookmark_type", 2);
+        cv.put("is_synced", 0);
+        cv.put("user_id", user_id);
+
+        result = petBetterDb.insert(BOOKMARK_TABLE, null, cv);
+        return result;
+    }
+
+    public void deleteFacilityBookmark (long item_id, long user_id) {
+        petBetterDb.delete(BOOKMARK_TABLE, "user_id = " + user_id + " AND item_id = "+ item_id+" AND bookmark_type = 1", null);
+    }
+
+    public void deletePostBookmark (long item_id, long user_id) {
+        petBetterDb.delete(BOOKMARK_TABLE, "user_id = " + user_id + " AND item_id = "+ item_id+" AND bookmark_type = 2", null);
     }
 
     public long setVeterinarians(ArrayList<Veterinarian> vetList){
