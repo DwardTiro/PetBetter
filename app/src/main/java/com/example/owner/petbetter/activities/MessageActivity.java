@@ -70,6 +70,7 @@ public class MessageActivity extends AppCompatActivity {
     private String timeStamp, email;
     private int nId;
     private HerokuService service;
+    private ImageView addTopic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +97,8 @@ public class MessageActivity extends AppCompatActivity {
         replyButton = (Button) findViewById(R.id.replyButton);
         messageText = (EditText) findViewById(R.id.messageText);
         addPhotoButton = (ImageButton) findViewById(R.id.addPhotoButton);
+        addTopic = (ImageView) findViewById(R.id.topicNewPost);
+        addTopic.setVisibility(View.GONE);
 
         systemSessionManager = new SystemSessionManager(this);
         if(systemSessionManager.checkLogin())
