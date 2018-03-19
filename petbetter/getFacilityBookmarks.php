@@ -8,7 +8,7 @@ $response = array();
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
 
-	if($stmt = $mysqli->prepare("SELECT f.faci_id, f.faci_name, f.location, f.hours_open, f.hours_close, f.contact_info, f.vet_id, f.rating, f.faci_photo FROM `bookmarks` AS b JOIN facilities AS f ON b.item_id = f.faci_id WHERE b.bookmark_type = 1 AND b.user_id = ?")){
+	if($stmt = $mysqli->prepare("SELECT f.faci_id AS faci_id, f.faci_name AS faci_name, f.location AS location, f.hours_open AS hours_open, f.hours_close AS hours_close, f.contact_info AS contact_info, f.vet_id AS vet_id, f.rating AS rating, f.faci_photo AS faci_photo FROM bookmarks AS b INNER JOIN facilities AS f ON b.item_id = f.faci_id WHERE b.bookmark_type = 1 AND b.user_id = ?")){
 		$stmt->bind_param("s", $user_id);
 		$stmt->execute();
 		$stmt->bind_result($faci_id, $faci_name, $location, $hours_open, $hours_close, $contact_info, $vet_id, $rating, $faci_photo);

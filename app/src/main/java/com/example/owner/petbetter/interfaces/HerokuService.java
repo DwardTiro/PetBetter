@@ -22,6 +22,7 @@ import com.example.owner.petbetter.classes.Veterinarian;
 
 import java.util.ArrayList;
 
+import okhttp3.Request;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -409,6 +410,9 @@ public interface HerokuService {
 
     @POST("addBookmark.php")
     Call<Void> addBookmark(@Body RequestBody bookmark);
+
+    @POST("addBookmarks.php")
+    Call<Void> addBookmarks(@Body RequestBody bookmarkList);
 
     @POST("addPostReps.php")
     Call<Void> addPostReps(@Body RequestBody postRepList);

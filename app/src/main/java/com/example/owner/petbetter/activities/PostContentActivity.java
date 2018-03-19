@@ -3,6 +3,7 @@ package com.example.owner.petbetter.activities;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -16,15 +17,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
+import com.example.owner.petbetter.classes.Bookmark;
 import com.example.owner.petbetter.classes.Notifications;
 import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.PostRep;
+import com.example.owner.petbetter.classes.Rating;
 import com.example.owner.petbetter.classes.Upvote;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
@@ -75,8 +79,10 @@ public class PostContentActivity extends AppCompatActivity {
     private Upvote vote;
     private SwipeRefreshLayout refreshPostContent;
     private FragmentPostReps fragment;
+    private ImageButton bookMarkPost;
     HerokuService service;
     private Toolbar toolbar;
+    private NestedScrollView postScrollView;
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -115,6 +121,12 @@ public class PostContentActivity extends AppCompatActivity {
         upCounter = (TextView) findViewById(R.id.upCounter);
         downPostButton = (ImageButton) findViewById(R.id.downPostButton);
         refreshPostContent = (SwipeRefreshLayout) findViewById(R.id.refreshPostContent);
+        bookMarkPost = (ImageButton) findViewById(R.id.topicNewPost);
+        postScrollView = (NestedScrollView) findViewById(R.id.postScrollView);
+
+        postScrollView.smoothScrollTo(0,0);
+
+        bookMarkPost.setImageResource(R.drawable.ic_bookmark_border_white_24dp);
 
         refreshPostContent.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -176,6 +188,38 @@ public class PostContentActivity extends AppCompatActivity {
 
         email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
         user = getUser(email);
+
+        bookMarkPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bookMarkPost.setImageResource(R.drawable.ic_bookmark_white_24dp);
+                bookMarkPost.setEnabled(false);
+                int newId = generateBookmarkIds();
+                addPostBookmarkToDB(newId, postItem.getId(), user.getUserId());
+                Bookmark bookmark = new Bookmark(newId, postItem.getId(), 2, user.getUserId());
+
+                final HerokuService bookMarkService = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+                Gson gson = new GsonBuilder().serializeNulls().create();
+                String jsonArray = gson.toJson(bookmark);
+                RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray);
+
+                Call<Void> call = bookMarkService.addBookmark(body);
+                call.enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+
+                        dataSync(16);
+                        syncBookmarkChanges();
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+
+                    }
+                });
+
+            }
+        });
 
 
 
@@ -330,8 +374,8 @@ public class PostContentActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         View item = toolbar.findViewById(R.id.topicNewPost);
-        item.setVisibility(View.GONE);
-        item.setEnabled(false);
+        item.setVisibility(View.VISIBLE);
+        item.setEnabled(true);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -349,6 +393,85 @@ public class PostContentActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+    public void syncBookmarkChanges(){
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        ArrayList<Bookmark> unsyncedBookmarks = getUnsyncedBookmarks();
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String jsonArray = gson.toJson(unsyncedBookmarks);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray);
+
+        final Call<Void> call = service.addBookmarks(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                dataSync(16);
+                bookMarkPost.setEnabled(true);
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private ArrayList<Bookmark> getUnsyncedBookmarks(){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Bookmark> result = petBetterDb.getUnsyncedBookmarks();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private void dataSync(int n) {
+        try {
+            petBetterDb.openDatabase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        petBetterDb.dataSynced(n);
+        petBetterDb.closeDatabase();
+
+    }
+
+    public int generateBookmarkIds(){
+        int newId;
+        try{
+            petBetterDb.openDatabase();
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        ArrayList<Integer> ids = petBetterDb.generateBookmarkIds();
+        if(ids.size() != 0){
+            newId = ids.get(ids.size() - 1);
+            newId += 1;
+        }
+        else
+            newId = 1;
+
+        petBetterDb.closeDatabase();
+
+        return newId;
+    }
+
+    public long addPostBookmarkToDB(long _id, long item_id, long user_id){
+        try{
+            petBetterDb.openDatabase();
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        long result = petBetterDb.addPostBookmark( _id, item_id, user_id );
+
+        petBetterDb.closeDatabase();
+        return result;
+    }
+
 
     public void removeVote(long id){
 

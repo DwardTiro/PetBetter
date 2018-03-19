@@ -126,6 +126,11 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         bookMarkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                int id = generateBookmarkIds();
+
+                bookMarkButton.setEnabled(false);
+
+                addFacilityBookmarkToDB(id, faciItem.getId(), user.getUserId());
                 final HerokuService bookMarkService = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
                 Bookmark bookmark = new Bookmark(1, faciItem.getId(), 1, user.getUserId());
                 Gson gson = new GsonBuilder().serializeNulls().create();
@@ -141,6 +146,8 @@ public class PetClinicProfileActivity extends AppCompatActivity {
                         {
                             bookMarkButton.setText("Bookmarked");
                             bookMarkButton.setBackgroundResource(R.color.myrtle_green);
+                            dataSync(16);
+                            syncBookmarkChanges();
                         }
                     }
 
@@ -172,6 +179,28 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         item.setVisibility(View.GONE);
         item.setEnabled(false);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    public void syncBookmarkChanges(){
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        ArrayList<Bookmark> unsyncedBookmarks = getUnsyncedBookmarks();
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String jsonArray = gson.toJson(unsyncedBookmarks);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray);
+
+        final Call<Void> call = service.addBookmarks(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                dataSync(16);
+                bookMarkButton.setEnabled(true);
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+            }
+        });
     }
 
     public void syncRatingChanges(){
@@ -301,6 +330,20 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         return result;
     }
 
+    private ArrayList<Bookmark> getUnsyncedBookmarks(){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Bookmark> result = petBetterDb.getUnsyncedBookmarks();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+
     private void initializeDatabase() {
 
         petBetterDb = new DataAdapter(this);
@@ -310,6 +353,16 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         } catch(SQLException e ){
             e.printStackTrace();
         }
+
+    }
+    private void dataSync(int n) {
+        try {
+            petBetterDb.openDatabase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        petBetterDb.dataSynced(n);
+        petBetterDb.closeDatabase();
 
     }
 
@@ -327,7 +380,7 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         return result;
     }
 
-    public int generateMarkerId(){
+    public int generateNewMarkerId(){
         ArrayList<Integer> storedIds;
         int markerId = 1;
 
@@ -363,6 +416,38 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         long result = petBetterDb.convertFaciToBookmark(mId, bldgName, longitude, latitude, location, userId, type);
         petBetterDb.closeDatabase();
 
+        return result;
+    }
+
+    public int generateBookmarkIds(){
+        int newId;
+        try{
+            petBetterDb.openDatabase();
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        ArrayList<Integer> ids = petBetterDb.generateBookmarkIds();
+        if(ids.size() != 0){
+            newId = ids.get(ids.size() - 1);
+            newId += 1;
+        }
+        else
+            newId = 1;
+
+        petBetterDb.closeDatabase();
+
+        return newId;
+    }
+
+    public long addFacilityBookmarkToDB(long _id, long item_id, long user_id){
+        try{
+            petBetterDb.openDatabase();
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        long result = petBetterDb.addFacilityBookmark( _id, item_id, user_id );
+
+        petBetterDb.closeDatabase();
         return result;
     }
 
