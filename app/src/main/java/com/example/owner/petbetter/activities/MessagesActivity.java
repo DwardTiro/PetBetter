@@ -84,6 +84,8 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
     private int currFragment = 1;
     private Button messagesButton;
     private Button messageReqButton;
+    private Toolbar toolbar;
+    private ArrayList<Message> pendingMessages;
 
     HerokuService service;
 
@@ -124,7 +126,7 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         setContentView(R.layout.activity_messages);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         DrawerLayout nDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -233,7 +235,7 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
                                     User mUser = getUserWithId(message.getUserId());
                                     message.setFromName(mUser.getName());
                                 }
-                                fragment1 = new FragmentMessages(messageList, true);
+                                fragment1 = new FragmentMessages(messageList, 1);
                                 //replace frame_se
 
 
@@ -274,8 +276,11 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
         messagesButton.setBackgroundResource(R.color.medTurquoise);
         messagesButton.setTextColor(getResources().getColor(R.color.colorWhite));
 
+        //messageList = getMessages(user.getUserId());
+
         fragment1 = new FragmentMessages();
-        getSupportFragmentManager().beginTransaction().add(R.id.messages_container,fragment1).commitAllowingStateLoss();
+        getSupportFragmentManager().beginTransaction().replace(R.id.messages_container,fragment1).
+                addToBackStack(null).commitAllowingStateLoss();
         /*
         FragmentPetClinicListing fragment = new FragmentPetClinicListing();
 
@@ -289,10 +294,11 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
         messageReqButton.setTextColor(getResources().getColor(R.color.main_White));
         messagesButton.setBackgroundResource(R.color.colorWhite);
         messagesButton.setTextColor(getResources().getColor(R.color.myrtle_green));
-        /*
-        FragmentPetClinicListing fragment = new FragmentPetClinicListing();
 
-        getSupportFragmentManager().beginTransaction().add(R.id.frame_container,fragment).commit();*/
+        pendingMessages = getPendingMessages(user.getUserId());
+        FragmentMessages fragment2 = new FragmentMessages(pendingMessages, 2);
+        getSupportFragmentManager().beginTransaction().replace(R.id.messages_container,fragment2).
+                addToBackStack(null).commitAllowingStateLoss();
     }
 
     @Override
@@ -479,6 +485,20 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
         }
 
         ArrayList<Notifications> result = petBetterDb.getUnsyncedNotifications();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<Message> getPendingMessages(long userId){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Message> result = petBetterDb.getPendingMessages(userId);
         petBetterDb.closeDatabase();
 
         return result;

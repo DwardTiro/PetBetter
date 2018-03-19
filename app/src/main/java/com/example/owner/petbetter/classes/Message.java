@@ -20,21 +20,34 @@ public class Message {
     @SerializedName("user_two")
     private long fromId;
 
+    @SerializedName("is_allowed")
+    private long isAllowed;
+
 
     private String fromName;
     private String messageContent;
 
-    public Message(long id, long userId, long fromId) {
+    public Message(long id, long userId, long fromId, int isAllowed) {
         this.id = id;
         this.userId = userId;
         this.fromId = fromId;
+        this.isAllowed = isAllowed;
     }
 
-    public Message(long id, long userId, long fromId, String firstName, String lastName) {
+    public Message(long id, long userId, long fromId, int isAllowed, String firstName, String lastName) {
         this.id = id;
         this.userId = userId;
         this.fromId = fromId;
+        this.isAllowed = isAllowed;
         this.fromName = firstName + " " + lastName;
+    }
+
+    public long getIsAllowed() {
+        return isAllowed;
+    }
+
+    public void setIsAllowed(long isAllowed) {
+        this.isAllowed = isAllowed;
     }
 
     public long getId() {

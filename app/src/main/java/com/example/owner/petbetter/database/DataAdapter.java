@@ -410,11 +410,12 @@ public class DataAdapter {
 
         //String sql = "SELECT * FROM "+MESSAGE_TABLE+" INNER JOIN "+USER_TABLE+" ON messages.from_id = users._id WHERE user_id = '" + userId + "'";
 
-        String sql = "SELECT m._id AS _id, m.user_one AS user_one, m.user_two AS user_two, u.first_name AS first_name, " +
-                "u.last_name AS last_name FROM messages AS m INNER JOIN users AS u ON m.user_one = u._id WHERE u._id = '" + userId + "'" +
+
+        String sql = "SELECT m._id AS _id, m.user_one AS user_one, m.user_two AS user_two, m.is_allowed AS is_allowed, u.first_name AS first_name, " +
+                "u.last_name AS last_name FROM messages AS m INNER JOIN users AS u ON m.user_one = u._id WHERE u._id = '" + userId + "' AND m.is_allowed = 1 " +
                 "UNION " +
-                "SELECT m._id AS _id, m.user_one AS user_one, m.user_two AS user_two, u.first_name AS first_name, " +
-                "u.last_name AS last_name FROM messages AS m INNER JOIN users AS u ON m.user_two = u._id WHERE u._id = '" + userId + "'";
+                "SELECT m._id AS _id, m.user_one AS user_one, m.user_two AS user_two, m.is_allowed AS is_allowed, u.first_name AS first_name, " +
+                "u.last_name AS last_name FROM messages AS m INNER JOIN users AS u ON m.user_two = u._id WHERE u._id = '" + userId + "' AND m.is_allowed = 1";
 
 
         //SELECT * FROM messages INNER JOIN users ON messages.from_id = users._id WHERE messages.user_id = messageId
@@ -424,6 +425,39 @@ public class DataAdapter {
             Message message = new Message(c.getInt(c.getColumnIndexOrThrow("_id")),
                     c.getLong(c.getColumnIndexOrThrow("user_one")),
                     c.getLong(c.getColumnIndexOrThrow("user_two")),
+                    c.getInt(c.getColumnIndexOrThrow("is_allowed")),
+                    c.getString(c.getColumnIndexOrThrow("first_name")),
+                    c.getString(c.getColumnIndexOrThrow("last_name")));
+            message.setMessageContent(getLatestRep((int) message.getId()));
+            results.add(message);
+        }
+
+        c.close();
+        return results;
+    }
+
+    public ArrayList<Message> getPendingMessages(long userId){
+        //probably needs userid as parameter
+
+        ArrayList<Message> results = new ArrayList<>();
+
+        //String sql = "SELECT * FROM "+MESSAGE_TABLE+" INNER JOIN "+USER_TABLE+" ON messages.from_id = users._id WHERE user_id = '" + userId + "'";
+
+        String sql = "SELECT m._id AS _id, m.user_one AS user_one, m.user_two AS user_two, m.is_allowed AS is_allowed, u.first_name AS first_name, " +
+                "u.last_name AS last_name FROM messages AS m INNER JOIN users AS u ON m.user_one = u._id WHERE u._id = '" + userId + "' AND m.is_allowed = 0 " +
+                "UNION " +
+                "SELECT m._id AS _id, m.user_one AS user_one, m.user_two AS user_two, m.is_allowed AS is_allowed, u.first_name AS first_name, " +
+                "u.last_name AS last_name FROM messages AS m INNER JOIN users AS u ON m.user_two = u._id WHERE u._id = '" + userId + "' AND m.is_allowed = 0";
+
+
+        //SELECT * FROM messages INNER JOIN users ON messages.from_id = users._id WHERE messages.user_id = messageId
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            Message message = new Message(c.getInt(c.getColumnIndexOrThrow("_id")),
+                    c.getLong(c.getColumnIndexOrThrow("user_one")),
+                    c.getLong(c.getColumnIndexOrThrow("user_two")),
+                    c.getInt(c.getColumnIndexOrThrow("is_allowed")),
                     c.getString(c.getColumnIndexOrThrow("first_name")),
                     c.getString(c.getColumnIndexOrThrow("last_name")));
             message.setMessageContent(getLatestRep((int) message.getId()));
@@ -968,7 +1002,8 @@ public class DataAdapter {
         while(c.moveToNext()) {
             Message message = new Message(c.getInt(c.getColumnIndexOrThrow("_id")),
                     c.getLong(c.getColumnIndexOrThrow("user_one")),
-                    c.getLong(c.getColumnIndexOrThrow("user_two")));
+                    c.getLong(c.getColumnIndexOrThrow("user_two")),
+                    c.getInt(c.getColumnIndexOrThrow("is_allowed")));
             results.add(message);
         }
 
@@ -2087,8 +2122,9 @@ public class DataAdapter {
 
     public Message getMessage(long messageId){
 
-        String sql = "SELECT m._id AS _id, m.user_one AS user_one, m.user_two AS user_two, u.first_name AS first_name, " +
-                "u.last_name AS last_name FROM messages AS m INNER JOIN users AS u ON m.user_one = u._id WHERE m._id = '" + messageId + "'";
+        String sql = "SELECT m._id AS _id, m.user_one AS user_one, m.user_two AS user_two, m.is_allowed AS is_allowed, " +
+                "u.first_name AS first_name, u.last_name AS last_name FROM messages AS m INNER JOIN users AS u " +
+                "ON m.user_one = u._id WHERE m._id = '" + messageId + "'";
 
         //String sql = "SELECT * FROM " + MESSAGE_TABLE + " WHERE _id = '" + messageId + "'";
         Cursor c = petBetterDb.rawQuery(sql, null);
@@ -2100,6 +2136,7 @@ public class DataAdapter {
         Message result = new Message(c.getInt(c.getColumnIndexOrThrow("_id")),
                 c.getLong(c.getColumnIndexOrThrow("user_one")),
                 c.getLong(c.getColumnIndexOrThrow("user_two")),
+                c.getInt(c.getColumnIndexOrThrow("is_allowed")),
                 c.getString(c.getColumnIndexOrThrow("first_name")),
                 c.getString(c.getColumnIndexOrThrow("last_name")));
         result.setMessageContent(getLatestRep((int) result.getId()));
@@ -2603,6 +2640,7 @@ public class DataAdapter {
             cv.put("_id", message.getId());
             cv.put("user_one", message.getUserId());
             cv.put("user_two", message.getFromId());
+            cv.put("is_allowed", message.getIsAllowed());
             result = petBetterDb.insert(MESSAGE_TABLE, null, cv);
         }
         System.out.println("2ND REAL NUM OF MESSAGES "+getMessageIds().size());

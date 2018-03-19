@@ -15,7 +15,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.owner.petbetter.R;
+import com.example.owner.petbetter.adapters.FollowerAdapter;
 import com.example.owner.petbetter.adapters.MessageAdapter;
+import com.example.owner.petbetter.adapters.MessageRequestAdapter;
 import com.example.owner.petbetter.classes.Message;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
@@ -31,6 +33,8 @@ import java.util.HashMap;
 public class FragmentMessages extends Fragment implements CheckUpdates {
 
     private MessageAdapter messageAdapter;
+    private MessageRequestAdapter messageRequestAdapter;
+    private FollowerAdapter followerAdapter;
     private RecyclerView recyclerView;
     private ArrayList<Message> messageList;
     private TextView nameTextView;
@@ -41,16 +45,16 @@ public class FragmentMessages extends Fragment implements CheckUpdates {
     private String email;
     private FloatingActionButton fab;
     private boolean allowRefresh = false;
-    private boolean isSearching = false;
+    private int task = 0;
     private NotificationReceiver notifReceiver = new NotificationReceiver(this);
 
     public FragmentMessages() {
     }
 
     @SuppressLint("ValidFragment")
-    public FragmentMessages(ArrayList<Message> messageList, boolean isSearching) {
+    public FragmentMessages(ArrayList<Message> messageList, int task) {
         this.messageList = messageList;
-        this.isSearching = isSearching;
+        this.task = task;
     }
 
     @Override
@@ -86,19 +90,31 @@ public class FragmentMessages extends Fragment implements CheckUpdates {
         }
 
         System.out.println("Size of list "+messageList.size());
-        messageAdapter = new MessageAdapter(getActivity(), messageList,new MessageAdapter.OnItemClickListener() {
-            @Override public void onItemClick(Message item) {
-                //Execute command here
-                Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.MessageActivity.class);
-                System.out.println("Item: "+item.getMessageContent());
-                intent.putExtra("thisMessage", new Gson().toJson(item));
-                startActivity(intent);
-                allowRefresh = true;
-            }
-        });
+        if(task==2){
+            messageRequestAdapter = new MessageRequestAdapter(getActivity(), messageList,new MessageRequestAdapter.OnItemClickListener() {
+                @Override public void onItemClick(Message item) {
+                    //Execute command here
+                }
+            });
+            recyclerView.setAdapter(messageRequestAdapter);
+        }
+        else{
+            messageAdapter = new MessageAdapter(getActivity(), messageList,new MessageAdapter.OnItemClickListener() {
+                @Override public void onItemClick(Message item) {
+                    //Execute command here
+                    Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.MessageActivity.class);
+                    System.out.println("Item: "+item.getMessageContent());
+                    intent.putExtra("thisMessage", new Gson().toJson(item));
+                    startActivity(intent);
+                    allowRefresh = true;
+                }
+            });
+            recyclerView.setAdapter(messageAdapter);
+        }
+
         //messageAdapter = new MessageAdapter(getActivity(), messageList);
         //messageAdapter.notifyItemRangeChanged(0, messageAdapter.getItemCount());
-        recyclerView.setAdapter(messageAdapter);
+
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -193,7 +209,7 @@ public class FragmentMessages extends Fragment implements CheckUpdates {
 
     @Override
     public void onResult() {
-        if(isSearching==false) {
+        if(task==1) {
             messageList = getMessages(user.getUserId());
             messageAdapter.updateList(messageList);
             //messageAdapter.notifyDataSetChanged();
