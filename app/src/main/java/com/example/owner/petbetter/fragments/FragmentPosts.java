@@ -26,7 +26,11 @@ import android.widget.TextView;
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
+import com.example.owner.petbetter.activities.BookmarksActivity;
+import com.example.owner.petbetter.adapters.ClinicListingAdapter;
 import com.example.owner.petbetter.adapters.HomeAdapter;
+import com.example.owner.petbetter.classes.Bookmark;
+import com.example.owner.petbetter.classes.Facility;
 import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
@@ -83,10 +87,13 @@ public class FragmentPosts extends Fragment implements CheckUpdates {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_posts,container, false);
+        View view = inflater.inflate(R.layout.fragment_posts, container, false);
+
+
+        recyclerView = (RecyclerView) view.findViewById(R.id.topicContentListing);
 
         systemSessionManager = new SystemSessionManager(getActivity());
-        if(systemSessionManager.checkLogin())
+        if (systemSessionManager.checkLogin())
             getActivity().finish();
         HashMap<String, String> userIn = systemSessionManager.getUserDetails();
 
@@ -99,22 +106,52 @@ public class FragmentPosts extends Fragment implements CheckUpdates {
 
         Bundle bundle = this.getArguments();
 
-        if(postList==null){
+        if (postList == null && !(getActivity() instanceof BookmarksActivity)) {
             topicId = bundle.getLong("topicId");
             postList = getTopicPosts(topicId);
         }
+        if (getActivity() instanceof BookmarksActivity) {
+            final HerokuService bookmarkService = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+            Call<ArrayList<Post>> call = bookmarkService.getPostBookmarks(user.getUserId());
+            call.enqueue(new Callback<ArrayList<Post>>() {
+                @Override
+                public void onResponse(Call<ArrayList<Post>> call, Response<ArrayList<Post>> response) {
+                    if (response.isSuccessful() && !(response.body() == null)) {
+                        ArrayList<Post> bookMarkList = response.body();
+                        //faciList = response.body();
+                        System.out.println("Postlist size is" + bookMarkList.size());
+                        homeAdapter = new HomeAdapter(getActivity(), bookMarkList, user, new HomeAdapter.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(Post item) {
+                                //Execute command here
+                                Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.PostContentActivity.class);
+                                System.out.println("PLEASE BAKIT KA GANYAN " + item.getId());
+                                intent.putExtra("thisPost", new Gson().toJson(item));
+                                startActivity(intent);
+                            }
+                        });
+                        recyclerView.setAdapter(homeAdapter);
+                        recyclerView.setHasFixedSize(true);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                    }
+                }
 
+                @Override
+                public void onFailure(Call<ArrayList<Post>> call, Throwable t) {
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.topicContentListing);
+                }
+            });
+        }else
+        {
 
-
-        System.out.println("Size of postList "+postList.size());
+        // System.out.println("Size of postList "+postList.size());
 
         homeAdapter = new HomeAdapter(getActivity(), postList, user, new HomeAdapter.OnItemClickListener() {
-            @Override public void onItemClick(Post item) {
+            @Override
+            public void onItemClick(Post item) {
                 //Execute command here
                 Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.PostContentActivity.class);
-                System.out.println("PLEASE BAKIT KA GANYAN "+item.getId());
+                System.out.println("PLEASE BAKIT KA GANYAN " + item.getId());
                 intent.putExtra("thisPost", new Gson().toJson(item));
                 startActivity(intent);
             }
@@ -125,7 +162,7 @@ public class FragmentPosts extends Fragment implements CheckUpdates {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
+    }
         /*
         fab = (FloatingActionButton) view.findViewById(R.id.fabPosts);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -198,10 +235,11 @@ public class FragmentPosts extends Fragment implements CheckUpdates {
 
     @Override
     public void onResult() {
-        if(postList.size()!=getTopicPosts(topicId).size()){
-            postList = getTopicPosts(topicId);
-            homeAdapter.updateList(postList);
-
+        if(!(getActivity() instanceof BookmarksActivity)){
+            if(postList.size()!=getTopicPosts(topicId).size()) {
+                postList = getTopicPosts(topicId);
+                homeAdapter.updateList(postList);
+            }
         }
     }
 

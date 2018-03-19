@@ -21,6 +21,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
@@ -51,6 +52,8 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.example.owner.petbetter.ServiceGenerator.BASE_URL;
 
 /**
  * Created by Kristian on 10/12/2017.
@@ -84,6 +87,8 @@ public class PostContentActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private NestedScrollView postScrollView;
     private boolean isBookmarked = false;
+    private ImageView postImage;
+    private ImageView postImageFrame;
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -124,6 +129,10 @@ public class PostContentActivity extends AppCompatActivity {
         refreshPostContent = (SwipeRefreshLayout) findViewById(R.id.refreshPostContent);
         bookMarkPost = (ImageButton) findViewById(R.id.topicNewPost);
         postScrollView = (NestedScrollView) findViewById(R.id.postScrollView);
+        postImage = (ImageView) findViewById(R.id.postImage);
+        postImageFrame = (ImageView) findViewById(R.id.postImageFrame);
+
+
 
         postScrollView.smoothScrollTo(0, 0);
 
@@ -188,6 +197,16 @@ public class PostContentActivity extends AppCompatActivity {
 
         email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
         user = getUser(email);
+
+        if(postItem.getPostPhoto() != null) {
+            String newFileName = BASE_URL + postItem.getPostPhoto();
+            System.out.println(newFileName);
+            Glide.with(PostContentActivity.this).load(newFileName).error(R.drawable.app_icon_yellow).into(postImage);
+            postImage.setVisibility(View.VISIBLE);
+            postImageFrame.setVisibility(View.VISIBLE);
+            //postImage.setImageResource();
+        }
+
 
         if (checkIfBookmark((int) postItem.getId(), (int) user.getUserId())) {
             bookMarkPost.setImageResource(R.drawable.ic_bookmark_white_24dp);
