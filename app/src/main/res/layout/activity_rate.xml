@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:hint="Want to write some comments?"
-
+            android:visibility="gone"
             android:textColorHint="@color/timestamp"
             android:background="@drawable/custom_edittext_white"
             />
