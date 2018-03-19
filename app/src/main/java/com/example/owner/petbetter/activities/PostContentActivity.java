@@ -83,6 +83,7 @@ public class PostContentActivity extends AppCompatActivity {
     HerokuService service;
     private Toolbar toolbar;
     private NestedScrollView postScrollView;
+    private boolean isBookmarked = false;
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -100,7 +101,7 @@ public class PostContentActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onCreate(Bundle SavedInstance){
+    protected void onCreate(Bundle SavedInstance) {
         super.onCreate(SavedInstance);
         setContentView(R.layout.activity_post_content);
 
@@ -124,7 +125,7 @@ public class PostContentActivity extends AppCompatActivity {
         bookMarkPost = (ImageButton) findViewById(R.id.topicNewPost);
         postScrollView = (NestedScrollView) findViewById(R.id.postScrollView);
 
-        postScrollView.smoothScrollTo(0,0);
+        postScrollView.smoothScrollTo(0, 0);
 
         bookMarkPost.setImageResource(R.drawable.ic_bookmark_border_white_24dp);
 
@@ -140,9 +141,9 @@ public class PostContentActivity extends AppCompatActivity {
 
 
         systemSessionManager = new SystemSessionManager(this);
-        if(systemSessionManager.checkLogin())
+        if (systemSessionManager.checkLogin())
             finish();
-        HashMap<String,String> userIn = systemSessionManager.getUserDetails();
+        HashMap<String, String> userIn = systemSessionManager.getUserDetails();
 
         initializeDatabase();
 
@@ -168,65 +169,80 @@ public class PostContentActivity extends AppCompatActivity {
         postItem = new Gson().fromJson(jsonMyObject, Post.class);
 
         postUser = getPostUser(postItem.getUserId());
-        System.out.println("POSTITEM ID IS: "+postItem.getId());
+        System.out.println("POSTITEM ID IS: " + postItem.getId());
 
-        int voteCount = getVoteCount((int) postItem.getId(),1);
+        int voteCount = getVoteCount((int) postItem.getId(), 1);
         upCounter.setText(String.valueOf(voteCount));
 
 
-
         Bundle bundle = new Bundle();
-        System.out.println("POST ID BEFORE SEND "+postItem.getUserId());
+        System.out.println("POST ID BEFORE SEND " + postItem.getUserId());
         bundle.putLong("postId", postItem.getId());
         fragment = new FragmentPostReps();
         fragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction().add(R.id.postrep_container,fragment).commitAllowingStateLoss();
+        getSupportFragmentManager().beginTransaction().add(R.id.postrep_container, fragment).commitAllowingStateLoss();
 
-        profileName.setText(postUser.getFirstName()+" "+postUser.getLastName());
+        profileName.setText(postUser.getFirstName() + " " + postUser.getLastName());
         postTitle.setText(postItem.getTopicName());
         homeListContent.setText(postItem.getTopicContent());
 
         email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
         user = getUser(email);
 
+        if (checkIfBookmark((int) postItem.getId(), (int) user.getUserId())) {
+            bookMarkPost.setImageResource(R.drawable.ic_bookmark_white_24dp);
+            isBookmarked=true;
+        }else{
+            bookMarkPost.setImageResource(R.drawable.ic_bookmark_border_white_24dp);
+            isBookmarked=false;
+        }
         bookMarkPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                bookMarkPost.setImageResource(R.drawable.ic_bookmark_white_24dp);
-                bookMarkPost.setEnabled(false);
-                int newId = generateBookmarkIds();
-                addPostBookmarkToDB(newId, postItem.getId(), user.getUserId());
-                Bookmark bookmark = new Bookmark(newId, postItem.getId(), 2, user.getUserId());
+                if (!isBookmarked) {
+                    bookMarkPost.setImageResource(R.drawable.ic_bookmark_white_24dp);
+                    bookMarkPost.setEnabled(false);
+                    int newId = generateBookmarkIds();
+                    addPostBookmarkToDB(newId, postItem.getId(), user.getUserId());
+                    Bookmark bookmark = new Bookmark(newId, postItem.getId(), 2, user.getUserId());
 
-                final HerokuService bookMarkService = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
-                Gson gson = new GsonBuilder().serializeNulls().create();
-                String jsonArray = gson.toJson(bookmark);
-                RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray);
+                    final HerokuService bookMarkService = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+                    Gson gson = new GsonBuilder().serializeNulls().create();
+                    String jsonArray = gson.toJson(bookmark);
+                    RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray);
 
-                Call<Void> call = bookMarkService.addBookmark(body);
-                call.enqueue(new Callback<Void>() {
-                    @Override
-                    public void onResponse(Call<Void> call, Response<Void> response) {
+                    Call<Void> call = bookMarkService.addBookmark(body);
+                    call.enqueue(new Callback<Void>() {
+                        @Override
+                        public void onResponse(Call<Void> call, Response<Void> response) {
 
-                        dataSync(16);
-                        syncBookmarkChanges();
-                    }
+                            dataSync(16);
+                            syncBookmarkChanges();
+                        }
 
-                    @Override
-                    public void onFailure(Call<Void> call, Throwable t) {
+                        @Override
+                        public void onFailure(Call<Void> call, Throwable t) {
 
-                    }
-                });
+                        }
+                    });
 
+                }else{
+                    bookMarkPost.setImageResource(R.drawable.ic_bookmark_border_white_24dp);
+                    bookMarkPost.setEnabled(false);
+                    deletePostBookmark(postItem.getId(),user.getUserId());
+                    removeBookmark(postItem.getId(), user.getUserId());
+
+
+                }
             }
-        });
 
+        });
 
 
         commentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!TextUtils.isEmpty(commentText.getText().toString())){
+                if (!TextUtils.isEmpty(commentText.getText().toString())) {
 
                     int postrepid = generatePostRepId();
 
@@ -234,7 +250,7 @@ public class PostContentActivity extends AppCompatActivity {
                     sdf.setTimeZone(TimeZone.getTimeZone("GMT+8"));
                     timeStamp = sdf.format(new Date());
 
-                    addPostRep(postrepid, (int) user.getUserId(), (int) postItem.getId(), 0, commentText.getText().toString(),timeStamp);
+                    addPostRep(postrepid, (int) user.getUserId(), (int) postItem.getId(), 0, commentText.getText().toString(), timeStamp);
                     uploadPostReps(getUnsyncedPostReps());
 
                     nId = generateNotifsId();
@@ -250,13 +266,12 @@ public class PostContentActivity extends AppCompatActivity {
         });
 
 
-        vote = getUserVote((int) postItem.getId(),(int) user.getUserId(),1);
+        vote = getUserVote((int) postItem.getId(), (int) user.getUserId(), 1);
 
-        if(vote!=null){
-            if(vote.getValue()==1){
+        if (vote != null) {
+            if (vote.getValue() == 1) {
                 upPostButton.setImageResource(R.mipmap.ic_thumb_up_black_24dp);
-            }
-            else{
+            } else {
                 downPostButton.setImageResource(R.mipmap.ic_thumb_down_black_24dp);
             }
         }
@@ -275,7 +290,7 @@ public class PostContentActivity extends AppCompatActivity {
                     }
                 }, 500);
 
-                if(vote==null){//0
+                if (vote == null) {//0
                     int id = generateUpvoteId();
                     addVote(id, (int) postItem.getId(), (int) user.getUserId(), 1, 1, 0);
                     upPostButton.setImageResource(R.mipmap.ic_thumb_up_black_24dp);
@@ -283,31 +298,29 @@ public class PostContentActivity extends AppCompatActivity {
 
                     syncUpvoteChanges();
                 }
-                try{
-                    if(vote.getValue()==1){
+                try {
+                    if (vote.getValue() == 1) {
                         removeVote(vote.getId());
                         upPostButton.setImageResource(R.drawable.ic_thumb_up_grey600_48dp);
-                        vote= null;
+                        vote = null;
                     }
-                    if(vote.getValue()==-1){
-                        alterVote(vote.getId(),1);
+                    if (vote.getValue() == -1) {
+                        alterVote(vote.getId(), 1);
                         upPostButton.setImageResource(R.mipmap.ic_thumb_up_black_24dp);
                         downPostButton.setImageResource(R.drawable.ic_thumb_down_grey600_48dp);
                     }
-                } catch (NullPointerException npe){
-                    vote = getUserVote((int) postItem.getId(),(int) user.getUserId(),1);
+                } catch (NullPointerException npe) {
+                    vote = getUserVote((int) postItem.getId(), (int) user.getUserId(), 1);
 
-                    if(vote!=null){
-                        if(vote.getValue()==1){
+                    if (vote != null) {
+                        if (vote.getValue() == 1) {
                             upPostButton.setImageResource(R.mipmap.ic_thumb_up_black_24dp);
                             downPostButton.setImageResource(R.drawable.ic_thumb_down_grey600_48dp);
-                        }
-                        else{
+                        } else {
                             downPostButton.setImageResource(R.mipmap.ic_thumb_down_black_24dp);
                             upPostButton.setImageResource(R.drawable.ic_thumb_up_grey600_48dp);
                         }
-                    }
-                    else{
+                    } else {
                         upPostButton.setImageResource(R.drawable.ic_thumb_up_grey600_48dp);
                         downPostButton.setImageResource(R.drawable.ic_thumb_down_grey600_48dp);
                     }
@@ -331,37 +344,35 @@ public class PostContentActivity extends AppCompatActivity {
                     }
                 }, 3000);
 
-                if(vote==null){
+                if (vote == null) {
                     int id = generateUpvoteId();
                     addVote(id, (int) postItem.getId(), (int) user.getUserId(), -1, 1, 0);
                     downPostButton.setImageResource(R.mipmap.ic_thumb_down_black_24dp);
                     upPostButton.setImageResource(R.drawable.ic_thumb_up_grey600_48dp);
                     syncUpvoteChanges();
                 }
-                try{
-                    if(vote.getValue()==-1){
+                try {
+                    if (vote.getValue() == -1) {
                         removeVote(vote.getId());
                         downPostButton.setImageResource(R.drawable.ic_thumb_down_grey600_48dp);
                         vote = null;
                     }
-                    if(vote.getValue()==1){
-                        alterVote(vote.getId(),-1);
+                    if (vote.getValue() == 1) {
+                        alterVote(vote.getId(), -1);
                         downPostButton.setImageResource(R.mipmap.ic_thumb_down_black_24dp);
                         upPostButton.setImageResource(R.drawable.ic_thumb_up_grey600_48dp);
                     }
-                }catch(NullPointerException npe){
-                    vote = getUserVote((int) postItem.getId(),(int) user.getUserId(),1);
-                    if(vote!=null){
-                        if(vote.getValue()==1){
+                } catch (NullPointerException npe) {
+                    vote = getUserVote((int) postItem.getId(), (int) user.getUserId(), 1);
+                    if (vote != null) {
+                        if (vote.getValue() == 1) {
                             upPostButton.setImageResource(R.mipmap.ic_thumb_up_black_24dp);
                             downPostButton.setImageResource(R.drawable.ic_thumb_down_grey600_48dp);
-                        }
-                        else{
+                        } else {
                             downPostButton.setImageResource(R.mipmap.ic_thumb_down_black_24dp);
                             upPostButton.setImageResource(R.drawable.ic_thumb_up_grey600_48dp);
                         }
-                    }
-                    else{
+                    } else {
                         upPostButton.setImageResource(R.drawable.ic_thumb_up_grey600_48dp);
                         downPostButton.setImageResource(R.drawable.ic_thumb_down_grey600_48dp);
                     }
@@ -379,7 +390,21 @@ public class PostContentActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    public void viewPostBackButtonClicked(View view){
+    private boolean checkIfBookmark(int item_id, int user_id) {
+
+        try {
+            petBetterDb.openDatabase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        boolean result = petBetterDb.checkIfBookMark(item_id, user_id, 2);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    public void viewPostBackButtonClicked(View view) {
         finish();
     }
 
@@ -389,12 +414,12 @@ public class PostContentActivity extends AppCompatActivity {
 
         try {
             petBetterDb.createDatabase();
-        } catch(SQLException e ){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void syncBookmarkChanges(){
+    public void syncBookmarkChanges() {
         final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         ArrayList<Bookmark> unsyncedBookmarks = getUnsyncedBookmarks();
         Gson gson = new GsonBuilder().serializeNulls().create();
@@ -407,6 +432,7 @@ public class PostContentActivity extends AppCompatActivity {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 dataSync(16);
                 bookMarkPost.setEnabled(true);
+                isBookmarked = true;
             }
 
             @Override
@@ -416,10 +442,10 @@ public class PostContentActivity extends AppCompatActivity {
         });
     }
 
-    private ArrayList<Bookmark> getUnsyncedBookmarks(){
+    private ArrayList<Bookmark> getUnsyncedBookmarks() {
         try {
             petBetterDb.openDatabase();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -440,19 +466,18 @@ public class PostContentActivity extends AppCompatActivity {
 
     }
 
-    public int generateBookmarkIds(){
+    public int generateBookmarkIds() {
         int newId;
-        try{
+        try {
             petBetterDb.openDatabase();
-        } catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         ArrayList<Integer> ids = petBetterDb.generateBookmarkIds();
-        if(ids.size() != 0){
+        if (ids.size() != 0) {
             newId = ids.get(ids.size() - 1);
             newId += 1;
-        }
-        else
+        } else
             newId = 1;
 
         petBetterDb.closeDatabase();
@@ -460,27 +485,57 @@ public class PostContentActivity extends AppCompatActivity {
         return newId;
     }
 
-    public long addPostBookmarkToDB(long _id, long item_id, long user_id){
-        try{
+    public long addPostBookmarkToDB(long _id, long item_id, long user_id) {
+        try {
             petBetterDb.openDatabase();
-        } catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-        long result = petBetterDb.addPostBookmark( _id, item_id, user_id );
+        long result = petBetterDb.addPostBookmark(_id, item_id, user_id);
 
         petBetterDb.closeDatabase();
         return result;
     }
 
+    private void deletePostBookmark(long item_id, long user_id){
+        try{
+            petBetterDb.openDatabase();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        petBetterDb.deletePostBookmark(item_id, user_id);
+        petBetterDb.closeDatabase();
+    }
 
-    public void removeVote(long id){
+    private void removeBookmark(long item_id, long user_id){
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final Call<Void> call = service.deleteBookmark(user_id, item_id, 2);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()){
+                    syncBookmarkChanges();
+                    isBookmarked=false;
+                    bookMarkPost.setEnabled(true);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+            }
+        });
+    }
+
+
+    public void removeVote(long id) {
 
         final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         final Call<Void> call = service.removeVote(id);
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     syncUpvoteChanges();
                 }
             }
@@ -492,14 +547,14 @@ public class PostContentActivity extends AppCompatActivity {
         });
     }
 
-    public void alterVote(long id, int value){
+    public void alterVote(long id, int value) {
 
         final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         final Call<Void> call = service.alterVote(id, value);
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     syncUpvoteChanges();
                 }
             }
@@ -511,7 +566,7 @@ public class PostContentActivity extends AppCompatActivity {
         });
     }
 
-    public void syncPostRepChanges(){
+    public void syncPostRepChanges() {
 
         final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
@@ -525,16 +580,16 @@ public class PostContentActivity extends AppCompatActivity {
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     dataSynced(10);
 
                     final Call<ArrayList<PostRep>> call2 = service2.getAllPostReps();
                     call2.enqueue(new Callback<ArrayList<PostRep>>() {
                         @Override
                         public void onResponse(Call<ArrayList<PostRep>> call, Response<ArrayList<PostRep>> response) {
-                            if(response.isSuccessful()){
+                            if (response.isSuccessful()) {
                                 setPostReps(response.body());
-                                getSupportFragmentManager().beginTransaction().replace(R.id.postrep_container,fragment)
+                                getSupportFragmentManager().beginTransaction().replace(R.id.postrep_container, fragment)
                                         .commitAllowingStateLoss();
                             }
                         }
@@ -556,7 +611,7 @@ public class PostContentActivity extends AppCompatActivity {
         });
     }
 
-    public void syncUpvoteChanges(){
+    public void syncUpvoteChanges() {
 
         final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
@@ -571,7 +626,7 @@ public class PostContentActivity extends AppCompatActivity {
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     System.out.println("POSTS ADDED YEY");
                     dataSynced(15);
 
@@ -579,21 +634,19 @@ public class PostContentActivity extends AppCompatActivity {
                     call2.enqueue(new Callback<ArrayList<Upvote>>() {
                         @Override
                         public void onResponse(Call<ArrayList<Upvote>> call, Response<ArrayList<Upvote>> response) {
-                            if(response.isSuccessful()){
+                            if (response.isSuccessful()) {
                                 setUpvotes(response.body());
-                                upCounter.setText(String.valueOf(getVoteCount((int) postItem.getId(),1)));
-                                vote = getUserVote((int) postItem.getId(),(int) user.getUserId(),1);
-                                if(vote!=null){
-                                    if(vote.getValue()==1){
+                                upCounter.setText(String.valueOf(getVoteCount((int) postItem.getId(), 1)));
+                                vote = getUserVote((int) postItem.getId(), (int) user.getUserId(), 1);
+                                if (vote != null) {
+                                    if (vote.getValue() == 1) {
                                         upPostButton.setImageResource(R.mipmap.ic_thumb_up_black_24dp);
                                         downPostButton.setImageResource(R.drawable.ic_thumb_down_grey600_48dp);
-                                    }
-                                    else{
+                                    } else {
                                         downPostButton.setImageResource(R.mipmap.ic_thumb_down_black_24dp);
                                         upPostButton.setImageResource(R.drawable.ic_thumb_up_grey600_48dp);
                                     }
-                                }
-                                else{
+                                } else {
                                     upPostButton.setImageResource(R.drawable.ic_thumb_up_grey600_48dp);
                                     downPostButton.setImageResource(R.drawable.ic_thumb_down_grey600_48dp);
                                 }
@@ -617,11 +670,11 @@ public class PostContentActivity extends AppCompatActivity {
         });
     }
 
-    private ArrayList<Upvote> getUnsyncedUpvotes(){
+    private ArrayList<Upvote> getUnsyncedUpvotes() {
 
         try {
             petBetterDb.openDatabase();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -631,10 +684,10 @@ public class PostContentActivity extends AppCompatActivity {
         return result;
     }
 
-    public long setUpvotes(ArrayList<Upvote> upvoteList){
+    public long setUpvotes(ArrayList<Upvote> upvoteList) {
         try {
             petBetterDb.openDatabase();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         long result = petBetterDb.setUpvotes(upvoteList);
@@ -643,10 +696,10 @@ public class PostContentActivity extends AppCompatActivity {
         return result;
     }
 
-    private void uploadPostReps(ArrayList<PostRep> postreps){
+    private void uploadPostReps(ArrayList<PostRep> postreps) {
         service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
-        System.out.println("HOW MANY POSTREPS? "+postreps.size());
+        System.out.println("HOW MANY POSTREPS? " + postreps.size());
 
         Gson gson = new GsonBuilder().serializeNulls().create();
         String jsonArray = gson.toJson(postreps);
@@ -667,10 +720,10 @@ public class PostContentActivity extends AppCompatActivity {
         });
     }
 
-    private void uploadNotifications(ArrayList<Notifications> notifs){
+    private void uploadNotifications(ArrayList<Notifications> notifs) {
         service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
-        System.out.println("HOW MANY NOTIFICATIONS? "+notifs.size());
+        System.out.println("HOW MANY NOTIFICATIONS? " + notifs.size());
 
         Gson gson = new GsonBuilder().serializeNulls().create();
         String jsonArray = gson.toJson(notifs);
@@ -691,10 +744,10 @@ public class PostContentActivity extends AppCompatActivity {
         });
     }
 
-    public long setPostReps(ArrayList<PostRep> postRepList){
+    public long setPostReps(ArrayList<PostRep> postRepList) {
         try {
             petBetterDb.openDatabase();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         long result = petBetterDb.setPostReps(postRepList);
@@ -703,11 +756,11 @@ public class PostContentActivity extends AppCompatActivity {
         return result;
     }
 
-    private ArrayList<PostRep> getUnsyncedPostReps(){
+    private ArrayList<PostRep> getUnsyncedPostReps() {
 
         try {
             petBetterDb.openDatabase();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -717,11 +770,11 @@ public class PostContentActivity extends AppCompatActivity {
         return result;
     }
 
-    private long addVote(long id, int feedId, int userId, int value, int type, int isSynced){
+    private long addVote(long id, int feedId, int userId, int value, int type, int isSynced) {
 
         try {
             petBetterDb.openDatabase();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -731,11 +784,11 @@ public class PostContentActivity extends AppCompatActivity {
         return result;
     }
 
-    private Upvote getUserVote(int feedId, int userId, int type){
+    private Upvote getUserVote(int feedId, int userId, int type) {
 
         try {
             petBetterDb.openDatabase();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -745,11 +798,11 @@ public class PostContentActivity extends AppCompatActivity {
         return result;
     }
 
-    private void dataSynced(int n){
+    private void dataSynced(int n) {
 
         try {
             petBetterDb.openDatabase();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -757,25 +810,25 @@ public class PostContentActivity extends AppCompatActivity {
         petBetterDb.closeDatabase();
     }
 
-    private int getVoteCount(int feedId, int type){
+    private int getVoteCount(int feedId, int type) {
 
         try {
             petBetterDb.openDatabase();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        int result = petBetterDb.getVoteCount(feedId,type);
+        int result = petBetterDb.getVoteCount(feedId, type);
         petBetterDb.closeDatabase();
 
         return result;
     }
 
-    private ArrayList<Notifications> getUnsyncedNotifications(){
+    private ArrayList<Notifications> getUnsyncedNotifications() {
 
         try {
             petBetterDb.openDatabase();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -785,7 +838,7 @@ public class PostContentActivity extends AppCompatActivity {
         return result;
     }
 
-    public int generateUpvoteId(){
+    public int generateUpvoteId() {
         ArrayList<Integer> storedIds;
         int upvoteId = 1;
 
@@ -799,17 +852,17 @@ public class PostContentActivity extends AppCompatActivity {
         petBetterDb.closeDatabase();
 
 
-        if(storedIds.isEmpty()) {
+        if (storedIds.isEmpty()) {
             return upvoteId;
         } else {
-            while (storedIds.contains(upvoteId)){
+            while (storedIds.contains(upvoteId)) {
                 upvoteId += 1;
             }
             return upvoteId;
         }
     }
 
-    public int generatePostRepId(){
+    public int generatePostRepId() {
         ArrayList<Integer> storedIds;
         int postRepId = 1;
 
@@ -823,21 +876,21 @@ public class PostContentActivity extends AppCompatActivity {
         petBetterDb.closeDatabase();
 
 
-        if(storedIds.isEmpty()) {
+        if (storedIds.isEmpty()) {
             return postRepId;
         } else {
-            while (storedIds.contains(postRepId)){
+            while (storedIds.contains(postRepId)) {
                 postRepId += 1;
             }
             return postRepId;
         }
     }
 
-    private long addPostRep(int postRepId, int userId, int postId, int parentId, String repContent, String datePerformed){
+    private long addPostRep(int postRepId, int userId, int postId, int parentId, String repContent, String datePerformed) {
 
         try {
             petBetterDb.openDatabase();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -847,11 +900,11 @@ public class PostContentActivity extends AppCompatActivity {
         return result;
     }
 
-    private User getUser(String email){
+    private User getUser(String email) {
 
         try {
             petBetterDb.openDatabase();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -861,11 +914,11 @@ public class PostContentActivity extends AppCompatActivity {
         return result;
     }
 
-    private User getPostUser(long userId){
+    private User getPostUser(long userId) {
 
         try {
             petBetterDb.openDatabase();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -875,7 +928,7 @@ public class PostContentActivity extends AppCompatActivity {
         return result;
     }
 
-    public int generateNotifsId(){
+    public int generateNotifsId() {
         ArrayList<Integer> storedIds;
         int markerId = 1;
 
@@ -889,10 +942,10 @@ public class PostContentActivity extends AppCompatActivity {
         petBetterDb.closeDatabase();
 
 
-        if(storedIds.isEmpty()) {
+        if (storedIds.isEmpty()) {
             return markerId;
         } else {
-            while (storedIds.contains(markerId)){
+            while (storedIds.contains(markerId)) {
                 markerId += 1;
             }
 
@@ -900,23 +953,23 @@ public class PostContentActivity extends AppCompatActivity {
         }
     }
 
-    public void notifRead(long notifId){
+    public void notifRead(long notifId) {
 
         //modify this method in such a way that it only gets bookmarks tagged by user. Separate from facilities.
         try {
             petBetterDb.openDatabase();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         petBetterDb.notifRead(notifId);
         petBetterDb.closeDatabase();
     }
 
-    public long notifyPostRep(int notifId, long toId, long userId, int isRead, int type, String timeStamp, int postId, int isSynced){
+    public long notifyPostRep(int notifId, long toId, long userId, int isRead, int type, String timeStamp, int postId, int isSynced) {
 
         try {
             petBetterDb.openDatabase();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 

@@ -59,9 +59,10 @@ public class PetClinicProfileActivity extends AppCompatActivity {
     private int mId;
     private double longitude, latitude;
     private Toolbar toolbar;
+    private boolean isBookmarked = false;
 
     @Override
-    public void onCreate(Bundle savedInstance){
+    public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_petclinic_profile);
 
@@ -89,7 +90,7 @@ public class PetClinicProfileActivity extends AppCompatActivity {
 
 
         systemSessionManager = new SystemSessionManager(this);
-        if(systemSessionManager.checkLogin())
+        if (systemSessionManager.checkLogin())
             finish();
         HashMap<String, String> userIn = systemSessionManager.getUserDetails();
 
@@ -99,12 +100,11 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         user = getUser(email);
 
 
-
         final String jsonMyObject;
         Bundle extras = getIntent().getExtras();
         jsonMyObject = extras.getString("thisClinic");
 
-        faciItem = new Gson().fromJson(jsonMyObject,Facility.class);
+        faciItem = new Gson().fromJson(jsonMyObject, Facility.class);
 
         petClinicName.setText(faciItem.getFaciName());
         petClinicAddress.setText(faciItem.getLocation());
@@ -117,53 +117,68 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         petClinicRateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(),RateFacilityActivity.class);
-                intent.putExtra("thisClinic",jsonMyObject);
+                Intent intent = new Intent(view.getContext(), RateFacilityActivity.class);
+                intent.putExtra("thisClinic", jsonMyObject);
                 startActivity(intent);
             }
         });
 
+        if (checkIfBookmark((int) faciItem.getId(), (int) user.getUserId())) {
+            bookMarkButton.setBackgroundResource(R.color.myrtle_green);
+            bookMarkButton.setText("Bookmarked");
+            isBookmarked = true;
+        }else{
+            bookMarkButton.setBackgroundResource(R.color.amazonite);
+            bookMarkButton.setText("Bookmark");
+        }
+
         bookMarkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int id = generateBookmarkIds();
+                if (!isBookmarked) {
+                    int id = generateBookmarkIds();
 
-                bookMarkButton.setEnabled(false);
+                    bookMarkButton.setEnabled(false);
 
-                addFacilityBookmarkToDB(id, faciItem.getId(), user.getUserId());
-                final HerokuService bookMarkService = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
-                Bookmark bookmark = new Bookmark(1, faciItem.getId(), 1, user.getUserId());
-                Gson gson = new GsonBuilder().serializeNulls().create();
-                String jsonArray = gson.toJson(bookmark);
-                RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray);
+                    addFacilityBookmarkToDB(id, faciItem.getId(), user.getUserId());
+                    final HerokuService bookMarkService = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+                    Bookmark bookmark = new Bookmark(1, faciItem.getId(), 1, user.getUserId());
+                    Gson gson = new GsonBuilder().serializeNulls().create();
+                    String jsonArray = gson.toJson(bookmark);
+                    RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray);
 
-                Call<Void> call = bookMarkService.addBookmark(body);
-                call.enqueue(new Callback<Void>() {
-                    @Override
-                    public void onResponse(Call<Void> call, Response<Void> response) {
-                        System.out.println("New bookmark added");
-                        if(response.isSuccessful())
-                        {
-                            bookMarkButton.setText("Bookmarked");
-                            bookMarkButton.setBackgroundResource(R.color.myrtle_green);
-                            dataSync(16);
-                            syncBookmarkChanges();
+                    Call<Void> call = bookMarkService.addBookmark(body);
+                    call.enqueue(new Callback<Void>() {
+                        @Override
+                        public void onResponse(Call<Void> call, Response<Void> response) {
+                            System.out.println("New bookmark added");
+                            if (response.isSuccessful()) {
+                                bookMarkButton.setText("Bookmarked");
+                                bookMarkButton.setBackgroundResource(R.color.myrtle_green);
+                                dataSync(16);
+                                isBookmarked=true;
+                                syncBookmarkChanges();
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<Void> call, Throwable t) {
-                        System.out.println("Bookmark not added");
-                    }
-                });
+                        @Override
+                        public void onFailure(Call<Void> call, Throwable t) {
+                            System.out.println("Bookmark not added");
+                        }
+                    });
 
-
+                }else{
+                    bookMarkButton.setBackgroundResource(R.color.amazonite);
+                    bookMarkButton.setText("Bookmark");
+                    deleteFacilityBookmark(faciItem.getId(),user.getUserId());
+                    removeBookmark(faciItem.getId(), user.getUserId());
+                }
             }
         });
 
-        if(faciItem.getFaciPhoto()!=null){
+        if (faciItem.getFaciPhoto() != null) {
             String newFileName = BASE_URL + faciItem.getFaciPhoto();
-            System.out.println("FACI PHOTO "+faciItem.getFaciPhoto());
+            System.out.println("FACI PHOTO " + faciItem.getFaciPhoto());
             //String newFileName = "http://192.168.0.19/petbetter/"+thisMessageRep.getMessagePhoto();
             Glide.with(PetClinicProfileActivity.this).load(newFileName).error(R.drawable.back_button).into(clinicProfileImage);
         }
@@ -181,7 +196,7 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    public void syncBookmarkChanges(){
+    public void syncBookmarkChanges() {
         final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         ArrayList<Bookmark> unsyncedBookmarks = getUnsyncedBookmarks();
         Gson gson = new GsonBuilder().serializeNulls().create();
@@ -203,14 +218,34 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         });
     }
 
-    public void syncRatingChanges(){
+    private void removeBookmark(long item_id, long user_id){
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final Call<Void> call = service.deleteBookmark(user_id, item_id, 1);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()){
+                    syncBookmarkChanges();
+                    isBookmarked=false;
+                    bookMarkButton.setEnabled(true);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void syncRatingChanges() {
 
         final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         final HerokuService service3 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         ArrayList<Rating> unsyncedRatings = getUnsyncedRatings();
 
-        System.out.println("how many ratings? "+unsyncedRatings.size());
+        System.out.println("how many ratings? " + unsyncedRatings.size());
 
         Gson gson = new GsonBuilder().serializeNulls().create();
         String jsonArray = gson.toJson(unsyncedRatings);
@@ -219,7 +254,7 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     System.out.println("RATINGS ADDED YEY");
                     dataSynced(14);
 
@@ -227,19 +262,18 @@ public class PetClinicProfileActivity extends AppCompatActivity {
                     call2.enqueue(new Callback<ArrayList<Rating>>() {
                         @Override
                         public void onResponse(Call<ArrayList<Rating>> call, Response<ArrayList<Rating>> response) {
-                            if(response.isSuccessful()){
+                            if (response.isSuccessful()) {
                                 setRatings(response.body());
                                 ArrayList<Float> faciRatings = getFacilityRatings(faciItem.getId());
                                 float n = 0;
-                                if(faciRatings!=null){
-                                    if(faciRatings.size()>0){
-                                        for(int i = 0; i<faciRatings.size();i++){
+                                if (faciRatings != null) {
+                                    if (faciRatings.size() > 0) {
+                                        for (int i = 0; i < faciRatings.size(); i++) {
                                             n = n + faciRatings.get(i);
                                         }
-                                        n = n/(float) faciRatings.size();
+                                        n = n / (float) faciRatings.size();
                                         petClinicRating.setText(String.valueOf(n));
-                                    }
-                                    else{
+                                    } else {
                                         petClinicRating.setText("0.0");
                                     }
                                 }
@@ -277,10 +311,10 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         });
     }
 
-    public long setRatings(ArrayList<Rating> rateList){
+    public long setRatings(ArrayList<Rating> rateList) {
         try {
             petBetterDb.openDatabase();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         long result = petBetterDb.setRatings(rateList);
@@ -289,11 +323,11 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         return result;
     }
 
-    private ArrayList<Rating> getUnsyncedRatings(){
+    private ArrayList<Rating> getUnsyncedRatings() {
 
         try {
             petBetterDb.openDatabase();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -303,11 +337,11 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         return result;
     }
 
-    private void dataSynced(int n){
+    private void dataSynced(int n) {
 
         try {
             petBetterDb.openDatabase();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -316,11 +350,35 @@ public class PetClinicProfileActivity extends AppCompatActivity {
 
     }
 
-    private ArrayList<Float> getFacilityRatings(long faciId){
+    private void deleteFacilityBookmark(long item_id, long user_id){
+        try{
+            petBetterDb.openDatabase();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        petBetterDb.deleteFacilityBookmark(item_id, user_id);
+        petBetterDb.closeDatabase();
+    }
+
+    private boolean checkIfBookmark(int item_id, int user_id) {
 
         try {
             petBetterDb.openDatabase();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        boolean result = petBetterDb.checkIfBookMark(item_id, user_id, 1);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<Float> getFacilityRatings(long faciId) {
+
+        try {
+            petBetterDb.openDatabase();
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -330,10 +388,10 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         return result;
     }
 
-    private ArrayList<Bookmark> getUnsyncedBookmarks(){
+    private ArrayList<Bookmark> getUnsyncedBookmarks() {
         try {
             petBetterDb.openDatabase();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -350,11 +408,12 @@ public class PetClinicProfileActivity extends AppCompatActivity {
 
         try {
             petBetterDb.createDatabase();
-        } catch(SQLException e ){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
     }
+
     private void dataSync(int n) {
         try {
             petBetterDb.openDatabase();
@@ -366,11 +425,11 @@ public class PetClinicProfileActivity extends AppCompatActivity {
 
     }
 
-    private User getUser(String email){
+    private User getUser(String email) {
 
         try {
             petBetterDb.openDatabase();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -380,7 +439,7 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         return result;
     }
 
-    public int generateNewMarkerId(){
+    public int generateNewMarkerId() {
         ArrayList<Integer> storedIds;
         int markerId = 1;
 
@@ -394,10 +453,10 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         petBetterDb.closeDatabase();
 
 
-        if(storedIds.isEmpty()) {
+        if (storedIds.isEmpty()) {
             return markerId;
         } else {
-            while (storedIds.contains(markerId)){
+            while (storedIds.contains(markerId)) {
                 markerId += 1;
             }
 
@@ -406,10 +465,10 @@ public class PetClinicProfileActivity extends AppCompatActivity {
     }
 
     //mId, faciItem.getFaciName(), faciItem.getLocation(), user.getUserId(), 1
-    public long convertFaciToBookmark(int mId, String bldgName,double longitude, double latitude, String location, long userId, int type){
+    public long convertFaciToBookmark(int mId, String bldgName, double longitude, double latitude, String location, long userId, int type) {
         try {
             petBetterDb.openDatabase();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -419,19 +478,18 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         return result;
     }
 
-    public int generateBookmarkIds(){
+    public int generateBookmarkIds() {
         int newId;
-        try{
+        try {
             petBetterDb.openDatabase();
-        } catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         ArrayList<Integer> ids = petBetterDb.generateBookmarkIds();
-        if(ids.size() != 0){
+        if (ids.size() != 0) {
             newId = ids.get(ids.size() - 1);
             newId += 1;
-        }
-        else
+        } else
             newId = 1;
 
         petBetterDb.closeDatabase();
@@ -439,22 +497,22 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         return newId;
     }
 
-    public long addFacilityBookmarkToDB(long _id, long item_id, long user_id){
-        try{
+    public long addFacilityBookmarkToDB(long _id, long item_id, long user_id) {
+        try {
             petBetterDb.openDatabase();
-        } catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-        long result = petBetterDb.addFacilityBookmark( _id, item_id, user_id );
+        long result = petBetterDb.addFacilityBookmark(_id, item_id, user_id);
 
         petBetterDb.closeDatabase();
         return result;
     }
 
-    public LocationMarker getMarker(String bldgName){
+    public LocationMarker getMarker(String bldgName) {
         try {
             petBetterDb.openDatabase();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -464,8 +522,8 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         return result;
     }
 
-    private LocationMarker getLocationMarker(int faciId){
-        try{
+    private LocationMarker getLocationMarker(int faciId) {
+        try {
             petBetterDb.openDatabase();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -477,55 +535,63 @@ public class PetClinicProfileActivity extends AppCompatActivity {
     }
 
     //get methods
-    public TextView getPetClinicName(){
+    public TextView getPetClinicName() {
         return petClinicName;
     }
-    public TextView getPetClinicAddress(){
+
+    public TextView getPetClinicAddress() {
         return petClinicAddress;
     }
-    public TextView getPetClinicLandline(){
+
+    public TextView getPetClinicLandline() {
         return petClinicLandline;
     }
-    public TextView getPetClinicOpenTime(){
+
+    public TextView getPetClinicOpenTime() {
         return petClinicOpenTime;
     }
-    public TextView getPetClinicCloseTime(){
+
+    public TextView getPetClinicCloseTime() {
         return petClinicCloseTime;
     }
-    public TextView getPetClinicRating(){
+
+    public TextView getPetClinicRating() {
         return petClinicRating;
     }
 
     //set methods
-    public void setPetClinicName(String str){
+    public void setPetClinicName(String str) {
         petClinicName.setText(str);
     }
-    public void setPetClinicAddress(String str){
+
+    public void setPetClinicAddress(String str) {
         petClinicAddress.setText(str);
     }
-    public void setPetClinicLandline(String str){
+
+    public void setPetClinicLandline(String str) {
         petClinicLandline.setText(str);
     }
-    public void setPetClinicOpenTime(String str){
+
+    public void setPetClinicOpenTime(String str) {
         petClinicOpenTime.setText(str);
     }
-    public void setPetClinicCloseTime(String str){
+
+    public void setPetClinicCloseTime(String str) {
         petClinicCloseTime.setText(str);
     }
-    public void setPetClinicRating(String str){
+
+    public void setPetClinicRating(String str) {
         petClinicRating.setText(str);
     }
-  
 
 
-
-
-    public void viewPostBackButtonClicked(View view){
-       finish();
+    public void viewPostBackButtonClicked(View view) {
+        finish();
     }
-    public void onFacilityLocationClicked(View view){
-        System.out.println("This faciId in pet profile: "+ faciItem.getId());
-        LocationMarker location = getLocationMarker((int)faciItem.getId());
+
+    public void onFacilityLocationClicked(View view) {
+        System.out.println("This faciId in pet profile: " + faciItem.getId());
+        LocationMarker location = getLocationMarker((int) faciItem.getId());
         Bundle extras = new Bundle();
         extras.putString("bldg_name", location.getBldgName());
         extras.putDouble("latitude", location.getLatitude());

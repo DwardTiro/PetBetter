@@ -163,7 +163,7 @@ public class TopicContentActivity extends AppCompatActivity {
             }
         });
 
-        if(checkIfFollower((int) topicItem.getId(), (int) user.getUserId())==true){
+        if(checkIfFollower((int) topicItem.getId(), (int) user.getUserId())){
             followButton.setBackgroundColor(getResources().getColor(R.color.amazonite));
             Follower check = getFollowerWithTopicUser(topicItem.getId(), user.getUserId());
             if(check.getIsAllowed()==1){

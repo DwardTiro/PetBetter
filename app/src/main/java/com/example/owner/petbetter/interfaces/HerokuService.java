@@ -312,6 +312,10 @@ public interface HerokuService {
     Call<Void> deleteMessage(@Field("_id") long messageId);
 
     @FormUrlEncoded
+    @POST("deleteBookmark.php")
+    Call<Void> deleteBookmark(@Field("user_id") long user_id, @Field("item_id") long item_id, @Field("bookmark_type") long bookmark_type);
+
+    @FormUrlEncoded
     @POST("deleteFollower.php")
     Call<Void> deleteFollower(@Field("topic_id") long topicId, @Field("user_id") long userId);
 

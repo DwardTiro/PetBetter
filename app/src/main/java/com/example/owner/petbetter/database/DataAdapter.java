@@ -2135,6 +2135,24 @@ public class DataAdapter {
             return false;
     }
 
+    public boolean checkIfBookMark (int item_id, int user_id, int bookmark_type) {
+
+        ArrayList<Integer> ids = new ArrayList<>();
+
+        String sql = "SELECT _id FROM "+BOOKMARK_TABLE+" WHERE user_id = '"+ user_id +"' AND bookmark_type = '"+ bookmark_type +"' AND item_id = '"+ item_id +"'";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            ids.add(c.getInt(c.getColumnIndexOrThrow("_id")));
+        }
+
+        c.close();
+        if(ids.size()>0)
+            return true;
+        else
+            return false;
+    }
+
     public void deleteFollower (int topicId, int userId) {
         petBetterDb.delete(FOLLOWER_TABLE, "user_id = " + userId + " AND topic_id = "+ topicId, null);
     }
