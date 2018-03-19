@@ -22,14 +22,39 @@
                 android:id="@+id/communityToolbar"
                 layout="@layout/app_bar_nav_bar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                />
 
-            <include
+            <LinearLayout
                 android:id="@+id/toolbarComm"
-                layout="@layout/comm_toolbar"
+                android:layout_below="@id/communityToolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:layout_below="@id/communityToolbar" />
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/allPostsButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="All Posts"
+                    android:textAllCaps="false"
+                    android:background="@color/medTurquoise"
+                    android:textColor="@color/colorWhite"
+                    style="?android:attr/borderlessButtonStyle"
+                    />
+                <Button
+                    android:id="@+id/allTopicsButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Topics"
+                    android:textAllCaps="false"
+                    android:background="@color/medTurquoise"
+                    android:textColor="@color/colorWhite"
+                    style="?android:attr/borderlessButtonStyle"
+                    />
+
+            </LinearLayout>
 
             <FrameLayout
                 android:id="@+id/comm_container"

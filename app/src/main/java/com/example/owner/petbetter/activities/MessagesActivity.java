@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -452,13 +453,15 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
     public void messagesButtonClicked(View view){
 
         currFragment = 1;
-        messageReqButton.setBackgroundResource(R.color.main_White);
-        messageReqButton.setTextColor(getResources().getColor(R.color.myrtle_green));
-        messagesButton.setBackgroundResource(R.color.medTurquoise);
-        messagesButton.setTextColor(getResources().getColor(R.color.colorWhite));
+        messageReqButton.setBackgroundResource(R.color.medTurquoise);
+        messageReqButton.setTextColor(getResources().getColor(R.color.colorWhite));
+        messagesButton.setBackgroundResource(R.color.main_White);
+        messagesButton.setTextColor(getResources().getColor(R.color.myrtle_green));
+        messagesButton.setPaintFlags( messagesButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        messageReqButton.setPaintFlags( messageReqButton.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
+
 
         //messageList = getMessages(user.getUserId());
-
         fragment1 = new FragmentMessages();
         getSupportFragmentManager().beginTransaction().replace(R.id.messages_container,fragment1).
                 addToBackStack(null).commitAllowingStateLoss();
@@ -471,10 +474,12 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
     public void messageReqButtonClicked(View view){
 
         currFragment = 2;
-        messageReqButton.setBackgroundResource(R.color.medTurquoise);
-        messageReqButton.setTextColor(getResources().getColor(R.color.main_White));
-        messagesButton.setBackgroundResource(R.color.colorWhite);
-        messagesButton.setTextColor(getResources().getColor(R.color.myrtle_green));
+        messageReqButton.setBackgroundResource(R.color.main_White);
+        messageReqButton.setTextColor(getResources().getColor(R.color.myrtle_green));
+        messagesButton.setBackgroundResource(R.color.medTurquoise);
+        messagesButton.setTextColor(getResources().getColor(R.color.colorWhite));
+        messageReqButton.setPaintFlags( messageReqButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        messagesButton.setPaintFlags( messagesButton.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
 
         /*
         actvMessage.setText("");

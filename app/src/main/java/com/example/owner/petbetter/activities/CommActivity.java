@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -20,6 +21,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -61,8 +63,8 @@ import static com.example.owner.petbetter.ServiceGenerator.BASE_URL;
 public class CommActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, CheckUpdates{
 
     private DataAdapter petBetterDb;
-    private ImageButton btnHome;
-    private ImageButton btnCommunity;
+    private Button btnHome;
+    private Button btnCommunity;
     private FrameLayout container;
     private NavigationView navigationView;
     private SystemSessionManager systemSessionManager;
@@ -166,8 +168,8 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
         textNavUser = (TextView) headerView.findViewById(R.id.textNavUser);
         textNavUser.setText(user.getName());
 
-        btnHome = (ImageButton) findViewById(R.id.btnHome);
-        btnCommunity = (ImageButton) findViewById(R.id.btnCommunity);
+        btnHome = (Button) findViewById(R.id.allPostsButton);
+        btnCommunity = (Button) findViewById(R.id.allTopicsButton);
         container = (FrameLayout) findViewById(R.id.comm_container);
         refreshCommunity = (SwipeRefreshLayout) findViewById(R.id.refreshCommunity);
 
@@ -184,9 +186,13 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
         });
 
         currFragment = 2;
-        btnHome.setBackgroundColor(Color.WHITE);
-        btnCommunity.setBackgroundResource(R.color.medTurquoise);
-        btnCommunity.setImageResource(R.mipmap.ic_people_white_24dp);
+        btnCommunity.setBackgroundResource(R.color.main_White);
+        btnCommunity.setTextColor(getResources().getColor(R.color.myrtle_green));
+        btnHome.setBackgroundResource(R.color.medTurquoise);
+        btnHome.setTextColor(getResources().getColor(R.color.colorWhite));
+        btnCommunity.setPaintFlags(btnCommunity.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        btnHome.setPaintFlags(btnHome.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
+
         container.removeAllViews();
         FragmentHome fragment3 = new FragmentHome();
         getSupportFragmentManager().beginTransaction().replace(R.id.comm_container,fragment3).commitAllowingStateLoss();
@@ -195,9 +201,12 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View v) {
                 System.out.println("Fragment 1");
-                btnHome.setBackgroundColor(Color.WHITE);
                 btnCommunity.setBackgroundResource(R.color.medTurquoise);
-                btnCommunity.setImageResource(R.mipmap.ic_people_white_24dp);
+                btnCommunity.setTextColor(getResources().getColor(R.color.colorWhite));
+                btnHome.setBackgroundResource(R.color.main_White);
+                btnHome.setTextColor(getResources().getColor(R.color.myrtle_green));
+                btnHome.setPaintFlags(btnCommunity.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                btnCommunity.setPaintFlags(btnHome.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
                 container.removeAllViews();
                 FragmentHome fragment3 = new FragmentHome();
                 getSupportFragmentManager().beginTransaction().replace(R.id.comm_container,fragment3).commitAllowingStateLoss();
@@ -208,9 +217,12 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View v) {
                 System.out.println("Fragment 2");
-                btnCommunity.setImageResource(R.mipmap.ic_people_black_24dp);
-                btnCommunity.setBackgroundColor(Color.WHITE);
+                btnCommunity.setBackgroundResource(R.color.main_White);
+                btnCommunity.setTextColor(getResources().getColor(R.color.myrtle_green));
                 btnHome.setBackgroundResource(R.color.medTurquoise);
+                btnHome.setTextColor(getResources().getColor(R.color.colorWhite));
+                btnCommunity.setPaintFlags(btnCommunity.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                btnHome.setPaintFlags(btnHome.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
                 container.removeAllViews();
                 FragmentCommunity fragment2 = new FragmentCommunity();
                 getSupportFragmentManager().beginTransaction().replace(R.id.comm_container,fragment2).commitAllowingStateLoss();
@@ -246,9 +258,12 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
         super.onRestart();
         //recreate();
         FragmentHome fragment3 = new FragmentHome();
-        btnHome.setBackgroundColor(Color.WHITE);
-        btnCommunity.setBackgroundResource(R.color.medTurquoise);
-        btnCommunity.setImageResource(R.mipmap.ic_people_white_24dp);
+        btnCommunity.setBackgroundResource(R.color.main_White);
+        btnCommunity.setTextColor(getResources().getColor(R.color.myrtle_green));
+        btnHome.setBackgroundResource(R.color.medTurquoise);
+        btnHome.setTextColor(getResources().getColor(R.color.colorWhite));
+        btnCommunity.setPaintFlags(btnCommunity.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        btnHome.setPaintFlags(btnHome.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
         container.removeAllViews();
         getSupportFragmentManager().beginTransaction().replace(R.id.comm_container,fragment3).commitAllowingStateLoss();
     }
@@ -322,17 +337,23 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
                     setTopics(response.body());
 
                     if(currFragment==1){
-                        btnCommunity.setImageResource(R.mipmap.ic_people_black_24dp);
-                        btnCommunity.setBackgroundColor(Color.WHITE);
-                        btnHome.setBackgroundResource(R.color.medTurquoise);
+                        btnCommunity.setBackgroundResource(R.color.medTurquoise);
+                        btnCommunity.setTextColor(getResources().getColor(R.color.colorWhite));
+                        btnHome.setBackgroundResource(R.color.main_White);
+                        btnHome.setTextColor(getResources().getColor(R.color.myrtle_green));
+                        btnHome.setPaintFlags(btnCommunity.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                        btnCommunity.setPaintFlags(btnHome.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
                         container.removeAllViews();
                         FragmentCommunity fragment2 = new FragmentCommunity();
                         getSupportFragmentManager().beginTransaction().replace(R.id.comm_container,fragment2).commitAllowingStateLoss();
                     }
                     else{
-                        btnHome.setBackgroundColor(Color.WHITE);
-                        btnCommunity.setBackgroundResource(R.color.medTurquoise);
-                        btnCommunity.setImageResource(R.mipmap.ic_people_white_24dp);
+                        btnCommunity.setBackgroundResource(R.color.main_White);
+                        btnCommunity.setTextColor(getResources().getColor(R.color.myrtle_green));
+                        btnHome.setBackgroundResource(R.color.medTurquoise);
+                        btnHome.setTextColor(getResources().getColor(R.color.colorWhite));
+                        btnCommunity.setPaintFlags(btnCommunity.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                        btnHome.setPaintFlags(btnHome.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
                         container.removeAllViews();
                         FragmentHome fragment3 = new FragmentHome();
                         getSupportFragmentManager().beginTransaction().replace(R.id.comm_container,fragment3).commitAllowingStateLoss();
@@ -359,17 +380,23 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
                     setPosts(response.body());
 
                     if(currFragment==1){
-                        btnCommunity.setImageResource(R.mipmap.ic_people_black_24dp);
-                        btnCommunity.setBackgroundColor(Color.WHITE);
-                        btnHome.setBackgroundResource(R.color.medTurquoise);
+                        btnCommunity.setBackgroundResource(R.color.medTurquoise);
+                        btnCommunity.setTextColor(getResources().getColor(R.color.colorWhite));
+                        btnHome.setBackgroundResource(R.color.main_White);
+                        btnHome.setTextColor(getResources().getColor(R.color.myrtle_green));
+                        btnHome.setPaintFlags(btnCommunity.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                        btnCommunity.setPaintFlags(btnHome.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
                         container.removeAllViews();
                         FragmentCommunity fragment2 = new FragmentCommunity();
                         getSupportFragmentManager().beginTransaction().replace(R.id.comm_container,fragment2).commit();
                     }
                     else{
-                        btnHome.setBackgroundColor(Color.WHITE);
-                        btnCommunity.setBackgroundResource(R.color.medTurquoise);
-                        btnCommunity.setImageResource(R.mipmap.ic_people_white_24dp);
+                        btnCommunity.setBackgroundResource(R.color.main_White);
+                        btnCommunity.setTextColor(getResources().getColor(R.color.myrtle_green));
+                        btnHome.setBackgroundResource(R.color.medTurquoise);
+                        btnHome.setTextColor(getResources().getColor(R.color.colorWhite));
+                        btnCommunity.setPaintFlags(btnCommunity.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                        btnHome.setPaintFlags(btnHome.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
                         container.removeAllViews();
                         FragmentHome fragment3 = new FragmentHome();
                         getSupportFragmentManager().beginTransaction().replace(R.id.comm_container,fragment3).commit();

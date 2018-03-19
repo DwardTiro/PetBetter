@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Paint;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -409,6 +410,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         petCareButton.setTextColor(getResources().getColor(R.color.colorWhite));
         //FragmentVetListing fragment = (FragmentVetListing) getSupportFragmentManager().findFragmentById(R.id.frame_container);
         vetList = getVeterinarians();
+        vetButton.setPaintFlags(vetButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        petCareButton.setPaintFlags(petCareButton.getPaintFlags() & (~ Paint.UNDERLINE_TEXT_FLAG));
 
         FragmentVetListing fragment1 = new FragmentVetListing();
         getSupportFragmentManager().beginTransaction().add(R.id.frame_container,fragment1).commit();
@@ -453,6 +456,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         vetButton.setBackgroundResource(R.color.medTurquoise);
         vetButton.setTextColor(getResources().getColor(R.color.colorWhite));
         FragmentPetClinicListing fragment = new FragmentPetClinicListing();
+        petCareButton.setPaintFlags(vetButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        vetButton.setPaintFlags(petCareButton.getPaintFlags() & (~ Paint.UNDERLINE_TEXT_FLAG));
 
         getSupportFragmentManager().beginTransaction().add(R.id.frame_container,fragment).commit();
     }
