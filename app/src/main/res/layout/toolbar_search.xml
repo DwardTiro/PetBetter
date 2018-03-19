@@ -13,7 +13,8 @@
         android:gravity="center_vertical|start"
 
         app:popupTheme="@style/AppTheme.PopupOverlay"
-        app:theme="@style/ThemeOverlay.AppCompat.Light">
+        app:theme="@style/ThemeOverlay.AppCompat.Light"
+        android:focusableInTouchMode="true">
 
         <ImageButton
             android:id="@+id/searchToolbarBack"
@@ -25,12 +26,21 @@
             android:onClick="searchBackButtonClicked"
             android:src="@mipmap/ic_keyboard_arrow_left_white_24dp" />
 
+        <LinearLayout
+            android:id="@+id/dummyForAutoComplete"
+            android:layout_width="0px"
+            android:layout_height="0px"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="horizontal"/>
+
         <AutoCompleteTextView
             android:id="@+id/actvSearch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
-            android:layout_marginStart="5dp" />
+            android:layout_marginStart="5dp"
+            />
 
     </android.support.v7.widget.Toolbar>
 

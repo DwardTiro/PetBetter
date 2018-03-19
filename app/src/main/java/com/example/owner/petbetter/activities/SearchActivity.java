@@ -122,6 +122,7 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
         relativeLayout = (RelativeLayout) findViewById(R.id.relativeSearch);
         relativeLayout.setClickable(true);
 
+
         if(user.getUserType() == 1){
             vetSearchButton.setVisibility(View.GONE);
             petSearchButton.setVisibility(View.GONE);
