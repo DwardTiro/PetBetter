@@ -1,13 +1,15 @@
 -- phpMyAdmin SQL Dump
--- version 4.5.1
--- http://www.phpmyadmin.net
+-- version 4.7.4
+-- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 18, 2018 at 10:16 PM
--- Server version: 10.1.10-MariaDB
--- PHP Version: 7.0.3
+-- Generation Time: Mar 19, 2018 at 12:55 AM
+-- Server version: 10.1.29-MariaDB
+-- PHP Version: 7.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -19,6 +21,19 @@ SET time_zone = "+00:00";
 --
 -- Database: `petbetter`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `bookmarks`
+--
+
+CREATE TABLE `bookmarks` (
+  `_id` int(11) NOT NULL,
+  `item_id` int(11) NOT NULL,
+  `bookmark_type` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -139,7 +154,7 @@ INSERT INTO `messagereps` (`_id`, `user_id`, `sender_id`, `message_id`, `rep_con
 (44, 3, 1, 1, 'working?', 1, '2018-03-07T00:11:34Z', 'uploads/messagereps/fac0532.jpg'),
 (45, 3, 1, 1, 'eyyy john!!', 1, '2018-03-07T16:33:51Z', NULL),
 (46, 1, 3, 1, 'eyy edward', 1, '2018-03-07T16:36:14Z', NULL),
-(47, 3, 1, 1, 'didn''t get a notif. :(', 1, '2018-03-07T16:36:34Z', 'uploads/messagereps/9560584.jpg'),
+(47, 3, 1, 1, 'didn\'t get a notif. :(', 1, '2018-03-07T16:36:34Z', 'uploads/messagereps/9560584.jpg'),
 (48, 1, 3, 1, 'sad lah', 1, '2018-03-07T16:38:45Z', NULL),
 (49, 3, 1, 1, 'do you get notifs?', 1, '2018-03-07T16:38:27Z', NULL),
 (50, 1, 3, 1, 'yup', 1, '2018-03-07T16:40:15Z', NULL),
@@ -273,7 +288,7 @@ CREATE TABLE `postreps` (
 
 INSERT INTO `postreps` (`_id`, `user_id`, `post_id`, `parent_id`, `rep_content`, `date_performed`, `postrep_photo`, `is_deleted`) VALUES
 (1, 2, 1, 0, 'Ok I will when I have the time.', '', NULL, 0),
-(2, 3, 2, 0, 'I''m a doctor! :)', '', NULL, 0),
+(2, 3, 2, 0, 'I\'m a doctor! :)', '', NULL, 0),
 (3, 2, 1, 1, 'We give free treats~', '', NULL, 0),
 (4, 1, 1, 1, 'Loking forward to this. :D', '', NULL, 0),
 (5, 1, 2, 1, 'Yay~', '', NULL, 1),
@@ -313,7 +328,7 @@ CREATE TABLE `posts` (
 --
 
 INSERT INTO `posts` (`_id`, `user_id`, `topic_name`, `topic_content`, `topic_id`, `date_created`, `post_photo`, `faci_link`, `is_deleted`) VALUES
-(1, 3, 'Come visit my clinic!', 'Hi guys! I''m John Ivanhoe. If you are a pet owner you may want to visit my clinic for regular check ups.', 1, '', 'h', NULL, 0),
+(1, 3, 'Come visit my clinic!', 'Hi guys! I\'m John Ivanhoe. If you are a pet owner you may want to visit my clinic for regular check ups.', 1, '', 'h', NULL, 0),
 (2, 1, 'Hi guys! Looking for a doctor to treat my dog.', 'Could I get suggestions as to who I could contact or where to go?', 1, '', 'e', NULL, 0),
 (3, 1, 'I love dogs', 'Hi guys! I love dogs', 2, '', 'l', NULL, 0),
 (4, 2, 'Hey!', 'Hi!', 2, '', 'p', NULL, 1),
@@ -475,6 +490,12 @@ INSERT INTO `veterinarians` (`_id`, `user_id`, `specialty`, `rating`, `phone_num
 --
 
 --
+-- Indexes for table `bookmarks`
+--
+ALTER TABLE `bookmarks`
+  ADD PRIMARY KEY (`_id`);
+
+--
 -- Indexes for table `facilities`
 --
 ALTER TABLE `facilities`
@@ -569,80 +590,102 @@ ALTER TABLE `veterinarians`
 --
 
 --
+-- AUTO_INCREMENT for table `bookmarks`
+--
+ALTER TABLE `bookmarks`
+  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `facilities`
 --
 ALTER TABLE `facilities`
   MODIFY `faci_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
+
 --
 -- AUTO_INCREMENT for table `followers`
 --
 ALTER TABLE `followers`
   MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=376;
+
 --
 -- AUTO_INCREMENT for table `markers`
 --
 ALTER TABLE `markers`
   MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=140;
+
 --
 -- AUTO_INCREMENT for table `messagereps`
 --
 ALTER TABLE `messagereps`
   MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
+
 --
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
   MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
 --
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
   MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=204;
+
 --
 -- AUTO_INCREMENT for table `pets`
 --
 ALTER TABLE `pets`
   MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+
 --
 -- AUTO_INCREMENT for table `postreps`
 --
 ALTER TABLE `postreps`
   MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+
 --
 -- AUTO_INCREMENT for table `posts`
 --
 ALTER TABLE `posts`
   MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
 --
 -- AUTO_INCREMENT for table `ratings`
 --
 ALTER TABLE `ratings`
   MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
 --
 -- AUTO_INCREMENT for table `services`
 --
 ALTER TABLE `services`
   MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
 --
 -- AUTO_INCREMENT for table `topics`
 --
 ALTER TABLE `topics`
   MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
 --
 -- AUTO_INCREMENT for table `upvotes`
 --
 ALTER TABLE `upvotes`
   MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
   MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+
 --
 -- AUTO_INCREMENT for table `veterinarians`
 --
 ALTER TABLE `veterinarians`
   MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
+COMMIT;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
