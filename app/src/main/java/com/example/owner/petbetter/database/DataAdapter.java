@@ -2153,6 +2153,24 @@ public class DataAdapter {
             return false;
     }
 
+    public boolean checkIfRated (long rater_id, long rated_id, int rating_type) {
+
+        ArrayList<Integer> ids = new ArrayList<>();
+
+        String sql = "SELECT _id FROM "+RATE_TABLE+" WHERE rater_id = '"+ rater_id +"' AND rated_id = '"+ rated_id +"' AND rating_type = '"+ rating_type +"'";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            ids.add(c.getInt(c.getColumnIndexOrThrow("_id")));
+        }
+
+        c.close();
+        if(ids.size()>0)
+            return true;
+        else
+            return false;
+    }
+
     public void deleteFollower (int topicId, int userId) {
         petBetterDb.delete(FOLLOWER_TABLE, "user_id = " + userId + " AND topic_id = "+ topicId, null);
     }

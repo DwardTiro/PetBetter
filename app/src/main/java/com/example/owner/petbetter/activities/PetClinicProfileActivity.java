@@ -113,6 +113,12 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         petClinicOpenTime.setText(faciItem.getHoursOpen());
         petClinicCloseTime.setText(faciItem.getHoursClose());
 
+        if(checkIfRated(user.getUserId(), faciItem.getId())){
+            petClinicRateButton.setBackgroundResource(R.color.myrtle_green);
+            petClinicRateButton.setText("Rated");
+            petClinicRateButton.setEnabled(false);
+        }
+
 
         petClinicRateButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -180,7 +186,7 @@ public class PetClinicProfileActivity extends AppCompatActivity {
             String newFileName = BASE_URL + faciItem.getFaciPhoto();
             System.out.println("FACI PHOTO " + faciItem.getFaciPhoto());
             //String newFileName = "http://192.168.0.19/petbetter/"+thisMessageRep.getMessagePhoto();
-            Glide.with(PetClinicProfileActivity.this).load(newFileName).error(R.drawable.back_button).into(clinicProfileImage);
+            Glide.with(PetClinicProfileActivity.this).load(newFileName).error(R.drawable.app_icon_yellow).into(clinicProfileImage);
         }
 
         syncRatingChanges();
@@ -369,6 +375,20 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         }
 
         boolean result = petBetterDb.checkIfBookMark(item_id, user_id, 1);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private boolean checkIfRated(long rater_id, long rated_id) {
+
+        try {
+            petBetterDb.openDatabase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        boolean result = petBetterDb.checkIfRated(rater_id, rated_id, 2);
         petBetterDb.closeDatabase();
 
         return result;

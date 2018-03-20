@@ -111,11 +111,15 @@ public class VetProfileActivity extends AppCompatActivity {
             String newFileName = BASE_URL + vetItem.getUserPhoto();
             //String newFileName = "http://192.168.0.19/petbetter/"+vetItem.getUserPhoto();
             System.out.println("USER PHOTO "+user.getUserPhoto());
-            Glide.with(VetProfileActivity.this).load(newFileName).error(R.drawable.back_button).into(profileBG);
+            Glide.with(VetProfileActivity.this).load(newFileName).error(R.drawable.app_icon_yellow).into(profileBG);
         }
         syncRatingChanges();
 
-
+        if(checkIfRated(user.getUserId(), vetItem.getId())){
+            rateVetButton.setBackgroundResource(R.color.myrtle_green);
+            rateVetButton.setText("Rated");
+            rateVetButton.setEnabled(false);
+        }
 
         syncMessageChanges(user.getUserId());
 
@@ -284,6 +288,7 @@ public class VetProfileActivity extends AppCompatActivity {
         });
     }
 
+
     public long setMessages(ArrayList<Message> messageList){
         try {
             petBetterDb.openDatabase();
@@ -317,6 +322,21 @@ public class VetProfileActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         long result = petBetterDb.setRatings(rateList);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+
+    private boolean checkIfRated(long rater_id, long rated_id) {
+
+        try {
+            petBetterDb.openDatabase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        boolean result = petBetterDb.checkIfRated(rater_id, rated_id, 1);
         petBetterDb.closeDatabase();
 
         return result;
