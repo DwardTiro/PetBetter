@@ -188,6 +188,33 @@
                         android:scaleType="fitCenter"
                         android:src="@drawable/ic_thumb_down_grey600_48dp" />
 
+                    <ImageView
+                        android:id="@+id/locationImage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="5dp"
+                        android:adjustViewBounds="true"
+                        android:background="@color/colorWhite"
+                        android:maxHeight="24dp"
+                        android:maxWidth="24dp"
+                        android:scaleType="fitCenter"
+                        android:src="@mipmap/ic_location_on_black_24dp"
+                        />
+                    <Button
+                        android:id="@+id/locationButton"
+                        style="?android:attr/borderlessButtonStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="36dp"
+                        android:layout_weight="1"
+                        android:adjustViewBounds="true"
+                        android:background="@color/colorWhite"
+                        android:onClick="locButtonClicked"
+                        android:scaleType="fitCenter"
+                        android:text="Clinic Link"
+                        android:textAllCaps="false"
+                        android:textColor="@color/medTurquoise"
+                        />
 
                 </LinearLayout>
 

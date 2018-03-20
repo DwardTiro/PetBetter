@@ -26,6 +26,7 @@ import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.classes.Bookmark;
+import com.example.owner.petbetter.classes.Facility;
 import com.example.owner.petbetter.classes.Notifications;
 import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.PostRep;
@@ -89,6 +90,9 @@ public class PostContentActivity extends AppCompatActivity {
     private boolean isBookmarked = false;
     private ImageView postImage;
     private ImageView postImageFrame;
+    private Button locButton;
+    private Facility facility;
+    private ImageView locationImage;
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -131,6 +135,8 @@ public class PostContentActivity extends AppCompatActivity {
         postScrollView = (NestedScrollView) findViewById(R.id.postScrollView);
         postImage = (ImageView) findViewById(R.id.postImage);
         postImageFrame = (ImageView) findViewById(R.id.postImageFrame);
+        locButton = (Button) findViewById(R.id.locationButton);
+        locationImage = (ImageView) findViewById(R.id.locationImage);
 
 
 
@@ -200,7 +206,6 @@ public class PostContentActivity extends AppCompatActivity {
 
         if(postItem.getPostPhoto() != null) {
             String newFileName = BASE_URL + postItem.getPostPhoto();
-            System.out.println(newFileName);
             Glide.with(PostContentActivity.this).load(newFileName).error(R.drawable.app_icon_yellow).into(postImage);
             postImage.setVisibility(View.VISIBLE);
             postImageFrame.setVisibility(View.VISIBLE);
@@ -399,6 +404,20 @@ public class PostContentActivity extends AppCompatActivity {
 
             }
         });
+
+        try{
+            facility = getFacility(postItem.getFaciLink());
+            locButton.setText(facility.getFaciName());
+        }catch(NullPointerException npe){
+            locButton.setVisibility(View.GONE);
+            locationImage.setVisibility(View.GONE);
+        }
+    }
+
+    public void locButtonClicked(View view){
+        Intent intent = new Intent(PostContentActivity.this, com.example.owner.petbetter.activities.PetClinicProfileActivity.class);
+        intent.putExtra("thisClinic", new Gson().toJson(facility));
+        startActivity(intent);
     }
 
     @Override
@@ -407,6 +426,20 @@ public class PostContentActivity extends AppCompatActivity {
         item.setVisibility(View.VISIBLE);
         item.setEnabled(true);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    private Facility getFacility(long id) {
+
+        try {
+            petBetterDb.openDatabase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        Facility result = petBetterDb.getFacility((int) id);
+        petBetterDb.closeDatabase();
+
+        return result;
     }
 
     private boolean checkIfBookmark(int item_id, int user_id) {

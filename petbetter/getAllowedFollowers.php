@@ -2,76 +2,53 @@
 
 require 'init.php';
 
-//$vetlist = $_POST['vetlist'];;
+$topic_id = $_POST['topic_id'];
 
-$postlist = json_decode(file_get_contents('php://input'),true);
+$response = array(); 
 //$sql = "SELECT * FROM users WHERE email = ? AND password = ?";
 //$sql = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
 
 //$result = mysqli_query($con, $sql);
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
+
+	if($stmt = $mysqli->prepare("SELECT * FROM followers WHERE topic_id = ? AND is_allowed = 1")){
+		$stmt->bind_param("s", $topic_id);
+		$stmt->execute();
+		$stmt->bind_result($_id, $topic_id, $user_id, $is_allowed);
+		$stmt->store_result();
 	
-	$n = count($postlist);
-	//echo $n;
-	$i = 0;
-	//echo $notiflist[$i]['_id'];
-	
-	while($i<$n){
-		$title = substr(md5(rand()), 0, 7);
-		$upload_path = "uploads/posts/$title.jpg";
-		
-		if(!($postlist[$i]['post_photo']==null)){
-			file_put_contents($upload_path, base64_decode($postlist[$i]['post_photo']));
-		}
-		else{
-			$upload_path = null;
-		}
-		
-		if($stmt = $mysqli->prepare("INSERT INTO posts (user_id, topic_name, topic_content, topic_id, date_created, post_photo, faci_link, is_deleted) VALUES (?,?,?,?,?,?,?,?)")){
-			$stmt->bind_param("ssssssss", $postlist[$i]['user_id'], $postlist[$i]['topic_name'], $postlist[$i]['topic_content'], $postlist[$i]['topic_id'], $postlist[$i]['date_created'], 
-				$upload_path, $postlist[$i]['faci_link'], $postlist[$i]['is_deleted']);
-			$stmt->execute();
-			$stmt->close();
-			$i = $i + 1;
-		}
-		else{
-			//echo 'and here?';
-			break;
-		}
-		
-	}
-	
-		
-		//echo json_encode(array('_id'=>$vetlist['_id']));
-		
-		//$stmt->bind_result($_id, $first_name, $last_name, $mobile_num, $phone_num, $email,  $password, $age, $user_type);
-		//$stmt->store_result();
-	
-	/*
 		if($stmt->fetch()){
 			
+			do{
+				array_push($response, array('_id'=>$_id,
+				'topic_id'=>$topic_id,
+				'user_id'=>$user_id,
+				'is_allowed'=>$is_allowed));
+			}while($stmt->fetch());
+			
+			
 			$stmt->close();
-			//echo json_encode($response);
+			
+			echo json_encode($response);
+			/*
 			echo json_encode(array('_id'=>$_id,
+			'user_id'=>$user_id,
+			'topic_name'=>$topic_name,
+			'topic_content'=>$topic_content,
+			'date_created'=>$date_created,
 			'first_name'=>$first_name,
-			'last_name'=>$last_name,
-			'mobile_num'=>$mobile_num,
-			'phone_num'=>$phone_num,
-			'email'=>$email,
-			'password'=>$password,
-			'age'=>$age,
-			'user_type'=>$user_type));
+			'is_deleted'=>$is_deleted));
+			*/
 		}
 		else{
 			
 			$stmt->close();
-			echo 'SQL Query Error';
+			//echo 'SQL Query Error';
 		}
-		*/
 		//echo json_encode($stmt);
 		//echo json_encode(array('user'=>$response));
-	
+	}
 }
 
 /*
