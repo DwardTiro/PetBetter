@@ -27,7 +27,7 @@
 
                 <Button
                     android:id="@+id/addTopicButton"
-                    android:layout_width="100dp"
+                    android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Create Topic"

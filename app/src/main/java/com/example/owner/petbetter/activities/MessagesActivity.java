@@ -283,6 +283,7 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
                 refreshMessages.setRefreshing(true);
                 syncMessageChanges(user.getUserId());
                 syncMessageRepChanges();
+                refreshMessages.setRefreshing(false);
             }
         });
     }
@@ -313,7 +314,6 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
                             if(response.isSuccessful()){
                                 System.out.println("response size messages "+response.body().size());
                                 setMessages(response.body());
-                                refreshMessages.setRefreshing(false);
                                 if(currFragment==1){
                                     messagesButtonClicked(findViewById(android.R.id.content));
                                 }

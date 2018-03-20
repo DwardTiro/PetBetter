@@ -412,6 +412,20 @@ public class PostContentActivity extends AppCompatActivity {
             locButton.setVisibility(View.GONE);
             locationImage.setVisibility(View.GONE);
         }
+
+        if(postUser.getUserPhoto()!=null){
+
+            String newFileName = BASE_URL + postUser.getUserPhoto();
+            System.out.println(newFileName);
+            //String newFileName = "http://192.168.0.19/petbetter/"+thisMessageRep.getMessagePhoto();
+            Glide.with(PostContentActivity.this).load(newFileName).error(R.drawable.back_button).into(profilePic);
+            /*
+            Picasso.with(inflater.getContext()).load("http://".concat(newFileName))
+                    .error(R.drawable.back_button).into(holder.messageRepImage);*/
+            //setImage(holder.messageRepImage, newFileName);
+
+            profilePic.setVisibility(View.VISIBLE);
+        }
     }
 
     public void locButtonClicked(View view){

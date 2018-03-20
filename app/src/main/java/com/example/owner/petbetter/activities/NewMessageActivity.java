@@ -130,15 +130,15 @@ public class NewMessageActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 User check = getUser(newMsgSendTo.getText().toString());
-                if(newMsgContent.getText().toString()!=""&&newMsgSendTo.getText().toString()!=""&&check!=null
-                        &&check.getUserId()!=user.getUserId()){
+                if(newMsgContent.getText().toString()!=""&&newMsgSendTo.getText().toString()!=""&&
+                        check.getUserId()!=user.getUserId()){
                     usertwo = getUser(newMsgSendTo.getText().toString());
 
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
                     sdf.setTimeZone(TimeZone.getTimeZone("GMT+8"));
                     timeStamp = sdf.format(new Date());
 
-                    //check first if message exists before creating
+
                     service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
                     final Call<ArrayList<Message>> call2 = service2.getMessages(user.getUserId());
                     call2.enqueue(new Callback<ArrayList<Message>>() {
@@ -147,17 +147,16 @@ public class NewMessageActivity extends AppCompatActivity {
                             if(response.isSuccessful()){
                                 System.out.println("response size messages "+response.body().size());
                                 mList = response.body();
-                                for(int i=0;i<mList.size();i++){
-                                    if(mList.get(i).getUserId()==user.getUserId() && mList.get(i).getFromId()==usertwo.getUserId()
-                                            ||mList.get(i).getUserId()==usertwo.getUserId()&&mList.get(i).getFromId()==user.getUserId()){
-                                        alreadyExist= true;
-                                        mId = (int) mList.get(i).getId();
-                                    }
-                                }
                                 setMessages(response.body());
 
                                 String image = imageToString();
 
+                                for(Message message : mList){
+                                    if(message.getUserId()==user.getUserId()&&message.getFromId()==usertwo.getUserId()||
+                                            message.getUserId()==usertwo.getUserId()&&message.getFromId()==user.getUserId()){
+                                        alreadyExist = true;
+                                    }
+                                }
                                 if(alreadyExist==true){
                                     mrId = generateMessageRepId();
                                     addMessageRep(mrId, (int) usertwo.getUserId(),(int) user.getUserId(), mId,
@@ -166,7 +165,7 @@ public class NewMessageActivity extends AppCompatActivity {
                                     syncMessageRepChanges();
                                     System.out.println("We go here wrong?");
                                 }
-                                else{
+                                if(alreadyExist==false){
                                     createMessage(mId, user.getUserId(), usertwo.getUserId());
                                     //uploadMessage(getUnsyncedMessages());
                                     syncMessageChanges(user.getUserId());
@@ -190,6 +189,17 @@ public class NewMessageActivity extends AppCompatActivity {
                         public void onFailure(Call<ArrayList<Message>> call, Throwable t) {
                             Log.d("onFailure", t.getLocalizedMessage());
 
+                            String image = imageToString();
+                            createMessage(mId, user.getUserId(), usertwo.getUserId());
+                            //uploadMessage(getUnsyncedMessages());
+                            syncMessageChanges(user.getUserId());
+                            mrId = generateMessageRepId();
+                            addMessageRep(mrId, (int) usertwo.getUserId(),(int) user.getUserId(), mId,
+                                    newMsgContent.getText().toString(), 1, timeStamp, image, 0);
+                            //uploadMessageRep(getUnsyncedMessageReps());
+                            syncMessageRepChanges();
+
+                            finish();
                         }
                     });
                 }
