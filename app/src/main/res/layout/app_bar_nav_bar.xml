@@ -25,6 +25,19 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
+                <Button
+                    android:id="@+id/addTopicButton"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Create Topic"
+                    android:textAllCaps="false"
+                    android:layout_toLeftOf="@+id/imageview_notifs"
+                    android:background="@color/medTurquoise"
+                    android:textColor="@color/colorWhite"
+                    style="?android:attr/borderlessButtonStyle"
+                    />
+
                 <ImageView
                     android:id="@+id/imageview_notifs"
                     android:layout_width="wrap_content"

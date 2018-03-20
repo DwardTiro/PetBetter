@@ -23,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -77,6 +78,7 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
     private ImageView imageViewDrawer;
     private ArrayList<Facility> faciList;
     private Veterinarian thisVet;
+    private Button addTopicButton;
 
     AlarmManager alarmManager;
     PendingIntent pendingIntent;
@@ -130,6 +132,9 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
 
         user = getUser(email);
         imageViewDrawer = (ImageView) headerView.findViewById(R.id.imageViewDrawer);
+        addTopicButton = (Button) findViewById(R.id.addTopicButton);
+
+        addTopicButton.setVisibility(View.GONE);
         if(user.getUserPhoto()!=null){
 
             String newFileName = BASE_URL + user.getUserPhoto();

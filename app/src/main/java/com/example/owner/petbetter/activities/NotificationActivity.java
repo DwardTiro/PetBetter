@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -51,6 +52,7 @@ public class NotificationActivity extends AppCompatActivity implements Navigatio
     private NotificationReceiver notifReceiver = new NotificationReceiver();
     private ImageView imageViewDrawer;
     HerokuService service;
+    private Button addTopicButton;
 
     @Override
     protected void onResume() {
@@ -96,9 +98,13 @@ public class NotificationActivity extends AppCompatActivity implements Navigatio
         textNavEmail = (TextView) headerView.findViewById(R.id.textNavEmail);
         textNavUser = (TextView) headerView.findViewById(R.id.textNavUser);
 
+
         textNavEmail.setText(email);
         user = getUser(email);
         textNavUser.setText(user.getName());
+        addTopicButton = (Button) findViewById(R.id.addTopicButton);
+
+        addTopicButton.setVisibility(View.GONE);
 
         imageViewDrawer = (ImageView) headerView.findViewById(R.id.imageViewDrawer);
         if(user.getUserPhoto()!=null){

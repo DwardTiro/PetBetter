@@ -91,6 +91,7 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
     private ArrayList<Message> pendingMessages;
     private SwipeRefreshLayout refreshMessages;
     private int refChecker = 0;
+    private Button addTopicButton;
 
     HerokuService service;
 
@@ -157,6 +158,9 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
         messagesButton = (Button) findViewById(R.id.messagesButton);
         messageReqButton = (Button) findViewById(R.id.messageReqButton);
         refreshMessages = (SwipeRefreshLayout) findViewById(R.id.refreshMessages);
+        addTopicButton = (Button) findViewById(R.id.addTopicButton);
+
+        addTopicButton.setVisibility(View.GONE);
 
         if(!getUnsyncedNotifications().isEmpty())
             notifButton.setImageResource(R.mipmap.ic_notifications_active_black_24dp);

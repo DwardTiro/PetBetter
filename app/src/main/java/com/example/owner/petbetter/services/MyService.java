@@ -181,7 +181,7 @@ public class MyService extends Service {
                                 int val = getNotifications(userId).size();
                                 while(val<notifArray.size()){
 
-                                    if(notifArray.get(val).getType()==1){
+                                    if(notifArray.get(val).getType()==1 && (notifArray.get(val).getDoerId()==user.getUserId())){
                                         appNotif.setSmallIcon(R.drawable.app_icon)
                                                 .setTicker(notifArray.get(val).getDoerName()+" has replied to your post")
                                                 .setWhen(System.currentTimeMillis()).setContentTitle(notifArray.get(val).getDoerName())
@@ -193,7 +193,7 @@ public class MyService extends Service {
                                         PendingIntent pendingIntent = PendingIntent.getActivity(MyService.this, 0, intentNotif, PendingIntent.FLAG_UPDATE_CURRENT);
                                         appNotif.setContentIntent(pendingIntent);
                                     }
-                                    if(notifArray.get(val).getType()==2){
+                                    if(notifArray.get(val).getType()==2 && (notifArray.get(val).getDoerId()==user.getUserId())){
                                         syncMessageChanges(userId);
                                         syncMessageRepChanges();
                                         appNotif.setSmallIcon(R.drawable.app_icon)
@@ -208,7 +208,7 @@ public class MyService extends Service {
 
                                         //getApplicationContext().registerReceiver(notifReceiver, new IntentFilter(Intent.ACTION_ATTACH_DATA));
                                     }
-                                    if(notifArray.get(val).getType()==3){
+                                    if(notifArray.get(val).getType()==3 && (notifArray.get(val).getDoerId()==user.getUserId())){
                                         Topic topic = getTopic(notifArray.get(val).getSourceId());
                                         appNotif.setSmallIcon(R.drawable.app_icon)
                                                 .setTicker(notifArray.get(val).getDoerName()+" has posted in "+topic.getTopicName())
@@ -221,7 +221,7 @@ public class MyService extends Service {
                                         PendingIntent pendingIntent = PendingIntent.getActivity(MyService.this, 0, intentNotif, PendingIntent.FLAG_UPDATE_CURRENT);
                                         appNotif.setContentIntent(pendingIntent);
                                     }
-                                    if(notifArray.get(val).getType()==4){
+                                    if(notifArray.get(val).getType()==4 && (notifArray.get(val).getDoerId()==user.getUserId())){
                                         Topic topic = getTopic(notifArray.get(val).getSourceId());
 
                                         appNotif.setSmallIcon(R.drawable.app_icon)
@@ -234,7 +234,7 @@ public class MyService extends Service {
                                         PendingIntent pendingIntent = PendingIntent.getActivity(MyService.this, 0, intentNotif, PendingIntent.FLAG_UPDATE_CURRENT);
                                         appNotif.setContentIntent(pendingIntent);
                                     }
-                                    if(notifArray.get(val).getType()==5){
+                                    if(notifArray.get(val).getType()==5 && (notifArray.get(val).getDoerId()==user.getUserId())){
                                         Topic topic = getTopic(notifArray.get(val).getSourceId());
 
                                         appNotif.setSmallIcon(R.drawable.app_icon)

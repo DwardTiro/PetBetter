@@ -58,6 +58,7 @@ public class BookmarksActivity extends AppCompatActivity implements NavigationVi
     private NotificationReceiver notifReceiver = new NotificationReceiver();
     private ImageView imageViewDrawer;
     private int currFragment = 1;
+    private Button addTopicButton;
 
     HerokuService service;
 
@@ -105,6 +106,10 @@ public class BookmarksActivity extends AppCompatActivity implements NavigationVi
         String email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
         textNavEmail = (TextView) headerView.findViewById(R.id.textNavEmail);
         textNavEmail.setText(email);
+
+        addTopicButton = (Button) findViewById(R.id.addTopicButton);
+
+        addTopicButton.setVisibility(View.GONE);
 
         user = getUser(email);
         imageViewDrawer = (ImageView) headerView.findViewById(R.id.imageViewDrawer);

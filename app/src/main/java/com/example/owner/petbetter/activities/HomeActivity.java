@@ -81,6 +81,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private ArrayList<Veterinarian> vetList;
     HerokuService service;
     private ImageView imageViewDrawer;
+    private Button addTopicButton;
 
 
     @Override
@@ -112,6 +113,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         petCareButton = (Button) findViewById(R.id.petCareButton);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refreshHome);
         notifButton = (ImageView) findViewById(R.id.imageview_notifs);
+        addTopicButton = (Button) findViewById(R.id.addTopicButton);
+
+        addTopicButton.setVisibility(View.GONE);
 
         View headerView = navigationView.getHeaderView(0);
 

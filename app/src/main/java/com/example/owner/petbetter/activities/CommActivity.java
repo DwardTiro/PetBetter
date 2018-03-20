@@ -74,6 +74,7 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
     private int currFragment;
     private ImageView notifButton;
     private ImageView imageViewDrawer;
+    private Button addTopicButton;
 
     private NotificationReceiver notifReceiver = new NotificationReceiver(this);
     private NotificationReceiver notifReceiver2 = new NotificationReceiver();
@@ -160,6 +161,8 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
             imageViewDrawer.setVisibility(View.VISIBLE);
         }
         notifButton = (ImageView) findViewById(R.id.imageview_notifs);
+        addTopicButton = (Button) findViewById(R.id.addTopicButton);
+
 
         if(!getUnsyncedNotifications().isEmpty())
             notifButton.setImageResource(R.mipmap.ic_notifications_active_black_24dp);
@@ -238,6 +241,13 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
                 //Redirect to notifications
                 Intent intent = new Intent(CommActivity.this, com.example.owner.petbetter.activities.NotificationActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        addTopicButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                
             }
         });
 

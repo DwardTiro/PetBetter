@@ -62,6 +62,7 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
     private TextView userPostNum;
     private TextView userTopicNum;
     private ImageView imageViewDrawer;
+    private Button addTopicButton;
 
     HerokuService service;
 
@@ -111,6 +112,9 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
         textNavEmail = (TextView) headerView.findViewById(R.id.textNavEmail);
         textNavEmail.setText(email);
         notifButton = (ImageView) findViewById(R.id.imageview_notifs);
+        addTopicButton = (Button) findViewById(R.id.addTopicButton);
+
+        addTopicButton.setVisibility(View.GONE);
 
         if(!getUnsyncedNotifications().isEmpty())
             notifButton.setImageResource(R.mipmap.ic_notifications_active_black_24dp);
