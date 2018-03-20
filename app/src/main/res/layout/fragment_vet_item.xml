@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="330dp"
-    android:layout_height="220dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:layout_marginBottom="4dp"
-    android:layout_marginEnd="0dp"
-    android:layout_marginStart="15dp"
+    android:layout_marginEnd="10dp"
+    android:layout_marginStart="10dp"
     android:layout_marginTop="3dp"
     android:background="@drawable/rounded_bg_corner"
     android:orientation="vertical"
+    android:paddingBottom="5dp"
     android:weightSum="1">
 
     <RelativeLayout
         android:id="@+id/imageLayout"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
         <FrameLayout
             android:id="@+id/frameLayout"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
@@ -25,63 +26,64 @@
 
             <ImageView
                 android:id="@+id/vetListImage"
-                android:layout_width="310dp"
-                android:layout_height="140dp"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
 
                 android:layout_marginEnd="5dp"
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="5dp"
                 android:background="@drawable/sample_vet_clinic" />
 
-            <TextView
-                android:id="@+id/vetListRating"
-                android:layout_width="35dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="5dp"
-                android:layout_marginStart="280dp"
-                android:layout_marginTop="124dp"
-                android:background="@color/main_Color"
-                android:text="5.0"
-                android:textAlignment="center"
-                android:textColor="@color/colorAccent"
-                android:textSize="17sp"
-                android:textStyle="bold"
-                />
 
             <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
                 android:src="@drawable/image_border" />
         </FrameLayout>
 
     </RelativeLayout>
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/vetListName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imageLayout"
-        android:layout_marginStart="12dp"
-        android:orientation="vertical">
+        android:layout_gravity="center_horizontal"
+        android:layout_toEndOf="@+id/imageLayout"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="5dp"
+        android:text="@string/sample_name"
+        android:textColor="@color/black"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        />
 
-        <TextView
-            android:id="@+id/vetListName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
+    <TextView
+        android:id="@+id/vetListSpecialty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Animal Behaviour"
+        android:textColor="@color/darkAccent"
+        android:layout_toEndOf="@+id/imageLayout"
+        android:layout_below="@id/vetListName"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="3dp"
+        android:textSize="15sp" />
 
-            android:text="@string/sample_name"
-            android:textColor="@color/black"
-            android:textSize="@dimen/listing_font_size"
-            android:textStyle="bold" />
+    <TextView
+        android:id="@+id/vetListRating"
+        android:layout_width="35dp"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/imageLayout"
+        android:layout_below="@id/vetListSpecialty"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@color/main_Color"
+        android:text="5.0"
+        android:textAlignment="center"
+        android:textColor="@color/colorAccent"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        />
 
-        <TextView
-            android:id="@+id/vetListSpecialty"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Animal Behaviour"
-            android:textColor="@color/darkAccent"
-            android:textSize="13sp" />
 
-
-    </LinearLayout>
 </RelativeLayout>
