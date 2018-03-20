@@ -30,6 +30,8 @@
                 android:layout_marginLeft="50dp"
                 android:layout_width="225dp"
                 android:layout_height="wrap_content"
+                android:hint="Search Messages"
+                android:paddingStart="3dp"
                 />
 
             <LinearLayout
