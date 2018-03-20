@@ -128,7 +128,7 @@ public class SignUpUserActivity extends AppCompatActivity {
                     System.out.println("User added to server successfully");
                     Intent intent = new Intent(
                             SignUpUserActivity.this,
-                            com.example.owner.petbetter.activities.SignUpUserTypeActivity.class
+                            com.example.owner.petbetter.activities.MainActivity.class
                     );
                     startActivity(intent);
                 }
