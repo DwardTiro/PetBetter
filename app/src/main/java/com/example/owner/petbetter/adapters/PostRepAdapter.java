@@ -115,7 +115,7 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
             String newFileName = BASE_URL + user.getUserPhoto();
             System.out.println(newFileName);
             //String newFileName = "http://192.168.0.19/petbetter/"+thisMessageRep.getMessagePhoto();
-            Glide.with(inflater.getContext()).load(newFileName).error(R.drawable.back_button).into(holder.postRepImage);
+            Glide.with(inflater.getContext()).load(newFileName).error(R.drawable.app_icon_yellow).into(holder.postRepImage);
             /*
             Picasso.with(inflater.getContext()).load("http://".concat(newFileName))
                     .error(R.drawable.back_button).into(holder.messageRepImage);*/
