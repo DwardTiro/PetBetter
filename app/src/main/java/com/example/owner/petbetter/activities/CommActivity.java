@@ -31,6 +31,7 @@ import com.bumptech.glide.Glide;
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
+import com.example.owner.petbetter.classes.Facility;
 import com.example.owner.petbetter.classes.Notifications;
 import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.Topic;
@@ -247,7 +248,8 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
         addTopicButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                
+                Intent intent = new Intent(CommActivity.this, com.example.owner.petbetter.activities.NewTopicActivity.class);
+                startActivity(intent);
             }
         });
 
