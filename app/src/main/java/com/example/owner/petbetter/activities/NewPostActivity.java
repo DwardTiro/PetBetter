@@ -208,7 +208,7 @@ public class NewPostActivity extends AppCompatActivity {
             System.out.println("REQUEST CODE 111 ID: " + idLink);
 
             if(idType==1){
-                Veterinarian veterinarian = getVeterinarianWithId(idLink);
+                Veterinarian veterinarian = getVeterinarianFromId(idLink);
                 //User user = getUserWithId(idLink);
                 if(user!=null){
                     newPostLocationName.setVisibility(View.VISIBLE);
@@ -306,7 +306,7 @@ public class NewPostActivity extends AppCompatActivity {
         return result;
     }
 
-    private Veterinarian getVeterinarianWithId(long userId){
+    private Veterinarian getVeterinarianFromId(long userId){
 
         try {
             petBetterDb.openDatabase();
@@ -314,7 +314,7 @@ public class NewPostActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        Veterinarian result = petBetterDb.getVeterinarianWithId(userId);
+        Veterinarian result = petBetterDb.getVeterinarianFromId(userId);
         petBetterDb.closeDatabase();
 
         return result;

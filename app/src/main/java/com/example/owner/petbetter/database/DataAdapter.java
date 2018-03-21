@@ -289,6 +289,32 @@ public class DataAdapter {
         return result;
     }
 
+    public Veterinarian getVeterinarianFromId(long id){
+        String sql = "SELECT * FROM " + VET_TABLE + " WHERE _id = '" + id + "'";
+
+
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        c.moveToFirst();
+        User user = getUserWithId((int) c.getLong(c.getColumnIndexOrThrow("user_id")));
+        Veterinarian result = new Veterinarian(
+                c.getInt(c.getColumnIndexOrThrow("_id")),
+                c.getLong(c.getColumnIndexOrThrow("user_id")),
+                user.getLastName(),
+                user.getFirstName(),
+                user.getMobileNumber(),
+                user.getPhoneNumber(),
+                user.getEmail(),
+                user.getPassword(),
+                user.getAge(),
+                user.getUserType(),
+                user.getUserPhoto(),
+                c.getString(c.getColumnIndexOrThrow("specialty")),
+                c.getFloat(c.getColumnIndexOrThrow("rating"))
+        );
+        return result;
+    }
+
     public Veterinarian getVeterinarianWithId(long user_id){
         User user = getUserWithId((int) user_id);
         String sql = "SELECT * FROM " + VET_TABLE + " WHERE user_id = '" + user_id + "'";
