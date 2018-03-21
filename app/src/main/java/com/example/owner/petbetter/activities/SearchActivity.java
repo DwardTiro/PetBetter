@@ -123,12 +123,7 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
         relativeLayout.setClickable(true);
 
 
-        if(user.getUserType() == 1){
-            vetSearchButton.setVisibility(View.GONE);
-            petSearchButton.setVisibility(View.GONE);
-            topicSearchClicked(this.findViewById(android.R.id.content));
-        }else
-            vetSearchClicked(this.findViewById(android.R.id.content));
+        vetSearchClicked(this.findViewById(android.R.id.content));
 
         //  recyclerView = (RecyclerView) findViewById(R.id.recyclerViewSearch);
         // recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -161,10 +156,18 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
             public void onResponse(Call<ArrayList<Veterinarian>> call, Response<ArrayList<Veterinarian>> response) {
                 ArrayList<Veterinarian> vetList = response.body();
 
-                fragment1 = new FragmentVetListing(vetList);
+                if (isLinked) {
+                    FragmentVetListing fragment1 = new FragmentVetListing(vetList, isLinked);
+                    getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment1).
+                            addToBackStack(null).commitAllowingStateLoss();
+                }
+                else{
+                    fragment1 = new FragmentVetListing(vetList);
+                    getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment1).
+                            addToBackStack(null).commitAllowingStateLoss();
+                }
 
-                getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment1).
-                        addToBackStack(null).commitAllowingStateLoss();
+
                 // getSupportFragmentManager().beginTransaction().add(R.id.frame_search,fragment1).commitAllowingStateLoss();
                 //ArrayAdapter<Veterinarian> adapter = new ArrayAdapter<Veterinarian>(this,R.layout.,vetList);
 
@@ -202,9 +205,19 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
                         public void onResponse(Call<ArrayList<Veterinarian>> call, Response<ArrayList<Veterinarian>> response) {
                             ArrayList<Veterinarian> vetList = response.body();
 
-                            FragmentVetListing fragment1 = new FragmentVetListing(vetList);
-                            getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment1).
-                                    addToBackStack(null).commitAllowingStateLoss();
+                            if(isLinked){
+                                fragment1 = new FragmentVetListing(vetList, isLinked);
+
+                                getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment1).
+                                        addToBackStack(null).commitAllowingStateLoss();
+                            }
+                            else{
+                                FragmentVetListing fragment1 = new FragmentVetListing(vetList);
+                                getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment1).
+                                        addToBackStack(null).commitAllowingStateLoss();
+                            }
+
+
                             //ArrayAdapter<Veterinarian> adapter = new ArrayAdapter<Veterinarian>(this,R.layout.,vetList);
 
                         }
@@ -359,9 +372,17 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
             public void onResponse(Call<ArrayList<Topic>> call, Response<ArrayList<Topic>> response) {
                 ArrayList<Topic> topicList = response.body();
 
-                FragmentCommunity fragment1 = new FragmentCommunity(topicList);
-                getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment1).
-                        addToBackStack(null).commitAllowingStateLoss();
+                if (isLinked) {
+                    FragmentCommunity fragment1 = new FragmentCommunity(topicList, true);
+                    getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment1).
+                            addToBackStack(null).commitAllowingStateLoss();
+                }
+                else{
+                    FragmentCommunity fragment1 = new FragmentCommunity(topicList);
+                    getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment1).
+                            addToBackStack(null).commitAllowingStateLoss();
+                }
+
                 //ArrayAdapter<Veterinarian> adapter = new ArrayAdapter<Veterinarian>(this,R.layout.,vetList);
 
             }
@@ -397,9 +418,17 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
                         public void onResponse(Call<ArrayList<Topic>> call, Response<ArrayList<Topic>> response) {
                             ArrayList<Topic> topicList = response.body();
 
-                            FragmentCommunity fragment1 = new FragmentCommunity(topicList);
-                            getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment1).
-                                    addToBackStack(null).commitAllowingStateLoss();
+                            if (isLinked) {
+                                FragmentCommunity fragment1 = new FragmentCommunity(topicList, true);
+                                getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment1).
+                                        addToBackStack(null).commitAllowingStateLoss();
+                            }
+                            else{
+                                FragmentCommunity fragment1 = new FragmentCommunity(topicList);
+                                getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment1).
+                                        addToBackStack(null).commitAllowingStateLoss();
+                            }
+
                             //ArrayAdapter<Veterinarian> adapter = new ArrayAdapter<Veterinarian>(this,R.layout.,vetList);
 
                         }
@@ -446,9 +475,17 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
             public void onResponse(Call<ArrayList<Post>> call, Response<ArrayList<Post>> response) {
                 ArrayList<Post> postList = response.body();
 
-                FragmentHome fragment1 = new FragmentHome(postList);
-                getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment1).
-                        addToBackStack(null).commitAllowingStateLoss();
+                if (isLinked) {
+                    FragmentHome fragment1 = new FragmentHome(postList, true);
+                    getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment1).
+                            addToBackStack(null).commitAllowingStateLoss();
+                }
+                else{
+                    FragmentHome fragment1 = new FragmentHome(postList);
+                    getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment1).
+                            addToBackStack(null).commitAllowingStateLoss();
+                }
+
                 //ArrayAdapter<Veterinarian> adapter = new ArrayAdapter<Veterinarian>(this,R.layout.,vetList);
 
             }
@@ -484,9 +521,16 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
                         public void onResponse(Call<ArrayList<Post>> call, Response<ArrayList<Post>> response) {
                             ArrayList<Post> postList = response.body();
 
-                            FragmentHome fragment1 = new FragmentHome(postList);
-                            getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment1).
-                                    addToBackStack(null).commitAllowingStateLoss();
+                            if (isLinked) {
+                                FragmentHome fragment1 = new FragmentHome(postList, true);
+                                getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment1).
+                                        addToBackStack(null).commitAllowingStateLoss();
+                            }
+                            else{
+                                FragmentHome fragment1 = new FragmentHome(postList);
+                                getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragment1).
+                                        addToBackStack(null).commitAllowingStateLoss();
+                            }
                             //ArrayAdapter<Veterinarian> adapter = new ArrayAdapter<Veterinarian>(this,R.layout.,vetList);
 
                         }
@@ -641,10 +685,6 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
 
         Intent intent = getIntent();
         if(intent.getAction()==Intent.ACTION_GET_CONTENT){
-            petSearchClicked(this.findViewById(android.R.id.content));
-            vetSearchButton.setEnabled(false);
-            topicSearchButton.setEnabled(false);
-            postSearchButton.setEnabled(false);
             isLinked = true;
         }
     }

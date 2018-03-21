@@ -64,6 +64,7 @@ public class FragmentCommunity extends Fragment implements CheckUpdates, PlaceIn
     private boolean allowRefresh = false;
     private PopupWindow popUpConfirmationWindow;
     private ArrayList<Post> topicPosts;
+    private boolean isLinked = false;
 
     public FragmentCommunity() {
     }
@@ -73,7 +74,11 @@ public class FragmentCommunity extends Fragment implements CheckUpdates, PlaceIn
         this.topicList = topicList;
     }
 
-
+    @SuppressLint("ValidFragment")
+    public FragmentCommunity(ArrayList<Topic> topicList, boolean isLinked) {
+        this.topicList = topicList;
+        this.isLinked = isLinked;
+    }
 
     @Override
     public void onPause() {
@@ -109,15 +114,31 @@ public class FragmentCommunity extends Fragment implements CheckUpdates, PlaceIn
         }
         System.out.println("Size of postList "+topicList.size());
 
-        communityAdapter = new CommunityAdapter(getActivity(), topicList, user, new CommunityAdapter.OnItemClickListener() {
-            @Override public void onItemClick(Topic item) {
+        if(isLinked){
+            communityAdapter = new CommunityAdapter(getActivity(), topicList, user, new CommunityAdapter.OnItemClickListener() {
+                @Override public void onItemClick(Topic item) {
+                    Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.NewPostActivity.class);
+                    //System.out.println("REQUEST CODE ID BEFORE PASSING "+item.getId());
+                    //intent.putExtra("faciId", new Gson().toJson(item.getId()));
+                    intent.putExtra("faciId", item.getId());
+                    intent.putExtra("id_type", 3);
+                    getActivity().setResult(getActivity().RESULT_OK, intent);
+                    getActivity().finish();
 
-                Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.TopicContentActivity.class);
-                intent.putExtra("thisTopic", new Gson().toJson(item));
-                startActivity(intent);
+                }
+            });
+        }
+        else{
+            communityAdapter = new CommunityAdapter(getActivity(), topicList, user, new CommunityAdapter.OnItemClickListener() {
+                @Override public void onItemClick(Topic item) {
 
-            }
-        });
+                    Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.TopicContentActivity.class);
+                    intent.putExtra("thisTopic", new Gson().toJson(item));
+                    startActivity(intent);
+
+                }
+            });
+        }
         //homeAdapter = new HomeAdapter(getActivity(), postList);
         communityAdapter.notifyItemRangeChanged(0, communityAdapter.getItemCount());
         recyclerView.setAdapter(communityAdapter);

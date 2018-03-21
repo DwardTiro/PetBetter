@@ -29,6 +29,7 @@ import com.example.owner.petbetter.classes.Notifications;
 import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.Topic;
 import com.example.owner.petbetter.classes.User;
+import com.example.owner.petbetter.classes.Veterinarian;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.google.gson.Gson;
@@ -61,7 +62,11 @@ public class NewPostActivity extends AppCompatActivity {
     private HerokuService service;
     private static final int IMG_REQUEST = 777;
     private Bitmap bitmap;
-    private long faciId;
+    private long idLink;
+    private long vetId;
+    private long topicid;
+    private long postId;
+    private int idType=0;
 
     private DataAdapter petBetterDb;
     private SystemSessionManager systemSessionManager;
@@ -120,7 +125,8 @@ public class NewPostActivity extends AppCompatActivity {
                     timeStamp = sdf.format(new Date());
 
                     createPost(pId,user.getUserId(), newPostTitle.getText().toString(), newPostDesc.getText().toString(),
-                            topicId, timeStamp, image, (int) faciId, 0, 0);
+                            topicId, timeStamp, image, (int) idLink, idType, 0, 0);
+                    //change later
                     //add faci_id
                     uploadPost(getUnsyncedPosts());
                     //notifyMessage(nId, messageItem.getFromId(), user.getUserId(), 0, 2, timeStamp, sourceId);
@@ -197,14 +203,44 @@ public class NewPostActivity extends AppCompatActivity {
         if(requestCode==111 && resultCode == RESULT_OK){
             System.out.println("REQUEST CODE 111");
             Bundle bundle = data.getExtras();
-            faciId = bundle.getLong("faciId");
-            System.out.println("REQUEST CODE 111 ID: " + faciId);
-            Facility facility = getFacility(faciId);
-            if(facility!=null){
-                newPostLocationName.setVisibility(View.VISIBLE);
-                newPostLocationName.setText(facility.getFaciName());
-                System.out.println("FACI NAME POST "+facility.getFaciName());
+            idLink = bundle.getLong("faciId");
+            idType = bundle.getInt("id_type");
+            System.out.println("REQUEST CODE 111 ID: " + idLink);
+
+            if(idType==1){
+                Veterinarian veterinarian = getVeterinarianWithId(idLink);
+                //User user = getUserWithId(idLink);
+                if(user!=null){
+                    newPostLocationName.setVisibility(View.VISIBLE);
+                    newPostLocationName.setText(veterinarian.getName());
+                }
             }
+
+            if(idType==2){
+                Facility facility = getFacility(idLink);
+                if(facility!=null){
+                    newPostLocationName.setVisibility(View.VISIBLE);
+                    newPostLocationName.setText(facility.getFaciName());
+                    System.out.println("FACI NAME POST "+facility.getFaciName());
+                }
+            }
+
+            if(idType==3){
+                Topic topic = getTopic(idLink);
+                if(topic!=null){
+                    newPostLocationName.setVisibility(View.VISIBLE);
+                    newPostLocationName.setText(topic.getTopicName());
+                }
+            }
+
+            if(idType==4){
+                Post post = getPost(idLink);
+                if(post!=null){
+                    newPostLocationName.setVisibility(View.VISIBLE);
+                    newPostLocationName.setText(post.getTopicName());
+                }
+            }
+
 
         }
     }
@@ -265,6 +301,48 @@ public class NewPostActivity extends AppCompatActivity {
         }
 
         ArrayList<Notifications> result = petBetterDb.getUnsyncedNotifications();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private Veterinarian getVeterinarianWithId(long userId){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        Veterinarian result = petBetterDb.getVeterinarianWithId(userId);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private Topic getTopic(long topicId){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        Topic result = petBetterDb.getTopic(topicId);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private Post getPost(long postId){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        Post result = petBetterDb.getPost(postId);
         petBetterDb.closeDatabase();
 
         return result;
@@ -402,7 +480,7 @@ public class NewPostActivity extends AppCompatActivity {
     * */
 
     private long createPost(int pId, long userId, String postTitle, String postDesc, long topicId, String timeStamp,
-                            String postPhoto, int faciLink, int isDeleted, int isSynced){
+                            String postPhoto, int idLink, int idType, int isDeleted, int isSynced){
         long  result;
 
         try {
@@ -411,7 +489,7 @@ public class NewPostActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        result = petBetterDb.createPost(pId, userId, postTitle, postDesc, topicId, timeStamp, postPhoto, faciLink, isDeleted, isSynced);
+        result = petBetterDb.createPost(pId, userId, postTitle, postDesc, topicId, timeStamp, postPhoto, idLink, idType, isDeleted, isSynced);
         petBetterDb.closeDatabase();
 
 

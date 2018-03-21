@@ -406,7 +406,20 @@ public class PostContentActivity extends AppCompatActivity {
         });
 
         try{
-            facility = getFacility(postItem.getFaciLink());
+            int type = postItem.getIdType();
+            if(type==1){
+
+            }
+            if(type==2){
+                facility = getFacility(postItem.getIdLink());
+            }
+            if(type==3){
+
+            }
+            if(type==4){
+
+            }
+
             locButton.setText(facility.getFaciName());
         }catch(NullPointerException npe){
             locButton.setVisibility(View.GONE);

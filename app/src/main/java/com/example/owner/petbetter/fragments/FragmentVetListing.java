@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.owner.petbetter.R;
+import com.example.owner.petbetter.activities.SearchActivity;
 import com.example.owner.petbetter.activities.VetProfileActivity;
 import com.example.owner.petbetter.adapters.VetListingAdapter;
 import com.example.owner.petbetter.classes.User;
@@ -42,6 +43,7 @@ public class FragmentVetListing extends Fragment {
     private DataAdapter petBetterDb;
     private SystemSessionManager systemSessionManager;
     private User user;
+    private boolean isLinked;
 
     private VetProfileActivity vetProfileActivity;
 
@@ -52,6 +54,13 @@ public class FragmentVetListing extends Fragment {
     public FragmentVetListing(ArrayList<Veterinarian> vetList) {
         this.vetList = vetList;
     }
+
+    @SuppressLint("ValidFragment")
+    public FragmentVetListing(ArrayList<Veterinarian> vetList, boolean isLinked) {
+        this.vetList = vetList;
+        this.isLinked = isLinked;
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance){
@@ -67,14 +76,30 @@ public class FragmentVetListing extends Fragment {
         }
         System.out.println("Rating is "+vetList.get(0).getRating());
 
-        vetListingAdapter = new VetListingAdapter(getActivity(), vetList, new VetListingAdapter.OnItemClickListener() {
-            @Override public void onItemClick(Veterinarian item) {
+        if(isLinked){
+            vetListingAdapter = new VetListingAdapter(getActivity(), vetList, new VetListingAdapter.OnItemClickListener() {
+                @Override public void onItemClick(Veterinarian item) {
 
-                Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.VetProfileActivity.class);
-                intent.putExtra("thisVet", new Gson().toJson(item));
-                startActivity(intent);
-            }
-        });
+                    Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.NewPostActivity.class);
+                    //System.out.println("REQUEST CODE ID BEFORE PASSING "+item.getId());
+                    //intent.putExtra("faciId", new Gson().toJson(item.getId()));
+                    intent.putExtra("faciId", (long) item.getId());
+                    intent.putExtra("id_type", 1);
+                    getActivity().setResult(getActivity().RESULT_OK, intent);
+                    getActivity().finish();
+                }
+            });
+        }
+        else{
+            vetListingAdapter = new VetListingAdapter(getActivity(), vetList, new VetListingAdapter.OnItemClickListener() {
+                @Override public void onItemClick(Veterinarian item) {
+
+                    Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.VetProfileActivity.class);
+                    intent.putExtra("thisVet", new Gson().toJson(item));
+                    startActivity(intent);
+                }
+            });
+        }
         recyclerView.setAdapter(vetListingAdapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);

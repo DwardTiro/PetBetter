@@ -57,6 +57,7 @@ public class FragmentHome extends Fragment implements CheckUpdates {
     private PopupWindow popUpConfirmationWindow;
     private long topicId;
     private int type = 1;
+    private boolean isLinked = false;
 
     HerokuService service;
 
@@ -66,6 +67,12 @@ public class FragmentHome extends Fragment implements CheckUpdates {
     @SuppressLint("ValidFragment")
     public FragmentHome(ArrayList<Post> postList) {
         this.postList = postList;
+    }
+
+    @SuppressLint("ValidFragment")
+    public FragmentHome(ArrayList<Post> postList, boolean isLinked) {
+        this.postList = postList;
+        this.isLinked = isLinked;
     }
 
     @Override
@@ -126,15 +133,34 @@ public class FragmentHome extends Fragment implements CheckUpdates {
 
         System.out.println("Size of postList "+postList.size());
 
-        homeAdapter = new HomeAdapter(getActivity(), postList, user, new HomeAdapter.OnItemClickListener() {
-            @Override public void onItemClick(Post item) {
-                //Execute command here
-                Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.PostContentActivity.class);
-                System.out.println("PLEASE BAKIT KA GANYAN "+item.getId());
-                intent.putExtra("thisPost", new Gson().toJson(item));
-                startActivity(intent);
+        if(isLinked){
+            if(isLinked){
+                homeAdapter = new HomeAdapter(getActivity(), postList, user, new HomeAdapter.OnItemClickListener() {
+                    @Override public void onItemClick(Post item) {
+
+                        Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.NewPostActivity.class);
+                        //System.out.println("REQUEST CODE ID BEFORE PASSING "+item.getId());
+                        //intent.putExtra("faciId", new Gson().toJson(item.getId()));
+                        intent.putExtra("faciId", item.getId());
+                        intent.putExtra("id_type", 4);
+                        getActivity().setResult(getActivity().RESULT_OK, intent);
+                        getActivity().finish();
+                    }
+                });
             }
-        });
+        }
+        else{
+            homeAdapter = new HomeAdapter(getActivity(), postList, user, new HomeAdapter.OnItemClickListener() {
+                @Override public void onItemClick(Post item) {
+                    //Execute command here
+                    Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.PostContentActivity.class);
+                    System.out.println("PLEASE BAKIT KA GANYAN "+item.getId());
+                    intent.putExtra("thisPost", new Gson().toJson(item));
+                    startActivity(intent);
+                }
+            });
+        }
+
         //homeAdapter = new HomeAdapter(getActivity(), postList);
         homeAdapter.notifyItemRangeChanged(0, homeAdapter.getItemCount());
         recyclerView.setAdapter(homeAdapter);

@@ -32,8 +32,12 @@ public class Post {
     @SerializedName("post_photo")
     private String postPhoto;
 
-    @SerializedName("faci_link")
-    private int faciLink;
+    @SerializedName("id_link")
+    private int idLink;
+
+    @SerializedName("id_type")
+    private int idType;
+
 
     @SerializedName("is_deleted")
     private int isDeleted;
@@ -48,7 +52,7 @@ public class Post {
     }
 
     public Post(long id, long userId, String topicName, String topicContent, long topicId, String dateCreated,
-                String postPhoto, int faciLink, int isDeleted) {
+                String postPhoto, int idLink, int idType, int isDeleted) {
         this.id = id;
         this.userId = userId;
         this.topicName = topicName;
@@ -56,7 +60,8 @@ public class Post {
         this.topicId = topicId;
         this.dateCreated = dateCreated;
         this.postPhoto = postPhoto;
-        this.faciLink = faciLink;
+        this.idLink = idLink;
+        this.idType = idType;
         this.isDeleted = isDeleted;
     }
 
@@ -68,7 +73,7 @@ public class Post {
     }
 
     public Post(long id, long userId, String topicName, String topicContent, String dateCreated, String firstName, String lastName,
-                String postPhoto, int faciLink, int isDeleted) {
+                String postPhoto, int idLink, int idType, int isDeleted) {
         this.id = id;
         this.userId = userId;
         this.topicName = topicName;
@@ -76,8 +81,17 @@ public class Post {
         this.dateCreated = dateCreated;
         this.topicUser = firstName +" "+ lastName;
         this.postPhoto = postPhoto;
-        this.faciLink = faciLink;
+        this.idLink = idLink;
+        this.idType = idType;
         this.isDeleted = isDeleted;
+    }
+
+    public int getIdType() {
+        return idType;
+    }
+
+    public void setIdType(int idType) {
+        this.idType = idType;
     }
 
     public String getPostPhoto() {
@@ -88,12 +102,12 @@ public class Post {
         this.postPhoto = postPhoto;
     }
 
-    public int getFaciLink() {
-        return faciLink;
+    public int getIdLink() {
+        return idLink;
     }
 
-    public void setFaciLink(int faciLink) {
-        this.faciLink = faciLink;
+    public void setIdLink(int faciLink) {
+        this.idLink = faciLink;
     }
 
     public void setId(long id) {

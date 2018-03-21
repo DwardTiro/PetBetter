@@ -383,7 +383,7 @@ public class DataAdapter {
 
         String sql = "SELECT p._id AS _id, p.user_id, p.topic_name AS topic_name, p.topic_content AS topic_content, " +
                 "p.date_created AS date_created, u.first_name AS first_name, u.last_name AS last_name, p.is_deleted AS is_deleted," +
-                " p.post_photo AS post_photo, p.faci_link AS faci_link FROM posts AS p INNER JOIN users u ON p.user_id = u._id WHERE p.is_deleted != 1";
+                " p.post_photo AS post_photo, p.id_link AS id_link, p.id_type AS id_type FROM posts AS p INNER JOIN users u ON p.user_id = u._id WHERE p.is_deleted != 1";
         Cursor c = petBetterDb.rawQuery(sql, null);
 
         while(c.moveToNext()) {
@@ -396,7 +396,8 @@ public class DataAdapter {
                     c.getString(c.getColumnIndexOrThrow("first_name")),
                     c.getString(c.getColumnIndexOrThrow("last_name")),
                     c.getString(c.getColumnIndexOrThrow("post_photo")),
-                    c.getInt(c.getColumnIndexOrThrow("faci_link")),
+                    c.getInt(c.getColumnIndexOrThrow("id_link")),
+                    c.getInt(c.getColumnIndexOrThrow("id_type")),
                     c.getInt(c.getColumnIndexOrThrow("is_deleted")));
             results.add(post);
         }
@@ -858,7 +859,8 @@ public class DataAdapter {
                     c.getLong(c.getColumnIndexOrThrow("topic_id")),
                     c.getString(c.getColumnIndexOrThrow("date_created")),
                     c.getString(c.getColumnIndexOrThrow("post_photo")),
-                    c.getInt(c.getColumnIndexOrThrow("faci_link")),
+                    c.getInt(c.getColumnIndexOrThrow("id_link")),
+                    c.getInt(c.getColumnIndexOrThrow("id_type")),
                     c.getInt(c.getColumnIndexOrThrow("is_deleted")));
             results.add(post);
         }
@@ -1715,7 +1717,7 @@ public class DataAdapter {
 
         String sql = "SELECT p._id AS _id, p.user_id, p.topic_name AS topic_name, p.topic_content AS topic_content, " +
                 "p.date_created AS date_created, u.first_name AS first_name, u.last_name AS last_name, p.is_deleted AS is_deleted, " +
-                "p.post_photo AS post_photo, p.faci_link AS faci_link FROM posts AS p INNER JOIN users u ON p.user_id = u._id INNER JOIN topics t " +
+                "p.post_photo AS post_photo, p.id_link AS id_link, p.id_type AS id_type FROM posts AS p INNER JOIN users u ON p.user_id = u._id INNER JOIN topics t " +
                 "ON p.topic_id = t._id WHERE p.topic_id = '" + topicId + "' AND p.is_deleted != 1";
         Cursor c = petBetterDb.rawQuery(sql, null);
 
@@ -1729,7 +1731,8 @@ public class DataAdapter {
                     c.getString(c.getColumnIndexOrThrow("first_name")),
                     c.getString(c.getColumnIndexOrThrow("last_name")),
                     c.getString(c.getColumnIndexOrThrow("post_photo")),
-                    c.getInt(c.getColumnIndexOrThrow("faci_link")),
+                    c.getInt(c.getColumnIndexOrThrow("id_link")),
+                    c.getInt(c.getColumnIndexOrThrow("id_type")),
                     c.getInt(c.getColumnIndexOrThrow("is_deleted")));
             results.add(post);
         }
@@ -1754,7 +1757,7 @@ public class DataAdapter {
     }
 
     public long createPost(int pId, long userId, String postTitle, String postDesc, long topicId, String timeStamp,
-                           String postPhoto, int faciLink, int isDeleted, int isSynced){
+                           String postPhoto, int idLink, int idType, int isDeleted, int isSynced){
         long result;
 
         ContentValues cv = new ContentValues();
@@ -1765,7 +1768,8 @@ public class DataAdapter {
         cv.put("topic_id", topicId);
         cv.put("date_created", timeStamp);
         cv.put("post_photo", postPhoto);
-        cv.put("faci_link", faciLink);
+        cv.put("id_link", idLink);
+        cv.put("id_type", idType);
         cv.put("is_deleted", isDeleted);
         cv.put("is_synced", isSynced);
 
@@ -1781,7 +1785,7 @@ public class DataAdapter {
 
         String sql = "SELECT p._id AS _id, p.user_id, p.topic_name AS topic_name, p.topic_content AS topic_content, " +
                 "p.date_created AS date_created, u.first_name AS first_name, u.last_name AS last_name, p.post_photo AS post_photo, " +
-                "p.faci_link AS faci_link, p.is_deleted AS is_deleted FROM posts AS p INNER JOIN users u ON p.user_id = u._id INNER JOIN topics t " +
+                "p.id_link AS id_link, p.id_type AS id_type, p.is_deleted AS is_deleted FROM posts AS p INNER JOIN users u ON p.user_id = u._id INNER JOIN topics t " +
                 "ON p.topic_id = t._id WHERE p.user_id = '" + userId + "' AND p.is_deleted != 1";
         Cursor c = petBetterDb.rawQuery(sql, null);
 
@@ -1795,7 +1799,8 @@ public class DataAdapter {
                     c.getString(c.getColumnIndexOrThrow("first_name")),
                     c.getString(c.getColumnIndexOrThrow("last_name")),
                     c.getString(c.getColumnIndexOrThrow("post_photo")),
-                    c.getInt(c.getColumnIndexOrThrow("faci_link")),
+                    c.getInt(c.getColumnIndexOrThrow("id_link")),
+                    c.getInt(c.getColumnIndexOrThrow("id_type")),
                     c.getInt(c.getColumnIndexOrThrow("is_deleted")));
             results.add(post);
         }
@@ -2627,7 +2632,8 @@ public class DataAdapter {
             cv.put("topic_id", post.getTopicId());
             cv.put("date_created", post.getDateCreated());
             cv.put("post_photo", post.getPostPhoto());
-            cv.put("faci_link", post.getFaciLink());
+            cv.put("id_link", post.getIdLink());
+            cv.put("id_type", post.getIdType());
             cv.put("is_deleted", post.getIsDeleted());
             result = petBetterDb.insert(POST_TABLE, null, cv);
         }
