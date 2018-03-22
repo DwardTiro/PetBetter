@@ -647,7 +647,6 @@ public class MapsActivity extends FragmentActivity
                 openTime,
                 closeTime,
                 phoneNum,
-                vetId,
                 0,
                 image
         );

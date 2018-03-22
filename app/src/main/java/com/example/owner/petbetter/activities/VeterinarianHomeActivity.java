@@ -193,11 +193,12 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
 
         if(user.getUserType()==1){
             thisVet = getVeterinarianWithId(user.getUserId());
+            /*
             faciList = getFacilitiesByVetId(thisVet.getId());
             if(faciList.size()>0){
                 FragmentPetClinicListing fragment = new FragmentPetClinicListing(faciList);
                 getSupportFragmentManager().beginTransaction().replace(R.id.vethome_container,fragment).commitAllowingStateLoss();
-            }
+            }*/
         }
     }
 
@@ -391,6 +392,7 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
         return result;
     }
 
+    /*
     private ArrayList<Facility> getFacilitiesByVetId(long vetId) {
 
         try {
@@ -403,7 +405,7 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
         petBetterDb.closeDatabase();
 
         return result;
-    }
+    }*/
 
 
     public void vetAddFacilityOnClick(View view){

@@ -13,9 +13,6 @@ public class Facility {
     @SerializedName("faci_id")
     private long id;
 
-    @SerializedName("vet_id")
-    private int vetId;
-
     @SerializedName("rating")
     private float rating;
 
@@ -40,18 +37,17 @@ public class Facility {
     private double longitude;
     private double latitude;
 
-    public Facility(int id, String faciName, String location, String hoursOpen, String hoursClose, String contactInfo, int vetId, float rating) {
+    public Facility(int id, String faciName, String location, String hoursOpen, String hoursClose, String contactInfo, float rating) {
         this.id = id;
         this.faciName = faciName;
         this.location = location;
         this.hoursOpen = hoursOpen;
         this.hoursClose = hoursClose;
         this.contactInfo = contactInfo;
-        this.vetId = vetId;
         this.rating = rating;
     }
 
-    public Facility(int id, String faciName, String location, String hoursOpen, String hoursClose, String contactInfo, int vetId,
+    public Facility(int id, String faciName, String location, String hoursOpen, String hoursClose, String contactInfo,
                     float rating, String faciPhoto) {
         this.id = id;
         this.faciName = faciName;
@@ -59,7 +55,6 @@ public class Facility {
         this.hoursOpen = hoursOpen;
         this.hoursClose = hoursClose;
         this.contactInfo = contactInfo;
-        this.vetId = vetId;
         this.rating = rating;
         this.faciPhoto = faciPhoto;
     }
@@ -93,14 +88,6 @@ public class Facility {
     }
     public void setRating(float rating){
         this.rating = rating;
-    }
-
-    public int getVetId() {
-        return vetId;
-    }
-
-    public void setVetId(int vetId) {
-        this.vetId = vetId;
     }
 
     public long getId() {

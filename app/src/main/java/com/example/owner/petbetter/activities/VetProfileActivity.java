@@ -105,7 +105,7 @@ public class VetProfileActivity extends AppCompatActivity {
         profileName.setText(vetItem.getFirstName()+" " +vetItem.getLastName());
         vetName.setText(vetItem.getFirstName()+" "+vetItem.getLastName());
         vetLandline.setText(vetItem.getMobileNumber());
-        vetSpecialty.setText(vetItem.getSpecialty());
+        //vetSpecialty.setText(vetItem.getSpecialty());
 
         if(vetItem.getUserPhoto()!=null){
             String newFileName = BASE_URL + vetItem.getUserPhoto();

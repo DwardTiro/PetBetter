@@ -124,7 +124,7 @@ public class EditFacilityActivity extends AppCompatActivity {
 
             editFacility(faciItem.getId(), facilityName.getText().toString(), faciItem.getLocation(),
                     openTime.getSelectedItem().toString(), closeTime.getSelectedItem().toString(), phoneNum.getText().toString(),
-                    faciItem.getVetId(), faciItem.getRating(), image);
+                    faciItem.getRating(), image);
 
             uploadFacilityChanges();
             Intent intent = new Intent(EditFacilityActivity.this, com.example.owner.petbetter.activities.VeterinarianHomeActivity.class);
@@ -204,7 +204,7 @@ public class EditFacilityActivity extends AppCompatActivity {
     }
 
     private void editFacility(long _id, String faciName, String location, String hoursOpen,String hoursClose,
-                              String contactInfo, long vetId, float rating, String faciPhoto) {
+                              String contactInfo, float rating, String faciPhoto) {
 
         try {
             petBetterDb.openDatabase();
@@ -212,7 +212,7 @@ public class EditFacilityActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        petBetterDb.editFacility(_id, faciName, location, hoursOpen, hoursClose, contactInfo, vetId, rating, faciPhoto);
+        petBetterDb.editFacility(_id, faciName, location, hoursOpen, hoursClose, contactInfo, rating, faciPhoto);
         petBetterDb.closeDatabase();
 
     }

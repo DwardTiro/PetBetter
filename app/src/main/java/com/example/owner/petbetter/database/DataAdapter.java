@@ -309,8 +309,11 @@ public class DataAdapter {
                 user.getAge(),
                 user.getUserType(),
                 user.getUserPhoto(),
-                c.getString(c.getColumnIndexOrThrow("specialty")),
-                c.getFloat(c.getColumnIndexOrThrow("rating"))
+                c.getInt(c.getColumnIndexOrThrow("specialty")),
+                c.getFloat(c.getColumnIndexOrThrow("rating")),
+                c.getString(c.getColumnIndexOrThrow("education")),
+                c.getInt(c.getColumnIndexOrThrow("is_licensed")),
+                c.getString(c.getColumnIndexOrThrow("profile_desc"))
         );
         return result;
     }
@@ -335,8 +338,11 @@ public class DataAdapter {
                 user.getAge(),
                 user.getUserType(),
                 user.getUserPhoto(),
-                c.getString(c.getColumnIndexOrThrow("specialty")),
-                c.getFloat(c.getColumnIndexOrThrow("rating"))
+                c.getInt(c.getColumnIndexOrThrow("specialty")),
+                c.getFloat(c.getColumnIndexOrThrow("rating")),
+                c.getString(c.getColumnIndexOrThrow("education")),
+                c.getInt(c.getColumnIndexOrThrow("is_licensed")),
+                c.getString(c.getColumnIndexOrThrow("profile_desc"))
         );
         return result;
     }
@@ -374,7 +380,6 @@ public class DataAdapter {
                 c.getString(c.getColumnIndexOrThrow("hours_open")),
                 c.getString(c.getColumnIndexOrThrow("hours_close")),
                 c.getString(c.getColumnIndexOrThrow("contact_info")),
-                c.getInt(c.getColumnIndexOrThrow("vet_id")),
                 c.getFloat(c.getColumnIndexOrThrow("rating"))
         );
 
@@ -755,10 +760,11 @@ public class DataAdapter {
         while(c.moveToNext()) {
             userId = c.getInt(c.getColumnIndexOrThrow("user_id"));
             user = getUserWithId(userId);
-            Veterinarian vet = new Veterinarian(c.getInt(c.getColumnIndexOrThrow("_id")),
-                    user.getUserId(),
-                    user.getFirstName(),
+            Veterinarian vet = new Veterinarian(
+                    c.getInt(c.getColumnIndexOrThrow("_id")),
+                    c.getLong(c.getColumnIndexOrThrow("user_id")),
                     user.getLastName(),
+                    user.getFirstName(),
                     user.getMobileNumber(),
                     user.getPhoneNumber(),
                     user.getEmail(),
@@ -766,8 +772,12 @@ public class DataAdapter {
                     user.getAge(),
                     user.getUserType(),
                     user.getUserPhoto(),
-                    c.getString(c.getColumnIndexOrThrow("specialty")),
-                    c.getFloat(c.getColumnIndexOrThrow("rating")));
+                    c.getInt(c.getColumnIndexOrThrow("specialty")),
+                    c.getFloat(c.getColumnIndexOrThrow("rating")),
+                    c.getString(c.getColumnIndexOrThrow("education")),
+                    c.getInt(c.getColumnIndexOrThrow("is_licensed")),
+                    c.getString(c.getColumnIndexOrThrow("profile_desc"))
+            );
             results.add(vet);
         }
 
@@ -786,7 +796,6 @@ public class DataAdapter {
             cv.put("hours_open", clinics.get(id-1).getHoursOpen());
             cv.put("hours_close", clinics.get(id-1).getHoursClose());
             cv.put("contact_info", clinics.get(id-1).getContactInfo());
-            cv.put("vet_id", clinics.get(id-1).getVetId());
             cv.put("rating", clinics.get(id-1).getRating());
 
             String[] whereArgs = new String[]{String.valueOf(id)};
@@ -810,10 +819,11 @@ public class DataAdapter {
         while(c.moveToNext()) {
             userId = c.getInt(c.getColumnIndexOrThrow("user_id"));
             user = getUserWithId(userId);
-            Veterinarian vet = new Veterinarian(c.getInt(c.getColumnIndexOrThrow("_id")),
-                    user.getUserId(),
-                    user.getFirstName(),
+            Veterinarian vet = new Veterinarian(
+                    c.getInt(c.getColumnIndexOrThrow("_id")),
+                    c.getLong(c.getColumnIndexOrThrow("user_id")),
                     user.getLastName(),
+                    user.getFirstName(),
                     user.getMobileNumber(),
                     user.getPhoneNumber(),
                     user.getEmail(),
@@ -821,8 +831,12 @@ public class DataAdapter {
                     user.getAge(),
                     user.getUserType(),
                     user.getUserPhoto(),
-                    c.getString(c.getColumnIndexOrThrow("specialty")),
-                    c.getFloat(c.getColumnIndexOrThrow("rating")));
+                    c.getInt(c.getColumnIndexOrThrow("specialty")),
+                    c.getFloat(c.getColumnIndexOrThrow("rating")),
+                    c.getString(c.getColumnIndexOrThrow("education")),
+                    c.getInt(c.getColumnIndexOrThrow("is_licensed")),
+                    c.getString(c.getColumnIndexOrThrow("profile_desc"))
+            );
             results.add(vet);
         }
 
@@ -1131,7 +1145,6 @@ public class DataAdapter {
                     c.getString(c.getColumnIndexOrThrow("hours_open")),
                     c.getString(c.getColumnIndexOrThrow("hours_close")),
                     c.getString(c.getColumnIndexOrThrow("contact_info")),
-                    c.getInt(c.getColumnIndexOrThrow("vet_id")),
                     c.getFloat(c.getColumnIndexOrThrow("rating")));
             results.add(facility);
         }
@@ -1215,7 +1228,6 @@ public class DataAdapter {
                     c.getString(c.getColumnIndexOrThrow("hours_open")),
                     c.getString(c.getColumnIndexOrThrow("hours_close")),
                     c.getString(c.getColumnIndexOrThrow("contact_info")),
-                    c.getInt(c.getColumnIndexOrThrow("vet_id")),
                     c.getFloat(c.getColumnIndexOrThrow("rating")),
                     c.getString(c.getColumnIndexOrThrow("faci_photo")));
             results.add(facility);
@@ -1932,6 +1944,8 @@ public class DataAdapter {
         return ids;
     }*/
 
+    /*
+    //rewrite this
     public ArrayList<Facility> getFacilitiesByVetId(long vetId){
         ArrayList<Facility> results = new ArrayList<>();
 
@@ -1946,7 +1960,6 @@ public class DataAdapter {
                     c.getString(c.getColumnIndexOrThrow("hours_open")),
                     c.getString(c.getColumnIndexOrThrow("hours_close")),
                     c.getString(c.getColumnIndexOrThrow("contact_info")),
-                    c.getInt(c.getColumnIndexOrThrow("vet_id")),
                     c.getFloat(c.getColumnIndexOrThrow("rating")),
                     c.getString(c.getColumnIndexOrThrow("faci_photo")));
             results.add(facility);
@@ -1954,7 +1967,7 @@ public class DataAdapter {
 
         c.close();
         return results;
-    }
+    }*/
 
     public ArrayList<Float> getVeterinarianRatings(long vet_id){
 
@@ -2378,7 +2391,7 @@ public class DataAdapter {
     }
 
     public void editFacility(long _id, String faciName, String location, String hoursOpen,String hoursClose,
-                            String contactInfo, long vetId, float rating, String faciPhoto){
+                            String contactInfo, float rating, String faciPhoto){
 
 
         ContentValues cv = new ContentValues();
@@ -2388,7 +2401,6 @@ public class DataAdapter {
         cv.put("hours_open", hoursOpen);
         cv.put("hours_close",hoursClose);
         cv.put("contact_info", contactInfo);
-        cv.put("vet_id", vetId);
         cv.put("rating", rating);
         cv.put("faci_photo", faciPhoto);
         cv.put("is_synced", 0);
@@ -2540,7 +2552,6 @@ public class DataAdapter {
                     c.getString(c.getColumnIndexOrThrow("hours_open")),
                     c.getString(c.getColumnIndexOrThrow("hours_close")),
                     c.getString(c.getColumnIndexOrThrow("contact_info")),
-                    c.getInt(c.getColumnIndexOrThrow("vet_id")),
                     c.getFloat(c.getColumnIndexOrThrow("rating")));
 
             c.close();
@@ -2610,6 +2621,9 @@ public class DataAdapter {
             cv.put("_id", vet.getId());
             cv.put("user_id", vet.getUserId());
             cv.put("rating", vet.getRating());
+            cv.put("education", vet.getEducation());
+            cv.put("is_licensed", vet.getIsLicensed());
+            cv.put("profile_desc", vet.getProfileDesc());
             result = petBetterDb.insert(VET_TABLE, null, cv);
         }
         //System.out.println("2ND REAL NUM OF VETS "+getVeterinarians().size());
@@ -2959,7 +2973,6 @@ public class DataAdapter {
             cv.put("hours_open", facility.getHoursOpen());
             cv.put("hours_close", facility.getHoursClose());
             cv.put("contact_info", facility.getContactInfo());
-            cv.put("vet_id", facility.getVetId());
             cv.put("rating", facility.getRating());
             cv.put("faci_photo", facility.getFaciPhoto());
             result = petBetterDb.insert(FACI_TABLE, null, cv);

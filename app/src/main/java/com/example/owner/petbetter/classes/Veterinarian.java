@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
 public class Veterinarian extends User {
 
     @SerializedName("specialty")
-    String specialty;
+    int specialty;
 
     @SerializedName("_id")
     int id;
@@ -17,15 +17,58 @@ public class Veterinarian extends User {
     @SerializedName("rating")
     float rating;
 
+    @SerializedName("education")
+    String education;
+
+    @SerializedName("is_licensed")
+    int isLicensed;
+
+    @SerializedName("profile_desc")
+    String profileDesc;
+
     public Veterinarian(int id, long userId, String firstName, String lastName, String mobileNumber, String phoneNumber,
-                        String email, String password, int age, int userType, String userPhoto, String specialty, float rating) {
+                        String email, String password, int age, int userType, String userPhoto, int specialty, float rating,
+                        String education, int isLicensed, String profileDesc) {
         super(userId, firstName, lastName, mobileNumber, phoneNumber, email, password, age, userType, userPhoto);
         this.id = id;
         this.specialty = specialty;
         this.rating = rating;
-        //this.phoneNumber = phoneNumber;
+        this.education = education;
+        this.isLicensed = isLicensed;
+        this.profileDesc = profileDesc;
     }
 
+    public int getSpecialty() {
+        return specialty;
+    }
+
+    public void setSpecialty(int specialty) {
+        this.specialty = specialty;
+    }
+
+    public String getEducation() {
+        return education;
+    }
+
+    public void setEducation(String education) {
+        this.education = education;
+    }
+
+    public int getIsLicensed() {
+        return isLicensed;
+    }
+
+    public void setIsLicensed(int isLicensed) {
+        this.isLicensed = isLicensed;
+    }
+
+    public String getProfileDesc() {
+        return profileDesc;
+    }
+
+    public void setProfileDesc(String profileDesc) {
+        this.profileDesc = profileDesc;
+    }
 
     public int getId() {
         return id;
@@ -35,17 +78,11 @@ public class Veterinarian extends User {
         this.id = id;
     }
 
-    public String getSpecialty() {
-        return specialty;
-    }
 
     public String getName() {
         return super.getName();
     }
 
-    public void setSpecialty(String specialty) {
-        this.specialty = specialty;
-    }
 
     public float getRating() {
         return rating;
