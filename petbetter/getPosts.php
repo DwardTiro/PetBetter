@@ -13,7 +13,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 	if($stmt = $mysqli->prepare("SELECT * FROM posts WHERE is_deleted = 0")){
 		
 		$stmt->execute();
-		$stmt->bind_result($_id, $user_id, $topic_name, $topic_content, $topic_id, $date_created, $post_photo, $faci_link, $is_deleted);
+		$stmt->bind_result($_id, $user_id, $topic_name, $topic_content, $topic_id, $date_created, $post_photo, $id_link, $id_type, $is_deleted);
 		$stmt->store_result();
 	
 		if($stmt->fetch()){
@@ -26,7 +26,8 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 				'topic_id'=>$topic_id,
 				'date_created'=>$date_created,
 				'post_photo'=>$post_photo,
-				'faci_link'=>$faci_link,
+				'id_link'=>$id_link,
+				'id_type'=>$id_type,
 				'is_deleted'=>$is_deleted));
 			}while($stmt->fetch());
 			

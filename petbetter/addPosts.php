@@ -28,9 +28,9 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 			$upload_path = null;
 		}
 		
-		if($stmt = $mysqli->prepare("INSERT INTO posts (user_id, topic_name, topic_content, topic_id, date_created, post_photo, faci_link, is_deleted) VALUES (?,?,?,?,?,?,?,?)")){
-			$stmt->bind_param("ssssssss", $postlist[$i]['user_id'], $postlist[$i]['topic_name'], $postlist[$i]['topic_content'], $postlist[$i]['topic_id'], $postlist[$i]['date_created'], 
-				$upload_path, $postlist[$i]['faci_link'], $postlist[$i]['is_deleted']);
+		if($stmt = $mysqli->prepare("INSERT INTO posts (user_id, topic_name, topic_content, topic_id, date_created, post_photo, id_link, id_type, is_deleted) VALUES (?,?,?,?,?,?,?,?,?)")){
+			$stmt->bind_param("sssssssss", $postlist[$i]['user_id'], $postlist[$i]['topic_name'], $postlist[$i]['topic_content'], $postlist[$i]['topic_id'], $postlist[$i]['date_created'], 
+				$upload_path, $postlist[$i]['id_link'], $postlist[$i]['id_type'], $postlist[$i]['is_deleted']);
 			$stmt->execute();
 			$stmt->close();
 			$i = $i + 1;

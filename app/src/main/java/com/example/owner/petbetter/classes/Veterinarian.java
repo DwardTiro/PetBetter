@@ -17,7 +17,7 @@ public class Veterinarian extends User {
     @SerializedName("rating")
     float rating;
 
-    public Veterinarian(int id, long userId, String lastName, String firstName, String mobileNumber, String phoneNumber,
+    public Veterinarian(int id, long userId, String firstName, String lastName, String mobileNumber, String phoneNumber,
                         String email, String password, int age, int userType, String userPhoto, String specialty, float rating) {
         super(userId, firstName, lastName, mobileNumber, phoneNumber, email, password, age, userType, userPhoto);
         this.id = id;

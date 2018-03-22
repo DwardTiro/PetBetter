@@ -49,7 +49,6 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 		else{
 			
 			$stmt->close();
-			echo 'SQL Query Error';
 		}
 		//echo json_encode($stmt);
 		//echo json_encode(array('user'=>$response));

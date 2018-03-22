@@ -31,8 +31,10 @@ import com.example.owner.petbetter.classes.Notifications;
 import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.PostRep;
 import com.example.owner.petbetter.classes.Rating;
+import com.example.owner.petbetter.classes.Topic;
 import com.example.owner.petbetter.classes.Upvote;
 import com.example.owner.petbetter.classes.User;
+import com.example.owner.petbetter.classes.Veterinarian;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.fragments.FragmentPostReps;
 import com.example.owner.petbetter.interfaces.CheckUpdates;
@@ -91,8 +93,11 @@ public class PostContentActivity extends AppCompatActivity {
     private ImageView postImage;
     private ImageView postImageFrame;
     private Button locButton;
-    private Facility facility;
     private ImageView locationImage;
+    private Facility facility;
+    private Veterinarian veterinarian;
+    private Topic topic;
+    private Post post;
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -408,19 +413,25 @@ public class PostContentActivity extends AppCompatActivity {
         try{
             int type = postItem.getIdType();
             if(type==1){
-
+                veterinarian = getVeterinarianFromId(postItem.getIdLink());
+                locButton.setText(veterinarian.getName());
             }
             if(type==2){
                 facility = getFacility(postItem.getIdLink());
+                locButton.setText(facility.getFaciName());
             }
             if(type==3){
-
+                topic = getTopic(postItem.getIdLink());
+                locButton.setText(topic.getTopicName());
             }
             if(type==4){
-
+                post = getPost(postItem.getIdLink());
+                locButton.setText(post.getTopicName());
             }
-
-            locButton.setText(facility.getFaciName());
+            if(type==0){
+                locButton.setVisibility(View.GONE);
+                locationImage.setVisibility(View.GONE);
+            }
         }catch(NullPointerException npe){
             locButton.setVisibility(View.GONE);
             locationImage.setVisibility(View.GONE);
@@ -442,9 +453,27 @@ public class PostContentActivity extends AppCompatActivity {
     }
 
     public void locButtonClicked(View view){
-        Intent intent = new Intent(PostContentActivity.this, com.example.owner.petbetter.activities.PetClinicProfileActivity.class);
-        intent.putExtra("thisClinic", new Gson().toJson(facility));
-        startActivity(intent);
+        if(postItem.getIdType()==1){
+            Intent intent = new Intent(PostContentActivity.this, com.example.owner.petbetter.activities.VetProfileActivity.class);
+            intent.putExtra("thisVet", new Gson().toJson(veterinarian));
+            startActivity(intent);
+        }
+        if(postItem.getIdType()==2){
+            Intent intent = new Intent(PostContentActivity.this, com.example.owner.petbetter.activities.PetClinicProfileActivity.class);
+            intent.putExtra("thisClinic", new Gson().toJson(facility));
+            startActivity(intent);
+        }
+        if(postItem.getIdType()==3){
+            Intent intent = new Intent(PostContentActivity.this, com.example.owner.petbetter.activities.TopicContentActivity.class);
+            intent.putExtra("thisTopic", new Gson().toJson(topic));
+            startActivity(intent);
+        }
+        if(postItem.getIdType()==4){
+            Intent intent = new Intent(PostContentActivity.this, com.example.owner.petbetter.activities.PostContentActivity.class);
+            intent.putExtra("thisPost", new Gson().toJson(post));
+            startActivity(intent);
+        }
+
     }
 
     @Override
@@ -604,6 +633,48 @@ public class PostContentActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private Veterinarian getVeterinarianFromId(long userId){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        Veterinarian result = petBetterDb.getVeterinarianFromId(userId);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private Topic getTopic(long topicId){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        Topic result = petBetterDb.getTopic(topicId);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private Post getPost(long postId){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        Post result = petBetterDb.getPost(postId);
+        petBetterDb.closeDatabase();
+
+        return result;
     }
 
 

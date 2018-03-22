@@ -282,10 +282,7 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
 
     public void hideItems(){
         Menu menu = navigationView.getMenu();
-        if(user.getUserType()==1){
-            menu.findItem(R.id.bookmarks).setVisible(false);
-            menu.findItem(R.id.community).setVisible(false);
-        }
+
         if(user.getUserType()==2){
             menu.findItem(R.id.community2).setVisible(false);
         }
