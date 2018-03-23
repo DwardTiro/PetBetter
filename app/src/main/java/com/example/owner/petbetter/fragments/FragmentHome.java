@@ -24,8 +24,10 @@ import android.widget.TextView;
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
+import com.example.owner.petbetter.activities.MonitorVetsActivity;
 import com.example.owner.petbetter.activities.SearchActivity;
 import com.example.owner.petbetter.adapters.HomeAdapter;
+import com.example.owner.petbetter.adapters.MonitorAdapter;
 import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
@@ -134,8 +136,7 @@ public class FragmentHome extends Fragment implements CheckUpdates {
         System.out.println("Size of postList "+postList.size());
 
         if(isLinked){
-            if(isLinked){
-                homeAdapter = new HomeAdapter(getActivity(), postList, user, new HomeAdapter.OnItemClickListener() {
+            homeAdapter = new HomeAdapter(getActivity(), postList, user, new HomeAdapter.OnItemClickListener() {
                     @Override public void onItemClick(Post item) {
 
                         Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.NewPostActivity.class);
@@ -147,7 +148,13 @@ public class FragmentHome extends Fragment implements CheckUpdates {
                         getActivity().finish();
                     }
                 });
-            }
+            homeAdapter.notifyItemRangeChanged(0, homeAdapter.getItemCount());
+            recyclerView.setAdapter(homeAdapter);
+
+        }
+        if(getActivity() instanceof MonitorVetsActivity){
+            MonitorAdapter monitorAdapter = new MonitorAdapter(getActivity(), postList, 4);
+            recyclerView.setAdapter(monitorAdapter);
         }
         else{
             homeAdapter = new HomeAdapter(getActivity(), postList, user, new HomeAdapter.OnItemClickListener() {
@@ -159,11 +166,12 @@ public class FragmentHome extends Fragment implements CheckUpdates {
                     startActivity(intent);
                 }
             });
+            homeAdapter.notifyItemRangeChanged(0, homeAdapter.getItemCount());
+            recyclerView.setAdapter(homeAdapter);
         }
 
         //homeAdapter = new HomeAdapter(getActivity(), postList);
-        homeAdapter.notifyItemRangeChanged(0, homeAdapter.getItemCount());
-        recyclerView.setAdapter(homeAdapter);
+
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));

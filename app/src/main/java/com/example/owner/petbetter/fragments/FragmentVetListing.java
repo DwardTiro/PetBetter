@@ -15,8 +15,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.owner.petbetter.R;
+import com.example.owner.petbetter.activities.MonitorVetsActivity;
 import com.example.owner.petbetter.activities.SearchActivity;
 import com.example.owner.petbetter.activities.VetProfileActivity;
+import com.example.owner.petbetter.adapters.MonitorAdapter;
 import com.example.owner.petbetter.adapters.VetListingAdapter;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
@@ -89,6 +91,11 @@ public class FragmentVetListing extends Fragment {
                     getActivity().finish();
                 }
             });
+            recyclerView.setAdapter(vetListingAdapter);
+        }
+        if(getActivity() instanceof MonitorVetsActivity){
+            MonitorAdapter monitorAdapter = new MonitorAdapter(getActivity(), vetList, 1);
+            recyclerView.setAdapter(monitorAdapter);
         }
         else{
             vetListingAdapter = new VetListingAdapter(getActivity(), vetList, new VetListingAdapter.OnItemClickListener() {
@@ -99,8 +106,9 @@ public class FragmentVetListing extends Fragment {
                     startActivity(intent);
                 }
             });
+            recyclerView.setAdapter(vetListingAdapter);
         }
-        recyclerView.setAdapter(vetListingAdapter);
+
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));

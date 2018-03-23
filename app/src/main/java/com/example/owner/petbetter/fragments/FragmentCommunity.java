@@ -26,8 +26,10 @@ import android.widget.TextView;
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
+import com.example.owner.petbetter.activities.MonitorVetsActivity;
 import com.example.owner.petbetter.activities.SearchActivity;
 import com.example.owner.petbetter.adapters.CommunityAdapter;
+import com.example.owner.petbetter.adapters.MonitorAdapter;
 import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.Topic;
 import com.example.owner.petbetter.classes.User;
@@ -127,6 +129,12 @@ public class FragmentCommunity extends Fragment implements CheckUpdates, PlaceIn
 
                 }
             });
+            communityAdapter.notifyItemRangeChanged(0, communityAdapter.getItemCount());
+            recyclerView.setAdapter(communityAdapter);
+        }
+        if(getActivity() instanceof MonitorVetsActivity){
+            MonitorAdapter monitorAdapter = new MonitorAdapter(getActivity(), topicList, 3);
+            recyclerView.setAdapter(monitorAdapter);
         }
         else{
             communityAdapter = new CommunityAdapter(getActivity(), topicList, user, new CommunityAdapter.OnItemClickListener() {
@@ -138,10 +146,10 @@ public class FragmentCommunity extends Fragment implements CheckUpdates, PlaceIn
 
                 }
             });
+            communityAdapter.notifyItemRangeChanged(0, communityAdapter.getItemCount());
+            recyclerView.setAdapter(communityAdapter);
         }
         //homeAdapter = new HomeAdapter(getActivity(), postList);
-        communityAdapter.notifyItemRangeChanged(0, communityAdapter.getItemCount());
-        recyclerView.setAdapter(communityAdapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));

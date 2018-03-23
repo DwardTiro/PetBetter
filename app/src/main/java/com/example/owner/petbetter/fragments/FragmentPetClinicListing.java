@@ -16,9 +16,11 @@ import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.activities.BookmarksActivity;
+import com.example.owner.petbetter.activities.MonitorVetsActivity;
 import com.example.owner.petbetter.activities.SearchActivity;
 import com.example.owner.petbetter.activities.VeterinarianHomeActivity;
 import com.example.owner.petbetter.adapters.ClinicListingAdapter;
+import com.example.owner.petbetter.adapters.MonitorAdapter;
 import com.example.owner.petbetter.classes.Bookmark;
 import com.example.owner.petbetter.classes.Facility;
 import com.example.owner.petbetter.classes.User;
@@ -87,7 +89,11 @@ public class FragmentPetClinicListing extends Fragment {
             faciList = getClinics();
         }
 
-        if(isLinked&&(getActivity() instanceof SearchActivity)){
+        if(getActivity() instanceof MonitorVetsActivity){
+            MonitorAdapter monitorAdapter = new MonitorAdapter(getActivity(), faciList, 2);
+            recyclerView.setAdapter(monitorAdapter);
+        }
+        else if(isLinked&&(getActivity() instanceof SearchActivity)){
             clinicListingAdapter = new ClinicListingAdapter(getActivity(), faciList, new ClinicListingAdapter.OnItemClickListener() {
                 @Override public void onItemClick(Facility item) {
                     Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.NewPostActivity.class);
@@ -99,6 +105,7 @@ public class FragmentPetClinicListing extends Fragment {
                     //startActivity(intent);
                 }
             });
+            recyclerView.setAdapter(clinicListingAdapter);
         }
         //System.out.println("Rating is "+vetList.get(0).getRating());
         else if(getActivity() instanceof  VeterinarianHomeActivity){
@@ -109,6 +116,7 @@ public class FragmentPetClinicListing extends Fragment {
                     startActivity(intent);
                 }
             });
+            recyclerView.setAdapter(clinicListingAdapter);
         }
         else if(getActivity() instanceof BookmarksActivity){
             final HerokuService bookmarkService = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
@@ -129,8 +137,6 @@ public class FragmentPetClinicListing extends Fragment {
                             }
                         });
                         recyclerView.setAdapter(clinicListingAdapter);
-                        recyclerView.setHasFixedSize(true);
-                        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                     }
                 }
 
@@ -151,9 +157,10 @@ public class FragmentPetClinicListing extends Fragment {
                     startActivity(intent);
                 }
             });
+            recyclerView.setAdapter(clinicListingAdapter);
         }
-
-        recyclerView.setAdapter(clinicListingAdapter);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
