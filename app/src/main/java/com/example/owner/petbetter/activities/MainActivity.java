@@ -24,6 +24,7 @@ import com.example.owner.petbetter.classes.LocationMarker;
 import com.example.owner.petbetter.classes.Message;
 import com.example.owner.petbetter.classes.MessageRep;
 import com.example.owner.petbetter.classes.Notifications;
+import com.example.owner.petbetter.classes.Pending;
 import com.example.owner.petbetter.classes.Pet;
 import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.PostRep;
@@ -138,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
             call.enqueue(new Callback<User>() {
                 @Override
                 public void onResponse(Call<User> call, Response<User> response) {
-                    if(response.isSuccessful()){
+                    if(response.isSuccessful()&&response.body().getUserType()!=3){
 
                         final User user = response.body();
 
@@ -229,6 +230,28 @@ public class MainActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
 
+                    }
+                    if(response.isSuccessful()&&response.body().getUserType()==3){
+                        User thisUser = response.body();
+                        syncPendingChanges();
+                        syncUsers();
+                        syncClinicChanges();
+
+                        systemSessionManager.createUserSession(thisUser.getEmail());
+                        Intent intent;
+
+                        intent = new Intent(MainActivity.this, com.example.owner.petbetter.activities.AdminHomeActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                        editor.putLong(KEY_ID, thisUser.getUserId());
+                        editor.putString(KEY_USERNAME, thisUser.getName());
+                        editor.putString(KEY_EMAIL, thisUser.getEmail());
+                        editor.putString(KEY_PASS, thisUser.getPassword());
+                        editor.putBoolean("remember", true);
+                        editor.apply();
+                        startActivity(intent);
+                        finish();
                     }
                     else{
                         textInfo.setText("Invalid Email or Password");
@@ -973,6 +996,50 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public void syncPendingChanges(){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        System.out.println("WE HERE BOOIII");
+        ArrayList<Pending> unsyncedPending = getUnsyncedPending();
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String jsonArray = gson.toJson(unsyncedPending);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.addPending(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    System.out.println("PENDING ADDED YEY");
+                    dataSynced(2);
+
+                    final Call<ArrayList<Pending>> call2 = service2.getPending();
+                    call2.enqueue(new Callback<ArrayList<Pending>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<Pending>> call, Response<ArrayList<Pending>> response) {
+                            if(response.isSuccessful()){
+                                System.out.println("Number of pending from server: "+response.body().size());
+                                setPending(response.body());
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<Pending>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
     private boolean checkLogin(String email, String password) {
 
         try {
@@ -1225,6 +1292,20 @@ public class MainActivity extends AppCompatActivity {
         return result;
     }
 
+    private ArrayList<Pending> getUnsyncedPending(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Pending> result = petBetterDb.getUnsyncedPending();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
     private ArrayList<Rating> getUnsyncedRatings(){
 
         try {
@@ -1441,6 +1522,18 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         long result = petBetterDb.setVeterinarians(vetList);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    public long setPending(ArrayList<Pending> pendingList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setPending(pendingList);
         petBetterDb.closeDatabase();
 
         return result;

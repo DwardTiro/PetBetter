@@ -17,6 +17,7 @@ import com.example.owner.petbetter.classes.LocationMarker;
 import com.example.owner.petbetter.classes.Message;
 import com.example.owner.petbetter.classes.MessageRep;
 import com.example.owner.petbetter.classes.Notifications;
+import com.example.owner.petbetter.classes.Pending;
 import com.example.owner.petbetter.classes.Pet;
 import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.PostRep;
@@ -59,6 +60,7 @@ public class DataAdapter {
     private static final String SERVICE_TABLE = "services";
     private static final String UPVOTE_TABLE = "upvotes";
     private static final String BOOKMARK_TABLE = "bookmarks";
+    private static final String PENDING_TABLE = "pending";
 
 
 
@@ -495,6 +497,24 @@ public class DataAdapter {
                     c.getInt(c.getColumnIndexOrThrow("bookmark_type")),
                     c.getInt(c.getColumnIndexOrThrow("user_id")));
             results.add(bookmark);
+        }
+
+        c.close();
+        return results;
+    }
+
+    public ArrayList<Pending> getUnsyncedPending(){
+        ArrayList<Pending> results = new ArrayList<>();
+
+        String sql = "SELECT * FROM "+PENDING_TABLE+" WHERE is_synced = 0";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            Pending pending = new Pending(c.getInt(c.getColumnIndexOrThrow("_id")),
+                    c.getInt(c.getColumnIndexOrThrow("foreign_id")),
+                    c.getInt(c.getColumnIndexOrThrow("type")),
+                    c.getInt(c.getColumnIndexOrThrow("is_approved")));
+            results.add(pending);
         }
 
         c.close();
@@ -2678,6 +2698,27 @@ public class DataAdapter {
             result = petBetterDb.insert(POST_TABLE, null, cv);
         }
         System.out.println("2ND REAL NUM OF POSTS: "+getPosts().size());
+
+        return result;
+    }
+
+    public long setPending(ArrayList<Pending> pendingList){
+        long result = 0;
+
+        petBetterDb.delete(PENDING_TABLE, null, null);
+        //System.out.println("REAL NUM OF POSTS: "+getPosts().size());
+        //System.out.println("POST LIST SIZE "+postList.size());
+
+
+        for(Pending pending:pendingList){
+            ContentValues cv = new ContentValues();
+            cv.put("_id", pending.getId());
+            cv.put("foreign_id", pending.getForeignId());
+            cv.put("type", pending.getType());
+            cv.put("is_approved", pending.getIsApproved());
+            result = petBetterDb.insert(PENDING_TABLE, null, cv);
+        }
+        //System.out.println("2ND REAL NUM OF POSTS: "+getPosts().size());
 
         return result;
     }

@@ -10,6 +10,7 @@ import com.example.owner.petbetter.classes.LocationMarker;
 import com.example.owner.petbetter.classes.Message;
 import com.example.owner.petbetter.classes.MessageRep;
 import com.example.owner.petbetter.classes.Notifications;
+import com.example.owner.petbetter.classes.Pending;
 import com.example.owner.petbetter.classes.Pet;
 import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.PostRep;
@@ -124,6 +125,9 @@ public interface HerokuService {
 
     @POST("getClinics.php")
     Call<ArrayList<Facility>> getClinics();
+
+    @POST("getPending.php")
+    Call<ArrayList<Pending>> getPending();
 
     @POST("getFollowers.php")
     Call<ArrayList<Follower>> getFollowers();
@@ -446,6 +450,9 @@ public interface HerokuService {
 
     @POST("addFacilities.php")
     Call<Void> addFacilities(@Body RequestBody faciList);
+
+    @POST("addPending.php")
+    Call<Void> addPending(@Body RequestBody pendingList);
 
     @POST("addFollowers.php")
     Call<Void> addFollowers(@Body RequestBody followerList);
