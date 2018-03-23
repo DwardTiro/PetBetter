@@ -29,6 +29,10 @@ public class PendingActivity extends AppCompatActivity {
         pendingEducClicked(this.findViewById(android.R.id.content));
     }
 
+    public void searchBackButtonClicked(View view) {
+        finish();
+    }
+
     public void pendingEducClicked(View view){
         currFragment = 1;
         pendingEducButton.setBackgroundResource(R.color.main_White);
@@ -45,7 +49,7 @@ public class PendingActivity extends AppCompatActivity {
         pendingAdminButton.setPaintFlags(pendingAdminButton.getPaintFlags()&(~Paint.UNDERLINE_TEXT_FLAG));
     }
 
-    public void setPendingLicenseButton(View view){
+    public void pendingLicenseClicked(View view){
         currFragment = 2;
         pendingLicenseButton.setBackgroundResource(R.color.main_White);
         pendingLicenseButton.setTextColor(getResources().getColor(R.color.myrtle_green));

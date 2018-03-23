@@ -236,6 +236,11 @@ public class MainActivity extends AppCompatActivity {
                         syncPendingChanges();
                         syncUsers();
                         syncClinicChanges();
+                        syncVetChanges();
+                        syncTopicChanges();
+                        syncRatingChanges();
+                        syncPostChanges();
+                        syncPostRepChanges();
 
                         systemSessionManager.createUserSession(thisUser.getEmail());
                         Intent intent;

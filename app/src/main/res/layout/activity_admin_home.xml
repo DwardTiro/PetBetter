@@ -38,4 +38,19 @@
         android:textColor="@color/colorWhite"
         android:textSize="28sp" />
 
+    <Button
+        android:id="@+id/adminLogoutButton"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_gravity="bottom"
+        android:background="@color/myrtle_green"
+        android:onClick="adminLogoutClicked"
+        android:text="Logout"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/monitorVetsButton"
+        android:textAllCaps="false"
+        android:textColor="@color/colorWhite"
+        android:textSize="28sp" />
+
 </RelativeLayout>
