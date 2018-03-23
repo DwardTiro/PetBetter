@@ -10,23 +10,19 @@ $response = array();
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
 
-	if($stmt = $mysqli->prepare("SELECT * FROM facilities")){
+	if($stmt = $mysqli->prepare("SELECT * FROM pending")){
 		
 		$stmt->execute();
-		$stmt->bind_result($_id, $faci_name, $location, $hours_open, $hours_close, $contact_info, $rating, $faci_photo);
+		$stmt->bind_result($_id, $foreign_id, $type, $is_approved);
 		$stmt->store_result();
 	
 		if($stmt->fetch()){
 			
 			do{
-				array_push($response, array('faci_id'=>$_id,
-				'faci_name'=>$faci_name,
-				'location'=>$location,
-				'hours_open'=>$hours_open,
-				'hours_close'=>$hours_close,
-				'contact_info'=>$contact_info,
-				'rating'=>$rating,
-				'faci_photo'=>$faci_photo));
+				array_push($response, array('_id'=>$_id,
+				'foreign_id'=>$foreign_id,
+				'type'=>$type,
+				'is_approved'=>$is_approved));
 			}while($stmt->fetch());
 			
 			
@@ -46,7 +42,6 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 		else{
 			
 			$stmt->close();
-			echo 'SQL Query Error';
 		}
 		//echo json_encode($stmt);
 		//echo json_encode(array('user'=>$response));

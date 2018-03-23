@@ -192,7 +192,10 @@
         <activity android:name=".activities.ShowLocationActivity" />
         <activity android:name=".activities.EditFacilityActivity" />
         <activity android:name=".activities.FollowerRequestsActivity" />
-        <activity android:name=".activities.AdminHomeActivity"></activity>
+        <activity android:name=".activities.AdminHomeActivity" />
+        <activity android:name=".activities.PendingActivity" />
+        <activity android:name=".activities.MonitorVetsActivity" />
+        <activity android:name=".activities.MonitorTopicsActivity"></activity>
     </application>
 
 </manifest>

@@ -14,7 +14,7 @@ $messagereplist = json_decode(file_get_contents('php://input'),true);
 if($_SERVER['REQUEST_METHOD']=='POST'){
 	
 	$n = count($messagereplist);
-	echo $n;
+	//echo $n;
 	$i = 0;
 	//echo $messagereplist[$i]['_id'];
 	

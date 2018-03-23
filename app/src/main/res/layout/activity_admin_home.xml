@@ -1,9 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeAdmin"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.owner.petbetter.activities.AdminHomeActivity">
+    tools:context="com.example.owner.petbetter.activities.AdminHomeActivity"
+    android:clickable="true"
+    android:orientation="vertical">
 
-</android.support.constraint.ConstraintLayout>
+    <Button
+        android:id="@+id/pendingButton"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_gravity="bottom"
+        android:background="@color/myrtle_green"
+        android:onClick="pendingClicked"
+        android:text="Check Pending Items"
+        android:textAllCaps="false"
+        android:textColor="@color/colorWhite"
+        android:layout_marginTop="200dp"
+        android:textSize="28sp" />
+
+    <Button
+        android:id="@+id/monitorVetsButton"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_gravity="bottom"
+        android:background="@color/myrtle_green"
+        android:onClick="monitorVetsClicked"
+        android:text="Monitor Pet Pals and Pet Service Providers"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/pendingButton"
+        android:textAllCaps="false"
+        android:textColor="@color/colorWhite"
+        android:textSize="28sp" />
+
+</RelativeLayout>

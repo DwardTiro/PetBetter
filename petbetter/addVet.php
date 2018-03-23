@@ -16,8 +16,8 @@ $response = array();
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
 
-	if($stmt = $mysqli->prepare("INSERT INTO veterinarians (user_id, rating, specialty, phone_num) VALUES (?,?,?,?)")){
-		$stmt->bind_param("ssss", $user_id, $rating, $specialty, $phone_num);
+	if($stmt = $mysqli->prepare("INSERT INTO veterinarians (user_id, specialty, rating, education, is_licensed, profile_desc) VALUES (?,?,?,?,?,?)")){
+		$stmt->bind_param("ssssss", $user_id, $specialty, $rating, $education, $is_licensed, $profile_desc);
 		$stmt->execute();
 		$stmt->close();
 		echo 'Veterinarian added';

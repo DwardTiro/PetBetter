@@ -18,9 +18,19 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 	//echo $vetlist[$i]['_id'];
 	
 	while($i<$n){
-		if($stmt = $mysqli->prepare("INSERT INTO facilities (faci_name, location, hours_open, hours_close, contact_info, vet_id, rating) VALUES (?,?,?,?,?,?,?)")){
-			$stmt->bind_param("sssssss", $facilist[$i]['faci_name'], $facilist[$i]['location'], $facilist[$i]['hours_open'], $facilist[$i]['hours_close'], $facilist[$i]['contact_info'], $facilist[$i]['vet_id'], 
-				$facilist[$i]['rating']);
+		
+		$title = substr(md5(rand()), 0, 7);
+		$upload_path = "uploads/facilities/$title.jpg";
+		
+		if(!($facilist[$i]['faci_photo']==null)){
+			file_put_contents($upload_path, base64_decode($facilist['faci_photo']));
+		}
+		else{
+			$upload_path = null;
+		}
+		
+		if($stmt = $mysqli->prepare("INSERT INTO facilities (faci_name, location, hours_open, hours_close, contact_info, rating, upload_path) VALUES (?,?,?,?,?,?,?)")){
+			$stmt->bind_param("sssssss", $facilist[$i]['faci_name'], $facilist[$i]['location'], $facilist[$i]['hours_open'], $facilist[$i]['hours_close'], $facilist[$i]['contact_info'], $facilist[$i]['rating'], $upload_path);
 			$stmt->execute();
 			$stmt->close();
 			$i = $i + 1;

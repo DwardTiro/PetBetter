@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.owner.petbetter.activities.PendingActivity">
+
+    <include
+        android:id="@+id/pendingSearch"
+        layout="@layout/toolbar_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+    <LinearLayout
+        android:id="@+id/pendingSearchButtonBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/pendingSearch"
+        tools:layout_constraintTop_creator="1">
+
+        <Button
+            android:id="@+id/pendingEducButton"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:background="@color/myrtle_green"
+            android:onClick="pendingEducClicked"
+            android:scaleType="fitCenter"
+            android:text="Education"
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite" />
+
+        <Button
+            android:id="@+id/pendingLicenseButton"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:background="@color/myrtle_green"
+            android:onClick="pendingLicenseClicked"
+            android:scaleType="fitCenter"
+            android:text="Licensure"
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite" />
+
+        <Button
+            android:id="@+id/pendingServicesButton"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:background="@color/myrtle_green"
+            android:onClick="pendingServicesClicked"
+            android:scaleType="fitCenter"
+            android:text="Services"
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite" />
+
+
+
+        <Button
+            android:id="@+id/pendingAdminButton"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:background="@color/myrtle_green"
+            android:onClick="pendingAdminClicked"
+            android:scaleType="fitCenter"
+            android:text="Admins"
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite" />
+
+    </LinearLayout>
+
+
+    <FrameLayout
+        android:id="@+id/frame_pending"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/pendingSearchButtonBar"
+
+
+        />
+
+</RelativeLayout>

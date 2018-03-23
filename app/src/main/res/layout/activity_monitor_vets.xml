@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.owner.petbetter.activities.MonitorVetsActivity">
+
+    <include
+        android:id="@+id/monitorItemsSearch"
+        layout="@layout/toolbar_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+    <LinearLayout
+        android:id="@+id/monitorItemsButtonBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/monitorItemsSearch"
+        tools:layout_constraintTop_creator="1">
+
+        <Button
+            android:id="@+id/monitorVetsButton"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:background="@color/myrtle_green"
+            android:onClick="monitorVetsClicked"
+            android:scaleType="fitCenter"
+            android:text="Vets"
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite" />
+
+        <Button
+            android:id="@+id/monitorFaciButton"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:background="@color/myrtle_green"
+            android:onClick="monitorFaciClicked"
+            android:scaleType="fitCenter"
+            android:text="Facilities"
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite" />
+
+
+        <Button
+            android:id="@+id/monitorTopicsButton"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:background="@color/myrtle_green"
+            android:onClick="monitorTopicsClicked"
+            android:scaleType="fitCenter"
+            android:text="Topics"
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite" />
+
+        <Button
+            android:id="@+id/monitorPostsButton"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:background="@color/myrtle_green"
+            android:onClick="monitorPostsClicked"
+            android:scaleType="fitCenter"
+            android:text="Posts"
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite" />
+
+    </LinearLayout>
+
+
+    <FrameLayout
+        android:id="@+id/frame_monitoritems"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/monitorVetsButtonBar"
+
+
+        />
+
+</RelativeLayout>
