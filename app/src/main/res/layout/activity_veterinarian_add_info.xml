@@ -10,36 +10,37 @@
         layout="@layout/toolbar_signup"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:id="@+id/toolbarSignUp"
         />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/aboveFormContainer"
-        android:layout_centerHorizontal="true"
         android:text="One last step!"
         android:textColor="@color/black"
         android:textSize="28sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:layout_above="@+id/aboveFormContainer"
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:id="@+id/aboveFormContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/formContainer"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="30dp"
         android:text="Fill up the following details to start using PetBetter"
         android:textAlignment="center"
         android:textColor="@color/black"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:layout_above="@+id/formContainer"
+        android:layout_alignParentStart="true" />
 
     <RelativeLayout
         android:id="@+id/formContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true">
+        android:layout_above="@+id/addInfoVetButton"
+        android:layout_alignParentStart="true">
 
 
         <TextView
@@ -72,10 +73,70 @@
             android:paddingTop="5dp" />
 
         <TextView
+            android:id="@+id/vetTextEducation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:text="EDUCATION"
+            android:textSize="14sp"
+            android:layout_below="@+id/signUpVetTextPhoneNum"/>
+
+        <EditText
+            android:id="@+id/signUpVetTextEducation"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_below="@+id/vetTextEducation"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+
+            android:background="#FFFFFF"
+            android:paddingBottom="5dp"
+            android:paddingEnd="10dp"
+            android:paddingLeft="10dp"
+            android:paddingStart="10dp"
+            android:paddingTop="5dp" />
+
+        <RelativeLayout
+            android:id="@+id/linearLicensed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@id/signUpVetTextEducation">
+
+            <TextView
+                android:id="@+id/vetTextLicensed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"
+                android:paddingEnd="5dp"
+                android:paddingStart="5dp"
+                android:text="ARE YOU A LICENSED SERVICE PROVIDER?"
+                android:textSize="14sp"/>
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/switchLicense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@id/vetTextLicensed"
+                android:theme="@style/SCBSwitch"
+                />
+        </RelativeLayout>
+
+
+
+
+        <TextView
             android:id="@+id/vetSpecialtyTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/signUpVetTextPhoneNum"
+            android:layout_below="@+id/linearLicensed"
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
             android:paddingEnd="5dp"
@@ -95,6 +156,36 @@
             android:background="@color/colorWhite"
             android:entries="@array/veterinarySpecialtySpinner"
             android:prompt="@string/veterinarySpecialtyPrompt" />
+
+        <TextView
+            android:id="@+id/tvProfileDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/vetSpecialtySpinner"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:text="DESCRIBE YOURSELF:"
+            android:textSize="14sp" />
+
+        <EditText
+            android:id="@+id/editProfileDesc"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_below="@+id/tvProfileDesc"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:background="#FFFFFF"
+            android:paddingBottom="5dp"
+            android:paddingEnd="10dp"
+            android:paddingLeft="10dp"
+            android:paddingStart="10dp"
+            android:paddingTop="5dp" />
+
     </RelativeLayout>
 
     <Button

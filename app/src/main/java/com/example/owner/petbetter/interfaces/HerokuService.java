@@ -431,7 +431,9 @@ public interface HerokuService {
     Call<Void> addVet(@Field("user_id") long user_id,
                       @Field("specialty") String specialty,
                       @Field("rating") float rating,
-                      @Field("phone_num") String phone_num);
+                      @Field("education") String education,
+                      @Field("is_licensed") int isLicensed,
+                      @Field("profile_desc") String profileDesc);
 
     @POST("addVets.php")
     Call<Void> addVets(@Body RequestBody vetList);

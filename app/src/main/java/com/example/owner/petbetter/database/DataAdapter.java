@@ -1240,6 +1240,9 @@ public class DataAdapter {
         if(n==16){
             petBetterDb.update(BOOKMARK_TABLE,cv,"is_synced=?", whereArgs);
         }
+        if(n==17){
+            petBetterDb.update(PENDING_TABLE,cv,"is_synced=?", whereArgs);
+        }
         petBetterDb.close();
     }
 
@@ -1524,6 +1527,21 @@ public class DataAdapter {
     }
 
 
+    public long addPending(int id, int foreignId, int type, int isApproved){
+        long result;
+
+        ContentValues cv = new ContentValues();
+        cv.put("_id", id);
+        cv.put("foreign_id", foreignId);
+        cv.put("type", type);
+        cv.put("is_approved", isApproved);
+        cv.put("is_synced", 0);
+
+        result = petBetterDb.insert(PENDING_TABLE, null, cv);
+
+        return result;
+    }
+
     public long addPostRep(int postRepId, int userId, int postId, int parentId, String repContent, String datePerformed){
         long result;
 
@@ -1716,6 +1734,21 @@ public class DataAdapter {
         ArrayList<Integer> ids = new ArrayList<>();
 
         String sql = "SELECT _id FROM "+MESSAGE_REP_TABLE;
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            ids.add(c.getInt(c.getColumnIndexOrThrow("_id")));
+        }
+
+        c.close();
+        return ids;
+    }
+
+    public ArrayList<Integer> generatePendingIds () {
+
+        ArrayList<Integer> ids = new ArrayList<>();
+
+        String sql = "SELECT _id FROM "+PENDING_TABLE;
         Cursor c = petBetterDb.rawQuery(sql, null);
 
         while(c.moveToNext()) {

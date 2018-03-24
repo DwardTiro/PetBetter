@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.support.v7.widget.Toolbar;
 import android.widget.Spinner;
@@ -18,6 +20,7 @@ import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.classes.Facility;
+import com.example.owner.petbetter.classes.Pending;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
 import com.example.owner.petbetter.database.DataAdapter;
@@ -46,11 +49,18 @@ public class VeterinarianAddInfoActivity extends AppCompatActivity {
     private String password;
     private int userType;
     private int userId;
+    private String education;
+    private int isLicensed = 0;
+    private String profileDesc;
 
+    private EditText editEducation;
+    private SwitchCompat switchLicense;
+    private EditText editProfileDesc;
     private EditText phoneNumTextView;
     private Spinner vetSpecialtySpinner;
     private DataAdapter petBetterDb;
     HerokuService service;
+    HerokuService service2;
 
     @Override
     public void onCreate(Bundle savedInstance) {
@@ -65,7 +75,23 @@ public class VeterinarianAddInfoActivity extends AppCompatActivity {
 
         vetSpecialtySpinner = (Spinner) findViewById(R.id.vetSpecialtySpinner);
         phoneNumTextView = (EditText) findViewById(R.id.signUpVetTextPhoneNum);
+        editEducation = (EditText) findViewById(R.id.signUpVetTextEducation);
+        switchLicense = (SwitchCompat) findViewById(R.id.switchLicense);
+        editProfileDesc = (EditText) findViewById(R.id.editProfileDesc);
+
         initializeDatabase();
+
+        switchLicense.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    isLicensed = 1;
+                }
+                else{
+                    isLicensed = 0;
+                }
+            }
+        });
 
         Bundle extras = getIntent().getExtras();
         firstName = extras.getString("first_name");
@@ -73,8 +99,6 @@ public class VeterinarianAddInfoActivity extends AppCompatActivity {
         emailAddress = extras.getString("email_address");
         password = extras.getString("password");
         userType = extras.getInt("user_type");
-        specialty = vetSpecialtySpinner.getSelectedItem().toString();
-        phoneNum = phoneNumTextView.getText().toString();
     }
 
     public void signUpBackButtonClicked(View view) {
@@ -112,6 +136,20 @@ public class VeterinarianAddInfoActivity extends AppCompatActivity {
         return result;
     }
 
+    private long addPending(int id, int foreignId, int type, int isApproved) {
+
+        try {
+            petBetterDb.openDatabase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        long result = petBetterDb.addPending(id, foreignId, type, isApproved);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
     private int generateNewUserId(){
         int newId;
         try{
@@ -120,6 +158,26 @@ public class VeterinarianAddInfoActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         ArrayList<Integer> ids = petBetterDb.generateUserIds();
+        if(ids.size() != 0){
+            newId = ids.get(ids.size() - 1);
+            newId += 1;
+        }
+        else
+            newId = 1;
+
+        petBetterDb.closeDatabase();
+
+        return newId;
+    }
+
+    private int generateNewPendingId(){
+        int newId;
+        try{
+            petBetterDb.openDatabase();
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        ArrayList<Integer> ids = petBetterDb.generatePendingIds();
         if(ids.size() != 0){
             newId = ids.get(ids.size() - 1);
             newId += 1;
@@ -251,6 +309,10 @@ public class VeterinarianAddInfoActivity extends AppCompatActivity {
 
     public void signUpVeterinarian(View view) {
 
+        specialty = vetSpecialtySpinner.getSelectedItem().toString();
+        phoneNum = phoneNumTextView.getText().toString();
+        education = editEducation.getText().toString();
+        profileDesc = editProfileDesc.getText().toString();
         uploadUsertoDB();
     }
 
@@ -338,11 +400,32 @@ public class VeterinarianAddInfoActivity extends AppCompatActivity {
         //System.out.println(jsonArray);
         //RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
 
-        Call<Void> call = service.addVet(userId, specialty, 0, phoneNum);
+        //id, foreignid, type, isapproved
+        int id;
+        if(education!=""){
+            id = generateNewPendingId();
+            addPending(id, userId, 1, 0);
+        }
+
+        if(isLicensed==1){
+            id = generateNewPendingId();
+            addPending(id, userId, 2, 0);
+        }
+
+        if(specialty!=""){
+            id = generateNewPendingId();
+            addPending(id, userId, 4, 0);
+        }
+
+
+
+        Call<Void> call = service.addVet(userId, specialty, 0, education, isLicensed, profileDesc);
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 System.out.println("User added to server successfully");
+
+                syncPendingChanges();
                 Intent intent = new Intent(VeterinarianAddInfoActivity.this, com.example.owner.petbetter.activities.MainActivity.class);
                 startActivity(intent);
             }
@@ -352,5 +435,88 @@ public class VeterinarianAddInfoActivity extends AppCompatActivity {
                 System.out.println("FAILED TO ADD USER TO SERVER");
             }
         });
+    }
+
+    public void syncPendingChanges(){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        System.out.println("WE HERE BOOIII");
+        ArrayList<Pending> unsyncedPending = getUnsyncedPending();
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String jsonArray = gson.toJson(unsyncedPending);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.addPending(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    System.out.println("PENDING ADDED YEY");
+                    dataSynced(17);
+
+                    final Call<ArrayList<Pending>> call2 = service2.getPending();
+                    call2.enqueue(new Callback<ArrayList<Pending>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<Pending>> call, Response<ArrayList<Pending>> response) {
+                            if(response.isSuccessful()){
+                                System.out.println("Number of pending from server: "+response.body().size());
+                                setPending(response.body());
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<Pending>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
+    private ArrayList<Pending> getUnsyncedPending(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Pending> result = petBetterDb.getUnsyncedPending();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private void dataSynced(int n){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        petBetterDb.dataSynced(n);
+        petBetterDb.closeDatabase();
+
+    }
+
+    public long setPending(ArrayList<Pending> pendingList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setPending(pendingList);
+        petBetterDb.closeDatabase();
+
+        return result;
     }
 }
