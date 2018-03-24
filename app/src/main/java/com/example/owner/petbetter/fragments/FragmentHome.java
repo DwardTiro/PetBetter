@@ -39,11 +39,13 @@ import com.example.owner.petbetter.interfaces.PlaceInfoListener;
 import com.example.owner.petbetter.services.NotificationReceiver;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -129,6 +131,10 @@ public class FragmentHome extends Fragment implements CheckUpdates {
         }catch(NullPointerException npe){
             postList = getPosts();
             type = 2;
+        }
+
+        if(getActivity() instanceof MonitorVetsActivity){
+            getAllPosts();
         }
 
 
@@ -228,6 +234,27 @@ public class FragmentHome extends Fragment implements CheckUpdates {
             e.printStackTrace();
         }
 
+    }
+
+    public void getAllPosts(){
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        System.out.println("WE HERE BOOIII");
+
+        final Call<ArrayList<Post>> call = service.getAllPosts();
+        call.enqueue(new Callback<ArrayList<Post>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Post>> call, Response<ArrayList<Post>> response) {
+                if(response.isSuccessful()){
+                    postList = response.body();
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Post>> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
     }
 
     public ArrayList<Post> getPosts(){

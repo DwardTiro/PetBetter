@@ -192,6 +192,12 @@ public interface HerokuService {
     @POST("getTopics.php")
     Call<ArrayList<Topic>> getTopics();
 
+    @POST("getAllTopics.php")
+    Call<ArrayList<Topic>> getAllTopics();
+
+    @POST("getAllPosts.php")
+    Call<ArrayList<Post>> getAllPosts();
+
     @POST("getUpvotes.php")
     Call<ArrayList<Upvote>> getUpvotes();
 
@@ -333,6 +339,14 @@ public interface HerokuService {
     @FormUrlEncoded
     @POST("deleteFollower.php")
     Call<Void> deleteFollower(@Field("topic_id") long topicId, @Field("user_id") long userId);
+
+    @FormUrlEncoded
+    @POST("disableTopic.php")
+    Call<Void> disableTopic(@Field("is_deleted") int isDeleted, @Field("_id") long topicId);
+
+    @FormUrlEncoded
+    @POST("disablePost.php")
+    Call<Void> disablePost(@Field("is_deleted") int isDeleted, @Field("_id") long postId);
 
     @FormUrlEncoded
     @POST("disableUser.php")

@@ -60,6 +60,9 @@ public class MonitorVetsActivity extends AppCompatActivity {
         monitorPostsButton = (Button) findViewById(R.id.monitorPostsButton);
         actvMonitor = (AutoCompleteTextView) findViewById(R.id.actvSearch);
 
+        monitorTopicsButton.setVisibility(View.GONE);
+        monitorPostsButton.setVisibility(View.GONE);
+
         monitorVetsClicked(this.findViewById(android.R.id.content));
     }
 

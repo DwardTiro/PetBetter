@@ -468,7 +468,7 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if(response.isSuccessful()){
                     System.out.println("TOPICS ADDED YEY");
-                    dataSynced(9);
+                    dataSynced(13);
 
                     final Call<ArrayList<Topic>> call2 = service2.getTopics();
                     call2.enqueue(new Callback<ArrayList<Topic>>() {

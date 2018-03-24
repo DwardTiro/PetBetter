@@ -66,16 +66,16 @@
 
 
         <Button
-            android:id="@+id/pendingAdminButton"
+            android:id="@+id/pendingSpecialtyButton"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:background="@color/myrtle_green"
-            android:onClick="pendingAdminClicked"
+            android:onClick="pendingSpecialtyClicked"
             android:scaleType="fitCenter"
-            android:text="Admins"
+            android:text="Specialty"
             android:textAllCaps="false"
             android:textColor="@color/colorWhite" />
 

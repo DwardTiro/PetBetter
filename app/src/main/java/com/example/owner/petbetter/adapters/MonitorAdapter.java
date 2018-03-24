@@ -94,6 +94,18 @@ public class MonitorAdapter extends RecyclerView.Adapter<MonitorAdapter.MonitorV
                 Glide.with(inflater.getContext()).load(newFileName).error(R.drawable.app_icon_yellow).into(holder.monitorProfilePic);
                 holder.monitorProfilePic.setVisibility(View.VISIBLE);
             }
+            if(thisUser.getIsDisabled()!=1){
+                holder.unbanButton.setEnabled(false);
+                holder.unbanButton.setVisibility(View.INVISIBLE);
+                holder.banButton.setEnabled(true);
+                holder.banButton.setVisibility(View.VISIBLE);
+            }
+            else{
+                holder.unbanButton.setEnabled(true);
+                holder.unbanButton.setVisibility(View.VISIBLE);
+                holder.banButton.setVisibility(View.INVISIBLE);
+                holder.banButton.setEnabled(false);
+            }
             holder.unbanButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -109,7 +121,7 @@ public class MonitorAdapter extends RecyclerView.Adapter<MonitorAdapter.MonitorV
             holder.bind(thisUser, listener);
         }
         if(type==2){
-            Facility thisFaci = faciList.get(position);
+            final Facility thisFaci = faciList.get(position);
             holder.monitorName.setText(thisFaci.getFaciName());
             if(thisFaci.getFaciPhoto()!=null){
                 String newFileName = BASE_URL + thisFaci.getFaciPhoto();
@@ -118,52 +130,94 @@ public class MonitorAdapter extends RecyclerView.Adapter<MonitorAdapter.MonitorV
                 Glide.with(inflater.getContext()).load(newFileName).error(R.drawable.app_icon_yellow).into(holder.monitorProfilePic);
                 holder.monitorProfilePic.setVisibility(View.VISIBLE);
             }
+
+            if(thisFaci.getIsDisabled()!=1){
+                holder.unbanButton.setEnabled(false);
+                holder.unbanButton.setVisibility(View.INVISIBLE);
+                holder.banButton.setEnabled(true);
+                holder.banButton.setVisibility(View.VISIBLE);
+            }
+            else{
+                holder.unbanButton.setEnabled(true);
+                holder.unbanButton.setVisibility(View.VISIBLE);
+                holder.banButton.setVisibility(View.INVISIBLE);
+                holder.banButton.setEnabled(false);
+            }
+
             holder.unbanButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    setDisableFacility(0, thisFaci);
                 }
             });
             holder.banButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //remove faci
+
+                    setDisableFacility(1, thisFaci);
                 }
             });
             holder.bind(thisFaci, listener);
         }
         if(type==3){
-            Topic thisTopic = topicList.get(position);
+            final Topic thisTopic = topicList.get(position);
             holder.monitorName.setText(thisTopic.getTopicName());
             holder.monitorProfilePic.setVisibility(View.GONE);
+
+            if(thisTopic.getIsDeleted()!=1){
+                holder.unbanButton.setEnabled(false);
+                holder.unbanButton.setVisibility(View.INVISIBLE);
+                holder.banButton.setVisibility(View.VISIBLE);
+                holder.banButton.setEnabled(true);
+            }
+            else{
+                holder.unbanButton.setEnabled(true);
+                holder.unbanButton.setVisibility(View.VISIBLE);
+                holder.banButton.setVisibility(View.INVISIBLE);
+                holder.banButton.setEnabled(false);
+            }
+
             holder.unbanButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    setDisableTopic(0, thisTopic);
                 }
             });
             holder.banButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //remove topic
+                    setDisableTopic(1, thisTopic);
                 }
             });
             holder.bind(thisTopic, listener);
         }
         if(type==4){
-            Post thisPost = postList.get(position);
+            final Post thisPost = postList.get(position);
             holder.monitorName.setText(thisPost.getTopicName());
             holder.monitorProfilePic.setVisibility(View.GONE);
+
+            if(thisPost.getIsDeleted()!=1){
+                holder.unbanButton.setEnabled(false);
+                holder.unbanButton.setVisibility(View.INVISIBLE);
+                holder.banButton.setEnabled(true);
+                holder.banButton.setVisibility(View.VISIBLE);
+            }
+            else{
+                holder.unbanButton.setEnabled(true);
+                holder.unbanButton.setVisibility(View.VISIBLE);
+                holder.banButton.setVisibility(View.INVISIBLE);
+                holder.banButton.setEnabled(false);
+            }
             holder.unbanButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    setDisablePost(0, thisPost);
                 }
             });
             holder.banButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //remove post
+                    setDisablePost(1, thisPost);
                 }
             });
             holder.bind(thisPost, listener);
@@ -195,6 +249,112 @@ public class MonitorAdapter extends RecyclerView.Adapter<MonitorAdapter.MonitorV
         //recyclerView.setAdapter(this);
     }
 
+    public void setDisableTopic(int isDisabled, Topic thisTopic) {
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+
+        final Call<Void> call = service.disableTopic(isDisabled, thisTopic.getId());
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+
+
+                    final Call<ArrayList<Topic>> call2 = service2.getAllTopics();
+                    call2.enqueue(new Callback<ArrayList<Topic>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<Topic>> call, Response<ArrayList<Topic>> response) {
+                            if(response.isSuccessful()){
+                                setTopics(response.body());
+                                dataSynced(13);
+                                updateList(response.body());
+
+
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<Topic>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
+    public void setDisablePost(int isDisabled, Post thisPost) {
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+
+        final Call<Void> call = service.disablePost(isDisabled, thisPost.getId());
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+
+
+                    final Call<ArrayList<Post>> call2 = service2.getAllPosts();
+                    call2.enqueue(new Callback<ArrayList<Post>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<Post>> call, Response<ArrayList<Post>> response) {
+                            if(response.isSuccessful()){
+                                setPosts(response.body());
+                                dataSynced(9);
+                                updateList(response.body());
+
+
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<Post>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
+    public long setPosts(ArrayList<Post> postList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setPosts(postList);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    public long setTopics(ArrayList<Topic> topicList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setTopics(topicList);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
     public void setDisableUser(int isDisabled, User thisUser) {
 
         final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
@@ -217,6 +377,7 @@ public class MonitorAdapter extends RecyclerView.Adapter<MonitorAdapter.MonitorV
                                 dataSynced(12);
                                 updateList(response.body());
 
+
                             }
                         }
 
@@ -233,6 +394,59 @@ public class MonitorAdapter extends RecyclerView.Adapter<MonitorAdapter.MonitorV
                 Log.d("onFailure", t.getLocalizedMessage());
             }
         });
+    }
+
+    public void setDisableFacility(int isDisabled, Facility facility) {
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+
+        final Call<Void> call = service.disableFacility(isDisabled, facility.getId());
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+
+
+                    final Call<ArrayList<Facility>> call2 = service2.getClinics();
+                    call2.enqueue(new Callback<ArrayList<Facility>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<Facility>> call, Response<ArrayList<Facility>> response) {
+                            if(response.isSuccessful()){
+                                setFacilities(response.body());
+                                dataSynced(2);
+                                updateList(response.body());
+
+
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<Facility>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
+    public long setFacilities(ArrayList<Facility> faciList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setFacilities(faciList);
+        petBetterDb.closeDatabase();
+
+        return result;
     }
 
     public long setUsers(ArrayList<User> userList){

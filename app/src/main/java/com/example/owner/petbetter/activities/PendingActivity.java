@@ -13,7 +13,7 @@ public class PendingActivity extends AppCompatActivity {
     private Button pendingEducButton;
     private Button pendingLicenseButton;
     private Button pendingServicesButton;
-    private Button pendingAdminButton;
+    private Button pendingSpecialtyButton;
     private int currFragment = 1;
 
     @Override
@@ -24,7 +24,7 @@ public class PendingActivity extends AppCompatActivity {
         pendingEducButton = (Button) findViewById(R.id.pendingEducButton);
         pendingLicenseButton = (Button) findViewById(R.id.pendingLicenseButton);
         pendingServicesButton = (Button) findViewById(R.id.pendingServicesButton);
-        pendingAdminButton = (Button) findViewById(R.id.pendingAdminButton);
+        pendingSpecialtyButton = (Button) findViewById(R.id.pendingSpecialtyButton);
 
         pendingEducClicked(this.findViewById(android.R.id.content));
     }
@@ -41,12 +41,12 @@ public class PendingActivity extends AppCompatActivity {
         pendingLicenseButton.setTextColor(getResources().getColor(R.color.colorWhite));
         pendingServicesButton.setBackgroundResource(R.color.medTurquoise);
         pendingServicesButton.setTextColor(getResources().getColor(R.color.colorWhite));
-        pendingAdminButton.setBackgroundResource(R.color.medTurquoise);
-        pendingAdminButton.setTextColor(getResources().getColor(R.color.colorWhite));
+        pendingSpecialtyButton.setBackgroundResource(R.color.medTurquoise);
+        pendingSpecialtyButton.setTextColor(getResources().getColor(R.color.colorWhite));
         pendingEducButton.setPaintFlags(pendingEducButton.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
         pendingLicenseButton.setPaintFlags(pendingLicenseButton.getPaintFlags()&(~Paint.UNDERLINE_TEXT_FLAG));
         pendingServicesButton.setPaintFlags(pendingServicesButton.getPaintFlags()&(~Paint.UNDERLINE_TEXT_FLAG));
-        pendingAdminButton.setPaintFlags(pendingAdminButton.getPaintFlags()&(~Paint.UNDERLINE_TEXT_FLAG));
+        pendingSpecialtyButton.setPaintFlags(pendingSpecialtyButton.getPaintFlags()&(~Paint.UNDERLINE_TEXT_FLAG));
     }
 
     public void pendingLicenseClicked(View view){
@@ -57,12 +57,12 @@ public class PendingActivity extends AppCompatActivity {
         pendingEducButton.setTextColor(getResources().getColor(R.color.colorWhite));
         pendingServicesButton.setBackgroundResource(R.color.medTurquoise);
         pendingServicesButton.setTextColor(getResources().getColor(R.color.colorWhite));
-        pendingAdminButton.setBackgroundResource(R.color.medTurquoise);
-        pendingAdminButton.setTextColor(getResources().getColor(R.color.colorWhite));
+        pendingSpecialtyButton.setBackgroundResource(R.color.medTurquoise);
+        pendingSpecialtyButton.setTextColor(getResources().getColor(R.color.colorWhite));
         pendingLicenseButton.setPaintFlags(pendingLicenseButton.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
         pendingEducButton.setPaintFlags(pendingEducButton.getPaintFlags()&(~Paint.UNDERLINE_TEXT_FLAG));
         pendingServicesButton.setPaintFlags(pendingServicesButton.getPaintFlags()&(~Paint.UNDERLINE_TEXT_FLAG));
-        pendingAdminButton.setPaintFlags(pendingAdminButton.getPaintFlags()&(~Paint.UNDERLINE_TEXT_FLAG));
+        pendingSpecialtyButton.setPaintFlags(pendingSpecialtyButton.getPaintFlags()&(~Paint.UNDERLINE_TEXT_FLAG));
     }
 
     public void pendingServicesClicked(View view){
@@ -73,25 +73,25 @@ public class PendingActivity extends AppCompatActivity {
         pendingLicenseButton.setTextColor(getResources().getColor(R.color.colorWhite));
         pendingEducButton.setBackgroundResource(R.color.medTurquoise);
         pendingEducButton.setTextColor(getResources().getColor(R.color.colorWhite));
-        pendingAdminButton.setBackgroundResource(R.color.medTurquoise);
-        pendingAdminButton.setTextColor(getResources().getColor(R.color.colorWhite));
+        pendingSpecialtyButton.setBackgroundResource(R.color.medTurquoise);
+        pendingSpecialtyButton.setTextColor(getResources().getColor(R.color.colorWhite));
         pendingServicesButton.setPaintFlags(pendingServicesButton.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
         pendingLicenseButton.setPaintFlags(pendingLicenseButton.getPaintFlags()&(~Paint.UNDERLINE_TEXT_FLAG));
         pendingEducButton.setPaintFlags(pendingEducButton.getPaintFlags()&(~Paint.UNDERLINE_TEXT_FLAG));
-        pendingAdminButton.setPaintFlags(pendingAdminButton.getPaintFlags()&(~Paint.UNDERLINE_TEXT_FLAG));
+        pendingSpecialtyButton.setPaintFlags(pendingSpecialtyButton.getPaintFlags()&(~Paint.UNDERLINE_TEXT_FLAG));
     }
 
-    public void pendingAdminClicked(View view){
+    public void pendingSpecialtyClicked(View view){
         currFragment = 4;
-        pendingAdminButton.setBackgroundResource(R.color.main_White);
-        pendingAdminButton.setTextColor(getResources().getColor(R.color.myrtle_green));
+        pendingSpecialtyButton.setBackgroundResource(R.color.main_White);
+        pendingSpecialtyButton.setTextColor(getResources().getColor(R.color.myrtle_green));
         pendingLicenseButton.setBackgroundResource(R.color.medTurquoise);
         pendingLicenseButton.setTextColor(getResources().getColor(R.color.colorWhite));
         pendingServicesButton.setBackgroundResource(R.color.medTurquoise);
         pendingServicesButton.setTextColor(getResources().getColor(R.color.colorWhite));
         pendingEducButton.setBackgroundResource(R.color.medTurquoise);
         pendingEducButton.setTextColor(getResources().getColor(R.color.colorWhite));
-        pendingAdminButton.setPaintFlags(pendingAdminButton.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
+        pendingSpecialtyButton.setPaintFlags(pendingSpecialtyButton.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
         pendingLicenseButton.setPaintFlags(pendingLicenseButton.getPaintFlags()&(~Paint.UNDERLINE_TEXT_FLAG));
         pendingServicesButton.setPaintFlags(pendingServicesButton.getPaintFlags()&(~Paint.UNDERLINE_TEXT_FLAG));
         pendingEducButton.setPaintFlags(pendingEducButton.getPaintFlags()&(~Paint.UNDERLINE_TEXT_FLAG));

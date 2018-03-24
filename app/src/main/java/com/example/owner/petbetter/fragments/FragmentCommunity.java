@@ -112,6 +112,9 @@ public class FragmentCommunity extends Fragment implements CheckUpdates, PlaceIn
         if(topicList==null){
             topicList = getTopics();
         }
+        if(getActivity() instanceof MonitorVetsActivity){
+            getAllTopics();
+        }
 
         for(int i = 0;i<topicList.size();i++){
             topicList.get(i).setFollowerCount(getFollowerCount((int) topicList.get(i).getId()));
@@ -135,6 +138,7 @@ public class FragmentCommunity extends Fragment implements CheckUpdates, PlaceIn
             recyclerView.setAdapter(communityAdapter);
         }
         if(getActivity() instanceof MonitorVetsActivity){
+
             MonitorAdapter monitorAdapter = new MonitorAdapter(getActivity(), topicList, 3, new MonitorAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(User item) {
@@ -370,6 +374,28 @@ public class FragmentCommunity extends Fragment implements CheckUpdates, PlaceIn
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
+    public void getAllTopics(){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        System.out.println("WE HERE BOOIII");
+
+        final Call<ArrayList<Topic>> call = service.getAllTopics();
+        call.enqueue(new Callback<ArrayList<Topic>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Topic>> call, Response<ArrayList<Topic>> response) {
+                if(response.isSuccessful()){
+                    topicList = response.body();
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Topic>> call, Throwable t) {
                 Log.d("onFailure", t.getLocalizedMessage());
             }
         });
