@@ -114,7 +114,7 @@ public class SignUpUserActivity extends AppCompatActivity {
 
 
             User user = new User(signupFirstName.getText().toString(), signupLastName.getText().toString(),
-                    signupEmail.getText().toString(), signupPassword.getEditText().getText().toString(), userType);
+                    signupEmail.getText().toString(), signupPassword.getEditText().getText().toString(), userType, 0);
 
             Gson gson = new GsonBuilder().serializeNulls().create();
             String jsonArray = gson.toJson(user);

@@ -2,6 +2,8 @@
 
 require 'init.php';
 
+//$queryjson = json_decode(file_get_contents('php://input'),true);
+
 $response = array(); 
 //$sql = "SELECT * FROM users WHERE email = ? AND password = ?";
 //$sql = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
@@ -9,27 +11,33 @@ $response = array();
 //$result = mysqli_query($con, $sql);
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
+	
+	//echo $queryjson;
+	
+	//$query = "%{$_POST['query']}%";
+	//$query = "%{$queryjson}%";
 
+	//SELECT email FROM users WHERE email LIKE ?
 	if($stmt = $mysqli->prepare("SELECT * FROM users")){
-		
+		//$stmt->bind_param("s", $query);
 		$stmt->execute();
-		$stmt->bind_result($user_id, $first_name, $last_name, $mobile_num, $phone_num, $email, $password, $age, $user_type, $user_photo, $is_disabled);
+		$stmt->bind_result($user_id, $first_name, $last_name, $mobile_num, $phone_num, $email,  $password, $age, $user_type, $user_photo, $is_disabled);
 		$stmt->store_result();
 	
 		if($stmt->fetch()){
 			
 			do{
 				array_push($response, array('user_id'=>$user_id,
-				'first_name'=>$first_name,
-				'last_name'=>$last_name,
-				'mobile_num'=>$mobile_num,
-				'phone_num'=>$phone_num,
-				'email'=>$email,
-				'password'=>$password,
-				'age'=>$age,
-				'user_type'=>$user_type,
-				'user_photo'=>$user_photo,
-				'is_disabled'=>$is_disabled));
+			'first_name'=>$first_name,
+			'last_name'=>$last_name,
+			'mobile_num'=>$mobile_num,
+			'phone_num'=>$phone_num,
+			'email'=>$email,
+			'password'=>$password,
+			'age'=>$age,
+			'user_type'=>$user_type,
+			'user_photo'=>$user_photo,
+			'is_disabled'=>$is_disabled));
 			}while($stmt->fetch());
 			
 			
@@ -49,6 +57,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 		else{
 			
 			$stmt->close();
+			//echo 'SQL Query Error';
 		}
 		//echo json_encode($stmt);
 		//echo json_encode(array('user'=>$response));

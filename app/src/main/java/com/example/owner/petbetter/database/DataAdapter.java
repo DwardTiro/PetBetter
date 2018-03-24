@@ -130,7 +130,8 @@ public class DataAdapter {
                 c.getString(c.getColumnIndexOrThrow("password")),
                 c.getInt(c.getColumnIndexOrThrow("age")),
                 c.getInt(c.getColumnIndexOrThrow("user_type")),
-                c.getString(c.getColumnIndexOrThrow("user_photo")));
+                c.getString(c.getColumnIndexOrThrow("user_photo")),
+                c.getInt(c.getColumnIndexOrThrow("is_disabled")));
         c.close();
         return true;
     }
@@ -166,7 +167,8 @@ public class DataAdapter {
                 c.getString(c.getColumnIndexOrThrow("password")),
                 c.getInt(c.getColumnIndexOrThrow("age")),
                 c.getInt(c.getColumnIndexOrThrow("user_type")),
-                c.getString(c.getColumnIndexOrThrow("user_photo")));
+                c.getString(c.getColumnIndexOrThrow("user_photo")),
+                c.getInt(c.getColumnIndexOrThrow("is_disabled")));
 
         c.close();
         return result;
@@ -221,7 +223,8 @@ public class DataAdapter {
                     c.getString(c.getColumnIndexOrThrow("password")),
                     c.getInt(c.getColumnIndexOrThrow("age")),
                     c.getInt(c.getColumnIndexOrThrow("user_type")),
-                    c.getString(c.getColumnIndexOrThrow("user_photo")));
+                    c.getString(c.getColumnIndexOrThrow("user_photo")),
+                    c.getInt(c.getColumnIndexOrThrow("is_disabled")));
 
             c.close();
 
@@ -285,7 +288,8 @@ public class DataAdapter {
                 c.getString(c.getColumnIndexOrThrow("password")),
                 c.getInt(c.getColumnIndexOrThrow("age")),
                 c.getInt(c.getColumnIndexOrThrow("user_type")),
-                c.getString(c.getColumnIndexOrThrow("user_photo")));
+                c.getString(c.getColumnIndexOrThrow("user_photo")),
+                c.getInt(c.getColumnIndexOrThrow("is_disabled")));
 
         c.close();
         return result;
@@ -311,6 +315,7 @@ public class DataAdapter {
                 user.getAge(),
                 user.getUserType(),
                 user.getUserPhoto(),
+                user.getIsDisabled(),
                 c.getInt(c.getColumnIndexOrThrow("specialty")),
                 c.getFloat(c.getColumnIndexOrThrow("rating")),
                 c.getString(c.getColumnIndexOrThrow("education")),
@@ -340,6 +345,7 @@ public class DataAdapter {
                 user.getAge(),
                 user.getUserType(),
                 user.getUserPhoto(),
+                user.getIsDisabled(),
                 c.getInt(c.getColumnIndexOrThrow("specialty")),
                 c.getFloat(c.getColumnIndexOrThrow("rating")),
                 c.getString(c.getColumnIndexOrThrow("education")),
@@ -382,7 +388,8 @@ public class DataAdapter {
                 c.getString(c.getColumnIndexOrThrow("hours_open")),
                 c.getString(c.getColumnIndexOrThrow("hours_close")),
                 c.getString(c.getColumnIndexOrThrow("contact_info")),
-                c.getFloat(c.getColumnIndexOrThrow("rating"))
+                c.getFloat(c.getColumnIndexOrThrow("rating")),
+                c.getInt(c.getColumnIndexOrThrow("is_disabled"))
         );
 
         return result;
@@ -394,8 +401,7 @@ public class DataAdapter {
         Cursor c = petBetterDb.rawQuery(sql, null);
         c.moveToLast();
 
-        User result = new User(
-                c.getLong(c.getColumnIndexOrThrow("_id")),
+        User result = new User(c.getLong(c.getColumnIndexOrThrow("_id")),
                 c.getString(c.getColumnIndexOrThrow("first_name")),
                 c.getString(c.getColumnIndexOrThrow("last_name")),
                 c.getString(c.getColumnIndexOrThrow("mobile_num")),
@@ -404,7 +410,8 @@ public class DataAdapter {
                 c.getString(c.getColumnIndexOrThrow("password")),
                 c.getInt(c.getColumnIndexOrThrow("age")),
                 c.getInt(c.getColumnIndexOrThrow("user_type")),
-                c.getString(c.getColumnIndexOrThrow("user_photo"))
+                c.getString(c.getColumnIndexOrThrow("user_photo")),
+                c.getInt(c.getColumnIndexOrThrow("is_disabled"))
         );
 
         return result;
@@ -792,6 +799,7 @@ public class DataAdapter {
                     user.getAge(),
                     user.getUserType(),
                     user.getUserPhoto(),
+                    user.getIsDisabled(),
                     c.getInt(c.getColumnIndexOrThrow("specialty")),
                     c.getFloat(c.getColumnIndexOrThrow("rating")),
                     c.getString(c.getColumnIndexOrThrow("education")),
@@ -851,6 +859,7 @@ public class DataAdapter {
                     user.getAge(),
                     user.getUserType(),
                     user.getUserPhoto(),
+                    user.getIsDisabled(),
                     c.getInt(c.getColumnIndexOrThrow("specialty")),
                     c.getFloat(c.getColumnIndexOrThrow("rating")),
                     c.getString(c.getColumnIndexOrThrow("education")),
@@ -875,7 +884,8 @@ public class DataAdapter {
                     c.getString(c.getColumnIndexOrThrow("last_name")),
                     c.getString(c.getColumnIndexOrThrow("email")),
                     c.getString(c.getColumnIndexOrThrow("password")),
-                    c.getInt(c.getColumnIndexOrThrow("user_type")));
+                    c.getInt(c.getColumnIndexOrThrow("user_type")),
+                    c.getInt(c.getColumnIndexOrThrow("is_disabled")));
             results.add(user);
         }
 
@@ -1165,7 +1175,8 @@ public class DataAdapter {
                     c.getString(c.getColumnIndexOrThrow("hours_open")),
                     c.getString(c.getColumnIndexOrThrow("hours_close")),
                     c.getString(c.getColumnIndexOrThrow("contact_info")),
-                    c.getFloat(c.getColumnIndexOrThrow("rating")));
+                    c.getFloat(c.getColumnIndexOrThrow("rating")),
+                    c.getInt(c.getColumnIndexOrThrow("is_disabled")));
             results.add(facility);
         }
 
@@ -1249,7 +1260,8 @@ public class DataAdapter {
                     c.getString(c.getColumnIndexOrThrow("hours_close")),
                     c.getString(c.getColumnIndexOrThrow("contact_info")),
                     c.getFloat(c.getColumnIndexOrThrow("rating")),
-                    c.getString(c.getColumnIndexOrThrow("faci_photo")));
+                    c.getString(c.getColumnIndexOrThrow("faci_photo")),
+                    c.getInt(c.getColumnIndexOrThrow("is_disabled")));
             results.add(facility);
         }
 
@@ -1294,6 +1306,33 @@ public class DataAdapter {
                     c.getLong(c.getColumnIndexOrThrow("user_id")),
                     c.getInt(c.getColumnIndexOrThrow("is_allowed")));
             results.add(follower);
+        }
+
+        c.close();
+        return results;
+    }
+
+    public ArrayList<User> getUsers(){
+        ArrayList<User> results = new ArrayList<>();
+        String temp;
+
+        //String sql = "SELECT * FROM " + FACI_TABLE + " WHERE vet_id = '" + veterinarian.getId() + "'";
+        String sql = "SELECT * FROM " + USER_TABLE;
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            User user = new User(c.getLong(c.getColumnIndexOrThrow("_id")),
+                    c.getString(c.getColumnIndexOrThrow("first_name")),
+                    c.getString(c.getColumnIndexOrThrow("last_name")),
+                    c.getString(c.getColumnIndexOrThrow("mobile_num")),
+                    c.getString(c.getColumnIndexOrThrow("phone_num")),
+                    c.getString(c.getColumnIndexOrThrow("email")),
+                    c.getString(c.getColumnIndexOrThrow("password")),
+                    c.getInt(c.getColumnIndexOrThrow("age")),
+                    c.getInt(c.getColumnIndexOrThrow("user_type")),
+                    c.getString(c.getColumnIndexOrThrow("user_photo")),
+                    c.getInt(c.getColumnIndexOrThrow("is_disabled")));
+            results.add(user);
         }
 
         c.close();
@@ -2572,7 +2611,8 @@ public class DataAdapter {
                     c.getString(c.getColumnIndexOrThrow("hours_open")),
                     c.getString(c.getColumnIndexOrThrow("hours_close")),
                     c.getString(c.getColumnIndexOrThrow("contact_info")),
-                    c.getFloat(c.getColumnIndexOrThrow("rating")));
+                    c.getFloat(c.getColumnIndexOrThrow("rating")),
+                    c.getInt(c.getColumnIndexOrThrow("is_disabled")));
 
             c.close();
             return result;
@@ -2981,7 +3021,6 @@ public class DataAdapter {
         long result = 0;
 
         petBetterDb.delete(FOLLOWER_TABLE, null, null);
-        System.out.println("REAL NUM OF FOLLOWERS "+getFollowers().size());
 
 
         for(Follower follower:followerList){
@@ -2992,7 +3031,6 @@ public class DataAdapter {
             cv.put("is_allowed", follower.getIsAllowed());
             result = petBetterDb.insert(FOLLOWER_TABLE, null, cv);
         }
-        System.out.println("2ND REAL NUM OF FOLLOWERS "+getFollowers().size());
 
         return result;
     }

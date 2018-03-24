@@ -23,6 +23,8 @@ import com.example.owner.petbetter.adapters.ClinicListingAdapter;
 import com.example.owner.petbetter.adapters.MonitorAdapter;
 import com.example.owner.petbetter.classes.Bookmark;
 import com.example.owner.petbetter.classes.Facility;
+import com.example.owner.petbetter.classes.Post;
+import com.example.owner.petbetter.classes.Topic;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
 import com.example.owner.petbetter.database.DataAdapter;
@@ -90,7 +92,29 @@ public class FragmentPetClinicListing extends Fragment {
         }
 
         if(getActivity() instanceof MonitorVetsActivity){
-            MonitorAdapter monitorAdapter = new MonitorAdapter(getActivity(), faciList, 2);
+            MonitorAdapter monitorAdapter = new MonitorAdapter(getActivity(), faciList, 2, new MonitorAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(User item) {
+
+                }
+
+                @Override
+                public void onItemClick(Facility item) {
+                    Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.EditFacilityActivity.class);
+                    intent.putExtra("thisClinic", new Gson().toJson(item));
+                    startActivity(intent);
+                }
+
+                @Override
+                public void onItemClick(Topic item) {
+
+                }
+
+                @Override
+                public void onItemClick(Post item) {
+
+                }
+            });
             recyclerView.setAdapter(monitorAdapter);
         }
         else if(isLinked&&(getActivity() instanceof SearchActivity)){

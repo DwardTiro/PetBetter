@@ -1,10 +1,9 @@
 package com.example.owner.petbetter.fragments;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,14 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.owner.petbetter.R;
-import com.example.owner.petbetter.activities.MonitorVetsActivity;
-import com.example.owner.petbetter.activities.SearchActivity;
-import com.example.owner.petbetter.activities.VetProfileActivity;
 import com.example.owner.petbetter.adapters.MonitorAdapter;
-import com.example.owner.petbetter.adapters.VetListingAdapter;
 import com.example.owner.petbetter.classes.Facility;
 import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.Topic;
@@ -27,22 +21,19 @@ import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
-import com.google.android.gms.vision.text.Text;
 import com.google.gson.Gson;
 
-import java.lang.reflect.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
- * Created by Kristian on 8/4/2017.
+ * Created by owner on 24/3/2018.
  */
 
-public class FragmentVetListing extends Fragment {
-
-    private VetListingAdapter vetListingAdapter;
+public class FragmentUser extends android.support.v4.app.Fragment{
+    private MonitorAdapter monitorAdapter;
     private RecyclerView recyclerView;
-    private ArrayList<Veterinarian> vetList;
+    private ArrayList<User> userList;
     private TextView nameTextView;
 
     private DataAdapter petBetterDb;
@@ -50,19 +41,18 @@ public class FragmentVetListing extends Fragment {
     private User user;
     private boolean isLinked;
 
-    private VetProfileActivity vetProfileActivity;
 
-    public FragmentVetListing() {
+    public FragmentUser() {
     }
 
     @SuppressLint("ValidFragment")
-    public FragmentVetListing(ArrayList<Veterinarian> vetList) {
-        this.vetList = vetList;
+    public FragmentUser(ArrayList<User> userList) {
+        this.userList = userList;
     }
 
     @SuppressLint("ValidFragment")
-    public FragmentVetListing(ArrayList<Veterinarian> vetList, boolean isLinked) {
-        this.vetList = vetList;
+    public FragmentUser(ArrayList<User> userList, boolean isLinked) {
+        this.userList = userList;
         this.isLinked = isLinked;
     }
 
@@ -76,38 +66,35 @@ public class FragmentVetListing extends Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.vetListing);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        if(vetList==null){
-            vetList = getVeterinarians();
-        }
-        System.out.println("Rating is "+vetList.get(0).getRating());
-
-        if(isLinked){
-            vetListingAdapter = new VetListingAdapter(getActivity(), vetList, new VetListingAdapter.OnItemClickListener() {
-                @Override public void onItemClick(Veterinarian item) {
-
-                    Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.NewPostActivity.class);
-                    //System.out.println("REQUEST CODE ID BEFORE PASSING "+item.getId());
-                    //intent.putExtra("faciId", new Gson().toJson(item.getId()));
-                    intent.putExtra("faciId", (long) item.getId());
-                    intent.putExtra("id_type", 1);
-                    getActivity().setResult(getActivity().RESULT_OK, intent);
-                    getActivity().finish();
-                }
-            });
-            recyclerView.setAdapter(vetListingAdapter);
-        }
-        else{
-            vetListingAdapter = new VetListingAdapter(getActivity(), vetList, new VetListingAdapter.OnItemClickListener() {
-                @Override public void onItemClick(Veterinarian item) {
-
-                    Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.VetProfileActivity.class);
-                    intent.putExtra("thisVet", new Gson().toJson(item));
-                    startActivity(intent);
-                }
-            });
-            recyclerView.setAdapter(vetListingAdapter);
+        if(userList ==null){
+            userList = getUsers();
         }
 
+
+
+        monitorAdapter = new MonitorAdapter(getActivity(), userList, 1, new MonitorAdapter.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(User item) {
+
+            }
+
+            @Override
+            public void onItemClick(Facility item) {
+
+            }
+
+            @Override
+            public void onItemClick(Topic item) {
+
+            }
+
+            @Override
+            public void onItemClick(Post item) {
+
+            }
+        });
+        recyclerView.setAdapter(monitorAdapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -154,14 +141,14 @@ public class FragmentVetListing extends Fragment {
     }
 
 
-    public ArrayList<Veterinarian> getVeterinarians(){
+    public ArrayList<User> getUsers(){
         try {
             petBetterDb.openDatabase();
         }catch (SQLException e) {
             e.printStackTrace();
         }
 
-        ArrayList<Veterinarian> result = petBetterDb.getVeterinarians();
+        ArrayList<User> result = petBetterDb.getUsers();
         petBetterDb.closeDatabase();
         return result;
     }
@@ -171,6 +158,4 @@ public class FragmentVetListing extends Fragment {
     public void setNameTextView(String text){
         nameTextView.setText(text);
     }
-
 }
-

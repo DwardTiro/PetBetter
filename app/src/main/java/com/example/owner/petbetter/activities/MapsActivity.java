@@ -648,7 +648,8 @@ public class MapsActivity extends FragmentActivity
                 closeTime,
                 phoneNum,
                 0,
-                image
+                image,
+                0
         );
 
         addFacilitytoDB((int)faciId,faciName,"",openTime,closeTime,phoneNum,vetId, image);

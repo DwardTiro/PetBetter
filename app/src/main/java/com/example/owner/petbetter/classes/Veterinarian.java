@@ -27,9 +27,9 @@ public class Veterinarian extends User {
     String profileDesc;
 
     public Veterinarian(int id, long userId, String firstName, String lastName, String mobileNumber, String phoneNumber,
-                        String email, String password, int age, int userType, String userPhoto, int specialty, float rating,
+                        String email, String password, int age, int userType, String userPhoto, int isDisabled, int specialty, float rating,
                         String education, int isLicensed, String profileDesc) {
-        super(userId, firstName, lastName, mobileNumber, phoneNumber, email, password, age, userType, userPhoto);
+        super(userId, firstName, lastName, mobileNumber, phoneNumber, email, password, age, userType, userPhoto, isDisabled);
         this.id = id;
         this.specialty = specialty;
         this.rating = rating;

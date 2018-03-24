@@ -31,7 +31,7 @@
             android:background="@color/myrtle_green"
             android:onClick="monitorVetsClicked"
             android:scaleType="fitCenter"
-            android:text="Vets"
+            android:text="Users"
             android:textAllCaps="false"
             android:textColor="@color/colorWhite" />
 

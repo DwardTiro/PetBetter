@@ -34,10 +34,13 @@ public class Facility {
     @SerializedName("faci_photo")
     private String faciPhoto;
 
+    @SerializedName("is_disabled")
+    private int isDisabled;
+
     private double longitude;
     private double latitude;
 
-    public Facility(int id, String faciName, String location, String hoursOpen, String hoursClose, String contactInfo, float rating) {
+    public Facility(int id, String faciName, String location, String hoursOpen, String hoursClose, String contactInfo, float rating, int isDisabled) {
         this.id = id;
         this.faciName = faciName;
         this.location = location;
@@ -45,10 +48,11 @@ public class Facility {
         this.hoursClose = hoursClose;
         this.contactInfo = contactInfo;
         this.rating = rating;
+        this.isDisabled = isDisabled;
     }
 
     public Facility(int id, String faciName, String location, String hoursOpen, String hoursClose, String contactInfo,
-                    float rating, String faciPhoto) {
+                    float rating, String faciPhoto, int isDisabled) {
         this.id = id;
         this.faciName = faciName;
         this.location = location;
@@ -57,6 +61,15 @@ public class Facility {
         this.contactInfo = contactInfo;
         this.rating = rating;
         this.faciPhoto = faciPhoto;
+        this.isDisabled = isDisabled;
+    }
+
+    public int getIsDisabled() {
+        return isDisabled;
+    }
+
+    public void setIsDisabled(int isDisabled) {
+        this.isDisabled = isDisabled;
     }
 
     public String getFaciPhoto() {

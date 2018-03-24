@@ -6,8 +6,8 @@ package com.example.owner.petbetter.classes;
 
 public class PetOwner extends User {
     public PetOwner(long userId, String lastName, String firstName, String mobileNumber, String phoneNumber,
-                    String email, String password, int age, int userType, String userPhoto) {
-        super(userId, lastName, firstName, mobileNumber, phoneNumber, email, password, age, userType, userPhoto);
+                    String email, String password, int age, int userType, String userPhoto, int isDisabled) {
+        super(userId, lastName, firstName, mobileNumber, phoneNumber, email, password, age, userType, userPhoto, isDisabled);
     }
     public void serviceEval(){
 

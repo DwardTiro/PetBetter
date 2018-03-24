@@ -30,9 +30,11 @@ import com.example.owner.petbetter.activities.MonitorVetsActivity;
 import com.example.owner.petbetter.activities.SearchActivity;
 import com.example.owner.petbetter.adapters.CommunityAdapter;
 import com.example.owner.petbetter.adapters.MonitorAdapter;
+import com.example.owner.petbetter.classes.Facility;
 import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.Topic;
 import com.example.owner.petbetter.classes.User;
+import com.example.owner.petbetter.classes.Veterinarian;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.interfaces.CheckUpdates;
 import com.example.owner.petbetter.interfaces.PlaceInfoListener;
@@ -133,7 +135,29 @@ public class FragmentCommunity extends Fragment implements CheckUpdates, PlaceIn
             recyclerView.setAdapter(communityAdapter);
         }
         if(getActivity() instanceof MonitorVetsActivity){
-            MonitorAdapter monitorAdapter = new MonitorAdapter(getActivity(), topicList, 3);
+            MonitorAdapter monitorAdapter = new MonitorAdapter(getActivity(), topicList, 3, new MonitorAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(User item) {
+
+                }
+
+                @Override
+                public void onItemClick(Facility item) {
+
+                }
+
+                @Override
+                public void onItemClick(Topic item) {
+                    Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.TopicContentActivity.class);
+                    intent.putExtra("thisTopic", new Gson().toJson(item));
+                    startActivity(intent);
+                }
+
+                @Override
+                public void onItemClick(Post item) {
+
+                }
+            });
             recyclerView.setAdapter(monitorAdapter);
         }
         else{

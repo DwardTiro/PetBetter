@@ -40,11 +40,14 @@ public class User {
     @SerializedName("user_photo")
     private String userPhoto;
 
+    @SerializedName("is_disabled")
+    private int isDisabled;
+
 
     private transient String userName;
 
     public User(long userId, String firstName, String lastName, String mobileNumber, String phoneNumber,
-                String email, String password, int age, int userType, String userPhoto){
+                String email, String password, int age, int userType, String userPhoto, int isDisabled){
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -55,14 +58,24 @@ public class User {
         this.age = age;
         this.userType = userType;
         this.userPhoto = userPhoto;
+        this.isDisabled = isDisabled;
     }
 
-    public User(String firstName, String lastName, String email, String password, int userType){
+    public User(String firstName, String lastName, String email, String password, int userType, int isDisabled){
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
         this.userType = userType;
+        this.isDisabled = isDisabled;
+    }
+
+    public int getIsDisabled() {
+        return isDisabled;
+    }
+
+    public void setIsDisabled(int isDisabled) {
+        this.isDisabled = isDisabled;
     }
 
     public long getUserId(){

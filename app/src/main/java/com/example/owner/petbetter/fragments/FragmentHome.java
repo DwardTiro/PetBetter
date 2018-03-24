@@ -28,8 +28,11 @@ import com.example.owner.petbetter.activities.MonitorVetsActivity;
 import com.example.owner.petbetter.activities.SearchActivity;
 import com.example.owner.petbetter.adapters.HomeAdapter;
 import com.example.owner.petbetter.adapters.MonitorAdapter;
+import com.example.owner.petbetter.classes.Facility;
 import com.example.owner.petbetter.classes.Post;
+import com.example.owner.petbetter.classes.Topic;
 import com.example.owner.petbetter.classes.User;
+import com.example.owner.petbetter.classes.Veterinarian;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.interfaces.CheckUpdates;
 import com.example.owner.petbetter.interfaces.PlaceInfoListener;
@@ -153,7 +156,30 @@ public class FragmentHome extends Fragment implements CheckUpdates {
 
         }
         if(getActivity() instanceof MonitorVetsActivity){
-            MonitorAdapter monitorAdapter = new MonitorAdapter(getActivity(), postList, 4);
+            MonitorAdapter monitorAdapter = new MonitorAdapter(getActivity(), postList, 4, new MonitorAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(User item) {
+
+                }
+
+                @Override
+                public void onItemClick(Facility item) {
+
+                }
+
+                @Override
+                public void onItemClick(Topic item) {
+
+                }
+
+                @Override
+                public void onItemClick(Post item) {
+                    Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.PostContentActivity.class);
+                    System.out.println("PLEASE BAKIT KA GANYAN "+item.getId());
+                    intent.putExtra("thisPost", new Gson().toJson(item));
+                    startActivity(intent);
+                }
+            });
             recyclerView.setAdapter(monitorAdapter);
         }
         else{
@@ -234,7 +260,7 @@ public class FragmentHome extends Fragment implements CheckUpdates {
 
     @Override
     public void onResult() {
-        if(postList.size()!=getPosts().size()&&(!(getActivity() instanceof SearchActivity))){
+        if(postList.size()!=getPosts().size()&&(!(getActivity() instanceof SearchActivity)||(getActivity() instanceof MonitorVetsActivity))){
             postList = getPosts();
             homeAdapter.updateList(postList);
         }

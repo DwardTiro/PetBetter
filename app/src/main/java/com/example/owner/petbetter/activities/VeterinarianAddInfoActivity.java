@@ -261,7 +261,7 @@ public class VeterinarianAddInfoActivity extends AppCompatActivity {
         service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
 
-        User user = new User(firstName, lastName, emailAddress, password, 1);
+        User user = new User(firstName, lastName, emailAddress, password, 1, 0);
 
         //addUsertoDB(newId,firstName,lastName,emailAddress,password, 1);
 

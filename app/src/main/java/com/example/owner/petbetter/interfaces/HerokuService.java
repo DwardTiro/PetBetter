@@ -268,6 +268,9 @@ public interface HerokuService {
     @POST("queryFacilities.php")
     Call<ArrayList<Facility>> queryFacilities(@Body RequestBody query);
 
+    @POST("queryUsers.php")
+    Call<ArrayList<User>> queryUsers(@Body RequestBody query);
+
     @FormUrlEncoded
     @POST("queryMessages.php")
     Call<ArrayList<Message>> queryMessages(@Field("queryjson") String query, @Field("_id") long _id);
@@ -330,6 +333,16 @@ public interface HerokuService {
     @FormUrlEncoded
     @POST("deleteFollower.php")
     Call<Void> deleteFollower(@Field("topic_id") long topicId, @Field("user_id") long userId);
+
+    @FormUrlEncoded
+    @POST("disableUser.php")
+    Call<Void> disableUser(@Field("is_disabled") int isDisabled, @Field("user_id") long userId);
+
+    @FormUrlEncoded
+    @POST("disableFacility.php")
+    Call<Void> disableFacility(@Field("is_disabled") int isDisabled, @Field("faci_id") long faciId);
+
+
 
     @FormUrlEncoded
     @POST("deleteNotification.php")

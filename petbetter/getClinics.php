@@ -13,7 +13,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 	if($stmt = $mysqli->prepare("SELECT * FROM facilities")){
 		
 		$stmt->execute();
-		$stmt->bind_result($_id, $faci_name, $location, $hours_open, $hours_close, $contact_info, $rating, $faci_photo);
+		$stmt->bind_result($_id, $faci_name, $location, $hours_open, $hours_close, $contact_info, $rating, $faci_photo, $is_disabled);
 		$stmt->store_result();
 	
 		if($stmt->fetch()){
@@ -26,7 +26,8 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 				'hours_close'=>$hours_close,
 				'contact_info'=>$contact_info,
 				'rating'=>$rating,
-				'faci_photo'=>$faci_photo));
+				'faci_photo'=>$faci_photo,
+				'is_disabled'=>$is_disabled));
 			}while($stmt->fetch());
 			
 			
