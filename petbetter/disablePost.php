@@ -2,12 +2,8 @@
 
 require 'init.php';
 
-$user_id = $_POST['user_id'];
-$specialty = $_POST['specialty'];
-$rating = $_POST['rating'];
-$education = $_POST['education'];
-$is_licensed = $_POST['is_licensed'];
-$profile_desc = $_POST['profile_desc']; 
+$post_id = $_POST['_id'];
+$is_deleted = $_POST['is_deleted'];
 
 
 $response = array(); 
@@ -18,41 +14,18 @@ $response = array();
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
 
-	if($stmt = $mysqli->prepare("INSERT INTO veterinarians (user_id, specialty, rating, education, is_licensed, profile_desc) VALUES (?,?,?,?,?,?)")){
-		$stmt->bind_param("ssssss", $user_id, $specialty, $rating, $education, $is_licensed, $profile_desc);
+	
+
+	if($stmt = $mysqli->prepare("UPDATE posts SET is_deleted = ? WHERE _id = ?")){
+		$stmt->bind_param("ss", $is_deleted, $post_id);
 		$stmt->execute();
 		$stmt->close();
-		echo 'Veterinarian added';
-		
-		//$stmt->bind_result($_id, $first_name, $last_name, $mobile_num, $phone_num, $email,  $password, $age, $user_type);
-		//$stmt->store_result();
-	
-	/*
-		if($stmt->fetch()){
-			
-			$stmt->close();
-			//echo json_encode($response);
-			echo json_encode(array('_id'=>$_id,
-			'first_name'=>$first_name,
-			'last_name'=>$last_name,
-			'mobile_num'=>$mobile_num,
-			'phone_num'=>$phone_num,
-			'email'=>$email,
-			'password'=>$password,
-			'age'=>$age,
-			'user_type'=>$user_type));
-		}
-		else{
-			
-			$stmt->close();
-			echo 'SQL Query Error';
-		}
-		*/
+		echo 'Update successful';
 		//echo json_encode($stmt);
 		//echo json_encode(array('user'=>$response));
 	}
 	else{
-		echo 'SQL Query Error';
+		echo 'Update unsuccessful';
 	}
 }
 

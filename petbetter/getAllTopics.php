@@ -2,14 +2,6 @@
 
 require 'init.php';
 
-$user_id = $_POST['user_id'];
-$specialty = $_POST['specialty'];
-$rating = $_POST['rating'];
-$education = $_POST['education'];
-$is_licensed = $_POST['is_licensed'];
-$profile_desc = $_POST['profile_desc']; 
-
-
 $response = array(); 
 //$sql = "SELECT * FROM users WHERE email = ? AND password = ?";
 //$sql = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
@@ -18,41 +10,44 @@ $response = array();
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
 
-	if($stmt = $mysqli->prepare("INSERT INTO veterinarians (user_id, specialty, rating, education, is_licensed, profile_desc) VALUES (?,?,?,?,?,?)")){
-		$stmt->bind_param("ssssss", $user_id, $specialty, $rating, $education, $is_licensed, $profile_desc);
-		$stmt->execute();
-		$stmt->close();
-		echo 'Veterinarian added';
+	if($stmt = $mysqli->prepare("SELECT * FROM topics")){
 		
-		//$stmt->bind_result($_id, $first_name, $last_name, $mobile_num, $phone_num, $email,  $password, $age, $user_type);
-		//$stmt->store_result();
+		$stmt->execute();
+		$stmt->bind_result($_id, $creator_id, $topic_name, $topic_desc, $date_created, $is_deleted);
+		$stmt->store_result();
 	
-	/*
 		if($stmt->fetch()){
 			
+			do{
+				array_push($response, array('_id'=>$_id,
+				'creator_id'=>$creator_id,
+				'topic_name'=>$topic_name,
+				'topic_desc'=>$topic_desc,
+				'date_created'=>$date_created,
+				'is_deleted'=>$is_deleted));
+			}while($stmt->fetch());
+			
+			
 			$stmt->close();
-			//echo json_encode($response);
+			
+			echo json_encode($response);
+			/*
 			echo json_encode(array('_id'=>$_id,
+			'user_id'=>$user_id,
+			'topic_name'=>$topic_name,
+			'topic_content'=>$topic_content,
+			'date_created'=>$date_created,
 			'first_name'=>$first_name,
-			'last_name'=>$last_name,
-			'mobile_num'=>$mobile_num,
-			'phone_num'=>$phone_num,
-			'email'=>$email,
-			'password'=>$password,
-			'age'=>$age,
-			'user_type'=>$user_type));
+			'is_deleted'=>$is_deleted));
+			*/
 		}
 		else{
 			
 			$stmt->close();
-			echo 'SQL Query Error';
+			//echo 'SQL Query Error';
 		}
-		*/
 		//echo json_encode($stmt);
 		//echo json_encode(array('user'=>$response));
-	}
-	else{
-		echo 'SQL Query Error';
 	}
 }
 
