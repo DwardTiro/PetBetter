@@ -66,9 +66,9 @@ public class PendingAdapter extends RecyclerView.Adapter<PendingAdapter.PendingV
     }
 
     @Override
-    public void onBindViewHolder(PendingViewHolder holder, int position) {
+    public void onBindViewHolder(PendingViewHolder holder, final int position) {
         initializeDatabase();
-        Pending thisPending = pendingList.get(position);
+        final Pending thisPending = pendingList.get(position);
         if(thisPending.getType()!=3){
 
             Veterinarian thisVet = getVeterinarianWithId(thisPending.getForeignId());
@@ -108,14 +108,18 @@ public class PendingAdapter extends RecyclerView.Adapter<PendingAdapter.PendingV
         holder.approveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                setIsApproved(1, thisPending);
+                pendingList.remove(position);
+                updateList(pendingList);
             }
         });
 
         holder.rejectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                setIsApproved(0, thisPending);
+                pendingList.remove(position);
+                updateList(pendingList);
             }
         });
         /*
@@ -162,6 +166,71 @@ public class PendingAdapter extends RecyclerView.Adapter<PendingAdapter.PendingV
             });
         }
         */
+    }
+
+    public void setIsApproved(int isApproved, final Pending thisPending) {
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+
+        final Call<Void> call = service.setIsApproved(isApproved, thisPending.getId());
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+
+
+                    final Call<ArrayList<Pending>> call2 = service2.getPending();
+                    call2.enqueue(new Callback<ArrayList<Pending>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<Pending>> call, Response<ArrayList<Pending>> response) {
+                            if(response.isSuccessful()){
+                                setPending(response.body());
+                                dataSynced(17);
+                                //find a way to refresh this and do search after.
+
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<Pending>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
+    public long setPending(ArrayList<Pending> pendingList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setPending(pendingList);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private void dataSynced(int n){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        petBetterDb.dataSynced(n);
+        petBetterDb.closeDatabase();
+
     }
 
     private void initializeDatabase() {

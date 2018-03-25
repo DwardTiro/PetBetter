@@ -2,6 +2,9 @@
 
 require 'init.php';
 
+$is_approved = $_POST['is_approved'];
+$_id = $_POST['_id'];
+
 $response = array(); 
 //$sql = "SELECT * FROM users WHERE email = ? AND password = ?";
 //$sql = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
@@ -10,42 +13,28 @@ $response = array();
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
 
-	if($stmt = $mysqli->prepare("SELECT * FROM pending WHERE is_approved = 0")){
-		
-		$stmt->execute();
-		$stmt->bind_result($_id, $foreign_id, $type, $is_approved);
-		$stmt->store_result();
 	
-		if($stmt->fetch()){
-			
-			do{
-				array_push($response, array('_id'=>$_id,
-				'foreign_id'=>$foreign_id,
-				'type'=>$type,
-				'is_approved'=>$is_approved));
-			}while($stmt->fetch());
-			
-			
+
+	if($is_approved==1){
+		if($stmt = $mysqli->prepare("UPDATE pending SET is_approved = ? WHERE _id = ?")){
+			$stmt->bind_param("ss", $is_approved, $_id);
+			$stmt->execute();
 			$stmt->close();
-			
-			echo json_encode($response);
-			/*
-			echo json_encode(array('_id'=>$_id,
-			'user_id'=>$user_id,
-			'topic_name'=>$topic_name,
-			'topic_content'=>$topic_content,
-			'date_created'=>$date_created,
-			'first_name'=>$first_name,
-			'is_deleted'=>$is_deleted));
-			*/
+			echo 'Update successful';
+			//echo json_encode($stmt);
+			//echo json_encode(array('user'=>$response));
 		}
 		else{
-			
-			$stmt->close();
+			echo 'Update unsuccessful';
 		}
-		//echo json_encode($stmt);
-		//echo json_encode(array('user'=>$response));
 	}
+	if($is_approved==0){
+		if($stmt = $mysqli->prepare("DELETE FROM pending WHERE _id = $_id")){
+			$stmt->execute();
+			$stmt->close();		
+		}
+	}
+	
 }
 
 /*

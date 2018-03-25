@@ -115,7 +115,6 @@ public class PendingActivity extends AppCompatActivity {
                         public void onResponse(Call<ArrayList<Pending>> call, Response<ArrayList<Pending>> response) {
                             ArrayList<Pending> pendingList = response.body();
 
-
                             FragmentPending fragment1 = new FragmentPending(pendingList, 1);
                             getSupportFragmentManager().beginTransaction().replace(R.id.frame_pending,fragment1).
                                     addToBackStack(null).commitAllowingStateLoss();
@@ -202,7 +201,7 @@ public class PendingActivity extends AppCompatActivity {
                     //query the substring to server data
 
 
-                    final Call<ArrayList<Pending>> call = service.queryPending(actvPending.getText().toString(), 1);
+                    final Call<ArrayList<Pending>> call = service.queryPending(actvPending.getText().toString(), 2);
                     call.enqueue(new Callback<ArrayList<Pending>>() {
                         @Override
                         public void onResponse(Call<ArrayList<Pending>> call, Response<ArrayList<Pending>> response) {
@@ -295,7 +294,7 @@ public class PendingActivity extends AppCompatActivity {
                     //query the substring to server data
 
 
-                    final Call<ArrayList<Pending>> call = service.queryPending(actvPending.getText().toString(), 1);
+                    final Call<ArrayList<Pending>> call = service.queryPending(actvPending.getText().toString(), 3);
                     call.enqueue(new Callback<ArrayList<Pending>>() {
                         @Override
                         public void onResponse(Call<ArrayList<Pending>> call, Response<ArrayList<Pending>> response) {
@@ -388,7 +387,7 @@ public class PendingActivity extends AppCompatActivity {
                     //query the substring to server data
 
 
-                    final Call<ArrayList<Pending>> call = service.queryPending(actvPending.getText().toString(), 1);
+                    final Call<ArrayList<Pending>> call = service.queryPending(actvPending.getText().toString(), 4);
                     call.enqueue(new Callback<ArrayList<Pending>>() {
                         @Override
                         public void onResponse(Call<ArrayList<Pending>> call, Response<ArrayList<Pending>> response) {

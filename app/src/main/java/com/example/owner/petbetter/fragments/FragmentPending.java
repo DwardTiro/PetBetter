@@ -80,7 +80,7 @@ public class FragmentPending extends Fragment{
             }
         }
 
-
+        //System.out.println("pending list par: "+newPendingList.size());
         recyclerView = (RecyclerView) view.findViewById(R.id.pendingListing);
         //pendingList = getBookmarks(user.getUserId(), 1);
         //System.out.println("Size of list "+pendingList.size());
