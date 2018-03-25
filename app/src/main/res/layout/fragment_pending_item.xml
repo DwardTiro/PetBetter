@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="10dp"
+    android:layout_marginStart="10dp"
+    android:background="@drawable/rounded_bg_corner">
+
+    <FrameLayout
+        android:id="@+id/imageLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp">
+
+        <ImageView
+            android:id="@+id/pendingProfilePic"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="3dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/vet_sample_pic" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:src="@drawable/profile_picture_frame" />
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/linearPending"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/imageLayout"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/pendingName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="10dp"
+            android:text="@string/sample_name"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/pendingInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="10dp"
+            android:text="Info"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/acceptButton"
+        android:layout_width="35dp"
+        android:layout_height="36dp"
+        android:layout_toStartOf="@+id/rejectButton"
+        android:background="@drawable/rounded_button_green"
+        android:drawableStart="@drawable/ic_check_white_18dp"
+        android:gravity="start|center_vertical"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="17dp"
+        android:padding="8dp"
+        android:textAllCaps="false"
+        android:textColor="@color/colorWhite"
+
+        android:textSize="12sp" />
+
+    <Button
+        android:id="@+id/rejectButton"
+        android:layout_width="35dp"
+        android:layout_height="36dp"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/rounded_button_red"
+        android:drawableStart="@drawable/ic_close_white_18dp"
+        android:gravity="center_vertical"
+        android:padding="8dp"
+        android:textAllCaps="false"
+        android:layout_centerVertical="true"
+        android:textColor="@color/colorWhite"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+
+        android:textSize="12sp" />
+
+</RelativeLayout>

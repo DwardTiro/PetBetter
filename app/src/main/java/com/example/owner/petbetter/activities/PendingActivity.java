@@ -161,6 +161,83 @@ public class PendingActivity extends AppCompatActivity {
         pendingEducButton.setPaintFlags(pendingEducButton.getPaintFlags()&(~Paint.UNDERLINE_TEXT_FLAG));
         pendingServicesButton.setPaintFlags(pendingServicesButton.getPaintFlags()&(~Paint.UNDERLINE_TEXT_FLAG));
         pendingSpecialtyButton.setPaintFlags(pendingSpecialtyButton.getPaintFlags()&(~Paint.UNDERLINE_TEXT_FLAG));
+
+        service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+        final Call<ArrayList<Pending>> call = service.getPending();
+        call.enqueue(new Callback<ArrayList<Pending>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Pending>> call, Response<ArrayList<Pending>> response) {
+                ArrayList<Pending> pendingList = response.body();
+
+                FragmentPending fragment1 = new FragmentPending(pendingList, 2);
+                getSupportFragmentManager().beginTransaction().replace(R.id.frame_pending,fragment1).
+                        addToBackStack(null).commitAllowingStateLoss();
+
+
+                // getSupportFragmentManager().beginTransaction().add(R.id.frame_search,fragment1).commitAllowingStateLoss();
+                //ArrayAdapter<Veterinarian> adapter = new ArrayAdapter<Veterinarian>(this,R.layout.,vetList);
+
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Pending>> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+                Toast.makeText(PendingActivity.this, "Unable to get vets from server", Toast.LENGTH_LONG);
+            }
+        });
+
+
+        actvPending.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(currFragment==2){
+                    service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+                    //query the substring to server data
+
+
+                    final Call<ArrayList<Pending>> call = service.queryPending(actvPending.getText().toString(), 1);
+                    call.enqueue(new Callback<ArrayList<Pending>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<Pending>> call, Response<ArrayList<Pending>> response) {
+                            ArrayList<Pending> pendingList = response.body();
+
+
+                            FragmentPending fragment1 = new FragmentPending(pendingList, 2);
+                            getSupportFragmentManager().beginTransaction().replace(R.id.frame_pending,fragment1).
+                                    addToBackStack(null).commitAllowingStateLoss();
+                            /*
+                            FragmentUser fragment1 = new FragmentUser(userList);
+                            getSupportFragmentManager().beginTransaction().replace(R.id.frame_pending,fragment1).
+                                    addToBackStack(null).commitAllowingStateLoss();
+                            */
+
+
+                            //ArrayAdapter<Veterinarian> adapter = new ArrayAdapter<Veterinarian>(this,R.layout.,vetList);
+
+                        }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<Pending>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+                            Toast.makeText(PendingActivity.this, "Unable to get vets from server", Toast.LENGTH_LONG);
+                        }
+                    });
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     public void pendingServicesClicked(View view){
@@ -177,6 +254,83 @@ public class PendingActivity extends AppCompatActivity {
         pendingLicenseButton.setPaintFlags(pendingLicenseButton.getPaintFlags()&(~Paint.UNDERLINE_TEXT_FLAG));
         pendingEducButton.setPaintFlags(pendingEducButton.getPaintFlags()&(~Paint.UNDERLINE_TEXT_FLAG));
         pendingSpecialtyButton.setPaintFlags(pendingSpecialtyButton.getPaintFlags()&(~Paint.UNDERLINE_TEXT_FLAG));
+
+        service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+        final Call<ArrayList<Pending>> call = service.getPending();
+        call.enqueue(new Callback<ArrayList<Pending>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Pending>> call, Response<ArrayList<Pending>> response) {
+                ArrayList<Pending> pendingList = response.body();
+
+                FragmentPending fragment1 = new FragmentPending(pendingList, 3);
+                getSupportFragmentManager().beginTransaction().replace(R.id.frame_pending,fragment1).
+                        addToBackStack(null).commitAllowingStateLoss();
+
+
+                // getSupportFragmentManager().beginTransaction().add(R.id.frame_search,fragment1).commitAllowingStateLoss();
+                //ArrayAdapter<Veterinarian> adapter = new ArrayAdapter<Veterinarian>(this,R.layout.,vetList);
+
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Pending>> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+                Toast.makeText(PendingActivity.this, "Unable to get vets from server", Toast.LENGTH_LONG);
+            }
+        });
+
+
+        actvPending.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(currFragment==3){
+                    service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+                    //query the substring to server data
+
+
+                    final Call<ArrayList<Pending>> call = service.queryPending(actvPending.getText().toString(), 1);
+                    call.enqueue(new Callback<ArrayList<Pending>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<Pending>> call, Response<ArrayList<Pending>> response) {
+                            ArrayList<Pending> pendingList = response.body();
+
+
+                            FragmentPending fragment1 = new FragmentPending(pendingList, 3);
+                            getSupportFragmentManager().beginTransaction().replace(R.id.frame_pending,fragment1).
+                                    addToBackStack(null).commitAllowingStateLoss();
+                            /*
+                            FragmentUser fragment1 = new FragmentUser(userList);
+                            getSupportFragmentManager().beginTransaction().replace(R.id.frame_pending,fragment1).
+                                    addToBackStack(null).commitAllowingStateLoss();
+                            */
+
+
+                            //ArrayAdapter<Veterinarian> adapter = new ArrayAdapter<Veterinarian>(this,R.layout.,vetList);
+
+                        }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<Pending>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+                            Toast.makeText(PendingActivity.this, "Unable to get vets from server", Toast.LENGTH_LONG);
+                        }
+                    });
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     public void pendingSpecialtyClicked(View view){
@@ -193,5 +347,82 @@ public class PendingActivity extends AppCompatActivity {
         pendingLicenseButton.setPaintFlags(pendingLicenseButton.getPaintFlags()&(~Paint.UNDERLINE_TEXT_FLAG));
         pendingServicesButton.setPaintFlags(pendingServicesButton.getPaintFlags()&(~Paint.UNDERLINE_TEXT_FLAG));
         pendingEducButton.setPaintFlags(pendingEducButton.getPaintFlags()&(~Paint.UNDERLINE_TEXT_FLAG));
+
+        service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+        final Call<ArrayList<Pending>> call = service.getPending();
+        call.enqueue(new Callback<ArrayList<Pending>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Pending>> call, Response<ArrayList<Pending>> response) {
+                ArrayList<Pending> pendingList = response.body();
+
+                FragmentPending fragment1 = new FragmentPending(pendingList, 4);
+                getSupportFragmentManager().beginTransaction().replace(R.id.frame_pending,fragment1).
+                        addToBackStack(null).commitAllowingStateLoss();
+
+
+                // getSupportFragmentManager().beginTransaction().add(R.id.frame_search,fragment1).commitAllowingStateLoss();
+                //ArrayAdapter<Veterinarian> adapter = new ArrayAdapter<Veterinarian>(this,R.layout.,vetList);
+
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Pending>> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+                Toast.makeText(PendingActivity.this, "Unable to get vets from server", Toast.LENGTH_LONG);
+            }
+        });
+
+
+        actvPending.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(currFragment==4){
+                    service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+                    //query the substring to server data
+
+
+                    final Call<ArrayList<Pending>> call = service.queryPending(actvPending.getText().toString(), 1);
+                    call.enqueue(new Callback<ArrayList<Pending>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<Pending>> call, Response<ArrayList<Pending>> response) {
+                            ArrayList<Pending> pendingList = response.body();
+
+
+                            FragmentPending fragment1 = new FragmentPending(pendingList, 4);
+                            getSupportFragmentManager().beginTransaction().replace(R.id.frame_pending,fragment1).
+                                    addToBackStack(null).commitAllowingStateLoss();
+                            /*
+                            FragmentUser fragment1 = new FragmentUser(userList);
+                            getSupportFragmentManager().beginTransaction().replace(R.id.frame_pending,fragment1).
+                                    addToBackStack(null).commitAllowingStateLoss();
+                            */
+
+
+                            //ArrayAdapter<Veterinarian> adapter = new ArrayAdapter<Veterinarian>(this,R.layout.,vetList);
+
+                        }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<Pending>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+                            Toast.makeText(PendingActivity.this, "Unable to get vets from server", Toast.LENGTH_LONG);
+                        }
+                    });
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 }

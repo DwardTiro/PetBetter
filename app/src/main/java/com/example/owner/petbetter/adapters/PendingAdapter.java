@@ -1,5 +1,6 @@
 package com.example.owner.petbetter.adapters;
 
+import android.app.Service;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
@@ -15,10 +16,13 @@ import com.bumptech.glide.Glide;
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
+import com.example.owner.petbetter.classes.Facility;
 import com.example.owner.petbetter.classes.Notifications;
 import com.example.owner.petbetter.classes.Pending;
+import com.example.owner.petbetter.classes.Services;
 import com.example.owner.petbetter.classes.Veterinarian;
 import com.example.owner.petbetter.database.DataAdapter;
+import com.google.android.gms.vision.text.Text;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -56,7 +60,7 @@ public class PendingAdapter extends RecyclerView.Adapter<PendingAdapter.PendingV
     }
     @Override
     public PendingViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.fragment_follower,parent,false);
+        View view = inflater.inflate(R.layout.fragment_pending_item,parent,false);
         PendingViewHolder holder = new PendingViewHolder(view);
         return holder;
     }
@@ -77,20 +81,43 @@ public class PendingAdapter extends RecyclerView.Adapter<PendingAdapter.PendingV
                 Glide.with(inflater.getContext()).load(newFileName).error(R.drawable.app_icon_yellow).into(holder.pendingProfilePic);
                 holder.pendingProfilePic.setVisibility(View.VISIBLE);
             }
-            holder.approveButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
+            if(thisPending.getType()==1){
+                holder.pendingInfo.setText(thisVet.getEducation());
+            }
+            if(thisPending.getType()==2){
+                if(thisVet.getIsLicensed()==1){
+                    holder.pendingInfo.setText("Has license");
                 }
-            });
-
-            holder.rejectButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
+                else{
+                    holder.pendingInfo.setText("No license");
                 }
-            });
+            }
+            if(thisPending.getType()==4){
+                holder.pendingInfo.setText(thisVet.getSpecialty());
+            }
         }
+        if(thisPending.getType()==3){
+            Services thisService = getServiceWithId(thisPending.getForeignId());
+            System.out.println("SERVICE ID "+thisService.getFaciId());
+            Facility facility = getFacility(thisService.getFaciId());
+            holder.pendingProfilePic.setVisibility(View.GONE);
+            holder.pendingName.setText(facility.getFaciName());
+            holder.pendingInfo.setText(thisService.getServiceName()+" - "+thisService.getServicePrice());
+        }
+
+        holder.approveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        holder.rejectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
         /*
         initializeDatabase();
         final Follower thisFollower = followerList.get(position);
@@ -163,6 +190,34 @@ public class PendingAdapter extends RecyclerView.Adapter<PendingAdapter.PendingV
         return result;
     }
 
+    private Services getServiceWithId(long id){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        Services result = petBetterDb.getServiceWithId(id);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private Facility getFacility(long faciId){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        Facility result = petBetterDb.getFacility((int) faciId);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
     public void updateList(ArrayList<Pending> newList){
         pendingList.clear();
         pendingList.addAll(newList);
@@ -181,14 +236,16 @@ public class PendingAdapter extends RecyclerView.Adapter<PendingAdapter.PendingV
         private ImageView pendingProfilePic;
         private Button approveButton;
         private Button rejectButton;
+        private TextView pendingInfo;
 
         public PendingViewHolder(View itemView){
             super(itemView);
 
-            pendingName = (TextView) itemView.findViewById(R.id.followerName);
-            pendingProfilePic = (ImageView) itemView.findViewById(R.id.followerProfilePic);
+            pendingName = (TextView) itemView.findViewById(R.id.pendingName);
+            pendingProfilePic = (ImageView) itemView.findViewById(R.id.pendingProfilePic);
             approveButton = (Button) itemView.findViewById(R.id.acceptButton);
             rejectButton = (Button) itemView.findViewById(R.id.rejectButton);
+            pendingInfo = (TextView) itemView.findViewById(R.id.pendingInfo);
 
         }
     }

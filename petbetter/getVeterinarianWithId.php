@@ -2,6 +2,8 @@
 
 require 'init.php';
 
+$user_id = $_POST['user_id'];
+
 $response = array(); 
 //$sql = "SELECT * FROM users WHERE email = ? AND password = ?";
 //$sql = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
@@ -11,18 +13,19 @@ $response = array();
 if($_SERVER['REQUEST_METHOD']=='POST'){
 
 	if($stmt = $mysqli->prepare("SELECT v._id AS _id, v.user_id, u.first_name AS first_name, u.last_name AS last_name, u.mobile_num AS mobile_num, u.phone_num AS phone_num, 
-		u.email AS email, u.password AS password, u.age AS age, u.user_type AS user_type, u.user_photo AS user_photo, u.is_disabled AS is_disabled, v.specialty AS specialty, v.rating AS rating, 
-		v.education AS education, v.is_licensed AS is_licensed, v.profile_desc AS profile_desc FROM veterinarians AS v INNER JOIN users u ON v.user_id = u.user_id")){
-		
+		u.email AS email, u.password AS password, u.age AS age, u.user_type AS user_type, u.user_photo AS user_photo, u.is_enabled AS is_enabled, v.specialty AS specialty, v.rating AS rating, 
+		v.education AS education, v.is_licensed AS is_licensed, v.profile_desc AS profile_desc FROM veterinarians AS v INNER JOIN users u ON v.user_id = u.user_id WHERE v.user_id = ?")){
+		$stmt->bind_param("s", $user_id);
 		$stmt->execute();
-		$stmt->bind_result($_id, $user_id, $first_name, $last_name, $mobile_num, $phone_num, $email, $password, $age, $user_type, $user_photo, $is_disabled, $specialty, $rating, 
+		$stmt->bind_result($_id, $user_id, $first_name, $last_name, $mobile_num, $phone_num, $email, $password, $age, $user_type, $user_photo, $is_enabled, $specialty, $rating, 
 			$education, $is_licensed, $profile_desc);
 		$stmt->store_result();
 	
 		if($stmt->fetch()){
 			
-			do{
-				array_push($response, array('_id'=>$_id,
+			$stmt->close();
+			
+			echo json_encode(array('_id'=>$_id,
 				'user_id'=>$user_id,
 				'first_name'=>$first_name,
 				'last_name'=>$last_name,
@@ -33,18 +36,12 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 				'age'=>$age,
 				'user_type'=>$user_type,
 				'user_photo'=>$user_photo,
-				'is_disabled'=>$is_disabled,
+				'is_enabled'=>$is_enabled,
 				'specialty'=>$specialty,
 				'rating'=>$rating,
 				'education'=>$education,
 				'is_licensed'=>$is_licensed,
 				'profile_desc'=>$profile_desc));
-			}while($stmt->fetch());
-			
-			
-			$stmt->close();
-			
-			echo json_encode($response);
 			/*
 			echo json_encode(array('_id'=>$_id,
 			'user_id'=>$user_id,

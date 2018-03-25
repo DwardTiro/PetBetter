@@ -2654,6 +2654,30 @@ public class DataAdapter {
         }
     }
 
+    public Services getServiceWithId(long id){
+        ArrayList<Services> results = new ArrayList<>();
+        String temp;
+
+        //String sql = "SELECT * FROM " + FACI_TABLE + " WHERE vet_id = '" + veterinarian.getId() + "'";
+        String sql = "SELECT * FROM " + SERVICE_TABLE + " WHERE _id = '" + id + "'";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        try{
+            c.moveToFirst();
+
+            Services result = new Services(c.getInt(c.getColumnIndexOrThrow("_id")),
+                    c.getLong(c.getColumnIndexOrThrow("faci_id")),
+                    c.getString(c.getColumnIndexOrThrow("service_name")),
+                    c.getFloat(c.getColumnIndexOrThrow("service_price")),
+                    c.getInt(c.getColumnIndexOrThrow("is_deleted")));
+
+            c.close();
+            return result;
+        }catch(CursorIndexOutOfBoundsException cpe){
+            return null;
+        }
+    }
+
     public long addVet(int vetId, int userId, int rating){
         long result;
 
@@ -2715,6 +2739,7 @@ public class DataAdapter {
             cv.put("user_id", vet.getUserId());
             cv.put("rating", vet.getRating());
             cv.put("education", vet.getEducation());
+            cv.put("specialty", vet.getSpecialty());
             cv.put("is_licensed", vet.getIsLicensed());
             cv.put("profile_desc", vet.getProfileDesc());
             result = petBetterDb.insert(VET_TABLE, null, cv);
