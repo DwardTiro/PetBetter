@@ -3,6 +3,7 @@ package com.example.owner.petbetter.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -24,6 +25,8 @@ import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import org.w3c.dom.Text;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -60,6 +63,12 @@ public class PetClinicProfileActivity extends AppCompatActivity {
     private double longitude, latitude;
     private Toolbar toolbar;
     private boolean isBookmarked = false;
+    private RecyclerView serviceRecyclerView;
+    private TextView noServicesTextView;
+    private TextView ambulanceTextView;
+    private TextView confinementTextView;
+    private TextView homeServiceTextView;
+    private TextView surgeryTextView;
 
     @Override
     public void onCreate(Bundle savedInstance) {
@@ -74,6 +83,13 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         petClinicRating = (TextView) findViewById(R.id.clinicRatingNumerator);
         clinicProfileImage = (ImageView) findViewById(R.id.clinicProfileImage);
         bookMarkButton = (Button) findViewById(R.id.bookmarkClinicButton);
+        ambulanceTextView = (TextView) findViewById(R.id.ambulanceTextView);
+        confinementTextView = (TextView) findViewById(R.id.confinementTextView);
+        homeServiceTextView = (TextView) findViewById(R.id.homeServiceTextView);
+        surgeryTextView = (TextView) findViewById(R.id.surgeryTextView);
+        noServicesTextView = (TextView) findViewById(R.id.noServicesTextView);
+        serviceRecyclerView = (RecyclerView) findViewById(R.id.servicesRecyclerView);
+
 
 
         petClinicRateButton = (Button) findViewById(R.id.rateClinicButton);

@@ -53,7 +53,7 @@ public class VetListingAdapter extends RecyclerView.Adapter<VetListingAdapter.Ve
         holder.vetListName.setText(thisVet.getName());
 
         System.out.println("The vet's name is "+holder.vetListName.getText());
-        holder.vetListSpecialty.setText("");
+        holder.vetListSpecialty.setText(thisVet.getSpecialty());
         holder.vetListRating.setText(String.format(Locale.getDefault(),"%.1f",thisVet.getRating()));
 
         if(thisVet.getUserPhoto()!=null){

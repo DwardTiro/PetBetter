@@ -1,66 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/rounded_bg_corner"
-    android:layout_marginStart="10dp"
     android:layout_marginEnd="10dp"
-    >
+    android:layout_marginStart="10dp"
+    android:background="@drawable/rounded_bg_corner">
 
-    <ImageView
-        android:id="@+id/locationLogo"
-        android:layout_width="12dp"
-        android:layout_height="15dp"
-        android:src="@drawable/ic_alarm_black_24dp"
-        android:background="@color/colorWhite"
-        android:layout_marginTop="5dp"
-        android:layout_marginStart="5dp"
-        />
-    <TextView
-        android:id="@+id/addressTextId"
+    <RelativeLayout
+        android:id="@+id/topContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@+id/locationLogo"
-        android:layout_marginStart="3dp"
-        android:text="Operating Hours:"
-        android:textStyle="bold"
-        android:textSize="15sp"
-        android:textColor="@color/black"
-        android:layout_marginTop="2dp"
-        />
+        android:background="@color/deep_turquoise"
+        android:paddingBottom="5dp">
 
-    <TextView
-        android:id="@+id/openTimeTextField"
-        android:layout_below="@id/addressTextId"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/sample_open_time"
-        android:layout_marginStart="7sp"
-        android:textSize="14sp"
-        />
-    <TextView
-        android:id="@+id/dashTextField"
-        android:layout_below="@id/addressTextId"
-        android:layout_toEndOf="@id/openTimeTextField"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="-"
-        android:layout_marginStart="7sp"
-        android:textSize="14sp"
-        />
-    <TextView
-        android:id="@+id/closeTimeTextField"
-        android:layout_below="@id/addressTextId"
-        android:layout_toEndOf="@id/dashTextField"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/sample_close_time"
-        android:layout_marginStart="7sp"
-        android:textSize="14sp"
-        android:layout_marginBottom="10dp"
-        />
+        <ImageView
+            android:id="@+id/locationLogo"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="7dp"
+            android:background="@color/deep_turquoise"
+            android:src="@drawable/ic_access_time_white_24dp" />
 
+        <TextView
+            android:id="@+id/addressTextId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="2dp"
+            android:layout_toEndOf="@+id/locationLogo"
+            android:text="Operating Hours"
+            android:textColor="@color/colorWhite"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_below="@id/topContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        >
+
+        <TextView
+            android:id="@+id/openTimeTextField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="7sp"
+            android:text="@string/sample_open_time"
+            android:textSize="14sp"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/dashTextField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="7sp"
+            android:layout_toEndOf="@id/openTimeTextField"
+            android:text="-"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            />
+
+        <TextView
+            android:id="@+id/closeTimeTextField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginStart="7sp"
+            android:layout_toEndOf="@id/dashTextField"
+            android:text="@string/sample_close_time"
+            android:textSize="14sp"
+            android:textColor="@color/black"/>
+    </RelativeLayout>
 
 
 </RelativeLayout>

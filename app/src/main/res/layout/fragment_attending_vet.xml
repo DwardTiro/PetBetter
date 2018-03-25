@@ -3,15 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginEnd="10dp"
-    android:layout_marginStart="10dp"
     android:background="@drawable/rounded_bg_corner"
-    android:onClick="onFacilityLocationClicked">
+    android:paddingTop="5dp"
+    android:paddingBottom="10dp">
 
     <RelativeLayout
         android:id="@+id/topContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/midnight_green"
+        android:background="@color/deep_turquoise"
         android:paddingBottom="5dp">
 
         <ImageView
@@ -20,8 +20,8 @@
             android:layout_height="20dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="7dp"
-            android:background="@color/midnight_green"
-            android:src="@drawable/ic_location_on_white_24dp" />
+            android:background="@color/deep_turquoise"
+            android:src="@drawable/ic_local_hospital_white_24dp" />
 
         <TextView
             android:id="@+id/addressTextId"
@@ -30,37 +30,17 @@
             android:layout_marginStart="5dp"
             android:layout_marginTop="2dp"
             android:layout_toEndOf="@+id/locationLogo"
-            android:text="Address"
+            android:text="Attending Veterinarians"
             android:textColor="@color/colorWhite"
             android:textSize="20sp"
             android:textStyle="bold" />
     </RelativeLayout>
 
-    <RelativeLayout
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/servicesRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/topContent"
-        android:paddingTop="7dp"
-        android:paddingBottom="7dp">
+        />
 
-        <TextView
-            android:id="@+id/addressTextField"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingStart="7dp"
-            android:paddingEnd="7dp"
-            android:text="@string/sample_address"
-            android:maxLines="3"
-            android:textSize="14sp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/addressTextField"
-            android:layout_marginBottom="5dp"
-            android:layout_marginStart="7sp"
-            android:text="Click to view location."
-            android:textColor="@color/teal_blue"
-            android:textSize="12sp" />
-    </RelativeLayout>
 </RelativeLayout>
