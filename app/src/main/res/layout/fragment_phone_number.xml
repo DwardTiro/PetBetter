@@ -1,45 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/rounded_bg_corner"
-    android:layout_marginStart="10dp"
     android:layout_marginEnd="10dp"
-    >
+    android:layout_marginStart="10dp"
+    android:background="@drawable/rounded_bg_corner_first_item">
 
-    <ImageView
-        android:id="@+id/locationLogo"
-        android:layout_width="12dp"
-        android:layout_height="15dp"
-        android:src="@drawable/ic_call_black_24dp"
-        android:background="@color/colorWhite"
-        android:layout_marginTop="5dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="3dp"
-        />
-    <TextView
-        android:id="@+id/phoneNumTextId"
+    <RelativeLayout
+        android:id="@+id/topContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@+id/locationLogo"
-        android:text="Phone Number:"
-        android:textStyle="bold"
-        android:textSize="15sp"
-        android:textColor="@color/black"
-        android:layout_marginTop="2dp"
-        />
+        android:background="@color/sea_green"
+        android:paddingBottom="5dp">
+
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="7dp"
+            android:background="@color/sea_green"
+            android:src="@drawable/ic_call_white_24dp" />
+
+        <TextView
+            android:id="@+id/TextId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="2dp"
+            android:layout_toEndOf="@+id/logo"
+            android:text="Contact Information"
+            android:textColor="@color/main_White"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/phoneNumTextField"
-        android:layout_below="@id/phoneNumTextId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/sample_landline"
-        android:layout_marginStart="7sp"
-        android:textSize="14sp"
+        android:layout_below="@id/topContent"
         android:layout_marginBottom="10dp"
-        />
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="7sp"
+        android:text="@string/sample_landline"
+        android:textColor="@color/midnight_green"
+        android:textSize="15sp" />
 
 
 </RelativeLayout>
