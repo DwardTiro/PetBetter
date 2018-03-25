@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
 public class Veterinarian extends User {
 
     @SerializedName("specialty")
-    int specialty;
+    String specialty;
 
     @SerializedName("_id")
     int id;
@@ -27,7 +27,7 @@ public class Veterinarian extends User {
     String profileDesc;
 
     public Veterinarian(int id, long userId, String firstName, String lastName, String mobileNumber, String phoneNumber,
-                        String email, String password, int age, int userType, String userPhoto, int isDisabled, int specialty, float rating,
+                        String email, String password, int age, int userType, String userPhoto, int isDisabled, String specialty, float rating,
                         String education, int isLicensed, String profileDesc) {
         super(userId, firstName, lastName, mobileNumber, phoneNumber, email, password, age, userType, userPhoto, isDisabled);
         this.id = id;
@@ -38,11 +38,11 @@ public class Veterinarian extends User {
         this.profileDesc = profileDesc;
     }
 
-    public int getSpecialty() {
+    public String getSpecialty() {
         return specialty;
     }
 
-    public void setSpecialty(int specialty) {
+    public void setSpecialty(String specialty) {
         this.specialty = specialty;
     }
 

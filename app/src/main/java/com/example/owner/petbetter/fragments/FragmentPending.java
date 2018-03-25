@@ -1,5 +1,6 @@
 package com.example.owner.petbetter.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -32,13 +33,28 @@ public class FragmentPending extends Fragment{
     private PendingAdapter pendingAdapter;
     private RecyclerView recyclerView;
     private ArrayList<Pending> pendingList;
+    private ArrayList<Pending> newPendingList = new ArrayList<Pending>();
     private TextView nameTextView;
 
     private DataAdapter petBetterDb;
     private SystemSessionManager systemSessionManager;
     private User user;
     private String email;
+    private int type = 0;
 
+    public FragmentPending() {
+    }
+
+    @SuppressLint("ValidFragment")
+    public FragmentPending(ArrayList<Pending> pendingList) {
+        this.pendingList = pendingList;
+    }
+
+    @SuppressLint("ValidFragment")
+    public FragmentPending(ArrayList<Pending> pendingList, int type) {
+        this.pendingList = pendingList;
+        this.type = type;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance){
@@ -55,10 +71,20 @@ public class FragmentPending extends Fragment{
         email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
         user = getUser(email);
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.bookmarkListing);
+
+        if(type!=0){
+            for(Pending pending:pendingList){
+                if(pending.getType()==type){
+                    newPendingList.add(pending);
+                }
+            }
+        }
+
+
+        recyclerView = (RecyclerView) view.findViewById(R.id.pendingListing);
         //pendingList = getBookmarks(user.getUserId(), 1);
-        System.out.println("Size of list "+pendingList.size());
-        pendingAdapter = new PendingAdapter(getActivity(), pendingList,new PendingAdapter.OnItemClickListener() {
+        //System.out.println("Size of list "+pendingList.size());
+        pendingAdapter = new PendingAdapter(getActivity(), newPendingList,new PendingAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Pending item) {
 

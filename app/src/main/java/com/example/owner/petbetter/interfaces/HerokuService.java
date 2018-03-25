@@ -114,6 +114,10 @@ public interface HerokuService {
     @POST("getVeterinarians.php")
     Call<ArrayList<Veterinarian>> getVeterinarians();
 
+    @FormUrlEncoded
+    @POST("getVeterinarianWithId.php")
+    Call<Veterinarian> getVeterinarianWithId(@Field("user_id") long userId);
+
     @POST("getRatings.php")
     Call<ArrayList<Rating>> getRatings();
 
@@ -280,6 +284,10 @@ public interface HerokuService {
     @FormUrlEncoded
     @POST("queryMessages.php")
     Call<ArrayList<Message>> queryMessages(@Field("queryjson") String query, @Field("_id") long _id);
+
+    @FormUrlEncoded
+    @POST("queryPending.php")
+    Call<ArrayList<Pending>> queryPending(@Field("queryjson") String query, @Field("type") int type);
 
     @POST("queryEmail.php")
     Call<ArrayList<String>> queryEmail();

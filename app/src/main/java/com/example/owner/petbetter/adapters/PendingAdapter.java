@@ -3,6 +3,7 @@ package com.example.owner.petbetter.adapters;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +11,23 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
+import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.classes.Notifications;
 import com.example.owner.petbetter.classes.Pending;
+import com.example.owner.petbetter.classes.Veterinarian;
+import com.example.owner.petbetter.database.DataAdapter;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static com.example.owner.petbetter.ServiceGenerator.BASE_URL;
 
 /**
  * Created by owner on 23/3/2018.
@@ -29,12 +42,16 @@ public class PendingAdapter extends RecyclerView.Adapter<PendingAdapter.PendingV
     private LayoutInflater inflater;
     private ArrayList<Pending> pendingList;
     private final OnItemClickListener listener;
+    private DataAdapter petBetterDb;
+    private Context context;
+    private HerokuService service;
 
     public PendingAdapter(Context context, ArrayList<Pending> pendingList, OnItemClickListener listener){
 
         inflater = LayoutInflater.from(context);
         this.pendingList = pendingList;
         this.listener = listener;
+        this.context = context;
 
     }
     @Override
@@ -46,7 +63,34 @@ public class PendingAdapter extends RecyclerView.Adapter<PendingAdapter.PendingV
 
     @Override
     public void onBindViewHolder(PendingViewHolder holder, int position) {
+        initializeDatabase();
+        Pending thisPending = pendingList.get(position);
+        if(thisPending.getType()!=3){
 
+            Veterinarian thisVet = getVeterinarianWithId(thisPending.getForeignId());
+            holder.pendingName.setText(thisVet.getName());
+
+            if(thisVet.getUserPhoto()!=null){
+                String newFileName = BASE_URL + thisVet.getUserPhoto();
+                System.out.println(newFileName);
+                //String newFileName = "http://192.168.0.19/petbetter/"+thisMessageRep.getMessagePhoto();
+                Glide.with(inflater.getContext()).load(newFileName).error(R.drawable.app_icon_yellow).into(holder.pendingProfilePic);
+                holder.pendingProfilePic.setVisibility(View.VISIBLE);
+            }
+            holder.approveButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+
+            holder.rejectButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+        }
         /*
         initializeDatabase();
         final Follower thisFollower = followerList.get(position);
@@ -91,6 +135,32 @@ public class PendingAdapter extends RecyclerView.Adapter<PendingAdapter.PendingV
             });
         }
         */
+    }
+
+    private void initializeDatabase() {
+
+        petBetterDb = new DataAdapter(context);
+
+        try {
+            petBetterDb.createDatabase();
+        } catch(SQLException e ){
+            e.printStackTrace();
+        }
+
+    }
+
+    private Veterinarian getVeterinarianWithId(long userId){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        Veterinarian result = petBetterDb.getVeterinarianWithId(userId);
+        petBetterDb.closeDatabase();
+
+        return result;
     }
 
     public void updateList(ArrayList<Pending> newList){
