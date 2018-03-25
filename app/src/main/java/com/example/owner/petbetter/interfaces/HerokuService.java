@@ -353,6 +353,10 @@ public interface HerokuService {
     Call<Void> disableTopic(@Field("is_deleted") int isDeleted, @Field("_id") long topicId);
 
     @FormUrlEncoded
+    @POST("setIsApproved.php")
+    Call<Void> setIsApproved(@Field("is_approved") int isApproved, @Field("_id") long pendingId);
+
+    @FormUrlEncoded
     @POST("disablePost.php")
     Call<Void> disablePost(@Field("is_deleted") int isDeleted, @Field("_id") long postId);
 
