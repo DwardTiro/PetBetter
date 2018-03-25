@@ -141,7 +141,7 @@
             android:layout_marginStart="10dp"
             android:paddingEnd="5dp"
             android:paddingStart="5dp"
-            android:text="VETERINARY SPECIALTY:"
+            android:text="VETERINARY SPECIALIZATION:"
             android:textSize="14sp" />
 
         <Spinner
@@ -155,6 +155,7 @@
             android:layout_marginTop="10dp"
             android:background="@color/colorWhite"
             android:entries="@array/veterinarySpecialtySpinner"
+            android:spinnerMode="dialog"
             android:prompt="@string/veterinarySpecialtyPrompt" />
 
         <TextView

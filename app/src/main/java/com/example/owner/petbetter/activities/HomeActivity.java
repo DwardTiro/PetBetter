@@ -84,12 +84,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private Button addTopicButton;
 
 
+    /*
     @Override
     protected void onPause() {
         super.onPause();
         HomeActivity.this.unregisterReceiver(notifReceiver);
     }
-
+*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

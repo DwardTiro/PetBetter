@@ -25,7 +25,7 @@
             android:layout_gravity="center">
 
             <ImageButton
-                android:id="@+id/editImage"
+                android:id="@+id/editVetImage"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:background="@drawable/app_icon_yellow"
@@ -69,7 +69,7 @@
                         android:textStyle="bold" />
 
                     <EditText
-                        android:id="@+id/editUserFirstName"
+                        android:id="@+id/editVetFirstName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
@@ -99,7 +99,7 @@
                         android:textStyle="bold" />
 
                     <EditText
-                        android:id="@+id/editUserLastName"
+                        android:id="@+id/editVetLastName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
@@ -129,7 +129,7 @@
                         android:textStyle="bold" />
 
                     <EditText
-                        android:id="@+id/editUserEmail"
+                        android:id="@+id/editVetEmail"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
@@ -153,13 +153,13 @@
                         android:layout_marginEnd="0dp"
                         android:layout_marginStart="13dp"
                         android:layout_marginTop="8dp"
-                        android:text="Mobile Number:"
+                        android:text="Contact Information:"
                         android:textColor="@color/black"
                         android:textSize="15sp"
                         android:textStyle="bold" />
 
                     <EditText
-                        android:id="@+id/editUserMobileNum"
+                        android:id="@+id/editVetContactNum"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
@@ -184,13 +184,13 @@
                         android:layout_marginEnd="0dp"
                         android:layout_marginStart="13dp"
                         android:layout_marginTop="8dp"
-                        android:text="Landline:"
+                        android:text="Education:"
                         android:textColor="@color/black"
                         android:textSize="15sp"
                         android:textStyle="bold" />
 
                     <EditText
-                        android:id="@+id/editUserLandline"
+                        android:id="@+id/editVetEducation"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
@@ -202,7 +202,69 @@
                         android:text="8712245" />
 
                 </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edit_profile_border"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="0dp"
+                        android:layout_marginStart="13dp"
+                        android:layout_marginTop="8dp"
+                        android:text="About Me:"
+                        android:textColor="@color/black"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/editVetAboutMe"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="8dp"
+                        android:paddingEnd="8dp"
+                        android:paddingStart="8dp"
+                        android:maxLines="3"
+                        android:text="Hi! I love dogs and I want to help you get the best for your dog." />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edit_profile_border"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="0dp"
+                        android:layout_marginStart="13dp"
+                        android:layout_marginTop="8dp"
+                        android:text="Specialization:"
+                        android:textColor="@color/black"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <Spinner
+                        android:id="@+id/editVetSpecialty"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:paddingEnd="8dp"
+                        android:paddingStart="8dp"
+                        android:background="@color/colorAccent"
+                        android:spinnerMode="dropdown"
+                        android:entries="@array/veterinarySpecialtySpinner"
+                        android:prompt="@string/veterinarySpecialtyPrompt"
+                         />
+
+                </LinearLayout>
             </LinearLayout>
+
         </ScrollView>
     </LinearLayout>
 

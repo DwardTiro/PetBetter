@@ -74,5 +74,5 @@
         <item>Canine/Feline Practice</item>
         <item>Nutrition</item>
     </string-array>
-    <string name="veterinarySpecialtyPrompt">Select an Option</string>
+    <string name="veterinarySpecialtyPrompt">Select a Specialization</string>
 </resources>
