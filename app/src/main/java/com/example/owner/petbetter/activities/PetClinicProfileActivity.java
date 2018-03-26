@@ -247,7 +247,7 @@ public class PetClinicProfileActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()){
-                    syncBookmarkChanges();
+                    //syncBookmarkChanges();
                     isBookmarked=false;
                     bookMarkButton.setEnabled(true);
                 }
