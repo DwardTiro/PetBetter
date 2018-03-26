@@ -100,7 +100,7 @@ public class MessageRepAdapter extends RecyclerView.Adapter<MessageRepAdapter.Me
             holder.messageRepImage.setVisibility(View.GONE);
         }
 
-        User user = getUserWithId(thisMessageRep.getUserId());
+        User user = getUserWithId(thisMessageRep.getSenderId());
 
         if(user.getUserPhoto()!=null){
 

@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.classes.Message;
+import com.example.owner.petbetter.classes.User;
 
 import java.util.ArrayList;
 
@@ -45,6 +46,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     @Override
     public void onBindViewHolder(MessageViewHolder holder, int position) {
         Message thisMessage = messageList.get(position);
+        System.out.println("FROM NAME PAR "+thisMessage.getFromName());
 
         holder.messageSender.setText(thisMessage.getFromName());
         holder.messageContent.setText(thisMessage.getMessageContent());

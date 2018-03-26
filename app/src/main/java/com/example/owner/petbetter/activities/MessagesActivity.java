@@ -242,12 +242,12 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
                                 ArrayList<Message> messageList = response.body();
 
                                 for(Message message : messageList){
-                                    User mUser = getUserWithId(message.getUserId());
+                                    User mUser = getUserWithId(message.getFromId());
                                     message.setFromName(mUser.getName());
                                 }
                                 fragment1 = new FragmentMessages(messageList, 1);
                                 //replace frame_se
-
+                                System.out.println("DO WE GET HERE MESSAGES PAR");
 
                                 getSupportFragmentManager().beginTransaction().replace(R.id.messages_container,fragment1).
                                         addToBackStack(null).commitAllowingStateLoss();
