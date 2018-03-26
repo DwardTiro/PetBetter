@@ -21,6 +21,7 @@ import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.activities.MessagesActivity;
+import com.example.owner.petbetter.activities.TopicContentActivity;
 import com.example.owner.petbetter.adapters.NotificationsAdapter;
 import com.example.owner.petbetter.classes.Follower;
 import com.example.owner.petbetter.classes.Message;
@@ -65,6 +66,8 @@ public class FragmentNoResults extends Fragment  {
     private Topic topicItem;
     HerokuService service;
 
+    private TextView tvNoResult;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_no_results,container, false);
@@ -73,6 +76,12 @@ public class FragmentNoResults extends Fragment  {
         if(systemSessionManager.checkLogin())
             getActivity().finish();
         HashMap<String, String> userIn = systemSessionManager.getUserDetails();
+
+        tvNoResult = (TextView) view.findViewById(R.id.tvNoResult);
+
+        if(getActivity() instanceof TopicContentActivity){
+            tvNoResult.setText("Follow this topic to view posts");
+        }
 
         return view;
     }

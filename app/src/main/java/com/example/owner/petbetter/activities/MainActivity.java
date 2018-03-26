@@ -263,7 +263,7 @@ public class MainActivity extends AppCompatActivity {
                         finish();
                     }
                     else{
-                        textInfo.setText("Invalid Email or Password");
+                        textInfo.setText("Logging in....");
                         textInfo.setVisibility(View.VISIBLE);
                     }
                 }

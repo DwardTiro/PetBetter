@@ -87,8 +87,8 @@ public class FollowerAdapter extends RecyclerView.Adapter<FollowerAdapter.Follow
             holder.followerProfilePic.setVisibility(View.VISIBLE);
         }
 
-        if(thisFollower.getIsAllowed() == 1 && thisTopic.getCreatorId() == thisFollower.getUserId() &&
-                appUser.getUserId() == thisTopic.getCreatorId()){
+        if(thisFollower.getIsAllowed() == 1 && (thisFollower.getUserId()==thisTopic.getCreatorId() ||
+                appUser.getUserId() != thisTopic.getCreatorId())){
             holder.acceptButton.setVisibility(View.GONE);
             holder.rejectButton.setVisibility(View.GONE);
 

@@ -30,6 +30,7 @@ import com.example.owner.petbetter.classes.Topic;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.fragments.FragmentHome;
+import com.example.owner.petbetter.fragments.FragmentNoResults;
 import com.example.owner.petbetter.fragments.FragmentPosts;
 import com.example.owner.petbetter.fragments.FragmentTopicFollowers;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
@@ -137,11 +138,21 @@ public class TopicContentActivity extends AppCompatActivity {
                 bundle = new Bundle();
                 bundle.putLong("topicId", topicItem.getId());
 
+                FragmentNoResults fragmentpar = new FragmentNoResults();
+                getSupportFragmentManager().beginTransaction().replace(R.id.topic_container,fragmentpar)
+                        .commitAllowingStateLoss();
+
                 if(check!=null){
                     if(check.getIsAllowed()==1){
+
                         Fragment postsFragment = new FragmentPosts();
                         postsFragment.setArguments(bundle);
                         getSupportFragmentManager().beginTransaction().replace(R.id.topic_container, postsFragment)
+                                .commitAllowingStateLoss();
+                    }
+                    else{
+                        fragmentpar = new FragmentNoResults();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.topic_container,fragmentpar)
                                 .commitAllowingStateLoss();
                     }
                 }
@@ -316,6 +327,8 @@ public class TopicContentActivity extends AppCompatActivity {
             followButton.setVisibility(View.VISIBLE);
         }
 
+        postsButton.callOnClick();
+
     }
 
     public void getTopicFollowers(long topicId){
@@ -460,12 +473,20 @@ public class TopicContentActivity extends AppCompatActivity {
                     System.out.println("POSTS ADDED YEY");
                     dataSynced(9);
 
+                    FragmentNoResults fragmentpar = new FragmentNoResults();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.topic_container,fragmentpar)
+                            .commitAllowingStateLoss();
+
                     final Call<ArrayList<Post>> call2 = service2.getPosts();
                     call2.enqueue(new Callback<ArrayList<Post>>() {
                         @Override
                         public void onResponse(Call<ArrayList<Post>> call, Response<ArrayList<Post>> response) {
                             if(response.isSuccessful()&&check!=null&&currFragment==1){
                                 if(check.getIsAllowed()==1){
+                                    FragmentNoResults fragmentpar = new FragmentNoResults();
+                                    getSupportFragmentManager().beginTransaction().replace(R.id.topic_container,fragmentpar)
+                                            .commitAllowingStateLoss();
+
                                     setPosts(response.body());
                                     fragment3 = new FragmentPosts();
                                     fragment3.setArguments(bundle);
