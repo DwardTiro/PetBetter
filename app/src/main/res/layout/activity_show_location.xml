@@ -6,7 +6,7 @@
 
     <include
         android:id="@+id/showLocationToolbar"
-        layout="@layout/toolbar_viewpost"
+        layout="@layout/toolbar_viewcomment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         />
