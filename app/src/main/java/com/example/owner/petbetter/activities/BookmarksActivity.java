@@ -162,7 +162,7 @@ public class BookmarksActivity extends AppCompatActivity implements NavigationVi
                 postBookmarks.setPaintFlags(postBookmarks.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
                 container.removeAllViews();
                 FragmentPetClinicListing fragment1 = new FragmentPetClinicListing();
-                getSupportFragmentManager().beginTransaction().replace(R.id.bookmark_container,fragment1).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.bookmark_container,fragment1).commitAllowingStateLoss();
             }
         });
         postBookmarks.setOnClickListener(new View.OnClickListener() {
@@ -178,7 +178,7 @@ public class BookmarksActivity extends AppCompatActivity implements NavigationVi
                 faciBookmarks.setPaintFlags(postBookmarks.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
                 container.removeAllViews();
                 FragmentPosts fragment = new FragmentPosts();
-                getSupportFragmentManager().beginTransaction().replace(R.id.bookmark_container,fragment).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.bookmark_container,fragment).commitAllowingStateLoss();
             }
         });
 

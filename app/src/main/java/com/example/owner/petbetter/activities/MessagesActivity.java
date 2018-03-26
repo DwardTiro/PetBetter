@@ -149,7 +149,7 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
         if (systemSessionManager.checkLogin())
             finish();
 
-        HashMap<String, String> userIn = systemSessionManager.getUserDetails();
+        final HashMap<String, String> userIn = systemSessionManager.getUserDetails();
 
         initializeDatabase();
         service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
@@ -242,7 +242,14 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
                                 ArrayList<Message> messageList = response.body();
 
                                 for(Message message : messageList){
-                                    User mUser = getUserWithId(message.getFromId());
+                                    User mUser;
+                                    if(getUserWithId(message.getFromId()).getUserId()==user.getUserId()){
+                                        mUser = getUserWithId(message.getUserId());
+                                    }
+                                    else{
+                                        mUser = getUserWithId(message.getFromId());
+                                    }
+
                                     message.setFromName(mUser.getName());
                                 }
                                 fragment1 = new FragmentMessages(messageList, 1);

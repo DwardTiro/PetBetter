@@ -240,13 +240,15 @@ public class PostContentActivity extends AppCompatActivity {
                     String jsonArray = gson.toJson(bookmark);
                     RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray);
 
+                    //syncBookmarkChanges();
+
                     Call<Void> call = bookMarkService.addBookmark(body);
                     call.enqueue(new Callback<Void>() {
                         @Override
                         public void onResponse(Call<Void> call, Response<Void> response) {
 
                             dataSync(16);
-                            syncBookmarkChanges();
+
                         }
 
                         @Override
@@ -622,7 +624,7 @@ public class PostContentActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()){
-                    syncBookmarkChanges();
+                    //syncBookmarkChanges();
                     isBookmarked=false;
                     bookMarkPost.setEnabled(true);
                 }
