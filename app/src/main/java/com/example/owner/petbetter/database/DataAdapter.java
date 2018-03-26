@@ -2097,7 +2097,7 @@ public class DataAdapter {
         ArrayList<Facility> results = new ArrayList<>();
 
         String sql = "SELECT f._id AS _id, f.faci_name AS faci_name, f.location AS location, f.hours_open AS hours_open, " +
-                "f.hours_close AS hour_close, f.contact_info AS contact_info, f.rating AS rating, f.faci_photo AS faci_photo, " +
+                "f.hours_close AS hours_close, f.contact_info AS contact_info, f.rating AS rating, f.faci_photo AS faci_photo, " +
                 "f.is_disabled AS is_disabled FROM facilities AS f INNER JOIN facility_membership AS fm ON f._id = fm.faci_id"+
                 " INNER JOIN veterinarians AS v ON fm.vet_id = v._id WHERE v._id = '"+vetId+"'";
         //String sql = "SELECT * FROM " + FACI_TABLE;

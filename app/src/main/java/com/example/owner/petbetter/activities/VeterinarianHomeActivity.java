@@ -32,6 +32,7 @@ import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.classes.Facility;
+import com.example.owner.petbetter.classes.FacilityMembership;
 import com.example.owner.petbetter.classes.Notifications;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
@@ -190,16 +191,38 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
 
         getVetChanges();
         getClinicChanges();
+        getMembershipChanges();
 
         if(user.getUserType()==1){
             thisVet = getVeterinarianWithId(user.getUserId());
-            /*
+
             faciList = getFacilitiesByVetId(thisVet.getId());
             if(faciList.size()>0){
                 FragmentPetClinicListing fragment = new FragmentPetClinicListing(faciList);
                 getSupportFragmentManager().beginTransaction().replace(R.id.vethome_container,fragment).commitAllowingStateLoss();
-            }*/
+            }
         }
+    }
+
+    public void getMembershipChanges(){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+        final Call<ArrayList<FacilityMembership>> call = service.getFacilityMembers();
+        call.enqueue(new Callback<ArrayList<FacilityMembership>>() {
+            @Override
+            public void onResponse(Call<ArrayList<FacilityMembership>> call, Response<ArrayList<FacilityMembership>> response) {
+                if(response.isSuccessful()){
+                    setMembers(response.body());
+                    dataSynced(18);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<FacilityMembership>> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
     }
 
     public void getClinicChanges(){
@@ -264,6 +287,18 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
             e.printStackTrace();
         }
         long result = petBetterDb.setVeterinarians(vetList);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    public long setMembers(ArrayList<FacilityMembership> fmList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setMembers(fmList);
         petBetterDb.closeDatabase();
 
         return result;
@@ -392,7 +427,7 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
         return result;
     }
 
-    /*
+
     private ArrayList<Facility> getFacilitiesByVetId(long vetId) {
 
         try {
@@ -405,7 +440,7 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
         petBetterDb.closeDatabase();
 
         return result;
-    }*/
+    }
 
 
     public void vetAddFacilityOnClick(View view){
