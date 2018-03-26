@@ -175,9 +175,6 @@ public class VetUserProfileActivity extends AppCompatActivity implements Navigat
 
     }
 
-    public void profileBackClicked(View view) {
-        finish();
-    }
     private void initializeDatabase() {
 
         petBetterDb = new DataAdapter(this);
