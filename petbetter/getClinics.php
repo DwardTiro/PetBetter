@@ -2,6 +2,7 @@
 
 require 'init.php';
 
+$checkdisabled = $_POST['checkdisabled'];
 $response = array(); 
 //$sql = "SELECT * FROM users WHERE email = ? AND password = ?";
 //$sql = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
@@ -9,49 +10,97 @@ $response = array();
 //$result = mysqli_query($con, $sql);
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
-
-	if($stmt = $mysqli->prepare("SELECT * FROM facilities")){
-		
-		$stmt->execute();
-		$stmt->bind_result($_id, $faci_name, $location, $hours_open, $hours_close, $contact_info, $rating, $faci_photo, $is_disabled);
-		$stmt->store_result();
 	
-		if($stmt->fetch()){
-			
-			do{
-				array_push($response, array('faci_id'=>$_id,
-				'faci_name'=>$faci_name,
-				'location'=>$location,
-				'hours_open'=>$hours_open,
-				'hours_close'=>$hours_close,
-				'contact_info'=>$contact_info,
-				'rating'=>$rating,
-				'faci_photo'=>$faci_photo,
-				'is_disabled'=>$is_disabled));
-			}while($stmt->fetch());
-			
-			
-			$stmt->close();
-			
-			echo json_encode($response);
-			/*
-			echo json_encode(array('_id'=>$_id,
-			'user_id'=>$user_id,
-			'topic_name'=>$topic_name,
-			'topic_content'=>$topic_content,
-			'date_created'=>$date_created,
-			'first_name'=>$first_name,
-			'is_deleted'=>$is_deleted));
-			*/
+	if($checkdisabled==0){
+		if($stmt = $mysqli->prepare("SELECT * FROM facilities")){
+		
+			$stmt->execute();
+			$stmt->bind_result($_id, $faci_name, $location, $hours_open, $hours_close, $contact_info, $rating, $faci_photo, $is_disabled);
+			$stmt->store_result();
+		
+			if($stmt->fetch()){
+				
+				do{
+					array_push($response, array('faci_id'=>$_id,
+					'faci_name'=>$faci_name,
+					'location'=>$location,
+					'hours_open'=>$hours_open,
+					'hours_close'=>$hours_close,
+					'contact_info'=>$contact_info,
+					'rating'=>$rating,
+					'faci_photo'=>$faci_photo,
+					'is_disabled'=>$is_disabled));
+				}while($stmt->fetch());
+				
+				
+				$stmt->close();
+				
+				echo json_encode($response);
+				/*
+				echo json_encode(array('_id'=>$_id,
+				'user_id'=>$user_id,
+				'topic_name'=>$topic_name,
+				'topic_content'=>$topic_content,
+				'date_created'=>$date_created,
+				'first_name'=>$first_name,
+				'is_deleted'=>$is_deleted));
+				*/
+			}
+			else{
+				
+				$stmt->close();
+				echo 'SQL Query Error';
+			}
+			//echo json_encode($stmt);
+			//echo json_encode(array('user'=>$response));
 		}
-		else{
-			
-			$stmt->close();
-			echo 'SQL Query Error';
-		}
-		//echo json_encode($stmt);
-		//echo json_encode(array('user'=>$response));
 	}
+	if($checkdisabled==1){
+		if($stmt = $mysqli->prepare("SELECT * FROM facilities WHERE is_disabled = 0")){
+			
+			$stmt->execute();
+			$stmt->bind_result($_id, $faci_name, $location, $hours_open, $hours_close, $contact_info, $rating, $faci_photo, $is_disabled);
+			$stmt->store_result();
+		
+			if($stmt->fetch()){
+				
+				do{
+					array_push($response, array('faci_id'=>$_id,
+					'faci_name'=>$faci_name,
+					'location'=>$location,
+					'hours_open'=>$hours_open,
+					'hours_close'=>$hours_close,
+					'contact_info'=>$contact_info,
+					'rating'=>$rating,
+					'faci_photo'=>$faci_photo,
+					'is_disabled'=>$is_disabled));
+				}while($stmt->fetch());
+				
+				
+				$stmt->close();
+				
+				echo json_encode($response);
+				/*
+				echo json_encode(array('_id'=>$_id,
+				'user_id'=>$user_id,
+				'topic_name'=>$topic_name,
+				'topic_content'=>$topic_content,
+				'date_created'=>$date_created,
+				'first_name'=>$first_name,
+				'is_deleted'=>$is_deleted));
+				*/
+			}
+			else{
+				
+				$stmt->close();
+				echo 'SQL Query Error';
+			}
+			//echo json_encode($stmt);
+			//echo json_encode(array('user'=>$response));
+		}
+	}
+
+	
 }
 
 /*

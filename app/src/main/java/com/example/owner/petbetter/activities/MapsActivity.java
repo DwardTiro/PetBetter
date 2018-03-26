@@ -386,7 +386,7 @@ public class MapsActivity extends FragmentActivity
                     System.out.println("FACILITIES ADDED YEY");
                     dataSync(2);
 
-                    final Call<ArrayList<Facility>> call2 = service2.getClinics();
+                    final Call<ArrayList<Facility>> call2 = service2.getClinics(1);
                     call2.enqueue(new Callback<ArrayList<Facility>>() {
                         @Override
                         public void onResponse(Call<ArrayList<Facility>> call, Response<ArrayList<Facility>> response) {

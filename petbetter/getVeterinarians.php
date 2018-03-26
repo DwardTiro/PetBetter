@@ -12,7 +12,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 
 	if($stmt = $mysqli->prepare("SELECT v._id AS _id, v.user_id, u.first_name AS first_name, u.last_name AS last_name, u.mobile_num AS mobile_num, u.phone_num AS phone_num, 
 		u.email AS email, u.password AS password, u.age AS age, u.user_type AS user_type, u.user_photo AS user_photo, u.is_disabled AS is_disabled, v.specialty AS specialty, v.rating AS rating, 
-		v.education AS education, v.is_licensed AS is_licensed, v.profile_desc AS profile_desc FROM veterinarians AS v INNER JOIN users u ON v.user_id = u.user_id")){
+		v.education AS education, v.is_licensed AS is_licensed, v.profile_desc AS profile_desc FROM veterinarians AS v INNER JOIN users u ON v.user_id = u.user_id WHERE u.is_disabled = 0")){
 		
 		$stmt->execute();
 		$stmt->bind_result($_id, $user_id, $first_name, $last_name, $mobile_num, $phone_num, $email, $password, $age, $user_type, $user_photo, $is_disabled, $specialty, $rating, 

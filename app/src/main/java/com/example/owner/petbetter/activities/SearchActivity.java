@@ -150,7 +150,7 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
         service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
 
-        final Call<ArrayList<Veterinarian>> call = service.getVeterinarians();
+        final Call<ArrayList<Veterinarian>> call = service.getVeterinarians(1);
         call.enqueue(new Callback<ArrayList<Veterinarian>>() {
             @Override
             public void onResponse(Call<ArrayList<Veterinarian>> call, Response<ArrayList<Veterinarian>> response) {
@@ -265,7 +265,7 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
         service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
 
-        final Call<ArrayList<Facility>> call = service2.getClinics();
+        final Call<ArrayList<Facility>> call = service2.getClinics(1);
         call.enqueue(new Callback<ArrayList<Facility>>() {
             @Override
             public void onResponse(Call<ArrayList<Facility>> call, Response<ArrayList<Facility>> response) {

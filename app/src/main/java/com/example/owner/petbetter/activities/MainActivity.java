@@ -313,7 +313,7 @@ public class MainActivity extends AppCompatActivity {
                             System.out.println("VETS ADDED YEY");
                             dataSynced(1);
 
-                            final Call<ArrayList<Veterinarian>> call2 = service2.getVeterinarians();
+                            final Call<ArrayList<Veterinarian>> call2 = service2.getVeterinarians(1);
                             call2.enqueue(new Callback<ArrayList<Veterinarian>>() {
                                 @Override
                                 public void onResponse(Call<ArrayList<Veterinarian>> call, Response<ArrayList<Veterinarian>> response) {
@@ -1023,7 +1023,7 @@ public class MainActivity extends AppCompatActivity {
                     System.out.println("FACILITIES ADDED YEY");
                     dataSynced(2);
 
-                    final Call<ArrayList<Facility>> call2 = service2.getClinics();
+                    final Call<ArrayList<Facility>> call2 = service2.getClinics(1);
                     call2.enqueue(new Callback<ArrayList<Facility>>() {
                         @Override
                         public void onResponse(Call<ArrayList<Facility>> call, Response<ArrayList<Facility>> response) {

@@ -229,7 +229,7 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
 
         final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
-        final Call<ArrayList<Facility>> call = service.getClinics();
+        final Call<ArrayList<Facility>> call = service.getClinics(1);
         call.enqueue(new Callback<ArrayList<Facility>>() {
             @Override
             public void onResponse(Call<ArrayList<Facility>> call, Response<ArrayList<Facility>> response) {
@@ -250,7 +250,7 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
 
         final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
-        final Call<ArrayList<Veterinarian>> call = service.getVeterinarians();
+        final Call<ArrayList<Veterinarian>> call = service.getVeterinarians(1);
         call.enqueue(new Callback<ArrayList<Veterinarian>>() {
             @Override
             public void onResponse(Call<ArrayList<Veterinarian>> call, Response<ArrayList<Veterinarian>> response) {

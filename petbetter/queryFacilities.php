@@ -17,14 +17,13 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 	//$query = "%{$_POST['query']}%";
 	$query = "%{$queryjson}%";
 
-	if($stmt = $mysqli->prepare("SELECT * FROM facilities WHERE faci_name LIKE ?")){
-		$stmt->bind_param("s", $query);
+	if($stmt = $mysqli->prepare("SELECT * FROM facilities AS f WHERE f.is_disabled = 0 AND (f.faci_name LIKE ? OR f.location LIKE ?)")){
+		$stmt->bind_param("ss", $query, $query);
 		$stmt->execute();
-		$stmt->bind_result($_id, $faci_name, $location, $hours_open, $hours_close, $contact_info, $vet_id, $rating, $faci_photo);
+		$stmt->bind_result($_id, $faci_name, $location, $hours_open, $hours_close, $contact_info, $rating, $faci_photo, $is_disabled);
 		$stmt->store_result();
 	
 		if($stmt->fetch()){
-			
 			do{
 				array_push($response, array('_id'=>$_id,
 				'faci_name'=>$faci_name,
@@ -32,9 +31,9 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 				'hours_open'=>$hours_open,
 				'hours_close'=>$hours_close,
 				'contact_info'=>$contact_info,
-				'vet_id'=>$vet_id,
 				'rating'=>$rating,
-				'faci_photo'=>$faci_photo));
+				'faci_photo'=>$faci_photo,
+				'is_disabled'=>$is_disabled,));
 			}while($stmt->fetch());
 			
 			

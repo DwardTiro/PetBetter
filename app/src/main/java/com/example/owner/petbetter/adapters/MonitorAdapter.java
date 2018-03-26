@@ -409,7 +409,7 @@ public class MonitorAdapter extends RecyclerView.Adapter<MonitorAdapter.MonitorV
                 if(response.isSuccessful()){
 
 
-                    final Call<ArrayList<Facility>> call2 = service2.getClinics();
+                    final Call<ArrayList<Facility>> call2 = service2.getClinics(0);
                     call2.enqueue(new Callback<ArrayList<Facility>>() {
                         @Override
                         public void onResponse(Call<ArrayList<Facility>> call, Response<ArrayList<Facility>> response) {

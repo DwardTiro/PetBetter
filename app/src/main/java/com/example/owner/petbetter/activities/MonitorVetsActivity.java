@@ -181,7 +181,7 @@ public class MonitorVetsActivity extends AppCompatActivity {
         service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
 
-        final Call<ArrayList<Facility>> call = service2.getClinics();
+        final Call<ArrayList<Facility>> call = service2.getClinics(0);
         call.enqueue(new Callback<ArrayList<Facility>>() {
             @Override
             public void onResponse(Call<ArrayList<Facility>> call, Response<ArrayList<Facility>> response) {

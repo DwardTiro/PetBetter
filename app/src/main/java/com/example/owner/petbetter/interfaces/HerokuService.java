@@ -112,8 +112,9 @@ public interface HerokuService {
     @POST("loadLocations.php")
     Call<ArrayList<LocationMarker>> loadLocations();
 
+    @FormUrlEncoded
     @POST("getVeterinarians.php")
-    Call<ArrayList<Veterinarian>> getVeterinarians();
+    Call<ArrayList<Veterinarian>> getVeterinarians(@Field("checkdisabled") int checkdisabled);
 
     @FormUrlEncoded
     @POST("getVeterinarianWithId.php")
@@ -128,8 +129,9 @@ public interface HerokuService {
     @POST("getUsers.php")
     Call<ArrayList<User>> getUsers();
 
+    @FormUrlEncoded
     @POST("getClinics.php")
-    Call<ArrayList<Facility>> getClinics();
+    Call<ArrayList<Facility>> getClinics(@Field("checkdisabled") int checkdisabled);
 
     @POST("getPending.php")
     Call<ArrayList<Pending>> getPending();
