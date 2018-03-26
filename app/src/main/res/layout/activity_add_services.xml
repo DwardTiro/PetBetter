@@ -27,60 +27,23 @@
             android:layout_centerHorizontal="true"
             android:text="Add Services"
             android:textColor="@color/black"
-            android:textSize="25sp" />
-
-        <LinearLayout
-            android:id="@+id/firstEntryLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_below="@id/labelActivity"
-            >
-
-            <EditText
-                android:id="@+id/serviceNameField"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="Service name"
-                android:maxLines="1"
-                android:textSize="18sp" />
-
-            <EditText
-                android:id="@+id/servicePriceField"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_toEndOf="@+id/serviceNameField"
-                android:layout_weight="1"
-                android:hint="Price"
-                android:maxLines="1"
-                android:textSize="18sp" />
-
-            <ImageButton
-                android:id="@+id/removeFieldButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="deleteRow"
-                android:src="@drawable/ic_dialog_close_light" />
-
-
-        </LinearLayout>
+            android:textSize="25sp"
+            />
 
         <LinearLayout
             android:id="@+id/serviceContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/firstEntryLayout"
-            android:layout_marginTop="5dp"
-            android:orientation="vertical" />
-
+            android:orientation="vertical"
+            android:layout_below="@id/labelActivity"
+            android:layout_marginTop="5dp"/>
         <Button
             android:id="@+id/addFieldButton"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_below="@id/serviceContainer"
+            android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:text="Add field" />
+            android:text="Add field"/>
 
         <Button
             android:id="@+id/addFacilityButton"

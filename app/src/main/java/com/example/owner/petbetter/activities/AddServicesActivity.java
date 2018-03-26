@@ -97,6 +97,7 @@ public class AddServicesActivity extends AppCompatActivity {
 
         Toast.makeText(this, faciName, Toast.LENGTH_SHORT).show();
 
+        createNewEditText();
         addField.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -114,7 +115,13 @@ public class AddServicesActivity extends AppCompatActivity {
         */
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View serviceView = inflater.inflate(R.layout.fragment_new_service_field, null);
-        newServices.addView(serviceView, newServices.getChildCount() - 1);
+        if(newServices.getChildCount() > 0)
+            newServices.addView(serviceView, newServices.getChildCount());
+        else if(newServices.getChildCount() == 1){
+            newServices.addView(serviceView, 1);
+        }
+        else
+            newServices.addView(serviceView, 0);
     }
 
     private void initializeDatabase() {
