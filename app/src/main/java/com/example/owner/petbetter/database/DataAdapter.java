@@ -1393,6 +1393,31 @@ public class DataAdapter {
 
     }
 
+    public ArrayList<Follower> getAllowedFollowers(long topicId){
+        ArrayList<Follower> results = new ArrayList<>();
+        String temp;
+
+        String sql = "SELECT * FROM " + FOLLOWER_TABLE + " WHERE topic_id = '" + topicId + "' AND is_allowed = 1";
+        //String sql = "SELECT * FROM " + FOLLOWER_TABLE;
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        try{
+            while(c.moveToNext()) {
+                Follower follower = new Follower(c.getLong(c.getColumnIndexOrThrow("_id")),
+                        c.getLong(c.getColumnIndexOrThrow("topic_id")),
+                        c.getLong(c.getColumnIndexOrThrow("user_id")),
+                        c.getInt(c.getColumnIndexOrThrow("is_allowed")));
+                results.add(follower);
+            }
+
+            c.close();
+            return results;
+        }catch(CursorIndexOutOfBoundsException e){
+            return null;
+        }
+
+    }
+
     public ArrayList<Pet> getPets(long userId){
         ArrayList<Pet> results = new ArrayList<>();
         String temp;

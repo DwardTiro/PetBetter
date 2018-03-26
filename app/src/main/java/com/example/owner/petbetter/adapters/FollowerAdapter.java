@@ -18,6 +18,7 @@ import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.activities.FollowerRequestsActivity;
 import com.example.owner.petbetter.activities.TopicContentActivity;
 import com.example.owner.petbetter.classes.Follower;
+import com.example.owner.petbetter.classes.Topic;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.google.gson.Gson;
@@ -48,12 +49,14 @@ public class FollowerAdapter extends RecyclerView.Adapter<FollowerAdapter.Follow
     private ArrayList<Follower> followerList;
     private final OnItemClickListener listener;
     private DataAdapter petBetterDb;
+    private User appUser;
 
-    public FollowerAdapter(Context context, ArrayList<Follower> followerList, OnItemClickListener listener){
+    public FollowerAdapter(Context context, ArrayList<Follower> followerList, OnItemClickListener listener, User appUser){
         inflater = LayoutInflater.from(context);
         this.context = context;
         this.followerList = followerList;
         this.listener = listener;
+        this.appUser = appUser;
     }
 
     @Override
@@ -67,6 +70,7 @@ public class FollowerAdapter extends RecyclerView.Adapter<FollowerAdapter.Follow
     public void onBindViewHolder(final FollowerViewHolder holder, int position) {
         initializeDatabase();
         final Follower thisFollower = followerList.get(position);
+        Topic thisTopic = getTopic(thisFollower.getTopicId());
         User user = getUserWithId((int) thisFollower.getUserId());
         holder.followerName.setText(user.getName());
         if(user.getUserPhoto()!=null){
@@ -83,7 +87,8 @@ public class FollowerAdapter extends RecyclerView.Adapter<FollowerAdapter.Follow
             holder.followerProfilePic.setVisibility(View.VISIBLE);
         }
 
-        if(thisFollower.getIsAllowed() == 1){
+        if(thisFollower.getIsAllowed() == 1 && thisTopic.getCreatorId() == thisFollower.getUserId() &&
+                appUser.getUserId() == thisTopic.getCreatorId()){
             holder.acceptButton.setVisibility(View.GONE);
             holder.rejectButton.setVisibility(View.GONE);
 
@@ -94,7 +99,12 @@ public class FollowerAdapter extends RecyclerView.Adapter<FollowerAdapter.Follow
                 public void onClick(View v) {
                     approveRequest(thisFollower.getId());
                     syncFollowerChanges(thisFollower.getId());
-                    updateList(getPendingFollowers(thisFollower.getTopicId()));
+                    if(context instanceof TopicContentActivity){
+                        updateList(getAllowedFollowers(thisFollower.getTopicId()));
+                    }
+                    else{
+                        updateList(getPendingFollowers(thisFollower.getTopicId()));
+                    }
                 }
             });
 
@@ -103,7 +113,13 @@ public class FollowerAdapter extends RecyclerView.Adapter<FollowerAdapter.Follow
                 public void onClick(View v) {
                     deleteFollower((int) thisFollower.getTopicId(), (int) thisFollower.getUserId());
                     removeFollower(thisFollower.getTopicId(), thisFollower.getUserId());
-                    updateList(getPendingFollowers(thisFollower.getTopicId()));
+                    if(context instanceof TopicContentActivity){
+                        updateList(getAllowedFollowers(thisFollower.getTopicId()));
+                    }
+                    else{
+                        updateList(getPendingFollowers(thisFollower.getTopicId()));
+                    }
+
                 }
             });
         }
@@ -163,6 +179,20 @@ public class FollowerAdapter extends RecyclerView.Adapter<FollowerAdapter.Follow
         });
     }
 
+    private ArrayList<Follower> getAllowedFollowers(long topicId){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Follower> result = petBetterDb.getAllowedFollowers(topicId);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
     private ArrayList<Follower> getPendingFollowers(long topicId){
 
         try {
@@ -172,6 +202,20 @@ public class FollowerAdapter extends RecyclerView.Adapter<FollowerAdapter.Follow
         }
 
         ArrayList<Follower> result = petBetterDb.getPendingFollowers(topicId);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private Topic getTopic(long topicId){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        Topic result = petBetterDb.getTopic(topicId);
         petBetterDb.closeDatabase();
 
         return result;
