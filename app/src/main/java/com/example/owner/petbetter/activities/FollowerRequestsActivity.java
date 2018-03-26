@@ -98,7 +98,7 @@ public class FollowerRequestsActivity extends AppCompatActivity {
                         @Override public void onItemClick(Follower item) {
                             //Execute command here
                         }
-                    });
+                    }, user);
                     followerAdapter.notifyItemRangeChanged(0, followerAdapter.getItemCount());
                     recyclerView.setAdapter(followerAdapter);
                     recyclerView.setItemAnimator(new DefaultItemAnimator());

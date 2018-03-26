@@ -75,7 +75,7 @@ public class FragmentTopicFollowers extends Fragment implements CheckUpdates{
             @Override public void onItemClick(Follower item) {
                 //Execute command here
             }
-        });
+        }, user);
         followerAdapter.notifyItemRangeChanged(0, followerAdapter.getItemCount());
         recyclerView.setAdapter(followerAdapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -100,7 +100,7 @@ public class FragmentTopicFollowers extends Fragment implements CheckUpdates{
                         public void onItemClick(Follower item) {
 
                         }
-                    });
+                    }, user);
                     followerAdapter.notifyItemRangeChanged(0, followerAdapter.getItemCount());
                     recyclerView.setAdapter(followerAdapter);
                     recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -130,7 +130,7 @@ public class FragmentTopicFollowers extends Fragment implements CheckUpdates{
                         @Override public void onItemClick(Follower item) {
                             //Execute command here
                         }
-                    });
+                    }, user);
                     followerAdapter.notifyItemRangeChanged(0, followerAdapter.getItemCount());
                     recyclerView.setAdapter(followerAdapter);
                     recyclerView.setItemAnimator(new DefaultItemAnimator());
