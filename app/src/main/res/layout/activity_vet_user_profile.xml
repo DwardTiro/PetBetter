@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/vetProfileToolbar"
+            layout="@layout/app_bar_nav_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/vetProfileToolbar">
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/midnight_green">
+
+                    <FrameLayout
+                        android:id="@+id/profileImageFrame"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp">
+
+                        <ImageView
+                            android:id="@+id/profileImage"
+                            android:layout_width="150dp"
+                            android:layout_height="150dp"
+                            android:layout_marginBottom="10dp"
+                            android:layout_marginEnd="13dp"
+                            android:layout_marginStart="13dp"
+                            android:layout_marginTop="13dp"
+                            android:adjustViewBounds="true"
+                            android:src="@drawable/vet_sample_pic" />
+
+                        <ImageView
+                            android:layout_width="160dp"
+                            android:layout_height="164dp"
+                            android:layout_marginStart="6dp"
+                            android:layout_marginTop="6dp"
+                            android:src="@drawable/profile_image_border" />
+                    </FrameLayout>
+
+                    <TextView
+                        android:id="@+id/profileName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_toEndOf="@+id/profileImageFrame"
+                        android:text="@string/sample_name"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="25sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/dvmTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/profileName"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="8dp"
+                        android:layout_toEndOf="@+id/profileImageFrame"
+                        android:text="DVM"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="25sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textRating"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/dvmTitle"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="7dp"
+                        android:layout_toEndOf="@+id/profileImageFrame"
+                        android:text="Rating:"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="17sp" />
+
+                    <TextView
+                        android:id="@+id/vetListRating"
+                        android:layout_width="35dp"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/dvmTitle"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="7dp"
+                        android:layout_toEndOf="@+id/textRating"
+                        android:background="@color/main_Color"
+                        android:text="5.0"
+                        android:textAlignment="center"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="17sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textVerified"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/textRating"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_toEndOf="@+id/profileImageFrame"
+                        android:text="Verified: "
+                        android:textColor="@color/colorWhite"
+                        android:textSize="17sp" />
+
+                    <ImageView
+                        android:id="@+id/vetVerified"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/vetListRating"
+                        android:layout_marginTop="3dp"
+                        android:layout_toEndOf="@id/textVerified"
+                        android:src="@drawable/ic_verified_user_white_24dp" />
+
+
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/separator"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/medTurquoise"
+                    android:orientation="horizontal" />
+
+                <include
+                    layout="@layout/fragment_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <include
+                    layout="@layout/fragment_education"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <include
+                    layout="@layout/fragment_specialty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <include
+                    layout="@layout/fragment_phone_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center_horizontal">
+
+
+                    <Button
+                        android:id="@+id/editVetProfileButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/myrtle_green"
+                        android:text="Edit Profile"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="18sp" />
+
+                </RelativeLayout>
+
+            </LinearLayout>
+        </ScrollView>
+
+    </RelativeLayout>
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_header_nav_bar"
+        app:menu="@menu/navigation_menu" />
+</android.support.v4.widget.DrawerLayout>

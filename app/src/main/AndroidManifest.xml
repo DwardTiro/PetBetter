@@ -195,7 +195,8 @@
         <activity android:name=".activities.AdminHomeActivity" />
         <activity android:name=".activities.PendingActivity" />
         <activity android:name=".activities.MonitorVetsActivity" />
-        <activity android:name=".activities.MonitorTopicsActivity"></activity>
+        <activity android:name=".activities.EditVetProfileActivity"/>
+        <activity android:name=".activities.VetUserProfileActivity"/>
     </application>
 
 </manifest>
