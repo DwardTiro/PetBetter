@@ -585,7 +585,6 @@ public class AddServicesActivity extends AppCompatActivity {
                             if (response.isSuccessful()) {
                                 System.out.println("Number of clinics from server: " + response.body().size());
                                 setFacilities(response.body());
-                                faciId = response.body().get(response.body().size() - 1).getId();
                                 int id = generateNewMemberID();
                                 addFacilityMember(id, faciId, (long) vetId);
                                 syncFacilityMemberChanges();
