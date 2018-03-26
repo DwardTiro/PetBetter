@@ -2566,6 +2566,21 @@ public class DataAdapter {
 
     }
 
+    public void editVeterinarian(long user_id, String specialty, String education, String profile_desc){
+
+
+        ContentValues cv = new ContentValues();
+        cv.put("specialty",specialty);
+        cv.put("education", education);
+        cv.put("profile_desc",profile_desc);
+
+        String[] whereArgs= new String[]{String.valueOf(user_id)};
+        petBetterDb.update(VET_TABLE,cv,"user_id=?", whereArgs);
+        petBetterDb.close();
+
+
+    }
+
     public void editFacility(long _id, String faciName, String location, String hoursOpen,String hoursClose,
                             String contactInfo, float rating, String faciPhoto){
 

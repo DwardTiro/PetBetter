@@ -118,7 +118,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
                 final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
-                final Call<User> call = service.getUser(user.getEmail());
+                final Call<User> call = service.checkLogin(user.getEmail(), user.getPassword());
                 call.enqueue(new Callback<User>() {
                     @Override
                     public void onResponse(Call<User> call, Response<User> response) {

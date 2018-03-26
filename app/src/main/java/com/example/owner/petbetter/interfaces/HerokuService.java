@@ -415,6 +415,13 @@ public interface HerokuService {
     Call<Void> editFacilities(@Body RequestBody faciList);
 
     @FormUrlEncoded
+    @POST("editVeterinarian.php")
+    Call<Void> editVeterinarian(@Field("specialty") String specialty,
+                                @Field("education") String education,
+                                @Field("profile_desc") String profile_desc,
+                                @Field("user_id") long user_id);
+
+    @FormUrlEncoded
     @POST("getMessageId.php")
     Call<Integer> getMessageId(@Field("from_id") long fromId, @Field("to_id") long toId);
 

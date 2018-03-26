@@ -11,11 +11,13 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.owner.petbetter.HerokuService;
@@ -25,11 +27,18 @@ import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
+
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.example.owner.petbetter.ServiceGenerator.BASE_URL;
 
@@ -60,7 +69,7 @@ public class EditVetProfileActivity extends AppCompatActivity {
     HerokuService service;
 
     @Override
-    public void onCreate(Bundle savedInstance){
+    public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_edit_vet_profile);
 
@@ -78,7 +87,7 @@ public class EditVetProfileActivity extends AppCompatActivity {
         saveButton = (Button) findViewById(R.id.saveButton);
 
         systemSessionManager = new SystemSessionManager(this);
-        if(systemSessionManager.checkLogin())
+        if (systemSessionManager.checkLogin())
             finish();
 
         HashMap<String, String> userIn = systemSessionManager.getUserDetails();
@@ -96,10 +105,10 @@ public class EditVetProfileActivity extends AppCompatActivity {
         vetEducation.setText(vet.getEducation());
         vetSpecialization.setSelection(getIndex(vetSpecialization, vet.getSpecialty()));
 
-        if(user.getUserPhoto()!=null){
+        if (user.getUserPhoto() != null) {
             String newFileName = BASE_URL + user.getUserPhoto();
             //String newFileName = "http://192.168.0.19/petbetter/"+user.getUserPhoto();
-            System.out.println("USER PHOTO "+user.getUserPhoto());
+            System.out.println("USER PHOTO " + user.getUserPhoto());
             Glide.with(EditVetProfileActivity.this).load(newFileName).error(R.drawable.app_icon_yellow).into(vetProfileImage);
         }
         vetProfileImage.setOnClickListener(new View.OnClickListener() {
@@ -113,33 +122,171 @@ public class EditVetProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String image = imageToString();
-                
+                editProfile(user.getUserId(),
+                        vetFirstName.getText().toString(),
+                        vetLastName.getText().toString(),
+                        vetEmailAddress.getText().toString(),
+                        vetContactInfo.getText().toString(),
+                        vetContactInfo.getText().toString(),
+                        image);
+
+                service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+                final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+                final HerokuService service3 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+                final Call<User> call = service.checkLogin(user.getEmail(), user.getPassword());
+                call.enqueue(new Callback<User>() {
+                    @Override
+                    public void onResponse(Call<User> call, Response<User> response) {
+                        //User thisUser = response.body();
+                        final User thisUser = getUserWithId((int) user.getUserId());
+                        thisUser.setUserId(response.body().getUserId());
+
+
+                        Gson gson = new GsonBuilder().serializeNulls().create();
+                        String jsonArray = gson.toJson(thisUser);
+                        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+                        //RequestBody doesn't contain message_photo.
+                        final Call<Void> call2 = service2.editProfile(body);
+                        call2.enqueue(new Callback<Void>() {
+                            @Override
+                            public void onResponse(Call<Void> call, Response<Void> response) {
+                                if (response.isSuccessful()) {
+                                    dataSynced(12);
+                                    final Call<User> call3 = service2.checkLogin(user.getEmail(), user.getPassword());
+                                    call3.enqueue(new Callback<User>() {
+                                        @Override
+                                        public void onResponse(Call<User> call, Response<User> response) {
+                                            if(response.isSuccessful()) {
+                                                editProfile(response.body().getUserId(), response.body().getFirstName(),
+                                                        response.body().getLastName(), response.body().getEmail(),
+                                                        response.body().getMobileNumber(), response.body().getPhoneNumber(),
+                                                        response.body().getUserPhoto());
+                                                editVeterinarian(response.body().getUserId(),
+                                                        vetSpecialization.getSelectedItem().toString(),
+                                                        vetEducation.getText().toString(), vetDescription.getText().toString());
+
+                                                final Call<Void> call3 = service3.editVeterinarian(vetSpecialization.getSelectedItem().toString(),
+                                                        vetEducation.getText().toString(), vetDescription.getText().toString(), response.body().getUserId());
+                                                call3.enqueue(new Callback<Void>() {
+                                                    @Override
+                                                    public void onResponse(Call<Void> call, Response<Void> response) {
+                                                        dataSynced(1);
+                                                        System.out.println("Edit Vet Profile Success");
+                                                        Intent intent = new Intent(EditVetProfileActivity.this, com.example.owner.petbetter.activities.VetUserProfileActivity.class);
+                                                        startActivity(intent);
+                                                        Toast.makeText(EditVetProfileActivity.this, "Edit Profile Success", Toast.LENGTH_SHORT).show();
+
+
+                                                    }
+
+                                                    @Override
+                                                    public void onFailure(Call<Void> call, Throwable t) {
+
+                                                    }
+                                                });
+                                            }
+
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<User> call, Throwable t) {
+
+                                        }
+                                    });
+
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<Void> call, Throwable t) {
+                                Log.d("onFailure", t.getLocalizedMessage());
+
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onFailure(Call<User> call, Throwable t) {
+                        Log.d("onFailure", t.getLocalizedMessage());
+                        Toast.makeText(EditVetProfileActivity.this, "Unable to update user on server", Toast.LENGTH_LONG);
+                    }
+                });
+
             }
         });
 
 
+    }
 
+    private void editProfile(long _id, String firstName, String lastName, String emailAddress, String mobileNum,
+                             String landline, String image) {
+
+        try {
+            petBetterDb.openDatabase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        petBetterDb.editProfile(_id, firstName, lastName, emailAddress, mobileNum, landline, image);
+        petBetterDb.closeDatabase();
+    }
+
+    public void editVeterinarian(long user_id, String specialty, String education, String profile_desc) {
+        try{
+            petBetterDb.openDatabase();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        petBetterDb.editVeterinarian(user_id, specialty, education, profile_desc);
+        petBetterDb.closeDatabase();
+    }
+
+    private User getUserWithId(int id) {
+
+        try {
+            petBetterDb.openDatabase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        User result = petBetterDb.getUserWithId(id);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private void dataSynced(int n) {
+
+        try {
+            petBetterDb.openDatabase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        petBetterDb.dataSynced(n);
+        petBetterDb.closeDatabase();
     }
 
     public void editBackClicked(View view) {
         finish();
     }
+
     private void initializeDatabase() {
 
         petBetterDb = new DataAdapter(this);
 
         try {
             petBetterDb.createDatabase();
-        } catch(SQLException e ){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
     }
-    private User getUser(String email){
+
+    private User getUser(String email) {
 
         try {
             petBetterDb.openDatabase();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -148,11 +295,12 @@ public class EditVetProfileActivity extends AppCompatActivity {
 
         return result;
     }
-    private Veterinarian getVetWithUserID(long user_id){
+
+    private Veterinarian getVetWithUserID(long user_id) {
 
         try {
             petBetterDb.openDatabase();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -162,24 +310,24 @@ public class EditVetProfileActivity extends AppCompatActivity {
         return result;
     }
 
-    private void selectImage(){
+    private void selectImage() {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(intent, IMG_REQUEST);
         ActivityCompat.requestPermissions(EditVetProfileActivity.this,
-                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},1);
+                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
 
     }
 
-    private String imageToString(){
-        try{
+    private String imageToString() {
+        try {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG,100,byteArrayOutputStream);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
             byte[] imgByte = byteArrayOutputStream.toByteArray();
 
-            return Base64.encodeToString(imgByte,Base64.DEFAULT);
-        }catch(NullPointerException npe){
+            return Base64.encodeToString(imgByte, Base64.DEFAULT);
+        } catch (NullPointerException npe) {
             return null;
         }
     }
@@ -187,14 +335,14 @@ public class EditVetProfileActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == IMG_REQUEST && resultCode == RESULT_OK && data!=null){
+        if (requestCode == IMG_REQUEST && resultCode == RESULT_OK && data != null) {
             Uri path = data.getData();
             try {
 
 
                 bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), path);
-                if(bitmap.getHeight()>150||bitmap.getWidth()>150){
-                    bitmap = Bitmap.createScaledBitmap(bitmap,150,150,false);
+                if (bitmap.getHeight() > 150 || bitmap.getWidth() > 150) {
+                    bitmap = Bitmap.createScaledBitmap(bitmap, 150, 150, false);
                 }
 
                 vetProfileImage.setImageBitmap(bitmap);
@@ -206,14 +354,14 @@ public class EditVetProfileActivity extends AppCompatActivity {
         }
     }
 
-    private int getIndex(Spinner spinner, String value){
+    private int getIndex(Spinner spinner, String value) {
         int itemIndex = 0;
-        for(int i = 0; i < spinner.getCount(); i++){
-            if(spinner.getItemAtPosition(i).toString().equalsIgnoreCase(value)){
+        for (int i = 0; i < spinner.getCount(); i++) {
+            if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(value)) {
                 itemIndex = i;
                 break;
             }
         }
-        return  itemIndex;
+        return itemIndex;
     }
 }

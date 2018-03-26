@@ -196,7 +196,6 @@
                         android:layout_marginBottom="8dp"
                         android:layout_marginEnd="8dp"
                         android:layout_marginStart="8dp"
-                        android:maxLength="7"
                         android:paddingEnd="8dp"
                         android:paddingStart="8dp"
                         android:text="8712245" />

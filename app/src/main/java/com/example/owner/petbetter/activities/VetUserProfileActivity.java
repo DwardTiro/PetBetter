@@ -2,6 +2,7 @@ package com.example.owner.petbetter.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -172,6 +173,66 @@ public class VetUserProfileActivity extends AppCompatActivity implements Navigat
         });
 
 
+
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        VetUserProfileActivity.this.registerReceiver(this.notifReceiver, new IntentFilter("com.example.ACTION_LOGOUT"));
+
+        systemSessionManager = new SystemSessionManager(this);
+        if(systemSessionManager.checkLogin())
+            finish();
+        HashMap<String, String> userIn = systemSessionManager.getUserDetails();
+
+        initializeDatabase();
+        View headerView = navigationView.getHeaderView(0);
+
+        String email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
+        textNavEmail = (TextView) headerView.findViewById(R.id.textNavEmail);
+        textNavEmail.setText(email);
+
+        user = getUser(email);
+
+        textNavUser = (TextView) headerView.findViewById(R.id.textNavUser);
+        textNavUser.setText(user.getName());
+
+        vetProfileImage = (ImageView) findViewById(R.id.profileImage);
+        vetName = (TextView) findViewById(R.id.profileName);
+        vetRating = (TextView) findViewById(R.id.vetListRating);
+        isVerified = (ImageView) findViewById(R.id.vetVerified);
+        vetDetails = (TextView) findViewById(R.id.vetDescriptionTextField);
+        vetEducation = (TextView) findViewById(R.id.bachelorEducationTextField);
+        vetSpecialization = (TextView) findViewById(R.id.specialtyTextField);
+        vetContactInformation = (TextView) findViewById(R.id.phoneNumTextField);
+
+        vetName.setText(user.getName()+",");
+        vetEducation.setText(vet.getEducation());
+        vetSpecialization.setText(vet.getSpecialty());
+        vetRating.setText(String.valueOf(vet.getRating()));
+        vetDetails.setText(vet.getProfileDesc());
+        if(vet.getIsLicensed() == 0){
+            isVerified.setVisibility(View.INVISIBLE);
+        }
+        else{
+            isVerified.setVisibility(View.VISIBLE);
+        }
+        vetContactInformation.setText(user.getMobileNumber());
+        if(user.getUserPhoto()!=null){
+
+            String newFileName = BASE_URL + user.getUserPhoto();
+            System.out.println(newFileName);
+            Glide.with(VetUserProfileActivity.this).load(newFileName).error(R.drawable.app_icon_yellow).into(vetProfileImage);
+            /*
+            Picasso.with(inflater.getContext()).load("http://".concat(newFileName))
+                    .error(R.drawable.back_button).into(holder.messageRepImage);*/
+            //setImage(holder.messageRepImage, newFileName);
+
+            vetProfileImage.setVisibility(View.VISIBLE);
+            vetProfileImage.setAdjustViewBounds(true);
+        }
 
     }
 
