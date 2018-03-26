@@ -2,78 +2,50 @@
 
 require 'init.php';
 
-//$vetlist = $_POST['vetlist'];;
-
-
-$facilist = json_decode(file_get_contents('php://input'),true);
+$response = array(); 
 //$sql = "SELECT * FROM users WHERE email = ? AND password = ?";
 //$sql = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
 
 //$result = mysqli_query($con, $sql);
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
+
+	if($stmt = $mysqli->prepare("SELECT * FROM facility_membership")){
+		
+		$stmt->execute();
+		$stmt->bind_result($_id, $faci_id, $vet_id);
+		$stmt->store_result();
 	
-	$n = count($facilist);
-	//echo $n;
-	$i = 0;
-	//echo $vetlist[$i]['_id'];
-	
-	while($i<$n){
-		
-		$title = substr(md5(rand()), 0, 7);
-		$upload_path = "uploads/facilities/$title.jpg";
-		
-		if(!($facilist[$i]['faci_photo']==null)){
-			file_put_contents($upload_path, base64_decode($facilist['faci_photo']));
-		}
-		else{
-			$upload_path = null;
-		}
-		
-		if($stmt = $mysqli->prepare("INSERT INTO facilities (faci_name, location, hours_open, hours_close, contact_info, rating, faci_photo, is_disabled) VALUES (?,?,?,?,?,?,?,?)")){
-			$stmt->bind_param("ssssssss", $facilist[$i]['faci_name'], $facilist[$i]['location'], $facilist[$i]['hours_open'], $facilist[$i]['hours_close'], $facilist[$i]['contact_info'], $facilist[$i]['rating'], 
-				$upload_path, $facilist[$i]['is_disabled']);
-			$stmt->execute();
-			$stmt->close();
-			$i = $i + 1;
-		}
-		else{
-			echo 'Failed to add to db';
-			break;
-		}
-		
-	}
-	
-		
-		//echo json_encode(array('_id'=>$vetlist['_id']));
-		
-		//$stmt->bind_result($_id, $first_name, $last_name, $mobile_num, $phone_num, $email,  $password, $age, $user_type);
-		//$stmt->store_result();
-	
-	/*
 		if($stmt->fetch()){
 			
+			do{
+				array_push($response, array('_id'=>$_id,
+				'faci_id'=>$faci_id,
+				'vet_id'=>$vet_id));
+			}while($stmt->fetch());
+			
+			
 			$stmt->close();
-			//echo json_encode($response);
+			
+			echo json_encode($response);
+			/*
 			echo json_encode(array('_id'=>$_id,
+			'user_id'=>$user_id,
+			'topic_name'=>$topic_name,
+			'topic_content'=>$topic_content,
+			'date_created'=>$date_created,
 			'first_name'=>$first_name,
-			'last_name'=>$last_name,
-			'mobile_num'=>$mobile_num,
-			'phone_num'=>$phone_num,
-			'email'=>$email,
-			'password'=>$password,
-			'age'=>$age,
-			'user_type'=>$user_type));
+			'is_deleted'=>$is_deleted));
+			*/
 		}
 		else{
 			
 			$stmt->close();
-			echo 'SQL Query Error';
+			//echo 'SQL Query Error';
 		}
-		*/
 		//echo json_encode($stmt);
 		//echo json_encode(array('user'=>$response));
-	
+	}
 }
 
 /*

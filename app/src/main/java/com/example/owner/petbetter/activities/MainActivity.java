@@ -19,6 +19,7 @@ import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.TypefaceUtil;
 import com.example.owner.petbetter.classes.Facility;
+import com.example.owner.petbetter.classes.FacilityMembership;
 import com.example.owner.petbetter.classes.Follower;
 import com.example.owner.petbetter.classes.LocationMarker;
 import com.example.owner.petbetter.classes.Message;
@@ -164,6 +165,8 @@ public class MainActivity extends AppCompatActivity {
                         syncClinicChanges();
 
                         syncFollowerChanges();
+
+                        syncFacilityMemberChanges();
 
                         syncLocationChanges();
 
@@ -438,6 +441,51 @@ public class MainActivity extends AppCompatActivity {
 
                         @Override
                         public void onFailure(Call<ArrayList<Upvote>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
+    public void syncFacilityMemberChanges(){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+
+        ArrayList<FacilityMembership> unsyncedMembers = getUnsyncedMembers();
+
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String jsonArray = gson.toJson(unsyncedMembers);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.addMembers(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    dataSynced(18);
+
+                    final Call<ArrayList<FacilityMembership>> call2 = service2.getFacilityMembers();
+                    call2.enqueue(new Callback<ArrayList<FacilityMembership>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<FacilityMembership>> call, Response<ArrayList<FacilityMembership>> response) {
+                            if(response.isSuccessful()){
+                                setMembers(response.body());
+
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<FacilityMembership>> call, Throwable t) {
                             Log.d("onFailure", t.getLocalizedMessage());
 
                         }
@@ -1312,6 +1360,20 @@ public class MainActivity extends AppCompatActivity {
         return result;
     }
 
+    private ArrayList<FacilityMembership> getUnsyncedMembers(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<FacilityMembership> result = petBetterDb.getUnsyncedMembers();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
     private ArrayList<Rating> getUnsyncedRatings(){
 
         try {
@@ -1528,6 +1590,18 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         long result = petBetterDb.setVeterinarians(vetList);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    public long setMembers(ArrayList<FacilityMembership> fmList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setMembers(fmList);
         petBetterDb.closeDatabase();
 
         return result;

@@ -12,6 +12,7 @@ import android.util.Log;
 
 import com.example.owner.petbetter.classes.Bookmark;
 import com.example.owner.petbetter.classes.Facility;
+import com.example.owner.petbetter.classes.FacilityMembership;
 import com.example.owner.petbetter.classes.Follower;
 import com.example.owner.petbetter.classes.LocationMarker;
 import com.example.owner.petbetter.classes.Message;
@@ -61,6 +62,7 @@ public class DataAdapter {
     private static final String UPVOTE_TABLE = "upvotes";
     private static final String BOOKMARK_TABLE = "bookmarks";
     private static final String PENDING_TABLE = "pending";
+    private static final String FACI_MEMBER_TABLE = "facility_membership";
 
 
 
@@ -376,7 +378,10 @@ public class DataAdapter {
     }
 
     public Facility getNewFacilityWithId(int vet_id){
-        String sql = "SELECT * FROM " + FACI_TABLE + " WHERE vet_id = '" + vet_id + "'";
+        String sql = "SELECT f._id AS _id, f.faci_name AS faci_name, f.location AS location, f.hours_open AS hours_open, " +
+                "f.hours_close AS hour_close, f.contact_info AS contact_info, f.rating AS rating, f.faci_photo AS faci_photo, " +
+                "f.is_disabled AS is_disabled FROM facilities AS f INNER JOIN facility_membership AS fm ON f._id = fm.faci_id"+
+                " INNER JOIN veterinarians AS v ON fm.vet_id = v._id WHERE v._id = '"+vet_id+"'";
 
         Cursor c = petBetterDb.rawQuery(sql, null);
         c.moveToLast();
@@ -389,6 +394,7 @@ public class DataAdapter {
                 c.getString(c.getColumnIndexOrThrow("hours_close")),
                 c.getString(c.getColumnIndexOrThrow("contact_info")),
                 c.getFloat(c.getColumnIndexOrThrow("rating")),
+                c.getString(c.getColumnIndexOrThrow("faci_photo")),
                 c.getInt(c.getColumnIndexOrThrow("is_disabled"))
         );
 
@@ -504,6 +510,23 @@ public class DataAdapter {
                     c.getInt(c.getColumnIndexOrThrow("bookmark_type")),
                     c.getInt(c.getColumnIndexOrThrow("user_id")));
             results.add(bookmark);
+        }
+
+        c.close();
+        return results;
+    }
+
+    public ArrayList<FacilityMembership> getUnsyncedMembers(){
+        ArrayList<FacilityMembership> results = new ArrayList<>();
+
+        String sql = "SELECT * FROM "+FACI_MEMBER_TABLE+" WHERE is_synced = 0";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            FacilityMembership facilityMembership = new FacilityMembership(c.getInt(c.getColumnIndexOrThrow("_id")),
+                    c.getInt(c.getColumnIndexOrThrow("faci_id")),
+                    c.getInt(c.getColumnIndexOrThrow("vet_id")));
+            results.add(facilityMembership);
         }
 
         c.close();
@@ -1243,6 +1266,9 @@ public class DataAdapter {
         if(n==17){
             petBetterDb.update(PENDING_TABLE,cv,"is_synced=?", whereArgs);
         }
+        if(n==18){
+            petBetterDb.update(FACI_MEMBER_TABLE,cv,"is_synced=?", whereArgs);
+        }
         petBetterDb.close();
     }
 
@@ -1485,7 +1511,7 @@ public class DataAdapter {
     }
 
     public long addFacility(int faci_id, String faci_name, String location, String hours_open, String hours_close,
-                            String contact_info, int vet_id, String faciPhoto){
+                            String contact_info, String faciPhoto){
         long result;
 
         ContentValues cv = new ContentValues();
@@ -1495,12 +1521,26 @@ public class DataAdapter {
         cv.put("hours_open", hours_open);
         cv.put("hours_close", hours_close);
         cv.put("contact_info", contact_info);
-        cv.put("vet_id", vet_id);
         cv.put("rating", 0);
         cv.put("faci_photo", faciPhoto);
+        cv.put("is_disabled", 0);
         cv.put("is_synced", 0);
 
         result = petBetterDb.insert(FACI_TABLE, null, cv);
+
+        return result;
+    }
+
+    public long addFacilityMember(int id, long faciId, long vetId){
+        long result;
+
+        ContentValues cv = new ContentValues();
+        cv.put("_id", id);
+        cv.put("faci_id", faciId);
+        cv.put("vet_id", vetId);
+        cv.put("is_synced", 0);
+
+        result = petBetterDb.insert(FACI_MEMBER_TABLE, null, cv);
 
         return result;
     }
@@ -1734,6 +1774,21 @@ public class DataAdapter {
         ArrayList<Integer> ids = new ArrayList<>();
 
         String sql = "SELECT _id FROM "+MESSAGE_REP_TABLE;
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            ids.add(c.getInt(c.getColumnIndexOrThrow("_id")));
+        }
+
+        c.close();
+        return ids;
+    }
+
+    public ArrayList<Integer> generateMembershipIds () {
+
+        ArrayList<Integer> ids = new ArrayList<>();
+
+        String sql = "SELECT _id FROM "+FACI_MEMBER_TABLE;
         Cursor c = petBetterDb.rawQuery(sql, null);
 
         while(c.moveToNext()) {
@@ -2036,12 +2091,15 @@ public class DataAdapter {
         return ids;
     }*/
 
-    /*
+
     //rewrite this
     public ArrayList<Facility> getFacilitiesByVetId(long vetId){
         ArrayList<Facility> results = new ArrayList<>();
 
-        String sql = "SELECT * FROM " + FACI_TABLE + " WHERE vet_id = '" + vetId + "'";
+        String sql = "SELECT f._id AS _id, f.faci_name AS faci_name, f.location AS location, f.hours_open AS hours_open, " +
+                "f.hours_close AS hour_close, f.contact_info AS contact_info, f.rating AS rating, f.faci_photo AS faci_photo, " +
+                "f.is_disabled AS is_disabled FROM facilities AS f INNER JOIN facility_membership AS fm ON f._id = fm.faci_id"+
+                " INNER JOIN veterinarians AS v ON fm.vet_id = v._id WHERE v._id = '"+vetId+"'";
         //String sql = "SELECT * FROM " + FACI_TABLE;
         Cursor c = petBetterDb.rawQuery(sql, null);
 
@@ -2053,13 +2111,14 @@ public class DataAdapter {
                     c.getString(c.getColumnIndexOrThrow("hours_close")),
                     c.getString(c.getColumnIndexOrThrow("contact_info")),
                     c.getFloat(c.getColumnIndexOrThrow("rating")),
-                    c.getString(c.getColumnIndexOrThrow("faci_photo")));
+                    c.getString(c.getColumnIndexOrThrow("faci_photo")),
+                    c.getInt(c.getColumnIndexOrThrow("is_disabled")));
             results.add(facility);
         }
 
         c.close();
         return results;
-    }*/
+    }
 
     public ArrayList<Float> getVeterinarianRatings(long vet_id){
 
@@ -3048,6 +3107,23 @@ public class DataAdapter {
             result = petBetterDb.insert(MARKER_TABLE, null, cv);
         }
         System.out.println("2ND REAL NUM OF MARKERS "+getMarkerIds().size());
+
+        return result;
+    }
+
+    public long setMembers(ArrayList<FacilityMembership> facilityMemberships){
+        long result = 0;
+
+        petBetterDb.delete(FACI_MEMBER_TABLE, null, null);
+
+        for(FacilityMembership facilityMembership : facilityMemberships){
+            ContentValues cv = new ContentValues();
+            cv.put("_id", facilityMembership.getId());
+            cv.put("faci_id", facilityMembership.getFaciId());
+            cv.put("vet_id", facilityMembership.getVetId());
+
+            result = petBetterDb.insert(FACI_MEMBER_TABLE, null, cv);
+        }
 
         return result;
     }

@@ -3,6 +3,7 @@ package com.example.owner.petbetter.activities;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Build;
@@ -20,10 +21,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response.ErrorListener;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.classes.Facility;
+import com.example.owner.petbetter.classes.FacilityMembership;
 import com.example.owner.petbetter.classes.LocationMarker;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
@@ -48,9 +56,15 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -97,6 +111,7 @@ public class MapsActivity extends FragmentActivity
     private String image;
     private long faciId;
     private long locationId;
+    private RequestQueue requestQueue;
 
     private Button addLocationButton;
 
@@ -113,13 +128,15 @@ public class MapsActivity extends FragmentActivity
         }
 
         addLocationButton = (Button) findViewById(R.id.addLocationButton);
+        addLocationButton.setEnabled(true);
+        requestQueue = Volley.newRequestQueue(this);
 
         Bundle extras = getIntent().getExtras();
         faciName = extras.getString("bldg_name");
         openTime = extras.getString("hours_open");
         closeTime = extras.getString("hours_close");
         phoneNum = extras.getString("phone_num");
-        address = extras.getString("location");
+        //address = extras.getString("location");
         image = extras.getString("image");
 
         service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
@@ -160,7 +177,7 @@ public class MapsActivity extends FragmentActivity
             @Override
             public void onMapClick(LatLng latLng) {
 
-                addLocationButton.setEnabled(true);
+
                 addLocationButton.setBackgroundColor(getResources().getColor(R.color.myrtle_green));
                 MarkerOptions markerOptions = new MarkerOptions();
                 markerOptions.title(faciName);
@@ -300,7 +317,6 @@ public class MapsActivity extends FragmentActivity
             String hours_open,
             String hours_close,
             String contact_info,
-            int vet_id,
             String faciPhoto
     ) {
 
@@ -310,7 +326,7 @@ public class MapsActivity extends FragmentActivity
             e.printStackTrace();
         }
 
-        long result = petBetterDb.addFacility(faci_id,faci_name,location,hours_open,hours_close,contact_info,vet_id, faciPhoto);
+        long result = petBetterDb.addFacility(faci_id,faci_name,location,hours_open,hours_close,contact_info, faciPhoto);
         petBetterDb.closeDatabase();
 
         return result;
@@ -377,8 +393,12 @@ public class MapsActivity extends FragmentActivity
                             if(response.isSuccessful()){
                                 System.out.println("Number of clinics from server: "+response.body().size());
                                 setFacilities(response.body());
-                                faciId = getNewFacility(vetId).getId();
-                                System.out.println("Faci id is: " + faciId);
+                                faciId = response.body().get(response.body().size()-1).getId();
+                                int id = generateNewMemberID();
+                                addFacilityMember(id, faciId, (long) vetId);
+                                syncFacilityMemberChanges();
+                                addFacilityLocation();
+
                             }
                         }
 
@@ -398,6 +418,7 @@ public class MapsActivity extends FragmentActivity
             }
         });
     }
+
 
     public void syncLocationChanges(){
 
@@ -423,6 +444,9 @@ public class MapsActivity extends FragmentActivity
                         public void onResponse(Call<ArrayList<LocationMarker>> call, Response<ArrayList<LocationMarker>> response) {
                             if(response.isSuccessful()){
                                 setLocationMarkers(response.body());
+                                Intent intent = new Intent(MapsActivity.this, com.example.owner.petbetter.activities.VeterinarianHomeActivity.class);
+                                startActivity(intent);
+                                finish();
                             }
                         }
 
@@ -464,6 +488,18 @@ public class MapsActivity extends FragmentActivity
             e.printStackTrace();
         }
         long result = petBetterDb.setLocationMarkers(locationMarkerList);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    public long addFacilityMember(int id, long faciId, long vetId){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.addFacilityMember(id, faciId, vetId);
         petBetterDb.closeDatabase();
 
         return result;
@@ -607,11 +643,30 @@ public class MapsActivity extends FragmentActivity
     }
 
     public void onAddFacilityClicked(View view) {
-        System.out.println("went here");
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        System.out.println("MARKER PAR "+newMarker.getPosition().latitude+", "+newMarker.getPosition().longitude);
+        String url = "https://maps.googleapis.com/maps/api/geocode/json?latng=" + newMarker.getPosition().latitude + "," + newMarker.getPosition().longitude + "&key=AIzaSyBETjxiY1bwpzb7Wq6OleNwDtQ5jEBVEKQ";
+        List<Address> addresses;
+        try{
+            addresses = geocoder.getFromLocation(newMarker.getPosition().latitude, newMarker.getPosition().longitude, 1);
+            System.out.println("NUMBER OF ADDRESSES: "+addresses);
+            address = addresses.get(0).getAddressLine(0);
+            /*
+            for(int i = 0; i < addresses.get(0).getMaxAddressLineIndex(); i++) {
+                address += ", " + addresses.get(0).getAddressLine(0);
+            }*/
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //AIzaSyBETjxiY1bwpzb7Wq6OleNwDtQ5jEBVEKQ
+
+        System.out.println("ADDRESS PAR: "+address);
         System.out.println(newMarker.getPosition().latitude + " " + newMarker.getPosition().longitude);
 
         addFacility();
-        addFacilityLocation();
+
 
     }
 
@@ -637,9 +692,33 @@ public class MapsActivity extends FragmentActivity
         return newId;
     }
 
+    private int generateNewMemberID(){
+        ArrayList<Integer> faciIDs;
+        int newId;
+        try{
+            petBetterDb.openDatabase();
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+        faciIDs = petBetterDb.generateMembershipIds();
+
+        if(faciIDs.size() != 0){
+            newId = faciIDs.get(faciIDs.size() - 1);
+            newId += 1;
+        }
+        else
+            newId = 1;
+
+        petBetterDb.closeDatabase();
+
+        return newId;
+    }
+
     public void addFacility() {
 
         faciId = generateNewFacilityID();
+
+        /*
         Facility facility = new Facility(
                 (int)faciId,
                 faciName,
@@ -650,35 +729,95 @@ public class MapsActivity extends FragmentActivity
                 0,
                 image,
                 0
-        );
+        );*/
 
-        addFacilitytoDB((int)faciId,faciName,"",openTime,closeTime,phoneNum,vetId, image);
+        addFacilitytoDB((int)faciId,faciName,address,openTime,closeTime,phoneNum, image);
+        syncFacilityChanges();
+
+    }
+
+    public void syncFacilityMemberChanges(){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+
+        ArrayList<FacilityMembership> unsyncedMembers = getUnsyncedMembers();
+
         Gson gson = new GsonBuilder().serializeNulls().create();
-        String jsonArray = gson.toJson(facility);
-        System.out.println(jsonArray);
-
-        RequestBody body = RequestBody.create(
-                okhttp3.MediaType.parse("application/json; charset=utf-8"),
-                jsonArray
-        );
-
-        Call<Void> call = service.addFacility(body);
+        String jsonArray = gson.toJson(unsyncedMembers);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.addMembers(body);
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                System.out.println("Facility added to server successfully");
-                dataSync(2);
-                syncFacilityChanges();
-                Facility newFacility = getNewFacility(vetId);
-                System.out.println("Hello ID is "+ newFacility.getId());
+                if(response.isSuccessful()){
+                    dataSynced(18);
+
+                    final Call<ArrayList<FacilityMembership>> call2 = service2.getFacilityMembers();
+                    call2.enqueue(new Callback<ArrayList<FacilityMembership>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<FacilityMembership>> call, Response<ArrayList<FacilityMembership>> response) {
+                            if(response.isSuccessful()){
+                                setMembers(response.body());
+
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<FacilityMembership>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+
+                        }
+                    });
+
+                }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                System.out.println("FAILED TO ADD FACILITY TO SERVER");
+                Log.d("onFailure", t.getLocalizedMessage());
             }
         });
+    }
 
+    private void dataSynced(int n){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        petBetterDb.dataSynced(n);
+        petBetterDb.closeDatabase();
+
+    }
+
+    private ArrayList<FacilityMembership> getUnsyncedMembers(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<FacilityMembership> result = petBetterDb.getUnsyncedMembers();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    public long setMembers(ArrayList<FacilityMembership> fmList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setMembers(fmList);
+        petBetterDb.closeDatabase();
+
+        return result;
     }
 
     private int generateNewLocationMarkerId(){
@@ -728,34 +867,7 @@ public class MapsActivity extends FragmentActivity
                 user.getUserId(),
                 1,
                 (int)faciId);
-
-        Gson gson = new GsonBuilder().serializeNulls().create();
-
-        String jsonArray = gson.toJson(locationMarker);
-        System.out.println(jsonArray);
-        RequestBody body = RequestBody.create(
-                okhttp3.MediaType.parse("application/json; charset=utf-8"),
-                jsonArray
-        );
-
-
-        Call<Void> locationCall = service.addLocation(body);
-        locationCall.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                System.out.println("Location added to server successfully");
-                dataSync(4);
-                syncLocationChanges();
-                Intent intent = new Intent(MapsActivity.this, com.example.owner.petbetter.activities.VeterinarianHomeActivity.class);
-                startActivity(intent);
-
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                System.out.println("Add location failed.");
-            }
-        });
+        syncLocationChanges();
 
     }
 }

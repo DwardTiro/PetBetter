@@ -37,8 +37,6 @@ public class Facility {
     @SerializedName("is_disabled")
     private int isDisabled;
 
-    private double longitude;
-    private double latitude;
 
     public Facility(int id, String faciName, String location, String hoursOpen, String hoursClose, String contactInfo, float rating, int isDisabled) {
         this.id = id;
@@ -78,22 +76,6 @@ public class Facility {
 
     public void setFaciPhoto(String faciPhoto) {
         this.faciPhoto = faciPhoto;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
-
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
     }
 
     public float getRating(){

@@ -50,6 +50,7 @@ public class AddFacilityActivity extends AppCompatActivity {
     private Spinner openTime;
     private Spinner closeTime;
     private ImageButton editImage;
+    private TextView textViewAddress;
     private SystemSessionManager systemSessionManager;
     private static final int IMG_REQUEST = 777;
     private Bitmap bitmap;
@@ -73,10 +74,14 @@ public class AddFacilityActivity extends AppCompatActivity {
         closeTime = (Spinner) findViewById(R.id.addFacilityCloseTimeSpinner);
         facilityAddress = (EditText) findViewById(R.id.addFacilityAddress);
         editImage = (ImageButton) findViewById(R.id.clinicEditImage);
+        textViewAddress = (TextView) findViewById(R.id.textViewAddress);
+
+        textViewAddress.setVisibility(View.GONE);
+        facilityAddress.setVisibility(View.GONE);
 
         facilityName.addTextChangedListener(formWatcher);
         phoneNum.addTextChangedListener(formWatcher);
-        facilityAddress.addTextChangedListener(formWatcher);
+        //facilityAddress.addTextChangedListener(formWatcher);
 
         editImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,8 +108,7 @@ public class AddFacilityActivity extends AppCompatActivity {
         @Override
         public void afterTextChanged(Editable editable) {
             if(facilityName.getText().toString().length() == 0 ||
-                    phoneNum.getText().toString().length() == 0 ||
-                    facilityAddress.getText().toString().length() == 0){
+                    phoneNum.getText().toString().length() == 0){
                 addFacilityButton.setBackgroundColor(getResources().getColor(R.color.medTurquoise));
                 addFacilityButton.setEnabled(false);
             }
@@ -115,28 +119,24 @@ public class AddFacilityActivity extends AppCompatActivity {
         }
     };
     public void addFacility(View view){
-        if(facilityAddress.getText().toString()!=""){
-            service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
-            String image = imageToString();
 
-            Bundle extras = new Bundle();
-            extras.putString("bldg_name", facilityName.getText().toString());
-            extras.putString("hours_open", openTime.getSelectedItem().toString());
-            extras.putString("hours_close", closeTime.getSelectedItem().toString());
-            extras.putString("phone_num", phoneNum.getText().toString());
-            extras.putString("location", facilityAddress.getText().toString());
-            extras.putString("image", image);
+        service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        String image = imageToString();
 
-            Intent intent = new Intent(
-                    AddFacilityActivity.this,
-                    com.example.owner.petbetter.activities.MapsActivity.class
-            );
-            intent.putExtras(extras);
-            startActivity(intent);
-        }
-        else{
-            Toast.makeText(AddFacilityActivity.this, "Please input a location", Toast.LENGTH_SHORT);
-        }
+        Bundle extras = new Bundle();
+        extras.putString("bldg_name", facilityName.getText().toString());
+        extras.putString("hours_open", openTime.getSelectedItem().toString());
+        extras.putString("hours_close", closeTime.getSelectedItem().toString());
+        extras.putString("phone_num", phoneNum.getText().toString());
+        extras.putString("location", facilityAddress.getText().toString());
+        extras.putString("image", image);
+
+        Intent intent = new Intent(
+                AddFacilityActivity.this,
+                com.example.owner.petbetter.activities.MapsActivity.class
+        );
+        intent.putExtras(extras);
+        startActivity(intent);
     }
 
     private void selectImage(){

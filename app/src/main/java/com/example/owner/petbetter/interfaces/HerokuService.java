@@ -5,6 +5,7 @@ package com.example.owner.petbetter;
  */
 import com.example.owner.petbetter.classes.Bookmark;
 import com.example.owner.petbetter.classes.Facility;
+import com.example.owner.petbetter.classes.FacilityMembership;
 import com.example.owner.petbetter.classes.Follower;
 import com.example.owner.petbetter.classes.LocationMarker;
 import com.example.owner.petbetter.classes.Message;
@@ -135,6 +136,9 @@ public interface HerokuService {
 
     @POST("getFollowers.php")
     Call<ArrayList<Follower>> getFollowers();
+
+    @POST("getFacilityMembers.php")
+    Call<ArrayList<FacilityMembership>> getFacilityMembers();
 
     @FormUrlEncoded
     @POST("getTopicFollowers.php")
@@ -449,6 +453,9 @@ public interface HerokuService {
 
     @POST("addVets.php")
     Call<Void> addVets(@Body RequestBody vetList);
+
+    @POST("addMembers.php")
+    Call<Void> addMembers(@Body RequestBody fmList);
 
     @POST("addPosts.php")
     Call<Void> addPosts(@Body RequestBody postList);
