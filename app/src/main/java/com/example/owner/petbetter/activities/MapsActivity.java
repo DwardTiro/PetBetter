@@ -183,6 +183,8 @@ public class MapsActivity extends FragmentActivity
                 markerOptions.title(faciName);
                 markerOptions.position(latLng);
                 markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                latitude = latLng.latitude;
+                longitude = latLng.longitude;
 
                 mMap.clear();
                 mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
@@ -675,7 +677,7 @@ public class MapsActivity extends FragmentActivity
         //address = extras.getString("location");
         extras.putString("image", image);
         extras.putDouble("longitude", longitude);
-        extras.putDouble("latitdue", latitude);
+        extras.putDouble("latitude", latitude);
         extras.putString("address", address);
         intent.putExtras(extras);
         startActivity(intent);
