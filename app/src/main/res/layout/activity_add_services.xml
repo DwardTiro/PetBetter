@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_White"
+    android:paddingBottom="10dp">
+
+    <include
+        android:id="@+id/addFacilityToolbar"
+        layout="@layout/toolbar_viewpost"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <RelativeLayout
+        android:id="@+id/basicInfoLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/addFacilityToolbar"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/labelActivity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="Add Services"
+            android:textColor="@color/black"
+            android:textSize="25sp" />
+
+        <LinearLayout
+            android:id="@+id/firstEntryLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@id/labelActivity"
+            >
+
+            <EditText
+                android:id="@+id/serviceNameField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Service name"
+                android:maxLines="1"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/servicePriceField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/serviceNameField"
+                android:layout_weight="1"
+                android:hint="Price"
+                android:maxLines="1"
+                android:textSize="18sp" />
+
+            <ImageButton
+                android:id="@+id/removeFieldButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="deleteRow"
+                android:src="@drawable/ic_dialog_close_light" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/serviceContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/firstEntryLayout"
+            android:layout_marginTop="5dp"
+            android:orientation="vertical" />
+
+        <Button
+            android:id="@+id/addFieldButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/serviceContainer"
+            android:layout_centerHorizontal="true"
+            android:text="Add field" />
+
+        <Button
+            android:id="@+id/addFacilityButton"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="0dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:background="@color/medTurquoise"
+            android:onClick="addFacility"
+            android:text="Add Facility"
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+
+</RelativeLayout>

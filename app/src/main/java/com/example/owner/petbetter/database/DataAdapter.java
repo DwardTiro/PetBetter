@@ -2804,6 +2804,21 @@ public class DataAdapter {
         return result;
     }
 
+    public long addServices(long _id, String service_name, String service_price, long faci_id){
+        long result;
+
+        ContentValues cv = new ContentValues();
+        cv.put("_id", _id);
+        cv.put("service_name", service_name);
+        cv.put("service_price", service_price);
+        cv.put("is_synced", 0);
+        cv.put("is_deleted", 0);
+        cv.put("faci_id", faci_id);
+
+        result = petBetterDb.insert(SERVICE_TABLE, null, cv);
+        return result;
+    }
+
     public long addPostBookmark(long _id, long item_id, long user_id){
         long result;
 

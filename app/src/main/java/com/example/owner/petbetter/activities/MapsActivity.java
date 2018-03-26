@@ -665,7 +665,20 @@ public class MapsActivity extends FragmentActivity
         System.out.println("ADDRESS PAR: "+address);
         System.out.println(newMarker.getPosition().latitude + " " + newMarker.getPosition().longitude);
 
-        addFacility();
+        //addFacility();
+        Intent intent = new Intent(MapsActivity.this, com.example.owner.petbetter.activities.AddServicesActivity.class);
+        Bundle extras = new Bundle();
+        extras.putString("bldg_name", faciName);
+        extras.putString("hours_open", openTime);
+        extras.putString("hours_close", closeTime);
+        extras.putString("phone_num", phoneNum);
+        //address = extras.getString("location");
+        extras.putString("image", image);
+        extras.putDouble("longitude", longitude);
+        extras.putDouble("latitdue", latitude);
+        extras.putString("address", address);
+        intent.putExtras(extras);
+        startActivity(intent);
 
 
     }

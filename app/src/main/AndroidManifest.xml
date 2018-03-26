@@ -197,6 +197,7 @@
         <activity android:name=".activities.MonitorVetsActivity" />
         <activity android:name=".activities.EditVetProfileActivity"/>
         <activity android:name=".activities.VetUserProfileActivity"/>
+        <activity android:name=".activities.AddServicesActivity"/>
     </application>
 
 </manifest>
