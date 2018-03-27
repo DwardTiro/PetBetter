@@ -99,7 +99,7 @@ public class EditFacilityActivity extends AppCompatActivity {
             String newFileName = BASE_URL + faciItem.getFaciPhoto();
             //String newFileName = "http://192.168.0.19/petbetter/"+user.getUserPhoto();
             System.out.println("USER PHOTO "+faciItem.getFaciPhoto());
-            Glide.with(EditFacilityActivity.this).load(newFileName).error(R.drawable.back_button).into(editImage);
+            Glide.with(EditFacilityActivity.this).load(newFileName).error(R.drawable.app_icon_yellow).into(editImage);
             editImage.setAdjustViewBounds(true);
         }
 

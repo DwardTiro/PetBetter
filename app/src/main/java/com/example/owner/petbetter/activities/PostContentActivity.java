@@ -444,7 +444,7 @@ public class PostContentActivity extends AppCompatActivity {
             String newFileName = BASE_URL + postUser.getUserPhoto();
             System.out.println(newFileName);
             //String newFileName = "http://192.168.0.19/petbetter/"+thisMessageRep.getMessagePhoto();
-            Glide.with(PostContentActivity.this).load(newFileName).error(R.drawable.back_button).into(profilePic);
+            Glide.with(PostContentActivity.this).load(newFileName).error(R.drawable.app_icon_yellow).into(profilePic);
             /*
             Picasso.with(inflater.getContext()).load("http://".concat(newFileName))
                     .error(R.drawable.back_button).into(holder.messageRepImage);*/

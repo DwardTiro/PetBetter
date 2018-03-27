@@ -95,7 +95,6 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         serviceRecyclerView = (RecyclerView) findViewById(R.id.servicesRecyclerView);
 
 
-
         petClinicRateButton = (Button) findViewById(R.id.rateClinicButton);
 
 
@@ -133,7 +132,7 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         petClinicOpenTime.setText(faciItem.getHoursOpen());
         petClinicCloseTime.setText(faciItem.getHoursClose());
 
-        if(checkIfRated(user.getUserId(), faciItem.getId())){
+        if (checkIfRated(user.getUserId(), faciItem.getId())) {
             petClinicRateButton.setBackgroundResource(R.color.myrtle_green);
             petClinicRateButton.setText("Rated");
             petClinicRateButton.setEnabled(false);
@@ -153,7 +152,7 @@ public class PetClinicProfileActivity extends AppCompatActivity {
             bookMarkButton.setBackgroundResource(R.color.myrtle_green);
             bookMarkButton.setText("Bookmarked");
             isBookmarked = true;
-        }else{
+        } else {
             bookMarkButton.setBackgroundResource(R.color.amazonite);
             bookMarkButton.setText("Bookmark");
         }
@@ -182,7 +181,7 @@ public class PetClinicProfileActivity extends AppCompatActivity {
                                 bookMarkButton.setText("Bookmarked");
                                 bookMarkButton.setBackgroundResource(R.color.myrtle_green);
                                 dataSync(16);
-                                isBookmarked=true;
+                                isBookmarked = true;
                                 syncBookmarkChanges();
                             }
                         }
@@ -193,10 +192,10 @@ public class PetClinicProfileActivity extends AppCompatActivity {
                         }
                     });
 
-                }else{
+                } else {
                     bookMarkButton.setBackgroundResource(R.color.amazonite);
                     bookMarkButton.setText("Bookmark");
-                    deleteFacilityBookmark(faciItem.getId(),user.getUserId());
+                    deleteFacilityBookmark(faciItem.getId(), user.getUserId());
                     removeBookmark(faciItem.getId(), user.getUserId());
                 }
             }
@@ -209,10 +208,9 @@ public class PetClinicProfileActivity extends AppCompatActivity {
             Glide.with(PetClinicProfileActivity.this).load(newFileName).error(R.drawable.app_icon_yellow).into(clinicProfileImage);
         }
 
-
-
-        syncRatingChanges();
         getServiceList();
+        syncRatingChanges();
+
         //Toast.makeText(this, "Facility's Name: "+faciItem.getFaciName() + ". Delete this toast. Just to help you see where vet variable is", Toast.LENGTH_LONG).show();
     }
 
@@ -224,18 +222,31 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    public void getServiceList(){
+    public void getServiceList() {
 
         final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         final Call<ArrayList<Services>> call = service.getServicesWithFaciID(faciItem.getId());
         call.enqueue(new Callback<ArrayList<Services>>() {
             @Override
             public void onResponse(Call<ArrayList<Services>> call, Response<ArrayList<Services>> response) {
+                if (response.isSuccessful()) {
+                    if (response.body().size() > 0) {
 
-                serviceRecyclerView.setAdapter(new ServiceAdapter(PetClinicProfileActivity.this, getLayoutInflater(), response.body()));
-                serviceRecyclerView.setItemAnimator(new DefaultItemAnimator());
-                serviceRecyclerView.setHasFixedSize(true);
-                serviceRecyclerView.setLayoutManager(new LinearLayoutManager(PetClinicProfileActivity.this));
+                        serviceRecyclerView.setVisibility(View.VISIBLE);
+                        noServicesTextView.setVisibility(View.GONE);
+                        serviceRecyclerView.setAdapter(new ServiceAdapter(PetClinicProfileActivity.this, getLayoutInflater(), response.body()));
+                        if(serviceRecyclerView.getAdapter() == null){
+                            System.out.println("No adapter bruh");
+                        }
+                        serviceRecyclerView.setItemAnimator(new DefaultItemAnimator());
+                        serviceRecyclerView.setHasFixedSize(true);
+                        serviceRecyclerView.setLayoutManager(new LinearLayoutManager(PetClinicProfileActivity.this));
+                    } else {
+                        System.out.println("Went here inside else bruh");
+                        serviceRecyclerView.setVisibility(View.GONE);
+                        noServicesTextView.setVisibility(View.VISIBLE);
+                    }
+                }
             }
 
             @Override
@@ -268,15 +279,15 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         });
     }
 
-    private void removeBookmark(long item_id, long user_id){
+    private void removeBookmark(long item_id, long user_id) {
         final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         final Call<Void> call = service.deleteBookmark(user_id, item_id, 1);
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful()){
+                if (response.isSuccessful()) {
                     //syncBookmarkChanges();
-                    isBookmarked=false;
+                    isBookmarked = false;
                     bookMarkButton.setEnabled(true);
                 }
             }
@@ -400,10 +411,10 @@ public class PetClinicProfileActivity extends AppCompatActivity {
 
     }
 
-    private void deleteFacilityBookmark(long item_id, long user_id){
-        try{
+    private void deleteFacilityBookmark(long item_id, long user_id) {
+        try {
             petBetterDb.openDatabase();
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         petBetterDb.deleteFacilityBookmark(item_id, user_id);

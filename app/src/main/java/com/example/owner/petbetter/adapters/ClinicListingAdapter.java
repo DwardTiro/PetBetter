@@ -63,7 +63,7 @@ public class ClinicListingAdapter extends RecyclerView.Adapter<ClinicListingAdap
 
 
             //String newFileName = "http://192.168.0.19/petbetter/"+thisMessageRep.getMessagePhoto();
-            Glide.with(inflater.getContext()).load(newFileName).error(R.drawable.back_button).into(holder.clinicListImage);
+            Glide.with(inflater.getContext()).load(newFileName).error(R.drawable.app_icon_yellow).into(holder.clinicListImage);
             /*
             Picasso.with(inflater.getContext()).load("http://".concat(newFileName))
                     .error(R.drawable.back_button).into(holder.messageRepImage);*/

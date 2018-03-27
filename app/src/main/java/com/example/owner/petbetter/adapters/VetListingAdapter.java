@@ -60,7 +60,7 @@ public class VetListingAdapter extends RecyclerView.Adapter<VetListingAdapter.Ve
 
             String newFileName = BASE_URL + thisVet.getUserPhoto();
             System.out.println("USER PHOTO WHERE "+newFileName);
-            Glide.with(inflater.getContext()).load(newFileName).error(R.drawable.back_button).into(holder.vetListImage);
+            Glide.with(inflater.getContext()).load(newFileName).error(R.drawable.app_icon_yellow).into(holder.vetListImage);
             /*
             Picasso.with(inflater.getContext()).load("http://".concat(newFileName))
                     .error(R.drawable.back_button).into(holder.messageRepImage);*/

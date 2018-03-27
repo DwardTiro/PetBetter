@@ -153,7 +153,7 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
             String newFileName = BASE_URL + user.getUserPhoto();
             System.out.println(newFileName);
             //String newFileName = "http://192.168.0.19/petbetter/"+thisMessageRep.getMessagePhoto();
-            Glide.with(CommActivity.this).load(newFileName).error(R.drawable.back_button).into(imageViewDrawer);
+            Glide.with(CommActivity.this).load(newFileName).error(R.drawable.app_icon_yellow).into(imageViewDrawer);
             /*
             Picasso.with(inflater.getContext()).load("http://".concat(newFileName))
                     .error(R.drawable.back_button).into(holder.messageRepImage);*/
