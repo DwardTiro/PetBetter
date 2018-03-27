@@ -115,12 +115,14 @@
                     android:textSize="17sp" />
 
                 <ImageView
+                    android:id="@+id/verifiedLicenseIndicator"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/vetListRating"
                     android:layout_marginTop="3dp"
                     android:layout_toEndOf="@id/textVerified"
-                    android:src="@drawable/ic_verified_user_white_24dp" />
+                    android:src="@drawable/ic_verified_user_white_24dp"
+                    />
 
 
             </RelativeLayout>

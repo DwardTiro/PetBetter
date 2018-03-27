@@ -16,6 +16,7 @@ import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.classes.Message;
+import com.example.owner.petbetter.classes.Pending;
 import com.example.owner.petbetter.classes.Rating;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
@@ -59,6 +60,10 @@ public class VetProfileActivity extends AppCompatActivity {
     private long mId;
     private boolean messageExist = true;
 
+    private ImageView verifyLicense;
+    private ImageView verifySpecialty;
+    private int licenseCheck = 0;
+
     @Override
     protected void onCreate(Bundle savedInstance){
         super.onCreate(savedInstance);
@@ -78,6 +83,11 @@ public class VetProfileActivity extends AppCompatActivity {
         vetRating = (TextView) findViewById(R.id.vetListRating);
         rateVetButton = (Button) findViewById(R.id.rateVetButton);
         messageVetButton = (Button) findViewById(R.id.messageVetButton);
+        verifyLicense = (ImageView) findViewById(R.id.verifiedLicenseIndicator);
+        verifySpecialty = (ImageView) findViewById(R.id.verifiedSpecialtyIndicator);
+
+        verifyLicense.setVisibility(View.GONE);
+        verifySpecialty.setVisibility(View.INVISIBLE);
 
         systemSessionManager = new SystemSessionManager(this);
         if(systemSessionManager.checkLogin())
@@ -114,6 +124,7 @@ public class VetProfileActivity extends AppCompatActivity {
             Glide.with(VetProfileActivity.this).load(newFileName).error(R.drawable.app_icon_yellow).into(profileBG);
         }
         syncRatingChanges();
+        syncPendingChanges();
 
         if(checkIfRated(user.getUserId(), vetItem.getId())){
             rateVetButton.setBackgroundResource(R.color.myrtle_green);
@@ -158,6 +169,69 @@ public class VetProfileActivity extends AppCompatActivity {
 
 
         //Toast.makeText(this, "Vet's Name: "+vetItem.getName() + ". Delete this toast. Just to help you see where vet variable is", Toast.LENGTH_LONG).show();
+    }
+
+    public void syncPendingChanges(){
+
+        System.out.println("PENDING WOOO");
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+
+        final Call<ArrayList<Pending>> call2 = service.getPendingByUser(user.getUserId());
+        call2.enqueue(new Callback<ArrayList<Pending>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Pending>> call, Response<ArrayList<Pending>> response) {
+                if(response.isSuccessful()){
+                    ArrayList<Pending> pendingList = response.body();
+                    System.out.println("PENDING SIZE "+response.body().size());
+                    for(Pending pending:pendingList){
+                        if((pending.getType()==1 && pending.getIsApproved()==1)||
+                                (pending.getType()==2 && pending.getIsApproved()==1)){
+                            licenseCheck += 1;
+                            if(licenseCheck==2){
+                                verifyLicense.setVisibility(View.VISIBLE);
+                            }
+                        }
+                        if(pending.getType()==4&&pending.getIsApproved()==1){
+                            verifySpecialty.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Pending>> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+
+    }
+
+
+    private ArrayList<Pending> getUnsyncedPending(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Pending> result = petBetterDb.getUnsyncedPending();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    public long setPending(ArrayList<Pending> pendingList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setPending(pendingList);
+        petBetterDb.closeDatabase();
+
+        return result;
     }
 
     public void syncRatingChanges(){

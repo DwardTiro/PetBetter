@@ -1065,7 +1065,7 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if(response.isSuccessful()){
                     System.out.println("PENDING ADDED YEY");
-                    dataSynced(2);
+                    dataSynced(17);
 
                     final Call<ArrayList<Pending>> call2 = service2.getPending();
                     call2.enqueue(new Callback<ArrayList<Pending>>() {

@@ -11,6 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -22,6 +23,7 @@ import com.bumptech.glide.Glide;
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
+import com.example.owner.petbetter.classes.Pending;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
 import com.example.owner.petbetter.database.DataAdapter;
@@ -31,7 +33,12 @@ import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import org.w3c.dom.Text;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.example.owner.petbetter.ServiceGenerator.BASE_URL;
 
@@ -47,7 +54,6 @@ public class VetUserProfileActivity extends AppCompatActivity implements Navigat
     private TextView vetSpecialization;
     private TextView vetContactInformation;
     private TextView vetRating;
-    private ImageView isVerified;
     private TextView textNavEmail, textNavUser;
     private ImageView vetProfileImage;
     private Button editProfileButton;
@@ -60,7 +66,9 @@ public class VetUserProfileActivity extends AppCompatActivity implements Navigat
     private ImageView imageViewDrawer;
     private Button addTopicButton;
     private ImageView notifButton;
-
+    private ImageView verifyLicense;
+    private ImageView verifySpecialty;
+    private int licenseCheck;
     private NotificationReceiver notifReceiver = new NotificationReceiver();
 
     HerokuService service;
@@ -86,12 +94,16 @@ public class VetUserProfileActivity extends AppCompatActivity implements Navigat
         vetProfileImage = (ImageView) findViewById(R.id.profileImage);
         vetName = (TextView) findViewById(R.id.profileName);
         vetRating = (TextView) findViewById(R.id.vetListRating);
-        isVerified = (ImageView) findViewById(R.id.vetVerified);
         vetDetails = (TextView) findViewById(R.id.vetDescriptionTextField);
         vetEducation = (TextView) findViewById(R.id.bachelorEducationTextField);
         vetSpecialization = (TextView) findViewById(R.id.specialtyTextField);
         vetContactInformation = (TextView) findViewById(R.id.phoneNumTextField);
         editProfileButton = (Button) findViewById(R.id.editVetProfileButton);
+        verifyLicense = (ImageView) findViewById(R.id.vetVerified);
+        verifySpecialty = (ImageView) findViewById(R.id.verifiedSpecialtyIndicator);
+
+        verifyLicense.setVisibility(View.INVISIBLE);
+        verifySpecialty.setVisibility(View.INVISIBLE);
 
         notifButton = (ImageView) findViewById(R.id.imageview_notifs);
         addTopicButton = (Button) findViewById(R.id.addTopicButton);
@@ -133,12 +145,6 @@ public class VetUserProfileActivity extends AppCompatActivity implements Navigat
         vetSpecialization.setText(vet.getSpecialty());
         vetRating.setText(String.valueOf(vet.getRating()));
         vetDetails.setText(vet.getProfileDesc());
-        if(vet.getIsLicensed() == 0){
-            isVerified.setVisibility(View.INVISIBLE);
-        }
-        else{
-            isVerified.setVisibility(View.VISIBLE);
-        }
         vetContactInformation.setText(user.getMobileNumber());
         if(user.getUserPhoto()!=null){
 
@@ -172,7 +178,41 @@ public class VetUserProfileActivity extends AppCompatActivity implements Navigat
             }
         });
 
+        syncPendingChanges();
 
+    }
+
+    public void syncPendingChanges(){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+
+        final Call<ArrayList<Pending>> call2 = service.getPendingByUser(user.getUserId());
+        call2.enqueue(new Callback<ArrayList<Pending>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Pending>> call, Response<ArrayList<Pending>> response) {
+                if(response.isSuccessful()){
+                    ArrayList<Pending> pendingList = response.body();
+                    for(Pending pending:pendingList){
+                        if((pending.getType()==1 && pending.getIsApproved()==1)||
+                                (pending.getType()==2 && pending.getIsApproved()==1)){
+                            licenseCheck += 1;
+                            if(licenseCheck==2){
+                                verifyLicense.setVisibility(View.VISIBLE);
+                            }
+                        }
+                        if(pending.getType()==4&&pending.getIsApproved()==1){
+                            verifySpecialty.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Pending>> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
 
     }
 
@@ -202,7 +242,6 @@ public class VetUserProfileActivity extends AppCompatActivity implements Navigat
         vetProfileImage = (ImageView) findViewById(R.id.profileImage);
         vetName = (TextView) findViewById(R.id.profileName);
         vetRating = (TextView) findViewById(R.id.vetListRating);
-        isVerified = (ImageView) findViewById(R.id.vetVerified);
         vetDetails = (TextView) findViewById(R.id.vetDescriptionTextField);
         vetEducation = (TextView) findViewById(R.id.bachelorEducationTextField);
         vetSpecialization = (TextView) findViewById(R.id.specialtyTextField);
@@ -213,12 +252,7 @@ public class VetUserProfileActivity extends AppCompatActivity implements Navigat
         vetSpecialization.setText(vet.getSpecialty());
         vetRating.setText(String.valueOf(vet.getRating()));
         vetDetails.setText(vet.getProfileDesc());
-        if(vet.getIsLicensed() == 0){
-            isVerified.setVisibility(View.INVISIBLE);
-        }
-        else{
-            isVerified.setVisibility(View.VISIBLE);
-        }
+
         vetContactInformation.setText(user.getMobileNumber());
         if(user.getUserPhoto()!=null){
 

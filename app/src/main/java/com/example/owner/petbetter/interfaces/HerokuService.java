@@ -109,6 +109,10 @@ public interface HerokuService {
     @POST("getBookmarks.php")
     Call<ArrayList<LocationMarker>> getBookmarks(@Field("user_id") long userId, @Field("type") int type);
 
+    @FormUrlEncoded
+    @POST("getPendingByUser.php")
+    Call<ArrayList<Pending>> getPendingByUser(@Field("foreign_id") long foreignId);
+
     @POST("loadLocations.php")
     Call<ArrayList<LocationMarker>> loadLocations();
 
