@@ -82,6 +82,7 @@ public class NewMessageActivity extends AppCompatActivity {
     private ArrayList<Message> mList;
     private boolean alreadyExist= false;
     private ImageView addTopic;
+    private String image;
     HerokuService service;
     HerokuService service2;
     HerokuService service3;
@@ -129,6 +130,7 @@ public class NewMessageActivity extends AppCompatActivity {
         newMsgSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                image = imageToString();
                 User check = getUser(newMsgSendTo.getText().toString());
                 if(newMsgContent.getText().toString()!=""&&newMsgSendTo.getText().toString()!=""&&
                         check.getUserId()!=user.getUserId()){
@@ -149,8 +151,6 @@ public class NewMessageActivity extends AppCompatActivity {
                                 mList = response.body();
                                 setMessages(response.body());
 
-                                String image = imageToString();
-
                                 for(Message message : mList){
                                     if(message.getUserId()==user.getUserId()&&message.getFromId()==usertwo.getUserId()||
                                             message.getUserId()==usertwo.getUserId()&&message.getFromId()==user.getUserId()){
@@ -169,11 +169,6 @@ public class NewMessageActivity extends AppCompatActivity {
                                     createMessage(mId, user.getUserId(), usertwo.getUserId());
                                     //uploadMessage(getUnsyncedMessages());
                                     syncMessageChanges(user.getUserId());
-                                    mrId = generateMessageRepId();
-                                    addMessageRep(mrId, (int) usertwo.getUserId(),(int) user.getUserId(), mId,
-                                            newMsgContent.getText().toString(), 1, timeStamp, image, 0);
-                                    //uploadMessageRep(getUnsyncedMessageReps());
-                                    syncMessageRepChanges();
 
                                 }
 
@@ -193,12 +188,14 @@ public class NewMessageActivity extends AppCompatActivity {
                             createMessage(mId, user.getUserId(), usertwo.getUserId());
                             //uploadMessage(getUnsyncedMessages());
                             syncMessageChanges(user.getUserId());
+                            /*
                             mrId = generateMessageRepId();
+                            System.out.println("MESSAGE ID PAR "+mId);
                             addMessageRep(mrId, (int) usertwo.getUserId(),(int) user.getUserId(), mId,
                                     newMsgContent.getText().toString(), 1, timeStamp, image, 0);
                             //uploadMessageRep(getUnsyncedMessageReps());
                             syncMessageRepChanges();
-
+                            */
                             finish();
                         }
                     });
@@ -303,6 +300,13 @@ public class NewMessageActivity extends AppCompatActivity {
                             if(response.isSuccessful()){
                                 System.out.println("response size messages "+response.body().size());
                                 setMessages(response.body());
+                                mId = (int) response.body().get(response.body().size()-1).getId();
+                                mrId = generateMessageRepId();
+                                System.out.println("MESSAGE ID PAR "+mId);
+                                addMessageRep(mrId, (int) usertwo.getUserId(),(int) user.getUserId(), mId,
+                                        newMsgContent.getText().toString(), 1, timeStamp, image, 0);
+                                //uploadMessageRep(getUnsyncedMessageReps());
+                                syncMessageRepChanges();
                             }
                         }
 

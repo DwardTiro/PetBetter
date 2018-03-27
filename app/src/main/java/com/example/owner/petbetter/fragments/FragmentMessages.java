@@ -209,7 +209,7 @@ public class FragmentMessages extends Fragment implements CheckUpdates {
 
     @Override
     public void onResult() {
-        if(task!=1) {
+        if(task!=1&&messageAdapter!=null) {
 
             messageList = getMessages(user.getUserId());
             messageAdapter.updateList(messageList);
