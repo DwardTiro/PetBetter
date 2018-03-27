@@ -58,6 +58,7 @@ public class EditFacilityActivity extends AppCompatActivity {
     private TextView textViewAddress;
     private Facility faciItem;
     private DataAdapter petBetterDb;
+    private ImageButton topicNewPost;
 
     HerokuService service;
     @Override
@@ -84,6 +85,8 @@ public class EditFacilityActivity extends AppCompatActivity {
         facilityAddress.setVisibility(View.GONE);
         textViewAddress = (TextView) findViewById(R.id.textViewAddress);
         textViewAddress.setVisibility(View.GONE);
+        topicNewPost = (ImageButton) findViewById(R.id.topicNewPost);
+        topicNewPost.setVisibility(View.GONE);
 
         initializeDatabase();
 

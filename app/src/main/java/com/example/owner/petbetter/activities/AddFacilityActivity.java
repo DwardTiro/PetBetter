@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -54,6 +55,7 @@ public class AddFacilityActivity extends AppCompatActivity {
     private SystemSessionManager systemSessionManager;
     private static final int IMG_REQUEST = 777;
     private Bitmap bitmap;
+    private ImageButton topicNewPost;
 
     HerokuService service;
     @Override
@@ -75,6 +77,8 @@ public class AddFacilityActivity extends AppCompatActivity {
         facilityAddress = (EditText) findViewById(R.id.addFacilityAddress);
         editImage = (ImageButton) findViewById(R.id.clinicEditImage);
         textViewAddress = (TextView) findViewById(R.id.textViewAddress);
+        topicNewPost = (ImageButton) findViewById(R.id.topicNewPost);
+        topicNewPost.setVisibility(View.GONE);
 
         textViewAddress.setVisibility(View.GONE);
         facilityAddress.setVisibility(View.GONE);

@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -59,6 +60,7 @@ public class AddServicesActivity extends AppCompatActivity {
     private SystemSessionManager systemSessionManager;
     private User user;
     private int vetId;
+    private ImageButton topicNewPost;
 
     private LinearLayout newServices;
     private Button addField;
@@ -82,6 +84,8 @@ public class AddServicesActivity extends AppCompatActivity {
         image = extras.getString("image");
         longitude = extras.getDouble("longitude");
         latitude = extras.getDouble("latitude");
+        topicNewPost = (ImageButton) findViewById(R.id.topicNewPost);
+        topicNewPost.setVisibility(View.GONE);
 
         service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         systemSessionManager = new SystemSessionManager(this);

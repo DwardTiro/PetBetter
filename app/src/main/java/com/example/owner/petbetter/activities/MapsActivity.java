@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -112,6 +113,7 @@ public class MapsActivity extends FragmentActivity
     private long faciId;
     private long locationId;
     private RequestQueue requestQueue;
+    private ImageButton topicNewPost;
 
     private Button addLocationButton;
 
@@ -130,6 +132,8 @@ public class MapsActivity extends FragmentActivity
         addLocationButton = (Button) findViewById(R.id.addLocationButton);
         addLocationButton.setEnabled(true);
         requestQueue = Volley.newRequestQueue(this);
+        //topicNewPost = (ImageButton) findViewById(R.id.topicNewPost);
+        //topicNewPost.setVisibility(View.GONE);
 
         Bundle extras = getIntent().getExtras();
         faciName = extras.getString("bldg_name");
