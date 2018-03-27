@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.classes.Services;
 
@@ -22,17 +23,27 @@ public class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.ServiceL
     private LayoutInflater inflater;
     private ArrayList<Services> serviceList;
 
+    HerokuService service;
+
     public ServiceAdapter(Context context, LayoutInflater inflater,ArrayList<Services> serviceList){
         this.inflater = LayoutInflater.from(context);
         this.serviceList=serviceList;
     }
     @Override
     public ServiceListingHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return null;
+        View view = inflater.inflate(R.layout.fragment_service_row, parent, false);
+        ServiceListingHolder holder = new ServiceListingHolder(view);
+        return holder;
+
     }
 
     @Override
     public void onBindViewHolder(ServiceListingHolder holder, int position) {
+        final Services thisService = serviceList.get(position);
+
+        holder.serviceNameText.setText(thisService.getServiceName());
+        holder.priceText.setText(Float.toString(thisService.getServicePrice()));
+
 
     }
 

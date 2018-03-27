@@ -159,7 +159,10 @@ public interface HerokuService {
     Call<ArrayList<Follower>> getAllowedFollowers(@Field("topic_id") long topicId);
 
     @POST("addUser.php")
-    Call<Void> addUser(@Body RequestBody user);
+    Call<Void> addUser(@Body RequestBody user);@FormUrlEncoded
+    
+    @POST("getServicesWithFaciID.php")
+    Call<ArrayList<Services>> getServicesWithFaciID(@Field("faci_id") long faci_id);
 
     @FormUrlEncoded
     @POST("touchMarker.php")

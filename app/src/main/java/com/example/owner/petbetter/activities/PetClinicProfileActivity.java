@@ -3,6 +3,8 @@ package com.example.owner.petbetter.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -16,10 +18,12 @@ import com.bumptech.glide.Glide;
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
+import com.example.owner.petbetter.adapters.ServiceAdapter;
 import com.example.owner.petbetter.classes.Bookmark;
 import com.example.owner.petbetter.classes.Facility;
 import com.example.owner.petbetter.classes.LocationMarker;
 import com.example.owner.petbetter.classes.Rating;
+import com.example.owner.petbetter.classes.Services;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
@@ -205,8 +209,10 @@ public class PetClinicProfileActivity extends AppCompatActivity {
             Glide.with(PetClinicProfileActivity.this).load(newFileName).error(R.drawable.app_icon_yellow).into(clinicProfileImage);
         }
 
-        syncRatingChanges();
 
+
+        syncRatingChanges();
+        getServiceList();
         //Toast.makeText(this, "Facility's Name: "+faciItem.getFaciName() + ". Delete this toast. Just to help you see where vet variable is", Toast.LENGTH_LONG).show();
     }
 
@@ -216,6 +222,28 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         item.setVisibility(View.GONE);
         item.setEnabled(false);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    public void getServiceList(){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final Call<ArrayList<Services>> call = service.getServicesWithFaciID(faciItem.getId());
+        call.enqueue(new Callback<ArrayList<Services>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Services>> call, Response<ArrayList<Services>> response) {
+
+                serviceRecyclerView.setAdapter(new ServiceAdapter(PetClinicProfileActivity.this, getLayoutInflater(), response.body()));
+                serviceRecyclerView.setItemAnimator(new DefaultItemAnimator());
+                serviceRecyclerView.setHasFixedSize(true);
+                serviceRecyclerView.setLayoutManager(new LinearLayoutManager(PetClinicProfileActivity.this));
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Services>> call, Throwable t) {
+
+            }
+        });
+
     }
 
     public void syncBookmarkChanges() {
