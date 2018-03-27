@@ -23,7 +23,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 		$upload_path = "uploads/messagereps/$title.jpg";
 		
 		if(!($messagereplist[$i]['message_photo']==null)){
-			file_put_contents($upload_path, base64_decode($messagereplist['message_photo']));
+			file_put_contents($upload_path, base64_decode($messagereplist[$i]['message_photo']));
 		}
 		else{
 			$upload_path = null;
