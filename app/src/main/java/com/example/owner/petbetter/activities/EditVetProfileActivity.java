@@ -103,6 +103,7 @@ public class EditVetProfileActivity extends AppCompatActivity {
         vetEmailAddress.setText(user.getEmail());
         vetDescription.setText(vet.getProfileDesc());
         vetEducation.setText(vet.getEducation());
+        vetEducation.setEnabled(false);
         vetSpecialization.setSelection(getIndex(vetSpecialization, vet.getSpecialty()));
 
         if (user.getUserPhoto() != null) {
@@ -133,6 +134,8 @@ public class EditVetProfileActivity extends AppCompatActivity {
                 service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
                 final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
                 final HerokuService service3 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+                final HerokuService service4 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
 
                 final Call<User> call = service.checkLogin(user.getEmail(), user.getPassword());
                 call.enqueue(new Callback<User>() {
@@ -176,6 +179,22 @@ public class EditVetProfileActivity extends AppCompatActivity {
                                                         Intent intent = new Intent(EditVetProfileActivity.this, com.example.owner.petbetter.activities.VetUserProfileActivity.class);
                                                         startActivity(intent);
                                                         Toast.makeText(EditVetProfileActivity.this, "Edit Profile Success", Toast.LENGTH_SHORT).show();
+
+                                                        if(vetSpecialization.getSelectedItem().toString()!=vet.getSpecialty()){
+                                                            System.out.println("What's the problem par? "+vetSpecialization.getSelectedItem().toString());
+                                                            Call<Void> call4 = service4.editPending(vet.getUserId(), vetSpecialization.getSelectedItem().toString());
+                                                            call4.enqueue(new Callback<Void>() {
+                                                                @Override
+                                                                public void onResponse(Call<Void> call, Response<Void> response) {
+                                                                    System.out.println("Successfully edited pending.");
+                                                                }
+
+                                                                @Override
+                                                                public void onFailure(Call<Void> call, Throwable t) {
+
+                                                                }
+                                                            });
+                                                        }
 
 
                                                     }
