@@ -21,10 +21,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -76,6 +79,7 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
     private ImageView notifButton;
     private ImageView imageViewDrawer;
     private Button addTopicButton;
+    private Spinner spinnerFilter;
 
     private NotificationReceiver notifReceiver = new NotificationReceiver(this);
     private NotificationReceiver notifReceiver2 = new NotificationReceiver();
@@ -143,6 +147,7 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
         String email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
         textNavEmail = (TextView) headerView.findViewById(R.id.textNavEmail);
         imageViewDrawer = (ImageView) headerView.findViewById(R.id.imageViewDrawer);
+
         textNavEmail.setText(email);
 
 
@@ -203,6 +208,12 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
         FragmentHome fragment3 = new FragmentHome();
         getSupportFragmentManager().beginTransaction().replace(R.id.comm_container,fragment3).commitAllowingStateLoss();
 
+        spinnerFilter = (Spinner) findViewById(R.id.spinnerFilter);
+        String[] filterItems = new String[]{"Most recent", "Most upvotes"};
+        ArrayAdapter<String> adapterSpinner = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, filterItems);
+        spinnerFilter.setAdapter(adapterSpinner);
+
+
         btnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -214,8 +225,12 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
                 btnHome.setPaintFlags(btnHome.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
                 btnCommunity.setPaintFlags(btnCommunity.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
                 container.removeAllViews();
-                FragmentHome fragment3 = new FragmentHome();
-                getSupportFragmentManager().beginTransaction().replace(R.id.comm_container,fragment3).commitAllowingStateLoss();
+                if(spinnerFilter.getSelectedItem().toString()=="Most recent"){
+                    filterPosts(1);
+                }
+                if(spinnerFilter.getSelectedItem().toString()=="Most upvotes"){
+                    filterPosts(2);
+                }
                 currFragment = 1;
             }
         });
@@ -230,6 +245,7 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
                 btnCommunity.setPaintFlags(btnCommunity.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
                 btnHome.setPaintFlags(btnHome.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
                 container.removeAllViews();
+
                 FragmentCommunity fragment2 = new FragmentCommunity();
                 getSupportFragmentManager().beginTransaction().replace(R.id.comm_container,fragment2).commitAllowingStateLoss();
                 currFragment = 2;
@@ -250,6 +266,30 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
             public void onClick(View v) {
                 Intent intent = new Intent(CommActivity.this, com.example.owner.petbetter.activities.NewTopicActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        spinnerFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(currFragment==1){
+                    if(spinnerFilter.getSelectedItem().toString()=="Most recent"){
+                        filterPosts(1);
+                    }
+                    if(spinnerFilter.getSelectedItem().toString()=="Most upvotes"){
+                        filterPosts(2);
+
+                    }
+                }
+                else{
+                    FragmentCommunity fragment2 = new FragmentCommunity();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.comm_container,fragment2).commitAllowingStateLoss();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
 
@@ -332,6 +372,28 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void filterPosts(int order){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final Call<ArrayList<Post>> call = service.getFilteredPosts(order);
+        call.enqueue(new Callback<ArrayList<Post>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Post>> call, Response<ArrayList<Post>> response) {
+                if(response.isSuccessful()){
+
+                    FragmentHome fragment3 = new FragmentHome(response.body());
+                    getSupportFragmentManager().beginTransaction().replace(R.id.comm_container,fragment3).commitAllowingStateLoss();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Post>> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+
+            }
+        });
     }
 
     public void syncTopicChanges(){

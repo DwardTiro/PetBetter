@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -59,6 +60,7 @@ public class BookmarksActivity extends AppCompatActivity implements NavigationVi
     private ImageView imageViewDrawer;
     private int currFragment = 1;
     private Button addTopicButton;
+    private Spinner spinnerFilter;
 
     HerokuService service;
 
@@ -108,6 +110,8 @@ public class BookmarksActivity extends AppCompatActivity implements NavigationVi
         textNavEmail.setText(email);
 
         addTopicButton = (Button) findViewById(R.id.addTopicButton);
+        spinnerFilter = (Spinner) findViewById(R.id.spinnerFilter);
+        spinnerFilter.setVisibility(View.GONE);
 
         addTopicButton.setVisibility(View.GONE);
 

@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 
@@ -70,6 +71,7 @@ public class VetUserProfileActivity extends AppCompatActivity implements Navigat
     private ImageView verifySpecialty;
     private int licenseCheck;
     private NotificationReceiver notifReceiver = new NotificationReceiver();
+    private Spinner spinnerFilter;
 
     HerokuService service;
 
@@ -107,6 +109,8 @@ public class VetUserProfileActivity extends AppCompatActivity implements Navigat
 
         notifButton = (ImageView) findViewById(R.id.imageview_notifs);
         addTopicButton = (Button) findViewById(R.id.addTopicButton);
+        spinnerFilter = (Spinner) findViewById(R.id.spinnerFilter);
+        spinnerFilter.setVisibility(View.GONE);
 
         addTopicButton.setVisibility(View.GONE);
 

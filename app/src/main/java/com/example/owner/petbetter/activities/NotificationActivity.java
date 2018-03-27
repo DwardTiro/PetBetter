@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -53,6 +54,7 @@ public class NotificationActivity extends AppCompatActivity implements Navigatio
     private ImageView imageViewDrawer;
     HerokuService service;
     private Button addTopicButton;
+    private Spinner spinnerFilter;
 
     @Override
     protected void onResume() {
@@ -103,6 +105,8 @@ public class NotificationActivity extends AppCompatActivity implements Navigatio
         user = getUser(email);
         textNavUser.setText(user.getName());
         addTopicButton = (Button) findViewById(R.id.addTopicButton);
+        spinnerFilter = (Spinner) findViewById(R.id.spinnerFilter);
+        spinnerFilter.setVisibility(View.GONE);
 
         addTopicButton.setVisibility(View.GONE);
 

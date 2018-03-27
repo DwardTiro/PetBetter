@@ -42,6 +42,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import android.widget.Toast;
@@ -82,6 +83,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     HerokuService service;
     private ImageView imageViewDrawer;
     private Button addTopicButton;
+    private Spinner spinnerFilter;
 
 
     /*
@@ -115,6 +117,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refreshHome);
         notifButton = (ImageView) findViewById(R.id.imageview_notifs);
         addTopicButton = (Button) findViewById(R.id.addTopicButton);
+        spinnerFilter = (Spinner) findViewById(R.id.spinnerFilter);
+        spinnerFilter.setVisibility(View.GONE);
 
         addTopicButton.setVisibility(View.GONE);
 

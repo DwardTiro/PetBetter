@@ -25,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -80,6 +81,7 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
     private ArrayList<Facility> faciList;
     private Veterinarian thisVet;
     private Button addTopicButton;
+    private Spinner filterSpinner;
 
     AlarmManager alarmManager;
     PendingIntent pendingIntent;
@@ -134,7 +136,9 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
         user = getUser(email);
         imageViewDrawer = (ImageView) headerView.findViewById(R.id.imageViewDrawer);
         addTopicButton = (Button) findViewById(R.id.addTopicButton);
+        filterSpinner = (Spinner) findViewById(R.id.spinnerFilter);
 
+        filterSpinner.setVisibility(View.GONE);
         addTopicButton.setVisibility(View.GONE);
         if(user.getUserPhoto()!=null){
 

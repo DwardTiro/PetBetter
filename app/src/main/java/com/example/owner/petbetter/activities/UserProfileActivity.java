@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -63,6 +64,7 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
     private TextView userTopicNum;
     private ImageView imageViewDrawer;
     private Button addTopicButton;
+    private Spinner spinnerFilter;
 
     HerokuService service;
 
@@ -113,6 +115,8 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
         textNavEmail.setText(email);
         notifButton = (ImageView) findViewById(R.id.imageview_notifs);
         addTopicButton = (Button) findViewById(R.id.addTopicButton);
+        spinnerFilter = (Spinner) findViewById(R.id.spinnerFilter);
+        spinnerFilter.setVisibility(View.GONE);
 
         addTopicButton.setVisibility(View.GONE);
 

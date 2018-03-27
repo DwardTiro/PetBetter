@@ -27,6 +27,7 @@ import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -92,6 +93,7 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
     private SwipeRefreshLayout refreshMessages;
     private int refChecker = 0;
     private Button addTopicButton;
+    private Spinner spinnerFilter;
 
     HerokuService service;
 
@@ -159,6 +161,8 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
         messageReqButton = (Button) findViewById(R.id.messageReqButton);
         refreshMessages = (SwipeRefreshLayout) findViewById(R.id.refreshMessages);
         addTopicButton = (Button) findViewById(R.id.addTopicButton);
+        spinnerFilter = (Spinner) findViewById(R.id.spinnerFilter);
+        spinnerFilter.setVisibility(View.GONE);
 
         addTopicButton.setVisibility(View.GONE);
 
