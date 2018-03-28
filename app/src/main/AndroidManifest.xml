@@ -198,7 +198,9 @@
         <activity android:name=".activities.EditVetProfileActivity" />
         <activity android:name=".activities.VetUserProfileActivity" />
         <activity android:name=".activities.AddServicesActivity" />
-        <activity android:name=".activities.UserActivity"></activity>
+        <activity android:name=".activities.UserActivity"/>
+        <activity android:name=".activities.VetOwnedFacilityProfileActivity"/>
+        <activity android:name=".activities.EditVetServicesActivity"/>
     </application>
 
 </manifest>

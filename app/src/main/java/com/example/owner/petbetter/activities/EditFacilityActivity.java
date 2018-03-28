@@ -109,12 +109,15 @@ public class EditFacilityActivity extends AppCompatActivity {
         facilityName.setText(faciItem.getFaciName());
         phoneNum.setText(faciItem.getContactInfo());
 
+        openTime.setSelection(getIndex(openTime,faciItem.getHoursOpen()));
+        closeTime.setSelection(getIndex(closeTime,faciItem.getHoursClose()));
         editImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 selectImage();
             }
         });
+
 
 
     }
@@ -242,6 +245,17 @@ public class EditFacilityActivity extends AppCompatActivity {
         }
     }
 
+    private int getIndex(Spinner spinner, String value) {
+        int itemIndex = 0;
+        for (int i = 0; i < spinner.getCount(); i++) {
+            if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(value)) {
+                itemIndex = i;
+                break;
+            }
+        }
+        return itemIndex;
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -265,10 +279,6 @@ public class EditFacilityActivity extends AppCompatActivity {
     }
 
     public void viewPostBackButtonClicked(View view){
-        Intent intent = new Intent(
-                EditFacilityActivity.this,
-                com.example.owner.petbetter.activities.VeterinarianHomeActivity.class
-        );
-        startActivity(intent);
+        finish();
     }
 }

@@ -135,7 +135,7 @@ public class FragmentPetClinicListing extends Fragment {
         else if(getActivity() instanceof  VeterinarianHomeActivity){
             clinicListingAdapter = new ClinicListingAdapter(getActivity(), faciList, new ClinicListingAdapter.OnItemClickListener() {
                 @Override public void onItemClick(Facility item) {
-                    Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.EditFacilityActivity.class);
+                    Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.VetOwnedFacilityProfileActivity.class);
                     intent.putExtra("thisClinic", new Gson().toJson(item));
                     startActivity(intent);
                 }
