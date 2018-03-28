@@ -109,8 +109,29 @@ public class MessageActivity extends AppCompatActivity {
 
         email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
         user = getUser(email);
+        fromText.setText("");
+        if(messageItem.getFromId()==user.getUserId()){
+            fromText.setText(messageItem.getFromName());
+        }
+        else{
+            HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+            Call<User> call = service.getUserWithId(messageItem.getFromId());
+            call.enqueue(new Callback<User>() {
+                @Override
+                public void onResponse(Call<User> call, Response<User> response) {
+                    if(response.isSuccessful()){
+                        User temp = response.body();
+                        fromText.setText(temp.getName());
+                    }
+                }
 
-        fromText.setText(messageItem.getFromName());
+                @Override
+                public void onFailure(Call<User> call, Throwable t) {
+
+                }
+            });
+        }
+        ;
 /*
         Bundle bundle = new Bundle();
         System.out.println("POST ID BEFORE SEND "+postItem.getUserId());
