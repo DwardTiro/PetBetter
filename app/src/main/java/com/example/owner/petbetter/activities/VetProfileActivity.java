@@ -151,18 +151,11 @@ public class VetProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if(mId!=0){
-                    messageItem = getMessage(mId);
-                    Intent intent = new Intent(view.getContext(),MessageActivity.class);
-                    intent.putExtra("thisMessage", new Gson().toJson(messageItem));
-                    startActivity(intent);
-                }
-                else{
-                    mId = generateMessageId();
-                    createMessage((int) mId, vetItem.getUserId(), user.getUserId());
-                    messageExist = false;
-                    syncMessageChanges(user.getUserId());
-                }
+                messageItem = getMessage(mId);
+                Intent intent = new Intent(view.getContext(),NewMessageActivity.class);
+                intent.putExtra("thisVet", vetItem.getEmail());
+                //intent.putExtra("thisVet", new Gson().toJson(vetItem.getEmail()));
+                startActivity(intent);
 
             }
         });

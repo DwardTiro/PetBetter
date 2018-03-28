@@ -114,11 +114,20 @@ public class NewMessageActivity extends AppCompatActivity {
         String email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
         user = getUser(email);
 
+        String vetEmail;
+        Bundle extras = getIntent().getExtras();
+        vetEmail = extras.getString("thisVet");
+        //String vetEmail = new Gson().fromJson(jsonMyObject, String);
+
         syncUsers();
         newMsgSendTo = (AutoCompleteTextView) findViewById(R.id.newMsgSendTo);
         newMsgContent = (EditText) findViewById(R.id.newMsgContent);
         newMsgSendButton = (Button) findViewById(R.id.newMsgSendBtn);
         newMsgAddPhoto = (ImageButton) findViewById(R.id.newMsgAddPhoto);
+
+        if(vetEmail!=null){
+            newMsgSendTo.setText(vetEmail);
+        }
 
         newMsgAddPhoto.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -172,10 +181,6 @@ public class NewMessageActivity extends AppCompatActivity {
                                     syncMessageChanges();
 
                                 }
-
-                                nId = generateNotifsId();
-                                notifyMessage(nId, usertwo.getUserId(), user.getUserId(), 0, 2, timeStamp, mId, 0);
-                                uploadNotifications(getUnsyncedNotifications());
 
                                 finish();
                             }
@@ -307,6 +312,10 @@ public class NewMessageActivity extends AppCompatActivity {
                                         newMsgContent.getText().toString(), 1, timeStamp, image, 0);
                                 //uploadMessageRep(getUnsyncedMessageReps());
                                 syncMessageRepChanges();
+
+                                nId = generateNotifsId();
+                                notifyMessage(nId, usertwo.getUserId(), user.getUserId(), 0, 2, timeStamp, mId, 0);
+                                uploadNotifications(getUnsyncedNotifications());
                             }
                         }
 
