@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
@@ -20,6 +21,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -125,17 +127,23 @@ public class SignUpUserActivity extends AppCompatActivity {
             call.enqueue(new Callback<Void>() {
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {
-                    System.out.println("User added to server successfully");
-                    Intent intent = new Intent(
-                            SignUpUserActivity.this,
-                            com.example.owner.petbetter.activities.MainActivity.class
-                    );
-                    startActivity(intent);
+                    if(response.isSuccessful()){
+                        System.out.println("User added to server successfully");
+                        Intent intent = new Intent(
+                                SignUpUserActivity.this,
+                                com.example.owner.petbetter.activities.MainActivity.class
+                        );
+                        startActivity(intent);
+                    }
+                    else{
+                        Toast.makeText(SignUpUserActivity.this, "Email is already taken", Toast.LENGTH_SHORT ).show();
+                    }
                 }
 
                 @Override
                 public void onFailure(Call<Void> call, Throwable t) {
                     System.out.println("FAILED TO ADD USER TO SERVER");
+                    Toast.makeText(SignUpUserActivity.this, "Email is already taken", Toast.LENGTH_SHORT ).show();
                 }
             });
         }

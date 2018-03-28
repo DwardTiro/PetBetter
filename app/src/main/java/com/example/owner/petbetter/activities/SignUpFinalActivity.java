@@ -83,11 +83,12 @@ public class SignUpFinalActivity extends AppCompatActivity implements AdapterVie
     public void nextButtonClicked(View view){
 
         int userId = generateUserId();
-        addUser(userId, fName.getText().toString(), lName.getText().toString(), emailAdd, pWord, userType2);
+        //addUser(userId, fName.getText().toString(), lName.getText().toString(), emailAdd, pWord, userType2);
 
         Intent intent = new Intent(this, com.example.owner.petbetter.activities.MainActivity.class);
         startActivity(intent);
     }
+    /*
 
     private void addUser(int userId, String fName, String lName, String emailAdd, String pWord, int userType2){
         try {
@@ -103,7 +104,7 @@ public class SignUpFinalActivity extends AppCompatActivity implements AdapterVie
             addVet(vetId, userId, 0);
         }
 
-    }
+    }*/
 
     private long addVet(int vetId, int userId, int rating){
         try {

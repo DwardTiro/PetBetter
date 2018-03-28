@@ -12,42 +12,61 @@ $response = array();
 //$result = mysqli_query($con, $sql);
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
-
-	if($stmt = $mysqli->prepare("INSERT INTO users (first_name, last_name, email, password, user_type) VALUES (?,?,?,?,?)")){
-		$stmt->bind_param("sssss", $user['first_name'], $user['last_name'], $user['email'], $user['password'], $user['user_type']);
-		$stmt->execute();
-		$stmt->close();
-		echo 'User registered';
-		
-		//$stmt->bind_result($_id, $first_name, $last_name, $mobile_num, $phone_num, $email,  $password, $age, $user_type);
-		//$stmt->store_result();
 	
-	/*
+	if($stmt = $mysqli->prepare("SELECT 1 FROM users WHERE email = ?")){
+		$stmt->bind_param("s", $user['email']);
+		$stmt->execute();
+		$stmt->bind_result($ctr);
+		$stmt->store_result();
+		//$stmt->bind_result($ctr);
+		
 		if($stmt->fetch()){
-			
-			$stmt->close();
-			//echo json_encode($response);
-			echo json_encode(array('_id'=>$_id,
-			'first_name'=>$first_name,
-			'last_name'=>$last_name,
-			'mobile_num'=>$mobile_num,
-			'phone_num'=>$phone_num,
-			'email'=>$email,
-			'password'=>$password,
-			'age'=>$age,
-			'user_type'=>$user_type));
+			throw new Exception('Email already taken');
 		}
 		else{
-			
 			$stmt->close();
-			echo 'SQL Query Error';
+			if($stmt = $mysqli->prepare("INSERT INTO users (first_name, last_name, email, password, user_type) VALUES (?,?,?,?,?)")){
+				$stmt->bind_param("sssss", $user['first_name'], $user['last_name'], $user['email'], $user['password'], $user['user_type']);
+				$stmt->execute();
+				$stmt->close();
+				echo 'User registered';
+						
+						//$stmt->bind_result($_id, $first_name, $last_name, $mobile_num, $phone_num, $email,  $password, $age, $user_type);
+						//$stmt->store_result();
+					
+					/*
+						if($stmt->fetch()){
+							
+							$stmt->close();
+							//echo json_encode($response);
+							echo json_encode(array('_id'=>$_id,
+							'first_name'=>$first_name,
+							'last_name'=>$last_name,
+							'mobile_num'=>$mobile_num,
+							'phone_num'=>$phone_num,
+							'email'=>$email,
+							'password'=>$password,
+							'age'=>$age,
+							'user_type'=>$user_type));
+						}
+						else{
+							
+							$stmt->close();
+							echo 'SQL Query Error';
+						}
+						*/
+						//echo json_encode($stmt);
+						//echo json_encode(array('user'=>$response));
+			}
+			else{
+				echo 'SQL Query Error';
+			}
 		}
-		*/
-		//echo json_encode($stmt);
-		//echo json_encode(array('user'=>$response));
+		
+		
 	}
 	else{
-		echo 'SQL Query Error';
+		
 	}
 }
 
