@@ -2,7 +2,9 @@
 
 require 'init.php';
 
-$user_id = $_POST['user_id'];
+
+//$user_id = $_POST['user_id'];
+
 $response = array(); 
 //$sql = "SELECT * FROM users WHERE email = ? AND password = ?";
 //$sql = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
@@ -10,33 +12,30 @@ $response = array();
 //$result = mysqli_query($con, $sql);
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
-
-	if($stmt = $mysqli->prepare("SELECT n._id AS _id, n.user_id AS user_id, n.doer_id AS doer_id, n.is_read AS is_read, 
-	n.type AS type, n.date_performed as date_performed, n.source_id as source_id, u.first_name AS first_name, u.last_name AS last_name 
-	FROM notifications AS n INNER JOIN users AS u ON n.doer_id = u.user_id WHERE n.user_id = ? ORDER BY n.date_performed ASC")){
-		$stmt->bind_param("s", $user_id);
+	
+	if($stmt = $mysqli->prepare("SELECT * FROM messages ORDER BY _id DESC LIMIT 1")){
 		$stmt->execute();
-		$stmt->bind_result($_id, $user_id, $doer_id, $is_read, $type, $date_performed, $source_id, $first_name,  $last_name);
+		$stmt->bind_result($_id, $user_one, $user_two, $is_allowed);
 		$stmt->store_result();
 	
 		if($stmt->fetch()){
 			
+			/*
 			do{
 				array_push($response, array('_id'=>$_id,
-				'user_id'=>$user_id,
-				'doer_id'=>$doer_id,
-				'is_read'=>$is_read,
-				'type'=>$type,
-				'source_id'=>$source_id,
-				'date_performed'=>$date_performed,
+				'user_one'=>$user_one,
+				'user_two'=>$user_two,
+				'is_allowed'=>$is_allowed,
 				'first_name'=>$first_name,
 				'last_name'=>$last_name));
-			}while($stmt->fetch());
-			
+			}while($stmt->fetch());*/
 			
 			$stmt->close();
 			
-			echo json_encode($response);
+			echo json_encode(array('_id'=>$_id,
+				'user_one'=>$user_one,
+				'user_two'=>$user_two,
+				'is_allowed'=>$is_allowed));
 			/*
 			echo json_encode(array('_id'=>$_id,
 			'user_id'=>$user_id,
@@ -50,7 +49,6 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 		else{
 			
 			$stmt->close();
-			//echo 'No notifications';
 		}
 		//echo json_encode($stmt);
 		//echo json_encode(array('user'=>$response));

@@ -81,6 +81,9 @@ public interface HerokuService {
     @POST("getMessages.php")
     Call<ArrayList<Message>> getMessages(@Field("user_id") long id);
 
+    @POST("getLatestMessage.php")
+    Call<Message> getLatestMessage();
+
     @POST("getMessageReps.php")
     Call<ArrayList<MessageRep>> getMessageReps();
 

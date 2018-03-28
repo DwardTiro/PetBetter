@@ -102,6 +102,7 @@ public class MessageRepAdapter extends RecyclerView.Adapter<MessageRepAdapter.Me
 
         User user = getUserWithId(thisMessageRep.getSenderId());
 
+
         if(user.getUserPhoto()!=null){
 
             String newFileName = BASE_URL + user.getUserPhoto();
@@ -113,6 +114,10 @@ public class MessageRepAdapter extends RecyclerView.Adapter<MessageRepAdapter.Me
                     .error(R.drawable.back_button).into(holder.messageRepImage);*/
             //setImage(holder.messageRepImage, newFileName);
 
+            holder.messageRepProfile.setVisibility(View.VISIBLE);
+        }
+        else{
+            Glide.with(inflater.getContext()).load(R.drawable.app_icon).error(R.drawable.back_button).into(holder.messageRepProfile);
             holder.messageRepProfile.setVisibility(View.VISIBLE);
         }
 

@@ -155,6 +155,7 @@ public class NewMessageActivity extends AppCompatActivity {
                                     if(message.getUserId()==user.getUserId()&&message.getFromId()==usertwo.getUserId()||
                                             message.getUserId()==usertwo.getUserId()&&message.getFromId()==user.getUserId()){
                                         alreadyExist = true;
+                                        mId = (int) message.getId();
                                     }
                                 }
                                 if(alreadyExist==true){
@@ -163,12 +164,12 @@ public class NewMessageActivity extends AppCompatActivity {
                                             newMsgContent.getText().toString(), 1, timeStamp, image, 0);
                                     //uploadMessageRep(getUnsyncedMessageReps());
                                     syncMessageRepChanges();
-                                    System.out.println("We go here wrong?");
+                                    System.out.println("We go here wrong?"+mId);
                                 }
                                 if(alreadyExist==false){
                                     createMessage(mId, user.getUserId(), usertwo.getUserId());
                                     //uploadMessage(getUnsyncedMessages());
-                                    syncMessageChanges(user.getUserId());
+                                    syncMessageChanges();
 
                                 }
 
@@ -187,7 +188,7 @@ public class NewMessageActivity extends AppCompatActivity {
                             String image = imageToString();
                             createMessage(mId, user.getUserId(), usertwo.getUserId());
                             //uploadMessage(getUnsyncedMessages());
-                            syncMessageChanges(user.getUserId());
+                            syncMessageChanges();
                             /*
                             mrId = generateMessageRepId();
                             System.out.println("MESSAGE ID PAR "+mId);
@@ -274,7 +275,7 @@ public class NewMessageActivity extends AppCompatActivity {
         return result;
     }
 
-    public void syncMessageChanges(final long userId){
+    public void syncMessageChanges(){
 
         final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
@@ -293,14 +294,13 @@ public class NewMessageActivity extends AppCompatActivity {
                     System.out.println("MESSAGES ADDED YEY");
                     dataSynced(5);
 
-                    final Call<ArrayList<Message>> call2 = service2.getMessages(userId);
-                    call2.enqueue(new Callback<ArrayList<Message>>() {
+                    final Call<Message> call2 = service2.getLatestMessage();
+                    call2.enqueue(new Callback<Message>() {
                         @Override
-                        public void onResponse(Call<ArrayList<Message>> call, Response<ArrayList<Message>> response) {
+                        public void onResponse(Call<Message> call, Response<Message> response) {
                             if(response.isSuccessful()){
-                                System.out.println("response size messages "+response.body().size());
-                                setMessages(response.body());
-                                mId = (int) response.body().get(response.body().size()-1).getId();
+                                //setMessages(response.body());
+                                mId = (int) response.body().getId();
                                 mrId = generateMessageRepId();
                                 System.out.println("MESSAGE ID PAR "+mId);
                                 addMessageRep(mrId, (int) usertwo.getUserId(),(int) user.getUserId(), mId,
@@ -311,7 +311,7 @@ public class NewMessageActivity extends AppCompatActivity {
                         }
 
                         @Override
-                        public void onFailure(Call<ArrayList<Message>> call, Throwable t) {
+                        public void onFailure(Call<Message> call, Throwable t) {
                             Log.d("onFailure", t.getLocalizedMessage());
 
                         }

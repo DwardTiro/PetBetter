@@ -42,7 +42,7 @@ public class NotificationReceiver extends BroadcastReceiver {
                 if(alarmRunning==false){
                     pendingIntent = PendingIntent.getBroadcast(context, 0, notifAlarm, 0);
                     alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-                    alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), 10000, pendingIntent);
+                    alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), 5000, pendingIntent);
                     //alarmManager.cancel(pendingIntent);
                     //1800000
                 }

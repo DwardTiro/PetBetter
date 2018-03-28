@@ -67,7 +67,7 @@ import static com.example.owner.petbetter.ServiceGenerator.BASE_URL;
  */
 
 
-public class MessagesActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MessagesActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, CheckUpdates {
 
     private ArrayList<Message> messageList;
     private DataAdapter petBetterDb;
@@ -80,7 +80,7 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
     private Toolbar menuBar;
     private User user;
     private FragmentMessages fragment1;
-    //private NotificationReceiver notifReceiver = new NotificationReceiver((CheckUpdates) this);
+    private NotificationReceiver notifReceiver = new NotificationReceiver((CheckUpdates) this);
     //private NotificationReceiver notifReceiver2 = new NotificationReceiver();
     private ImageView notifButton;
     private AutoCompleteTextView actvMessage;
@@ -100,17 +100,17 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
     @Override
     protected void onResume() {
         super.onResume();
-        //MessagesActivity.this.registerReceiver(this.notifReceiver, new IntentFilter(Intent.ACTION_ATTACH_DATA));
-        //onResult();
+        MessagesActivity.this.registerReceiver(this.notifReceiver, new IntentFilter(Intent.ACTION_ATTACH_DATA));
+        onResult();
     }
 
-    /*
+
     @Override
     protected void onPause() {
         super.onPause();
         MessagesActivity.this.unregisterReceiver(notifReceiver);
         //MessagesActivity.this.unregisterReceiver(notifReceiver2);
-    }*/
+    }
 
 
     @Override
@@ -670,13 +670,16 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
         return result;
     }
 
-    /*
+
     public void onResult() {
-        messageList = getMessages(user.getUserId());
-        messageAdapter.updateList(messageList);
-        //messageAdapter.notifyDataSetChanged();
-        System.out.println("ONRESULT MESSAGES");
-    }*/
+        if(actvMessage.getText().toString()==""){
+            messageList = getMessages(user.getUserId());
+            messageAdapter.updateList(messageList);
+            //messageAdapter.notifyDataSetChanged();
+            System.out.println("ONRESULT MESSAGES");
+        }
+
+    }
 
     private ArrayList<Notifications> getUnsyncedNotifications(){
 
