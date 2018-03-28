@@ -1,5 +1,6 @@
 package com.example.owner.petbetter.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.activities.MessagesActivity;
 import com.example.owner.petbetter.activities.TopicContentActivity;
+import com.example.owner.petbetter.activities.UserActivity;
 import com.example.owner.petbetter.adapters.NotificationsAdapter;
 import com.example.owner.petbetter.classes.Follower;
 import com.example.owner.petbetter.classes.Message;
@@ -67,6 +69,15 @@ public class FragmentNoResults extends Fragment  {
     HerokuService service;
 
     private TextView tvNoResult;
+    private int type;
+
+    public FragmentNoResults() {
+    }
+
+    @SuppressLint("ValidFragment")
+    public FragmentNoResults(int type) {
+        this.type = type;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -81,6 +92,16 @@ public class FragmentNoResults extends Fragment  {
 
         if(getActivity() instanceof TopicContentActivity){
             tvNoResult.setText("Follow this topic to view posts");
+        }
+
+        if(getActivity() instanceof UserActivity){
+            if(type==1){
+                tvNoResult.setText("This user hasn't posted anything");
+            }
+            if(type==2){
+                tvNoResult.setText("This user hasn't created a topic");
+            }
+
         }
 
         return view;

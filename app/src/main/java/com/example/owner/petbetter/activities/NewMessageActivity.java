@@ -114,9 +114,8 @@ public class NewMessageActivity extends AppCompatActivity {
         String email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
         user = getUser(email);
 
-        String vetEmail;
-        Bundle extras = getIntent().getExtras();
-        vetEmail = extras.getString("thisVet");
+
+
         //String vetEmail = new Gson().fromJson(jsonMyObject, String);
 
         syncUsers();
@@ -125,7 +124,10 @@ public class NewMessageActivity extends AppCompatActivity {
         newMsgSendButton = (Button) findViewById(R.id.newMsgSendBtn);
         newMsgAddPhoto = (ImageButton) findViewById(R.id.newMsgAddPhoto);
 
-        if(vetEmail!=null){
+        String vetEmail;
+        Bundle extras = getIntent().getExtras();
+        if(extras!=null){
+            vetEmail = extras.getString("thisVet");
             newMsgSendTo.setText(vetEmail);
         }
 

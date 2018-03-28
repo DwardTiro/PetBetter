@@ -26,6 +26,7 @@ import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.activities.MonitorVetsActivity;
 import com.example.owner.petbetter.activities.SearchActivity;
+import com.example.owner.petbetter.activities.UserActivity;
 import com.example.owner.petbetter.adapters.HomeAdapter;
 import com.example.owner.petbetter.adapters.MonitorAdapter;
 import com.example.owner.petbetter.classes.Facility;
@@ -287,7 +288,8 @@ public class FragmentHome extends Fragment implements CheckUpdates {
 
     @Override
     public void onResult() {
-        if(postList.size()!=getPosts().size()&&(!(getActivity() instanceof SearchActivity)||(getActivity() instanceof MonitorVetsActivity))){
+        if(postList.size()!=getPosts().size()&&(!(getActivity() instanceof SearchActivity||getActivity() instanceof MonitorVetsActivity||
+                getActivity() instanceof UserActivity))){
             postList = getPosts();
             homeAdapter.updateList(postList);
         }

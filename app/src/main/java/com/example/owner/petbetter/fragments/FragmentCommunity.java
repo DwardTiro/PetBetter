@@ -28,6 +28,7 @@ import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.activities.MonitorVetsActivity;
 import com.example.owner.petbetter.activities.SearchActivity;
+import com.example.owner.petbetter.activities.UserActivity;
 import com.example.owner.petbetter.adapters.CommunityAdapter;
 import com.example.owner.petbetter.adapters.MonitorAdapter;
 import com.example.owner.petbetter.classes.Facility;
@@ -119,7 +120,7 @@ public class FragmentCommunity extends Fragment implements CheckUpdates, PlaceIn
         for(int i = 0;i<topicList.size();i++){
             topicList.get(i).setFollowerCount(getFollowerCount((int) topicList.get(i).getId()));
         }
-        System.out.println("Size of postList "+topicList.size());
+        System.out.println("Size of topicList: "+topicList.size());
 
         if(isLinked){
             communityAdapter = new CommunityAdapter(getActivity(), topicList, user, new CommunityAdapter.OnItemClickListener() {
@@ -268,10 +269,12 @@ public class FragmentCommunity extends Fragment implements CheckUpdates, PlaceIn
 
     @Override
     public void onResult() {
-        if(topicList.size()!=getTopics().size()&&(!(getActivity() instanceof SearchActivity))){
-            topicList = getTopics();
-            communityAdapter.updateList(topicList);
+        if(!(getActivity() instanceof SearchActivity || getActivity() instanceof UserActivity)){
+            if(topicList.size()!=getTopics().size()){
 
+                topicList = getTopics();
+                communityAdapter.updateList(topicList);
+            }
         }
     }
 

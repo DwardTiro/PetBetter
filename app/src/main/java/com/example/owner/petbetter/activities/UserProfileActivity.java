@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -65,6 +66,9 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
     private ImageView imageViewDrawer;
     private Button addTopicButton;
     private Spinner spinnerFilter;
+    private RelativeLayout postTopicInfoLayout;
+    private ArrayList<Topic> userTopics;
+    private ArrayList<Post> userPosts;
 
     HerokuService service;
 
@@ -114,6 +118,8 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
         textNavEmail = (TextView) headerView.findViewById(R.id.textNavEmail);
         textNavEmail.setText(email);
         notifButton = (ImageView) findViewById(R.id.imageview_notifs);
+
+        postTopicInfoLayout = (RelativeLayout) findViewById(R.id.postTopicInfoLayout);
         addTopicButton = (Button) findViewById(R.id.addTopicButton);
         spinnerFilter = (Spinner) findViewById(R.id.spinnerFilter);
         spinnerFilter.setVisibility(View.GONE);
@@ -176,6 +182,14 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
             public void onClick(View v) {
                 //Redirect to notifications
                 Intent intent = new Intent(UserProfileActivity.this, com.example.owner.petbetter.activities.NotificationActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        postTopicInfoLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(UserProfileActivity.this, com.example.owner.petbetter.activities.UserActivity.class);
                 startActivity(intent);
             }
         });
