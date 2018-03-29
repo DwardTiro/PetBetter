@@ -383,6 +383,10 @@ public interface HerokuService {
     Call<Void> deleteFollower(@Field("topic_id") long topicId, @Field("user_id") long userId);
 
     @FormUrlEncoded
+    @POST("deleteService.php")
+    Call<Void> deleteService(@Field("_id") long service_id);
+
+    @FormUrlEncoded
     @POST("disableTopic.php")
     Call<Void> disableTopic(@Field("is_deleted") int isDeleted, @Field("_id") long topicId);
 
@@ -441,6 +445,9 @@ public interface HerokuService {
 
     @POST("editFacilities.php")
     Call<Void> editFacilities(@Body RequestBody faciList);
+
+    @POST("editFacilityService.php")
+    Call<Void> editFacilityService(@Body RequestBody serviceList);
 
     @FormUrlEncoded
     @POST("editVeterinarian.php")

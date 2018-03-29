@@ -121,6 +121,9 @@ public class EditFacilityActivity extends AppCompatActivity {
 
 
     }
+
+
+    //function to edit facility info
     public void addFacility(View view){
         if(facilityAddress.getText().toString()!=""){
             service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);

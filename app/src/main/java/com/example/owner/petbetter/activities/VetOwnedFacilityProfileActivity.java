@@ -110,6 +110,28 @@ public class VetOwnedFacilityProfileActivity extends AppCompatActivity{
         getServiceList();
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        serviceRecyclerView = (RecyclerView) findViewById(R.id.servicesRecyclerView);
+        getServiceList();
+
+        facilityName = (TextView) findViewById(R.id.clinicName);
+        facilityRating = (TextView) findViewById(R.id.clinicRatingNumerator);
+        facilityAddress = (TextView) findViewById(R.id.addressTextField);
+        facilityLandline = (TextView) findViewById(R.id.phoneNumTextField);
+        facilityOpenTime = (TextView) findViewById(R.id.openTimeTextField);
+        facilityCloseTime = (TextView) findViewById(R.id.closeTimeTextField);
+
+
+        facilityAddress.setText(faciItem.getLocation());
+        facilityLandline.setText(faciItem.getContactInfo());
+        facilityOpenTime.setText(faciItem.getHoursOpen());
+        facilityCloseTime.setText(faciItem.getHoursClose());
+
+
+    }
+
     public void getServiceList() {
 
         final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);

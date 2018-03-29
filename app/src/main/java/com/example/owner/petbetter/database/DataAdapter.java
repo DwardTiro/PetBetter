@@ -30,6 +30,7 @@ import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
 
 import java.io.IOException;
+import java.sql.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -2581,6 +2582,21 @@ public class DataAdapter {
 
     }
 
+    public void editService(long service_id, String service_name, float service_price){
+
+
+        ContentValues cv = new ContentValues();
+        cv.put("service_name", service_name);
+        cv.put("service_price", service_price);
+
+        String[] whereArgs= new String[]{String.valueOf(service_id)};
+        petBetterDb.update(SERVICE_TABLE,cv,"_id=?", whereArgs);
+        petBetterDb.close();
+
+
+    }
+
+
     public void editFacility(long _id, String faciName, String location, String hoursOpen,String hoursClose,
                             String contactInfo, float rating, String faciPhoto){
 
@@ -2758,7 +2774,7 @@ public class DataAdapter {
         String temp;
 
         //String sql = "SELECT * FROM " + FACI_TABLE + " WHERE vet_id = '" + veterinarian.getId() + "'";
-        String sql = "SELECT * FROM " + SERVICE_TABLE + " WHERE _id = '" + id + "'";
+        String sql = "SELECT * FROM " + SERVICE_TABLE + " WHERE faci_id = '" + id + "'";
         Cursor c = petBetterDb.rawQuery(sql, null);
 
         try{
@@ -2775,6 +2791,24 @@ public class DataAdapter {
         }catch(CursorIndexOutOfBoundsException cpe){
             return null;
         }
+    }
+
+    public ArrayList<Services> getServicesWithId(long id){
+        ArrayList<Services> results = new ArrayList<>();
+
+        String sql = "SELECT * FROM " + SERVICE_TABLE + " WHERE faci_id = '" + id + "' AND is_deleted = 0";
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()){
+        Services service = new Services(c.getInt(c.getColumnIndexOrThrow("_id")),
+                c.getLong(c.getColumnIndexOrThrow("faci_id")),
+                c.getString(c.getColumnIndexOrThrow("service_name")),
+                c.getFloat(c.getColumnIndexOrThrow("service_price")),
+                c.getInt(c.getColumnIndexOrThrow("is_deleted")));
+        results.add(service);}
+
+        c.close();
+        return results;
     }
 
     public long addVet(int vetId, int userId, int rating){
