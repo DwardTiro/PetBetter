@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -57,18 +58,23 @@ public class EditVetServicesActivity extends AppCompatActivity {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_add_services);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.viewPostToolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        final TextView activityTitle = (TextView) findViewById(R.id.activity_title);
+        activityTitle.setText("Edit Facility Services");
+
         currentServices = (LinearLayout) findViewById(R.id.serviceContainer);
         Button addField = (Button) findViewById(R.id.addFieldButton);
         newTopic = (ImageButton) findViewById(R.id.topicNewPost);
-        editServicesTitle = (TextView) findViewById(R.id.labelActivity);
+        //editServicesTitle = (TextView) findViewById(R.id.labelActivity);
         saveChangesButton = (Button) findViewById(R.id.addFacilityButton);
         newTopic.setVisibility(View.GONE);
         addField.setVisibility(View.GONE);
-        final TextView activityTitle = (TextView) findViewById(R.id.activity_title);
-        activityTitle.setText("Edit Facility Services");
+
         saveChangesButton.setText("Save Changes");
 
-        editServicesTitle.setVisibility(View.GONE);
+        //editServicesTitle.setVisibility(View.GONE);
 
         serviceList = new ArrayList<>();
         serviceIds = new ArrayList<>();

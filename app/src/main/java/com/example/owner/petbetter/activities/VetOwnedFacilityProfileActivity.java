@@ -46,6 +46,7 @@ public class VetOwnedFacilityProfileActivity extends AppCompatActivity{
     private RecyclerView serviceRecyclerView;
     private Button editFacilityProfileButton;
     private Button editServicesButton;
+    private Button addServicesButton;
     private Facility faciItem;
 
 
@@ -85,6 +86,7 @@ public class VetOwnedFacilityProfileActivity extends AppCompatActivity{
         serviceRecyclerView = (RecyclerView) findViewById(R.id.servicesRecyclerView);
         editFacilityProfileButton = (Button) findViewById(R.id.editFacilityButton);
         editServicesButton = (Button) findViewById(R.id.editServicesButton);
+        addServicesButton = (Button) findViewById(R.id.addServicesButton);
 
         editFacilityProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,6 +101,14 @@ public class VetOwnedFacilityProfileActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(VetOwnedFacilityProfileActivity.this, com.example.owner.petbetter.activities.EditVetServicesActivity.class);
+                intent.putExtra("thisClinic", new Gson().toJson(faciItem));
+                startActivity(intent);
+            }
+        });
+        addServicesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(VetOwnedFacilityProfileActivity.this, com.example.owner.petbetter.activities.AddServicesActivity.class);
                 intent.putExtra("thisClinic", new Gson().toJson(faciItem));
                 startActivity(intent);
             }

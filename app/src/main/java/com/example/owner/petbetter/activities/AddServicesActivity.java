@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.owner.petbetter.HerokuService;
@@ -62,6 +64,8 @@ public class AddServicesActivity extends AppCompatActivity {
     private int vetId;
     private ImageButton topicNewPost;
 
+    private boolean insideEditFacility = false;
+
     private LinearLayout newServices;
     private Button addField;
 
@@ -72,20 +76,35 @@ public class AddServicesActivity extends AppCompatActivity {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_add_services);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.viewPostToolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        final TextView activityTitle = (TextView) findViewById(R.id.activity_title);
+        activityTitle.setText("Add Facility Services");
+
         newServices = (LinearLayout) findViewById(R.id.serviceContainer);
         addField = (Button) findViewById(R.id.addFieldButton);
-
-        Bundle extras = getIntent().getExtras();
-        faciName = extras.getString("bldg_name");
-        openTime = extras.getString("hours_open");
-        closeTime = extras.getString("hours_close");
-        phoneNum = extras.getString("phone_num");
-        address = extras.getString("address");
-        image = extras.getString("image");
-        longitude = extras.getDouble("longitude");
-        latitude = extras.getDouble("latitude");
         topicNewPost = (ImageButton) findViewById(R.id.topicNewPost);
         topicNewPost.setVisibility(View.GONE);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras.getString("thisClinic") == null) {
+            insideEditFacility = false;
+            faciName = extras.getString("bldg_name");
+            openTime = extras.getString("hours_open");
+            closeTime = extras.getString("hours_close");
+            phoneNum = extras.getString("phone_num");
+            address = extras.getString("address");
+            image = extras.getString("image");
+            longitude = extras.getDouble("longitude");
+            latitude = extras.getDouble("latitude");
+        } else {
+            System.out.println("Here in add services");
+            String jsonMyObject = extras.getString("thisClinic");
+            Facility editingFacility = new Gson().fromJson(jsonMyObject, Facility.class);
+            faciId = editingFacility.getId();
+            insideEditFacility = true;
+        }
 
         service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         systemSessionManager = new SystemSessionManager(this);
@@ -99,7 +118,6 @@ public class AddServicesActivity extends AppCompatActivity {
         user = getUser(email);
         vetId = getVeterinarian((int) user.getUserId()).getId();
 
-        Toast.makeText(this, faciName, Toast.LENGTH_SHORT).show();
 
         createNewEditText();
         addField.setOnClickListener(new View.OnClickListener() {
@@ -119,12 +137,11 @@ public class AddServicesActivity extends AppCompatActivity {
         */
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View serviceView = inflater.inflate(R.layout.fragment_new_service_field, null);
-        if(newServices.getChildCount() > 0)
+        if (newServices.getChildCount() > 0)
             newServices.addView(serviceView, newServices.getChildCount());
-        else if(newServices.getChildCount() == 1){
+        else if (newServices.getChildCount() == 1) {
             newServices.addView(serviceView, 1);
-        }
-        else
+        } else
             newServices.addView(serviceView, 0);
     }
 
@@ -203,9 +220,11 @@ public class AddServicesActivity extends AppCompatActivity {
         ArrayList<Services> servicesList = new ArrayList<>();
 
 
-        faciId = generateNewFacilityID();
-        addFacilitytoDB((int) faciId, faciName, address, openTime, closeTime, phoneNum, image);
-        syncFacilityChanges();
+        if (!insideEditFacility) {
+            faciId = generateNewFacilityID();
+            addFacilitytoDB((int) faciId, faciName, address, openTime, closeTime, phoneNum, image);
+            syncFacilityChanges();
+        }
 
         for (int i = 0; i < newServices.getChildCount(); i++) {
             priceField = (EditText) (newServices.getChildAt(i).findViewById(R.id.servicePriceField));
@@ -496,9 +515,16 @@ public class AddServicesActivity extends AppCompatActivity {
                         public void onResponse(Call<ArrayList<Services>> call, Response<ArrayList<Services>> response) {
                             if (response.isSuccessful()) {
                                 setServices(response.body());
-                                Intent intent = new Intent(AddServicesActivity.this, com.example.owner.petbetter.activities.VeterinarianHomeActivity.class);
-                                startActivity(intent);
-                                finish();
+                                if (!insideEditFacility) {
+                                    Intent intent = new Intent(AddServicesActivity.this, com.example.owner.petbetter.activities.VeterinarianHomeActivity.class);
+                                    startActivity(intent);
+                                    Toast.makeText(AddServicesActivity.this, "Facility Successfully added.", Toast.LENGTH_LONG).show();
+                                    finish();
+                                }
+                                else{
+                                    Toast.makeText(AddServicesActivity.this, "New Services Successfully added.", Toast.LENGTH_LONG).show();
+                                    finish();
+                                }
 
                             }
                         }
@@ -690,5 +716,8 @@ public class AddServicesActivity extends AppCompatActivity {
 
     }
 
+    public void viewPostBackButtonClicked(View view) {
+        finish();
+    }
 
 }
