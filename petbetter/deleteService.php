@@ -2,7 +2,7 @@
 
 require 'init.php';
 
-$service_id = $_POST['service_id'];
+$service_id = $_POST['_id'];
 
 $response = array(); 
 

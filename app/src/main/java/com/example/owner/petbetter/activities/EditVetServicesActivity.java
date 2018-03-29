@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -49,6 +50,7 @@ public class EditVetServicesActivity extends AppCompatActivity {
     private ImageButton newTopic;
     private Button saveChangesButton;
     private ArrayList<Long> serviceIds;
+    private int targetIndex;
 
     private LinearLayout currentServices;
 
@@ -184,8 +186,32 @@ public class EditVetServicesActivity extends AppCompatActivity {
     }
 
     public void deleteRow(View view){
+
+
+        //int index = ((ViewGroup) ((View) view.getParent())).indexOfChild();
+        targetIndex = ((ViewGroup) view.getParent().getParent()).indexOfChild((View) view.getParent());
+        System.out.println(serviceList.get(targetIndex).getServiceName());
+
+        deleteService(serviceList.get(targetIndex).getId());
         currentServices.removeView((View) view.getParent());
-        System.out.println("ID of removed service" + (view.getParent()).toString());
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final Call<Void> call = service.deleteService(serviceList.get(targetIndex).getId());
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()){
+                    serviceList.remove(targetIndex);
+                    Toast.makeText(EditVetServicesActivity.this, "Service removed successfully.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+            }
+        });
+
 
     }
     private void initializeDatabase() {
@@ -198,6 +224,17 @@ public class EditVetServicesActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+    }
+
+    private long deleteService(long service_id){
+        try{
+            petBetterDb.openDatabase();
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        long result = petBetterDb.deleteService(service_id);
+        petBetterDb.closeDatabase();
+        return result;
     }
 
     public void editService(long service_id, String service_name, float service_price){

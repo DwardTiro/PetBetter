@@ -2485,6 +2485,18 @@ public class DataAdapter {
         return result;
     }
 
+    public long deleteService(long service_id){
+        ContentValues cv = new ContentValues();
+        cv.put("is_deleted",1);
+        cv.put("is_synced", 1);
+
+        String[] whereArgs = new String[]{String.valueOf(service_id)};
+        long result = petBetterDb.update(SERVICE_TABLE,cv,"_id=?", whereArgs);
+        petBetterDb.close();
+
+        return result;
+    }
+
     public long deletePostRep(long postRepId){
         ContentValues cv = new ContentValues();
         cv.put("is_deleted",1);
