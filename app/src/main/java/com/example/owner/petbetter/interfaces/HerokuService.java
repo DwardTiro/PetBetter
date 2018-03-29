@@ -26,6 +26,7 @@ import java.util.ArrayList;
 
 import okhttp3.Request;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
@@ -178,8 +179,9 @@ public interface HerokuService {
     Call<ArrayList<Follower>> getAllowedFollowers(@Field("topic_id") long topicId);
 
     @POST("addUser.php")
-    Call<Void> addUser(@Body RequestBody user);@FormUrlEncoded
+    Call<ResponseBody> addUser(@Body RequestBody user);
 
+    @FormUrlEncoded
     @POST("getServicesWithFaciID.php")
     Call<ArrayList<Services>> getServicesWithFaciID(@Field("faci_id") long faci_id);
 

@@ -27,10 +27,12 @@ import com.example.owner.petbetter.database.DataAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -332,19 +334,37 @@ public class VeterinarianAddInfoActivity extends AppCompatActivity {
         System.out.println(jsonArray);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
 
-        Call<Void> call = service.addUser(body);
-        call.enqueue(new Callback<Void>() {
+        Call<ResponseBody> call = service.addUser(body);
+        call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                System.out.println("User added to server successfully");
-                getUserFromDB();
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                try {
+                    String strResponse = response.body().string();
+                    System.out.println("Server response: "+strResponse);
+
+                    if(strResponse.equals("User registered")){
+                        System.out.println("User added to server successfully");
+                        getUserFromDB();
+                    }
+                    else{
+                        Toast.makeText(VeterinarianAddInfoActivity.this, "Email is already taken", Toast.LENGTH_SHORT ).show();
+                        //strResponse.equals("");
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(VeterinarianAddInfoActivity.this, "Email is already taken", Toast.LENGTH_SHORT ).show();
+                }
+
+
 
                 //dataSync(12);
 
             }
 
             @Override
-            public void onFailure(Call<Void> call, Throwable t) {
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
                 System.out.println("FAILED TO ADD USER TO SERVER");
             }
         });

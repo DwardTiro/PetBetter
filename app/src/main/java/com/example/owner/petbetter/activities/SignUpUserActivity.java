@@ -20,6 +20,8 @@ import com.example.owner.petbetter.classes.User;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.IOException;
+
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -97,56 +99,72 @@ public class SignUpUserActivity extends AppCompatActivity {
 
     public void signUpNext(View v) {
         Bundle extras = getIntent().getExtras();
-        int userType = extras.getInt("USERTYPE");
+        final int userType = extras.getInt("USERTYPE");
         //still fixing function wont go here yet
-        if (userType == 1) {
-            Intent intent = new Intent(SignUpUserActivity.this,
-                    com.example.owner.petbetter.activities.VeterinarianAddInfoActivity.class);
-            Bundle vetExtras = new Bundle();
-            vetExtras.putInt("user_type", userType);
-            vetExtras.putString("first_name", signupFirstName.getText().toString());
-            vetExtras.putString("last_name", signupLastName.getText().toString());
-            vetExtras.putString("email_address", signupEmail.getText().toString());
-            vetExtras.putString("password", signupPassword.getEditText().getText().toString());
-            intent.putExtras(vetExtras);
-            startActivity(intent);
 
-        } else {
-            service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
 
-            User user = new User(signupFirstName.getText().toString(), signupLastName.getText().toString(),
-                    signupEmail.getText().toString(), signupPassword.getEditText().getText().toString(), userType, 0);
+        User user = new User(signupFirstName.getText().toString(), signupLastName.getText().toString(),
+                signupEmail.getText().toString(), signupPassword.getEditText().getText().toString(), userType, 0);
 
-            Gson gson = new GsonBuilder().serializeNulls().create();
-            String jsonArray = gson.toJson(user);
-            System.out.println(jsonArray);
-            RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String jsonArray = gson.toJson(user);
+        System.out.println(jsonArray);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
 
-            Call<Void> call = service.addUser(body);
-            call.enqueue(new Callback<Void>() {
-                @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {
-                    if(response.isSuccessful()){
-                        System.out.println("User added to server successfully");
-                        Intent intent = new Intent(
-                                SignUpUserActivity.this,
-                                com.example.owner.petbetter.activities.MainActivity.class
-                        );
-                        startActivity(intent);
-                    }
-                    else{
+        Call<ResponseBody> call = service.addUser(body);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if(response.isSuccessful()){
+                    try {
+                        String strResponse = response.body().string();
+                        System.out.println("Server response: "+strResponse);
+
+                        if(strResponse.equals("User registered")){
+                            if(userType==1){
+                                Intent intent = new Intent(SignUpUserActivity.this,
+                                        com.example.owner.petbetter.activities.VeterinarianAddInfoActivity.class);
+                                Bundle vetExtras = new Bundle();
+                                vetExtras.putInt("user_type", userType);
+                                vetExtras.putString("first_name", signupFirstName.getText().toString());
+                                vetExtras.putString("last_name", signupLastName.getText().toString());
+                                vetExtras.putString("email_address", signupEmail.getText().toString());
+                                vetExtras.putString("password", signupPassword.getEditText().getText().toString());
+                                intent.putExtras(vetExtras);
+                                startActivity(intent);
+                            }
+                            if(userType==2){
+                                Intent intent = new Intent(
+                                        SignUpUserActivity.this,
+                                        com.example.owner.petbetter.activities.MainActivity.class);
+                                startActivity(intent);
+                            }
+
+                        }
+                        else{
+                            Toast.makeText(SignUpUserActivity.this, "Email is already taken", Toast.LENGTH_SHORT ).show();
+                            //strResponse.equals("");
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
                         Toast.makeText(SignUpUserActivity.this, "Email is already taken", Toast.LENGTH_SHORT ).show();
                     }
-                }
 
-                @Override
-                public void onFailure(Call<Void> call, Throwable t) {
-                    System.out.println("FAILED TO ADD USER TO SERVER");
+                }
+                else{
                     Toast.makeText(SignUpUserActivity.this, "Email is already taken", Toast.LENGTH_SHORT ).show();
                 }
-            });
-        }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                System.out.println("FAILED TO ADD USER TO SERVER");
+                Toast.makeText(SignUpUserActivity.this, "Email is already taken", Toast.LENGTH_SHORT ).show();
+            }
+        });
     }
 
     public void signUpBackButtonClicked(View view) {
