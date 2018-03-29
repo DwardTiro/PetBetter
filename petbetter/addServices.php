@@ -7,6 +7,7 @@ require 'init.php';
 $servicelist = json_decode(file_get_contents('php://input'),true);
 //$sql = "SELECT * FROM users WHERE email = ? AND password = ?";
 //$sql = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
+$pending = array(); 
 
 //$result = mysqli_query($con, $sql);
 
@@ -29,6 +30,81 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 			break;
 		}
 		
+	}
+	
+	if($stmt = $mysqli->prepare("SELECT _id FROM services WHERE is_deleted = 0 AND faci_id = ?")){
+		$stmt->bind_param("s", $servicelist[0]['faci_id']);
+		$stmt->execute();
+		$stmt->bind_result($_id);
+		$stmt->store_result();
+	
+		if($stmt->fetch()){
+			
+			do{
+				array_push($pending, array('_id'=>$_id));
+			}while($stmt->fetch());
+			
+			$stmt->close();
+			
+			$n = count($pending);
+			//echo $n;
+			$i = 0;
+			$ptype = 3;
+			$papproved = 0;
+			//echo $vetlist[$i]['_id'];
+			while($i<$n){
+				if($stmt = $mysqli->prepare("SELECT 1 FROM pending WHERE foreign_id = ?")){
+					$stmt->bind_param("s", $pending[$i]['_id']);
+					$stmt->execute();
+					$stmt->bind_result($ctr);
+					$stmt->store_result();
+					//$stmt->bind_result($ctr);
+					
+					if($stmt->fetch()){
+						//throw new Exception('Email already taken');
+						$i = $i + 1;
+					}
+					else{
+						$stmt->close();
+						if($stmt = $mysqli->prepare("INSERT INTO pending (foreign_id, type, is_approved) VALUES (?,?,?)")){
+							$stmt->bind_param("sss", $pending[$i]['_id'], $ptype, $papproved);
+							$stmt->execute();
+							$stmt->close();
+							$i = $i + 1;
+						}
+						else{
+							echo 'Failed to add to db';
+							break;
+						}
+					}
+					
+					
+				}
+			}
+			
+			/*
+			while($i<$n){
+				
+				if($stmt = $mysqli->prepare("INSERT INTO pending (foreign_id, type, is_approved) VALUES (?,?,?)")){
+					$stmt->bind_param("sss", $pending[$i]['_id'], 3, 0);
+					$stmt->execute();
+					$stmt->close();
+					$i = $i + 1;
+				}
+				else{
+					echo 'Failed to add to db';
+					break;
+				}
+				
+			}
+			*/
+		}
+		else{
+			
+			$stmt->close();
+			echo 'SQL Query Error';
+		}
+
 	}
 	
 		

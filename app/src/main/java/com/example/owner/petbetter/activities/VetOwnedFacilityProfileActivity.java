@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
@@ -18,6 +19,7 @@ import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.adapters.ServiceAdapter;
 import com.example.owner.petbetter.classes.Facility;
+import com.example.owner.petbetter.classes.Pending;
 import com.example.owner.petbetter.classes.Services;
 import com.google.gson.Gson;
 
@@ -48,6 +50,8 @@ public class VetOwnedFacilityProfileActivity extends AppCompatActivity{
     private Button editServicesButton;
     private Button addServicesButton;
     private Facility faciItem;
+    private ArrayList<Services> serviceList;
+    private ImageView verifiedServices;
 
 
     @Override
@@ -87,6 +91,8 @@ public class VetOwnedFacilityProfileActivity extends AppCompatActivity{
         editFacilityProfileButton = (Button) findViewById(R.id.editFacilityButton);
         editServicesButton = (Button) findViewById(R.id.editServicesButton);
         addServicesButton = (Button) findViewById(R.id.addServicesButton);
+        verifiedServices = (ImageView) findViewById(R.id.verifiedServices);
+        verifiedServices.setVisibility(View.VISIBLE);
 
         editFacilityProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -142,16 +148,19 @@ public class VetOwnedFacilityProfileActivity extends AppCompatActivity{
 
     }
 
+
+
     public void getServiceList() {
 
         final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         final Call<ArrayList<Services>> call = service.getServicesWithFaciID(faciItem.getId());
+
         call.enqueue(new Callback<ArrayList<Services>>() {
             @Override
             public void onResponse(Call<ArrayList<Services>> call, Response<ArrayList<Services>> response) {
                 if (response.isSuccessful()) {
                     if (response.body().size() > 0) {
-
+                        serviceList = response.body();
                         serviceRecyclerView.setVisibility(View.VISIBLE);
                         noServicesTextView.setVisibility(View.GONE);
                         serviceRecyclerView.setAdapter(new ServiceAdapter(VetOwnedFacilityProfileActivity.this, getLayoutInflater(), response.body()));
@@ -161,6 +170,26 @@ public class VetOwnedFacilityProfileActivity extends AppCompatActivity{
                         serviceRecyclerView.setItemAnimator(new DefaultItemAnimator());
                         serviceRecyclerView.setHasFixedSize(true);
                         serviceRecyclerView.setLayoutManager(new LinearLayoutManager(VetOwnedFacilityProfileActivity.this));
+
+
+                        for(Services services:serviceList){
+                            System.out.println("service id "+services.getId());
+                            final Call<ArrayList<Pending>> call2 = service.getPendingFacility(services.getId(), 3);
+                            call2.enqueue(new Callback<ArrayList<Pending>>() {
+                                @Override
+                                public void onResponse(Call<ArrayList<Pending>> call, Response<ArrayList<Pending>> response) {
+
+                                }
+
+                                @Override
+                                public void onFailure(Call<ArrayList<Pending>> call, Throwable t) {
+
+                                    verifiedServices.setVisibility(View.INVISIBLE);
+                                }
+                            });
+                        }
+
+
                     } else {
                         System.out.println("Went here inside else bruh");
                         serviceRecyclerView.setVisibility(View.GONE);

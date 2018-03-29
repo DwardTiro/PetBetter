@@ -97,6 +97,7 @@ public class PendingAdapter extends RecyclerView.Adapter<PendingAdapter.PendingV
             }
         }
         if(thisPending.getType()==3){
+            System.out.println("PENDING ID "+thisPending.getForeignId());
             Services thisService = getServiceWithId(thisPending.getForeignId());
             System.out.println("SERVICE ID "+thisService.getFaciId());
             Facility facility = getFacility(thisService.getFaciId());

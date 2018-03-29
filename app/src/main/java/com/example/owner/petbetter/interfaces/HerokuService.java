@@ -130,6 +130,10 @@ public interface HerokuService {
     Call<ArrayList<Pending>> getPendingByUser(@Field("foreign_id") long foreignId);
 
     @FormUrlEncoded
+    @POST("getPendingFacility.php")
+    Call<ArrayList<Pending>> getPendingFacility(@Field("foreign_id") long foreignId, @Field("type") int type);
+
+    @FormUrlEncoded
     @POST("editPending.php")
     Call<Void> editPending(@Field("foreign_id") long foreignId, @Field("specialty") String specialty);
 

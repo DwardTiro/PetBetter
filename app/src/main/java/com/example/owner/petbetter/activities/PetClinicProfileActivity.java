@@ -22,6 +22,7 @@ import com.example.owner.petbetter.adapters.ServiceAdapter;
 import com.example.owner.petbetter.classes.Bookmark;
 import com.example.owner.petbetter.classes.Facility;
 import com.example.owner.petbetter.classes.LocationMarker;
+import com.example.owner.petbetter.classes.Pending;
 import com.example.owner.petbetter.classes.Rating;
 import com.example.owner.petbetter.classes.Services;
 import com.example.owner.petbetter.classes.User;
@@ -73,6 +74,11 @@ public class PetClinicProfileActivity extends AppCompatActivity {
     private TextView confinementTextView;
     private TextView homeServiceTextView;
     private TextView surgeryTextView;
+    private ImageView verifiedServices;
+    private ArrayList<Services> serviceList;
+    private int pSize;
+    private int pendingCtr;
+    private boolean isVerified = true;
 
     @Override
     public void onCreate(Bundle savedInstance) {
@@ -93,6 +99,8 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         surgeryTextView = (TextView) findViewById(R.id.surgeryTextView);
         noServicesTextView = (TextView) findViewById(R.id.noServicesTextView);
         serviceRecyclerView = (RecyclerView) findViewById(R.id.servicesRecyclerView);
+        verifiedServices = (ImageView) findViewById(R.id.verifiedServices);
+        verifiedServices.setVisibility(View.VISIBLE);
 
 
         petClinicRateButton = (Button) findViewById(R.id.rateClinicButton);
@@ -117,7 +125,6 @@ public class PetClinicProfileActivity extends AppCompatActivity {
 
         email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
         user = getUser(email);
-
 
         final String jsonMyObject;
         Bundle extras = getIntent().getExtras();
@@ -208,6 +215,7 @@ public class PetClinicProfileActivity extends AppCompatActivity {
             Glide.with(PetClinicProfileActivity.this).load(newFileName).error(R.drawable.app_icon_yellow).into(clinicProfileImage);
         }
 
+
         getServiceList();
         syncRatingChanges();
 
@@ -226,12 +234,14 @@ public class PetClinicProfileActivity extends AppCompatActivity {
 
         final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         final Call<ArrayList<Services>> call = service.getServicesWithFaciID(faciItem.getId());
+        pendingCtr = 0;
+
         call.enqueue(new Callback<ArrayList<Services>>() {
             @Override
             public void onResponse(Call<ArrayList<Services>> call, Response<ArrayList<Services>> response) {
                 if (response.isSuccessful()) {
                     if (response.body().size() > 0) {
-
+                        serviceList = response.body();
                         serviceRecyclerView.setVisibility(View.VISIBLE);
                         noServicesTextView.setVisibility(View.GONE);
                         serviceRecyclerView.setAdapter(new ServiceAdapter(PetClinicProfileActivity.this, getLayoutInflater(), response.body()));
@@ -241,6 +251,26 @@ public class PetClinicProfileActivity extends AppCompatActivity {
                         serviceRecyclerView.setItemAnimator(new DefaultItemAnimator());
                         serviceRecyclerView.setHasFixedSize(true);
                         serviceRecyclerView.setLayoutManager(new LinearLayoutManager(PetClinicProfileActivity.this));
+
+
+                        for(Services services:serviceList){
+                            System.out.println("service id "+services.getId());
+                            final Call<ArrayList<Pending>> call2 = service.getPendingFacility(services.getId(), 3);
+                            call2.enqueue(new Callback<ArrayList<Pending>>() {
+                                @Override
+                                public void onResponse(Call<ArrayList<Pending>> call, Response<ArrayList<Pending>> response) {
+
+                                }
+
+                                @Override
+                                public void onFailure(Call<ArrayList<Pending>> call, Throwable t) {
+
+                                    verifiedServices.setVisibility(View.INVISIBLE);
+                                }
+                            });
+                        }
+
+
                     } else {
                         System.out.println("Went here inside else bruh");
                         serviceRecyclerView.setVisibility(View.GONE);

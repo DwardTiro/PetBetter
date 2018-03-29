@@ -2786,9 +2786,10 @@ public class DataAdapter {
         String temp;
 
         //String sql = "SELECT * FROM " + FACI_TABLE + " WHERE vet_id = '" + veterinarian.getId() + "'";
-        String sql = "SELECT * FROM " + SERVICE_TABLE + " WHERE faci_id = '" + id + "'";
+        String sql = "SELECT * FROM " + SERVICE_TABLE + " WHERE _id = '" + id + "'";
         Cursor c = petBetterDb.rawQuery(sql, null);
 
+        System.out.println("HI PAR "+id);
         try{
             c.moveToFirst();
 
@@ -2802,6 +2803,7 @@ public class DataAdapter {
             return result;
         }catch(CursorIndexOutOfBoundsException cpe){
             return null;
+
         }
     }
 
@@ -2809,6 +2811,7 @@ public class DataAdapter {
         ArrayList<Services> results = new ArrayList<>();
 
         String sql = "SELECT * FROM " + SERVICE_TABLE + " WHERE faci_id = '" + id + "' AND is_deleted = 0";
+        //String sql = "SELECT * FROM " + SERVICE_TABLE + " WHERE faci_id = '" + id + "'";
         Cursor c = petBetterDb.rawQuery(sql, null);
 
         while(c.moveToNext()){
