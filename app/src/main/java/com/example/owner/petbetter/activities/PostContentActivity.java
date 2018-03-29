@@ -147,8 +147,6 @@ public class PostContentActivity extends AppCompatActivity {
 
         postScrollView.smoothScrollTo(0, 0);
 
-        bookMarkPost.setImageResource(R.drawable.ic_bookmark_border_white_24dp);
-
         refreshPostContent.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -190,6 +188,8 @@ public class PostContentActivity extends AppCompatActivity {
 
         postUser = getPostUser(postItem.getUserId());
         System.out.println("POSTITEM ID IS: " + postItem.getId());
+
+        bookMarkPost.setImageResource(R.drawable.ic_bookmark_border_white_24dp);
 
         int voteCount = getVoteCount((int) postItem.getId(), 1);
         upCounter.setText(String.valueOf(voteCount));

@@ -110,6 +110,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        //currFragment = 1;
+
 
         menuBar = (Toolbar) findViewById(R.id.menu_bar);
         vetButton = (Button) findViewById(R.id.vetButton);
@@ -170,6 +172,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         vetButtonClicked(this.findViewById(android.R.id.content));
 
+
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -198,21 +201,24 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     protected void onResume(){
         super.onResume();
 
+        if(currFragment==1){
+            vetButtonClicked(this.findViewById(android.R.id.content));
+        }
+        else{
+            petCareButtonClicked(this.findViewById(android.R.id.content));
+        }
+
         HomeActivity.this.registerReceiver(this.notifReceiver, new IntentFilter("com.example.ACTION_LOGOUT"));
 
-        systemSessionManager = new SystemSessionManager(this);
-        if(systemSessionManager.checkLogin())
-            finish();
 
-        initializeDatabase();
-        vetButtonClicked(this.findViewById(android.R.id.content));
-
+        //initializeDatabase();
     }
+    /*
     @Override
     protected void onRestart(){
         super.onRestart();
         recreate();
-    }
+    }*/
 
     public void hideItems(){
         Menu menu = navigationView.getMenu();
