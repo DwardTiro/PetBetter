@@ -137,19 +137,22 @@ public class EditVetServicesActivity extends AppCompatActivity {
         editText.setLayoutParams(lparams);
         return editText;
         */
+
+
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View serviceView = inflater.inflate(R.layout.fragment_new_service_field, null);
-
-
-
         System.out.println("Service List size: "+ serviceList.size());
         for(int i =0; i<serviceList.size();i++){
+            final View serviceView = inflater.inflate(R.layout.fragment_new_service_field, null);
+
             currentServices.addView(serviceView, currentServices.getChildCount());
 
-            EditText serviceName = (EditText) findViewById(R.id.serviceNameField);
-            EditText servicePrice = (EditText) findViewById(R.id.servicePriceField);
+            EditText serviceName = (EditText) (currentServices.getChildAt(i).findViewById(R.id.serviceNameField));
+            EditText servicePrice = (EditText) (currentServices.getChildAt(i).findViewById(R.id.servicePriceField));
+
+            System.out.println("Service is: " +serviceList.get(i).getServiceName());
 
             serviceName.setText(serviceList.get(i).getServiceName());
+
             servicePrice.setText(Float.toString(serviceList.get(i).getServicePrice()));
         }
     }
@@ -182,7 +185,7 @@ public class EditVetServicesActivity extends AppCompatActivity {
 
     public void deleteRow(View view){
         currentServices.removeView((View) view.getParent());
-        System.out.println("ID of removed service" + ((View) view.getParent()).getId());
+        System.out.println("ID of removed service" + (view.getParent()).toString());
 
     }
     private void initializeDatabase() {
