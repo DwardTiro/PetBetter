@@ -19,6 +19,7 @@ import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.adapters.ServiceAdapter;
+import com.example.owner.petbetter.adapters.VetRowAdapter;
 import com.example.owner.petbetter.classes.Bookmark;
 import com.example.owner.petbetter.classes.Facility;
 import com.example.owner.petbetter.classes.LocationMarker;
@@ -26,6 +27,7 @@ import com.example.owner.petbetter.classes.Pending;
 import com.example.owner.petbetter.classes.Rating;
 import com.example.owner.petbetter.classes.Services;
 import com.example.owner.petbetter.classes.User;
+import com.example.owner.petbetter.classes.Veterinarian;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.google.gson.Gson;
@@ -79,6 +81,8 @@ public class PetClinicProfileActivity extends AppCompatActivity {
     private int pSize;
     private int pendingCtr;
     private boolean isVerified = true;
+    private ArrayList<Veterinarian> vetList;
+    private RecyclerView vetRecyclerView;
 
     @Override
     public void onCreate(Bundle savedInstance) {
@@ -101,6 +105,7 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         serviceRecyclerView = (RecyclerView) findViewById(R.id.servicesRecyclerView);
         verifiedServices = (ImageView) findViewById(R.id.verifiedServices);
         verifiedServices.setVisibility(View.VISIBLE);
+        vetRecyclerView = (RecyclerView) findViewById(R.id.vetRecyclerView);
 
 
         petClinicRateButton = (Button) findViewById(R.id.rateClinicButton);
@@ -217,6 +222,7 @@ public class PetClinicProfileActivity extends AppCompatActivity {
 
 
         getServiceList();
+        getVetList();
         syncRatingChanges();
 
         //Toast.makeText(this, "Facility's Name: "+faciItem.getFaciName() + ". Delete this toast. Just to help you see where vet variable is", Toast.LENGTH_LONG).show();
@@ -228,6 +234,46 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         item.setVisibility(View.GONE);
         item.setEnabled(false);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    public void getVetList() {
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final Call<ArrayList<Veterinarian>> call = service.getVetsByFacility(faciItem.getId());
+
+        call.enqueue(new Callback<ArrayList<Veterinarian>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Veterinarian>> call, Response<ArrayList<Veterinarian>> response) {
+                if (response.isSuccessful()) {
+                    if (response.body().size() > 0) {
+                        System.out.println("hi");
+                        vetList = response.body();
+                        vetRecyclerView.setVisibility(View.VISIBLE);
+                        vetRecyclerView.setAdapter(new VetRowAdapter(PetClinicProfileActivity.this,
+                                getLayoutInflater(), vetList));
+
+                        vetRecyclerView.setItemAnimator(new DefaultItemAnimator());
+                        vetRecyclerView.setHasFixedSize(true);
+                        vetRecyclerView.setLayoutManager(new LinearLayoutManager(PetClinicProfileActivity.this));
+
+
+
+                    } else {
+                        /*
+                        System.out.println("Went here inside else bruh");
+                        serviceRecyclerView.setVisibility(View.GONE);
+                        noServicesTextView.setVisibility(View.VISIBLE);
+                        */
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Veterinarian>> call, Throwable t) {
+
+            }
+        });
+
     }
 
     public void getServiceList() {

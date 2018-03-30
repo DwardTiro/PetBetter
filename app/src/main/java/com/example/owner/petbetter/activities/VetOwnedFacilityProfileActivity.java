@@ -18,9 +18,11 @@ import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.adapters.ServiceAdapter;
+import com.example.owner.petbetter.adapters.VetRowAdapter;
 import com.example.owner.petbetter.classes.Facility;
 import com.example.owner.petbetter.classes.Pending;
 import com.example.owner.petbetter.classes.Services;
+import com.example.owner.petbetter.classes.Veterinarian;
 import com.google.gson.Gson;
 
 import org.w3c.dom.Text;
@@ -52,6 +54,8 @@ public class VetOwnedFacilityProfileActivity extends AppCompatActivity{
     private Facility faciItem;
     private ArrayList<Services> serviceList;
     private ImageView verifiedServices;
+    private ArrayList<Veterinarian> vetList;
+    private RecyclerView vetRecyclerView;
 
 
     @Override
@@ -88,6 +92,7 @@ public class VetOwnedFacilityProfileActivity extends AppCompatActivity{
         facilityCloseTime.setText(faciItem.getHoursClose());
         noServicesTextView = (TextView) findViewById(R.id.noServicesTextView);
         serviceRecyclerView = (RecyclerView) findViewById(R.id.servicesRecyclerView);
+        vetRecyclerView = (RecyclerView) findViewById(R.id.vetRecyclerView);
         editFacilityProfileButton = (Button) findViewById(R.id.editFacilityButton);
         editServicesButton = (Button) findViewById(R.id.editServicesButton);
         addServicesButton = (Button) findViewById(R.id.addServicesButton);
@@ -124,6 +129,7 @@ public class VetOwnedFacilityProfileActivity extends AppCompatActivity{
         facilityRating.setText(Float.toString(faciItem.getRating()));
 
         getServiceList();
+        getVetList();
     }
 
     @Override
@@ -131,6 +137,7 @@ public class VetOwnedFacilityProfileActivity extends AppCompatActivity{
         super.onResume();
         serviceRecyclerView = (RecyclerView) findViewById(R.id.servicesRecyclerView);
         getServiceList();
+        getVetList();
 
         facilityName = (TextView) findViewById(R.id.clinicName);
         facilityRating = (TextView) findViewById(R.id.clinicRatingNumerator);
@@ -148,6 +155,46 @@ public class VetOwnedFacilityProfileActivity extends AppCompatActivity{
 
     }
 
+
+    public void getVetList() {
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final Call<ArrayList<Veterinarian>> call = service.getVetsByFacility(faciItem.getId());
+
+        call.enqueue(new Callback<ArrayList<Veterinarian>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Veterinarian>> call, Response<ArrayList<Veterinarian>> response) {
+                if (response.isSuccessful()) {
+                    if (response.body().size() > 0) {
+                        System.out.println("hi");
+                        vetList = response.body();
+                        vetRecyclerView.setVisibility(View.VISIBLE);
+                        vetRecyclerView.setAdapter(new VetRowAdapter(VetOwnedFacilityProfileActivity.this,
+                                getLayoutInflater(), vetList));
+
+                        vetRecyclerView.setItemAnimator(new DefaultItemAnimator());
+                        vetRecyclerView.setHasFixedSize(true);
+                        vetRecyclerView.setLayoutManager(new LinearLayoutManager(VetOwnedFacilityProfileActivity.this));
+
+
+
+                    } else {
+                        /*
+                        System.out.println("Went here inside else bruh");
+                        serviceRecyclerView.setVisibility(View.GONE);
+                        noServicesTextView.setVisibility(View.VISIBLE);
+                        */
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Veterinarian>> call, Throwable t) {
+
+            }
+        });
+
+    }
 
 
     public void getServiceList() {

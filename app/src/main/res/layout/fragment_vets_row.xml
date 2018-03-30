@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tvVetRow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@drawable/post_border"
+        android:gravity="center_horizontal"
+        android:paddingBottom="3dp"
+        android:paddingTop="3dp"
+        android:text="Service text 1"
+        android:textSize="15sp"
+        />
+
+
+</LinearLayout>

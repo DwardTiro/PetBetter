@@ -3,44 +3,48 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginEnd="10dp"
-    android:background="@drawable/rounded_bg_corner"
-    android:paddingTop="5dp"
-    android:paddingBottom="10dp">
+    android:layout_marginStart="10dp"
+    android:background="@drawable/rounded_bg_corner_first_item">
 
     <RelativeLayout
         android:id="@+id/topContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/deep_turquoise"
+        android:background="@color/xanadu"
         android:paddingBottom="5dp">
 
         <ImageView
-            android:id="@+id/locationLogo"
+            android:id="@+id/logo"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="7dp"
-            android:background="@color/deep_turquoise"
-            android:src="@drawable/ic_local_hospital_white_24dp" />
+            android:background="@color/xanadu"
+            android:src="@drawable/ic_school_white_24dp" />
 
         <TextView
-            android:id="@+id/addressTextId"
+            android:id="@+id/TextId"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
+            android:paddingStart="5dp"
+            android:paddingEnd="0dp"
             android:layout_marginTop="2dp"
-            android:layout_toEndOf="@+id/locationLogo"
+            android:layout_toEndOf="@+id/logo"
+
             android:text="Attending Veterinarians"
-            android:textColor="@color/colorWhite"
+            android:textColor="@color/main_White"
             android:textSize="20sp"
             android:textStyle="bold" />
+
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/servicesRecyclerView"
+        android:id="@+id/vetRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/topContent"
         />
+
+
 
 </RelativeLayout>
