@@ -18,6 +18,7 @@ import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.adapters.ServiceAdapter;
+import com.example.owner.petbetter.adapters.VetListingAdapter;
 import com.example.owner.petbetter.adapters.VetRowAdapter;
 import com.example.owner.petbetter.classes.Facility;
 import com.example.owner.petbetter.classes.Pending;
@@ -56,6 +57,7 @@ public class VetOwnedFacilityProfileActivity extends AppCompatActivity{
     private ImageView verifiedServices;
     private ArrayList<Veterinarian> vetList;
     private RecyclerView vetRecyclerView;
+    private VetListingAdapter vetListingAdapter;
 
 
     @Override
@@ -169,6 +171,17 @@ public class VetOwnedFacilityProfileActivity extends AppCompatActivity{
                         System.out.println("hi");
                         vetList = response.body();
                         vetRecyclerView.setVisibility(View.VISIBLE);
+
+                        vetListingAdapter = new VetListingAdapter(VetOwnedFacilityProfileActivity.this, vetList, new VetListingAdapter.OnItemClickListener() {
+                            @Override public void onItemClick(Veterinarian item) {
+
+                                Intent intent = new Intent(VetOwnedFacilityProfileActivity.this, com.example.owner.petbetter.activities.VetProfileActivity.class);
+                                intent.putExtra("thisVet", new Gson().toJson(item));
+                                startActivity(intent);
+                            }
+                        });
+                        vetRecyclerView.setAdapter(vetListingAdapter);
+                        /*
                         vetRecyclerView.setAdapter(new VetRowAdapter(VetOwnedFacilityProfileActivity.this,
                                 getLayoutInflater(), vetList, new VetRowAdapter.OnItemClickListener() {
                             @Override
@@ -177,7 +190,7 @@ public class VetOwnedFacilityProfileActivity extends AppCompatActivity{
                                 intent.putExtra("thisVet", new Gson().toJson(item));
                                 startActivity(intent);
                             }
-                        }));
+                        }));*/
 
                         vetRecyclerView.setItemAnimator(new DefaultItemAnimator());
                         vetRecyclerView.setHasFixedSize(true);

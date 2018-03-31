@@ -125,7 +125,21 @@ public class NewTopicActivity extends AppCompatActivity {
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                dataSynced(9);
+
+                final Call<ArrayList<Topic>> call2 = service.getTopics();
+                call2.enqueue(new Callback<ArrayList<Topic>>() {
+                    @Override
+                    public void onResponse(Call<ArrayList<Topic>> call, Response<ArrayList<Topic>> response) {
+                        setTopics(response.body());
+                        dataSynced(9);
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<ArrayList<Topic>> call, Throwable t) {
+
+                    }
+                });
             }
 
             @Override
@@ -136,6 +150,18 @@ public class NewTopicActivity extends AppCompatActivity {
         });
     }
 
+
+    public long setTopics(ArrayList<Topic> topicList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setTopics(topicList);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
 
     private User getUser(String email){
 

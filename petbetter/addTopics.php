@@ -9,6 +9,7 @@ $topiclist = json_decode(file_get_contents('php://input'),true);
 //$sql = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
 
 //$result = mysqli_query($con, $sql);
+$topicids = array();
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
 	
@@ -22,13 +23,68 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 			$stmt->bind_param("sssss", $topiclist[$i]['creator_id'], $topiclist[$i]['topic_name'], $topiclist[$i]['topic_desc'], $topiclist[$i]['date_created'], $topiclist[$i]['is_deleted']);
 			$stmt->execute();
 			$stmt->close();
-			$i = $i + 1;
-		}
-		else{
-			//echo 'and here?';
-			break;
-		}
-		
+			
+			if($stmt = $mysqli->prepare("SELECT _id FROM topics WHERE date_created = ?")){
+				$stmt->bind_param("s", $topiclist[$i]['date_created']);
+				$stmt->execute();
+				$stmt->bind_result($_id);
+				$stmt->store_result();
+				
+			
+				if($stmt->fetch()){
+					
+					
+					do{
+						array_push($topicids, array('_id'=>$_id));
+					}while($stmt->fetch());
+					
+					$stmt->close();
+					
+					
+					if($stmt = $mysqli->prepare("INSERT INTO followers (topic_id, user_id, is_allowed) VALUES (?,?,1)")){
+						$stmt->bind_param("ss", $topicids[0]['_id'], $topiclist[$i]['creator_id']);
+						$stmt->execute();
+						$stmt->close();
+						echo 'Follower added';
+						
+						//$stmt->bind_result($_id, $first_name, $last_name, $mobile_num, $phone_num, $email,  $password, $age, $user_type);
+						//$stmt->store_result();
+					
+					/*
+						if($stmt->fetch()){
+							
+							$stmt->close();
+							//echo json_encode($response);
+							echo json_encode(array('_id'=>$_id,
+							'first_name'=>$first_name,
+							'last_name'=>$last_name,
+							'mobile_num'=>$mobile_num,
+							'phone_num'=>$phone_num,
+							'email'=>$email,
+							'password'=>$password,
+							'age'=>$age,
+							'user_type'=>$user_type));
+						}
+						else{
+							
+							$stmt->close();
+							echo 'SQL Query Error';
+						}
+						*/
+						//echo json_encode($stmt);
+						//echo json_encode(array('user'=>$response));
+					}
+					else{
+						echo 'SQL Query Error';
+					}
+				}
+				
+			}
+			else{
+				//echo 'and here?';
+				break;
+			}
+		$i = $i + 1;
 	}
 	
 		
@@ -112,5 +168,6 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 }
 echo json_encode($response)
 */
+}
 
 ?>

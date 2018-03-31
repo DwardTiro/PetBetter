@@ -34,6 +34,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 			$stmt->execute();
 			$stmt->close();
 			$i = $i + 1;
+			echo 'Insertion successful';
 		}
 		else{
 			//echo 'and here?';

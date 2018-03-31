@@ -331,6 +331,31 @@ public class TopicContentActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(currFragment==1&&check!=null){
+            if (check.getIsAllowed()==1){
+                syncPostChanges();
+                String jsonMyObject;
+                Bundle extras = getIntent().getExtras();
+                jsonMyObject = extras.getString("thisTopic");
+                topicItem = new Gson().fromJson(jsonMyObject, Topic.class);
+
+                topicContentName.setText(topicItem.getTopicName());
+                bundle = new Bundle();
+                bundle.putLong("topicId", topicItem.getId());
+            }
+        }
+        else if(currFragment == 2){
+            getTopicFollowers(topicItem.getId());
+        }
+        if(toolbarItem!=null&&(check==null||check.getIsAllowed()!=1)){
+            toolbarItem.setVisibility(View.GONE);
+        }
+        refreshTopicContent.setRefreshing(false);
+    }
+
     public void getTopicFollowers(long topicId){
         final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         final Call<ArrayList<Follower>> call2 = service.getAllowedFollowers(topicId);
@@ -359,7 +384,11 @@ public class TopicContentActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         toolbarItem = toolbar.findViewById(R.id.topicNewPost);
-        if(check==null||check.getIsAllowed()==0){
+
+        if(topicItem.getCreatorId() == user.getUserId()){
+            toolbarItem.setVisibility(View.VISIBLE);
+        }
+        else{
             toolbarItem.setVisibility(View.GONE);
         }
         return super.onCreateOptionsMenu(menu);
@@ -457,61 +486,39 @@ public class TopicContentActivity extends AppCompatActivity {
 
     public void syncPostChanges(){
 
-        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        //final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
-        System.out.println("WE HERE BOOIII");
-        ArrayList<Post> unsyncedPosts = getUnsyncedPosts();
+        FragmentNoResults fragmentpar = new FragmentNoResults();
+        getSupportFragmentManager().beginTransaction().replace(R.id.topic_container,fragmentpar)
+                .commitAllowingStateLoss();
 
-        Gson gson = new GsonBuilder().serializeNulls().create();
-        String jsonArray = gson.toJson(unsyncedPosts);
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
-        final Call<Void> call = service.addPosts(body);
-        call.enqueue(new Callback<Void>() {
+        final Call<ArrayList<Post>> call2 = service2.getPosts();
+        call2.enqueue(new Callback<ArrayList<Post>>() {
             @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if(response.isSuccessful()){
-                    System.out.println("POSTS ADDED YEY");
-                    dataSynced(9);
+            public void onResponse(Call<ArrayList<Post>> call, Response<ArrayList<Post>> response) {
+                if(response.isSuccessful()&&check!=null&&currFragment==1){
+                    if(check.getIsAllowed()==1){
+                        FragmentNoResults fragmentpar = new FragmentNoResults();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.topic_container,fragmentpar)
+                                .commitAllowingStateLoss();
 
-                    FragmentNoResults fragmentpar = new FragmentNoResults();
-                    getSupportFragmentManager().beginTransaction().replace(R.id.topic_container,fragmentpar)
-                            .commitAllowingStateLoss();
-
-                    final Call<ArrayList<Post>> call2 = service2.getPosts();
-                    call2.enqueue(new Callback<ArrayList<Post>>() {
-                        @Override
-                        public void onResponse(Call<ArrayList<Post>> call, Response<ArrayList<Post>> response) {
-                            if(response.isSuccessful()&&check!=null&&currFragment==1){
-                                if(check.getIsAllowed()==1){
-                                    FragmentNoResults fragmentpar = new FragmentNoResults();
-                                    getSupportFragmentManager().beginTransaction().replace(R.id.topic_container,fragmentpar)
-                                            .commitAllowingStateLoss();
-
-                                    setPosts(response.body());
-                                    fragment3 = new FragmentPosts();
-                                    fragment3.setArguments(bundle);
-                                    getSupportFragmentManager().beginTransaction().replace(R.id.topic_container,fragment3)
-                                            .commitAllowingStateLoss();
-                                    System.out.println("DO WE REPLACE FRAGMENT AT LEAST??");
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<ArrayList<Post>> call, Throwable t) {
-                            Log.d("onFailure", t.getLocalizedMessage());
-
-                        }
-                    });
-
+                        setPosts(response.body());
+                        fragment3 = new FragmentPosts();
+                        fragment3.setArguments(bundle);
+                        getSupportFragmentManager().beginTransaction().replace(R.id.topic_container,fragment3)
+                                .commitAllowingStateLoss();
+                        System.out.println("DO WE REPLACE FRAGMENT AT LEAST??");
+                    }
                 }
             }
 
             @Override
-            public void onFailure(Call<Void> call, Throwable t) {
+            public void onFailure(Call<ArrayList<Post>> call, Throwable t) {
                 Log.d("onFailure", t.getLocalizedMessage());
+
             }
         });
+
     }
 
     public long setPosts(ArrayList<Post> postList){

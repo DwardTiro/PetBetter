@@ -32,6 +32,7 @@ import com.example.owner.petbetter.activities.UserActivity;
 import com.example.owner.petbetter.adapters.CommunityAdapter;
 import com.example.owner.petbetter.adapters.MonitorAdapter;
 import com.example.owner.petbetter.classes.Facility;
+import com.example.owner.petbetter.classes.Follower;
 import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.Topic;
 import com.example.owner.petbetter.classes.User;
@@ -211,6 +212,79 @@ public class FragmentCommunity extends Fragment implements CheckUpdates, PlaceIn
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.detach(this).attach(this).commit();
         }
+        syncFollowerChanges();
+    }
+
+    public void syncFollowerChanges(){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        System.out.println("WE HERE BOO");
+        ArrayList<Follower> unsyncedFollowers = getUnsyncedFollowers();
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String jsonArray = gson.toJson(unsyncedFollowers);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+
+        final Call<Void> call = service.addFollowers(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    System.out.println("Followers ADDED YEY");
+                    dataSynced(3);
+
+                    final Call<ArrayList<Follower>> call2 = service2.getFollowers();
+                    call2.enqueue(new Callback<ArrayList<Follower>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<Follower>> call, Response<ArrayList<Follower>> response) {
+                            if(response.isSuccessful()){
+                                setFollowers(response.body());
+                                //get back here boys
+
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ArrayList<Follower>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
+    private ArrayList<Follower> getUnsyncedFollowers(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Follower> result = petBetterDb.getUnsyncedFollowers();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    public long setFollowers(ArrayList<Follower> followerList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setFollowers(followerList);
+        petBetterDb.closeDatabase();
+
+        return result;
     }
 
     private void initializeDatabase() {
