@@ -541,6 +541,7 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
         if(user.getUserType()==2){
             menu.findItem(R.id.community2).setVisible(false);
         }
+        menu.findItem(R.id.search_drawer).setVisible(false);
     }
 
     @Override
