@@ -28,8 +28,10 @@
                 <Spinner
                     android:id="@+id/spinnerFilter"
                     android:layout_toLeftOf="@+id/addTopicButton"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
                     android:spinnerMode="dropdown"/>
                 <Button
                     android:id="@+id/addTopicButton"
@@ -42,6 +44,7 @@
                     android:background="@color/medTurquoise"
                     android:textColor="@color/colorWhite"
                     style="?android:attr/borderlessButtonStyle"
+                    android:visibility="gone"
                     />
 
                 <ImageView
@@ -51,7 +54,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="10dp"
                     android:layout_centerVertical="true"
-                    android:src="@mipmap/ic_notifications_none_black_24dp"/>
+                    android:src="@drawable/ic_notifications_none_white_24dp"/>
             </RelativeLayout>
 
         </android.support.v7.widget.Toolbar>

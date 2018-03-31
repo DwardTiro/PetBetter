@@ -249,6 +249,24 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
             }
         });
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.nav_bar,menu);
+        hideItems();
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        int id = item.getItemId();
+
+        if(id == R.id.action_search){
+            Intent intent = new Intent(this, com.example.owner.petbetter.activities.SearchActivity.class);
+            startActivity(intent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     public void getVetChanges(){
 
@@ -326,6 +344,7 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
         if(user.getUserType()==2){
             menu.findItem(R.id.community2).setVisible(false);
         }
+        menu.findItem(R.id.search_drawer).setVisible(false);
     }
 
     @Override

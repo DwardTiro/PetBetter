@@ -226,6 +226,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         if(user.getUserType()==2){
             menu.findItem(R.id.community2).setVisible(false);
         }
+        menu.findItem(R.id.search_drawer).setVisible(false);
     }
 
     public void syncClinicChanges(){
@@ -477,7 +478,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public void commButtonClicked(View view){
     }
 
-    /*
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.nav_bar,menu);
@@ -496,7 +497,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
         return super.onOptionsItemSelected(item);
     }
-    */
+
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item){
@@ -529,7 +530,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
         }
         else if(id == R.id.user_profile){
-            Intent intent = new Intent(this, com.example.owner.petbetter.activities.UserProfileActivity.class);
+            Intent intent;
+            if(user.getUserType() == 1){
+                intent = new Intent(this, com.example.owner.petbetter.activities.VetUserProfileActivity.class);
+            }else
+                intent = new Intent(this, com.example.owner.petbetter.activities.UserProfileActivity.class);
+
             startActivity(intent);
         }
         else if(id == R.id.bookmarks){

@@ -12,6 +12,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -84,7 +85,7 @@ public class VetUserProfileActivity extends AppCompatActivity implements Navigat
         setSupportActionBar(toolbar);
 
         DrawerLayout nDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle nToggle = new ActionBarDrawerToggle(this, nDrawerLayout,toolbar, R.string.open, R.string.close);
+        ActionBarDrawerToggle nToggle = new ActionBarDrawerToggle(this, nDrawerLayout, toolbar, R.string.open, R.string.close);
         nDrawerLayout.setDrawerListener(nToggle);
         nToggle.syncState();
 
@@ -115,7 +116,7 @@ public class VetUserProfileActivity extends AppCompatActivity implements Navigat
         addTopicButton.setVisibility(View.GONE);
 
         systemSessionManager = new SystemSessionManager(this);
-        if(systemSessionManager.checkLogin())
+        if (systemSessionManager.checkLogin())
             finish();
 
         HashMap<String, String> userIn = systemSessionManager.getUserDetails();
@@ -130,7 +131,7 @@ public class VetUserProfileActivity extends AppCompatActivity implements Navigat
         textNavUser = (TextView) headerView.findViewById(R.id.textNavUser);
         textNavUser.setText(user.getName());
         imageViewDrawer = (ImageView) headerView.findViewById(R.id.imageViewDrawer);
-        if(user.getUserPhoto()!=null){
+        if (user.getUserPhoto() != null) {
 
             String newFileName = BASE_URL + user.getUserPhoto();
             System.out.println(newFileName);
@@ -144,13 +145,13 @@ public class VetUserProfileActivity extends AppCompatActivity implements Navigat
             imageViewDrawer.setVisibility(View.VISIBLE);
         }
 
-        vetName.setText(user.getName()+",");
+        vetName.setText(user.getName() + ",");
         vetEducation.setText(vet.getEducation());
         vetSpecialization.setText(vet.getSpecialty());
         vetRating.setText(String.valueOf(vet.getRating()));
         vetDetails.setText(vet.getProfileDesc());
         vetContactInformation.setText(user.getMobileNumber());
-        if(user.getUserPhoto()!=null){
+        if (user.getUserPhoto() != null) {
 
             String newFileName = BASE_URL + user.getUserPhoto();
             System.out.println(newFileName);
@@ -186,7 +187,7 @@ public class VetUserProfileActivity extends AppCompatActivity implements Navigat
 
     }
 
-    public void syncPendingChanges(){
+    public void syncPendingChanges() {
 
         final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
@@ -195,17 +196,17 @@ public class VetUserProfileActivity extends AppCompatActivity implements Navigat
         call2.enqueue(new Callback<ArrayList<Pending>>() {
             @Override
             public void onResponse(Call<ArrayList<Pending>> call, Response<ArrayList<Pending>> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     ArrayList<Pending> pendingList = response.body();
-                    for(Pending pending:pendingList){
-                        if((pending.getType()==1 && pending.getIsApproved()==1)||
-                                (pending.getType()==2 && pending.getIsApproved()==1)){
+                    for (Pending pending : pendingList) {
+                        if ((pending.getType() == 1 && pending.getIsApproved() == 1) ||
+                                (pending.getType() == 2 && pending.getIsApproved() == 1)) {
                             licenseCheck += 1;
-                            if(licenseCheck==2){
+                            if (licenseCheck == 2) {
                                 verifyLicense.setVisibility(View.VISIBLE);
                             }
                         }
-                        if(pending.getType()==4&&pending.getIsApproved()==1){
+                        if (pending.getType() == 4 && pending.getIsApproved() == 1) {
                             verifySpecialty.setVisibility(View.VISIBLE);
                         }
                     }
@@ -221,13 +222,13 @@ public class VetUserProfileActivity extends AppCompatActivity implements Navigat
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
 
         VetUserProfileActivity.this.registerReceiver(this.notifReceiver, new IntentFilter("com.example.ACTION_LOGOUT"));
 
         systemSessionManager = new SystemSessionManager(this);
-        if(systemSessionManager.checkLogin())
+        if (systemSessionManager.checkLogin())
             finish();
         HashMap<String, String> userIn = systemSessionManager.getUserDetails();
 
@@ -251,14 +252,14 @@ public class VetUserProfileActivity extends AppCompatActivity implements Navigat
         vetSpecialization = (TextView) findViewById(R.id.specialtyTextField);
         vetContactInformation = (TextView) findViewById(R.id.phoneNumTextField);
 
-        vetName.setText(user.getName()+",");
+        vetName.setText(user.getName() + ",");
         vetEducation.setText(vet.getEducation());
         vetSpecialization.setText(vet.getSpecialty());
         vetRating.setText(String.valueOf(vet.getRating()));
         vetDetails.setText(vet.getProfileDesc());
 
         vetContactInformation.setText(user.getMobileNumber());
-        if(user.getUserPhoto()!=null){
+        if (user.getUserPhoto() != null) {
 
             String newFileName = BASE_URL + user.getUserPhoto();
             System.out.println(newFileName);
@@ -280,16 +281,17 @@ public class VetUserProfileActivity extends AppCompatActivity implements Navigat
 
         try {
             petBetterDb.createDatabase();
-        } catch(SQLException e ){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
     }
-    private User getUser(String email){
+
+    private User getUser(String email) {
 
         try {
             petBetterDb.openDatabase();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -298,11 +300,12 @@ public class VetUserProfileActivity extends AppCompatActivity implements Navigat
 
         return result;
     }
-    private Veterinarian getVetWithUserID(long user_id){
+
+    private Veterinarian getVetWithUserID(long user_id) {
 
         try {
             petBetterDb.openDatabase();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -312,16 +315,28 @@ public class VetUserProfileActivity extends AppCompatActivity implements Navigat
         return result;
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.nav_bar,menu);
+        hideItems();
+        return true;
+    }
+    public void hideItems(){
+        Menu menu = navigationView.getMenu();
+
+        if(user.getUserType()==2){
+            menu.findItem(R.id.community2).setVisible(false);
+        }
+        menu.findItem(R.id.search_drawer).setVisible(false);
+    }
+
 
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.search_drawer) {
-            Intent intent = new Intent(this, com.example.owner.petbetter.activities.SearchActivity.class);
-            startActivity(intent);
-        } else if (id == R.id.home) {
+        if (id == R.id.home) {
             if (user.getUserType() == 1) {
                 Intent intent = new Intent(this, com.example.owner.petbetter.activities.VeterinarianHomeActivity.class);
                 startActivity(intent);
