@@ -161,8 +161,6 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
         messageReqButton = (Button) findViewById(R.id.messageReqButton);
         refreshMessages = (SwipeRefreshLayout) findViewById(R.id.refreshMessages);
         addTopicButton = (Button) findViewById(R.id.addTopicButton);
-        spinnerFilter = (Spinner) findViewById(R.id.spinnerFilter);
-        spinnerFilter.setVisibility(View.GONE);
 
         addTopicButton.setVisibility(View.GONE);
 

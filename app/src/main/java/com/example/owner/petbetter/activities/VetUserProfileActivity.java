@@ -110,8 +110,7 @@ public class VetUserProfileActivity extends AppCompatActivity implements Navigat
 
         notifButton = (ImageView) findViewById(R.id.imageview_notifs);
         addTopicButton = (Button) findViewById(R.id.addTopicButton);
-        spinnerFilter = (Spinner) findViewById(R.id.spinnerFilter);
-        spinnerFilter.setVisibility(View.GONE);
+
 
         addTopicButton.setVisibility(View.GONE);
 

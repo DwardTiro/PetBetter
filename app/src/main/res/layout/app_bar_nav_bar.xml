@@ -25,14 +25,7 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <Spinner
-                    android:id="@+id/spinnerFilter"
-                    android:layout_toLeftOf="@+id/addTopicButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:spinnerMode="dropdown"/>
+
                 <Button
                     android:id="@+id/addTopicButton"
                     android:layout_width="120dp"

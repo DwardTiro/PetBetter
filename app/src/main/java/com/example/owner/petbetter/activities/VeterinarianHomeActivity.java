@@ -136,9 +136,7 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
         user = getUser(email);
         imageViewDrawer = (ImageView) headerView.findViewById(R.id.imageViewDrawer);
         addTopicButton = (Button) findViewById(R.id.addTopicButton);
-        filterSpinner = (Spinner) findViewById(R.id.spinnerFilter);
-
-        filterSpinner.setVisibility(View.GONE);
+        
         addTopicButton.setVisibility(View.GONE);
         if(user.getUserPhoto()!=null){
 

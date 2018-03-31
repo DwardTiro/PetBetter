@@ -110,8 +110,7 @@ public class BookmarksActivity extends AppCompatActivity implements NavigationVi
         textNavEmail.setText(email);
 
         addTopicButton = (Button) findViewById(R.id.addTopicButton);
-        spinnerFilter = (Spinner) findViewById(R.id.spinnerFilter);
-        spinnerFilter.setVisibility(View.GONE);
+
 
         addTopicButton.setVisibility(View.GONE);
 

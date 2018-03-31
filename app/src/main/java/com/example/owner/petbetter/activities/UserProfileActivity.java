@@ -121,8 +121,7 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
 
         postTopicInfoLayout = (RelativeLayout) findViewById(R.id.postTopicInfoLayout);
         addTopicButton = (Button) findViewById(R.id.addTopicButton);
-        spinnerFilter = (Spinner) findViewById(R.id.spinnerFilter);
-        spinnerFilter.setVisibility(View.GONE);
+
 
         addTopicButton.setVisibility(View.GONE);
 
