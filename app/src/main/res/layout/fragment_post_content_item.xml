@@ -74,26 +74,6 @@
             android:background="@color/colorWhite"/>
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="5dp"
-        android:paddingLeft="20dp"
-        android:paddingRight="5dp"
-        android:weightSum="1">
 
-        <Button
-            android:id="@+id/postRepEditBtn"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="50dp"
-            android:layout_height="30dp"
-            android:layout_marginLeft="300dp"
-            android:background="@color/colorWhite"
-            android:text="Edit"
-            android:textAllCaps="false"
-            android:textColor="@color/amazonite"
-            android:textSize="17sp" />
-    </LinearLayout>
 
 </LinearLayout>

@@ -105,8 +105,7 @@ public class NotificationActivity extends AppCompatActivity implements Navigatio
         user = getUser(email);
         textNavUser.setText(user.getName());
         addTopicButton = (Button) findViewById(R.id.addTopicButton);
-        spinnerFilter = (Spinner) findViewById(R.id.spinnerFilter);
-        spinnerFilter.setVisibility(View.GONE);
+
 
         addTopicButton.setVisibility(View.GONE);
 
@@ -116,7 +115,7 @@ public class NotificationActivity extends AppCompatActivity implements Navigatio
             String newFileName = BASE_URL + user.getUserPhoto();
             System.out.println(newFileName);
             //String newFileName = "http://192.168.0.19/petbetter/"+thisMessageRep.getMessagePhoto();
-            Glide.with(NotificationActivity.this).load(newFileName).error(R.drawable.back_button).into(imageViewDrawer);
+            Glide.with(NotificationActivity.this).load(newFileName).error(R.drawable.app_icon_yellow).into(imageViewDrawer);
             /*
             Picasso.with(inflater.getContext()).load("http://".concat(newFileName))
                     .error(R.drawable.back_button).into(holder.messageRepImage);*/
@@ -144,16 +143,12 @@ public class NotificationActivity extends AppCompatActivity implements Navigatio
 
     }
 
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.search_drawer) {
-            Intent intent = new Intent(this, com.example.owner.petbetter.activities.SearchActivity.class);
-            startActivity(intent);
-        }
-
-        else if(id == R.id.home){
+        if(id == R.id.home){
             if(user.getUserType()==1){
                 Intent intent = new Intent(this, com.example.owner.petbetter.activities.VeterinarianHomeActivity.class);
                 startActivity(intent);
@@ -172,7 +167,12 @@ public class NotificationActivity extends AppCompatActivity implements Navigatio
             startActivity(intent);
         }
         else if(id == R.id.user_profile){
-            Intent intent = new Intent(this, com.example.owner.petbetter.activities.UserProfileActivity.class);
+            Intent intent;
+            if(user.getUserType() == 1){
+                intent = new Intent(this, com.example.owner.petbetter.activities.VetUserProfileActivity.class);
+            }else
+                intent = new Intent(this, com.example.owner.petbetter.activities.UserProfileActivity.class);
+
             startActivity(intent);
         }
         else if(id == R.id.bookmarks){

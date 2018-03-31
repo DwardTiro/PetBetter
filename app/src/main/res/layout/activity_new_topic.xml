@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.owner.petbetter.activities.NewTopicActivity"
-    android:background="@color/colorWhite">
+    android:background="@color/colorWhite"
+    tools:context="com.example.owner.petbetter.activities.NewTopicActivity">
 
     <include
         android:id="@+id/createToolbar"
@@ -20,35 +20,51 @@
         android:layout_below="@+id/createToolbar"
         android:orientation="vertical">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@color/main_White">
+            android:background="@color/colorWhite"
+            android:orientation="vertical">
 
             <TextView
-                android:layout_width="match_parent"
+                android:id="@+id/topicTitleTextView"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="0dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
+                android:background="@color/colorWhite"
                 android:text="Topic Title:"
-                android:textSize="15sp"
-                android:textColor="@color/black"/>
+
+                android:textColor="@color/black"
+                android:textSize="17sp" />
 
             <EditText
                 android:id="@+id/newTopicTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/topicTitleTextView"
+                android:layout_marginBottom="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginStart="3dp"
                 android:layout_marginTop="11dp"
-                android:layout_marginBottom="10dp"
                 android:background="@drawable/custom_edittext"
-                android:hint="What is your topic about?"
-                android:textColorHint="@color/timestamp" />
+                android:maxLines="1"
+                android:paddingEnd="5dp"
+                android:paddingStart="5dp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/timestamp"
+                android:textCursorDrawable="@null"
+                android:textSize="17sp" />
 
-        </LinearLayout>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/greenLine"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/myrtle_green"
+            android:orientation="horizontal" />
 
         <EditText
             android:id="@+id/newTopicDesc"
@@ -60,7 +76,11 @@
             android:layout_marginTop="24dp"
             android:background="@drawable/custom_edittext_white"
             android:hint="Want to write something about it?"
-            android:textColorHint="@color/timestamp" />
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/timestamp"
+            android:textCursorDrawable="@null" />
 
 
     </LinearLayout>

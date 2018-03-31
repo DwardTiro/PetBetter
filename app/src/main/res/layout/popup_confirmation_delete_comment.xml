@@ -44,7 +44,7 @@
             android:background="@drawable/popup_button_border"
             android:text="Cancel"
             android:textAllCaps="false"
-            android:textColor="@color/peridot"
+            android:textColor="@color/amazonite"
             android:textSize="17sp"
            />
 

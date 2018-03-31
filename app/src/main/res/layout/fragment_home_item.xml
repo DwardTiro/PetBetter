@@ -28,11 +28,21 @@
                 android:id="@+id/topicName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxLength="25"
+                android:maxLength="40"
                 android:maxLines="1"
                 android:text="@string/sample_clinic"
                 android:textColor="@color/black"
-                android:textSize="@dimen/listing_font_size" />
+                android:textSize="@dimen/listing_font_size"
+                android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/topicUser"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLength="50"
+                android:textSize="15sp"
+                android:textColor="@color/black"
+
+                android:text="@string/sample_address" />
 
             <TextView
                 android:id="@+id/topicDescription"
@@ -41,16 +51,10 @@
                 android:layout_marginTop="5dp"
                 android:ellipsize="end"
                 android:maxLines="1"
+                android:textSize="15sp"
                 android:scrollHorizontally="true"
                 android:text="@string/sample_address" />
 
-            <TextView
-                android:id="@+id/topicUser"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:maxLength="35"
-                android:text="@string/sample_address" />
 
 
         </LinearLayout>
@@ -122,31 +126,36 @@
             android:layout_marginTop="10dp">
 
             <TextView
-                android:id="@+id/topicLabel"
+                android:id="@+id/topicSentenceStart"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="3dp"
-                android:text="Post"
+                android:text="View"
                 android:textColor="@color/amazonite"
-                android:textSize="15sp"
-                android:textStyle="italic|bold" />
+                android:textSize="13sp"
+                android:textStyle="italic" />
 
-
-            <ImageView
-                android:id="@+id/iconReplies"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/topicLabel"
-                android:src="@drawable/ic_reply_black_24dp" />
 
             <TextView
                 android:id="@+id/textViewReplies"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="3dp"
-                android:layout_toEndOf="@id/iconReplies"
+                android:layout_marginEnd="3dp"
+                android:textStyle="italic"
+                android:layout_toEndOf="@+id/topicSentenceStart"
                 android:text="99"
-                android:textSize="17sp" />
+                android:textColor="@color/amazonite"
+                android:textSize="13sp" />
+            <TextView
+                android:id="@+id/topicLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="3dp"
+                android:layout_toEndOf="@+id/textViewReplies"
+                android:text="replies"
+                android:textColor="@color/amazonite"
+                android:textSize="13sp"
+                android:textStyle="italic" />
 
         </RelativeLayout>
 

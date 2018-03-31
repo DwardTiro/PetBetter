@@ -224,6 +224,7 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
                 btnHome.setTextColor(getResources().getColor(R.color.myrtle_green));
                 btnHome.setPaintFlags(btnHome.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
                 btnCommunity.setPaintFlags(btnCommunity.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
+                spinnerFilter.setVisibility(View.VISIBLE);
                 container.removeAllViews();
                 if(spinnerFilter.getSelectedItem().toString()=="Most recent"){
                     filterPosts(1);
@@ -245,6 +246,7 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
                 btnCommunity.setPaintFlags(btnCommunity.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
                 btnHome.setPaintFlags(btnHome.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
                 container.removeAllViews();
+                spinnerFilter.setVisibility(View.GONE);
 
                 FragmentCommunity fragment2 = new FragmentCommunity();
                 getSupportFragmentManager().beginTransaction().replace(R.id.comm_container,fragment2).commitAllowingStateLoss();

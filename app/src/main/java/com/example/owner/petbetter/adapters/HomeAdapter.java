@@ -78,7 +78,20 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
         holder.topicName.setText(thisPost.getTopicName());
         holder.topicDescription.setText(thisPost.getTopicContent());
         holder.topicUser.setText(thisPost.getTopicUser());
-        holder.replyCounter.setText(Integer.toString(getPostReps(thisPost.getId()).size()));
+
+        if(getPostReps(thisPost.getId()).size() == 0){
+            holder.replyCounter.setVisibility(View.GONE);
+            holder.sentenceEnd.setVisibility(View.GONE);
+            holder.sentenceStart.setText("No replies yet");
+        }else if(getPostReps(thisPost.getId()).size() == 1){
+            holder.sentenceEnd.setText("reply");
+            holder.replyCounter.setText(Integer.toString(getPostReps(thisPost.getId()).size()));
+        }
+        else{
+            holder.replyCounter.setText(Integer.toString(getPostReps(thisPost.getId()).size()));
+        }
+
+
         int result = getVoteCount(thisPost.getId(), 1);
         holder.upvoteCounter.setText(String.valueOf(result));
         holder.upvoteCounter.setVisibility(View.INVISIBLE);
@@ -329,6 +342,8 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
         private TextView upvoteCounter;
         private ImageButton optionsButton;
         private TextView replyCounter;
+        private TextView sentenceStart;
+        private TextView sentenceEnd;
 
         public HomeViewHolder(View itemView) {
             super(itemView);
@@ -342,6 +357,8 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
             upvoteCounter = (TextView) itemView.findViewById(R.id.upvoteCounter);
             optionsButton = (ImageButton) itemView.findViewById(R.id.postOptionsButton);
             replyCounter = (TextView) itemView.findViewById(R.id.textViewReplies);
+            sentenceStart = (TextView) itemView.findViewById(R.id.topicSentenceStart);
+            sentenceEnd = (TextView) itemView.findViewById(R.id.topicLabel);
         }
 
         public void bind(final Post item, final OnItemClickListener listener) {
