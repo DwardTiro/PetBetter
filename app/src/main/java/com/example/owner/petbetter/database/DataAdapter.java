@@ -814,8 +814,8 @@ public class DataAdapter {
             Veterinarian vet = new Veterinarian(
                     c.getInt(c.getColumnIndexOrThrow("_id")),
                     c.getLong(c.getColumnIndexOrThrow("user_id")),
-                    user.getLastName(),
                     user.getFirstName(),
+                    user.getLastName(),
                     user.getMobileNumber(),
                     user.getPhoneNumber(),
                     user.getEmail(),

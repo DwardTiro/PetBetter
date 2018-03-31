@@ -170,7 +170,14 @@ public class VetOwnedFacilityProfileActivity extends AppCompatActivity{
                         vetList = response.body();
                         vetRecyclerView.setVisibility(View.VISIBLE);
                         vetRecyclerView.setAdapter(new VetRowAdapter(VetOwnedFacilityProfileActivity.this,
-                                getLayoutInflater(), vetList));
+                                getLayoutInflater(), vetList, new VetRowAdapter.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(Veterinarian item) {
+                                Intent intent = new Intent(VetOwnedFacilityProfileActivity.this, com.example.owner.petbetter.activities.VetProfileActivity.class);
+                                intent.putExtra("thisVet", new Gson().toJson(item));
+                                startActivity(intent);
+                            }
+                        }));
 
                         vetRecyclerView.setItemAnimator(new DefaultItemAnimator());
                         vetRecyclerView.setHasFixedSize(true);
