@@ -30,17 +30,20 @@
 
     <EditText
         android:id="@+id/editEmail"
-        android:layout_width="260dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="30dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
         android:layout_below="@+id/textInfo"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
 
         android:ems="10"
-        android:hint="Username"
+        android:hint="Email Address"
+        android:maxLines="1"
 
         android:paddingEnd="0dp"
 
@@ -49,13 +52,15 @@
 
     <EditText
         android:id="@+id/editPassword"
-        android:layout_width="260dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="15dp"
         android:layout_below="@id/editEmail"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
 
         android:ems="10"
         android:hint="Password"
@@ -67,33 +72,35 @@
 
     <Button
         android:id="@+id/loginButton"
-        android:layout_width="140dp"
-        android:layout_height="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
         android:layout_gravity="center"
         android:layout_marginBottom="30dp"
         android:layout_below="@+id/editPassword"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
+        android:background="@color/colorWhite"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
 
-        android:background="@drawable/rounded_button"
+
         android:onClick="userLogin"
         android:text="@string/login_button"
         android:textAllCaps="false"
         android:textColor="@color/medTurquoise"
         android:textSize="18sp"
-        android:textStyle="bold"/>
+        />
 
 
     <TextView
         android:id="@+id/noAccountLink"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="16dp"
+        android:layout_height="48dp"
         android:layout_below="@+id/loginButton"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
+        android:padding="5dp"
 
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
         android:onClick="signUp"
         android:text="@string/no_account" />
 </RelativeLayout>

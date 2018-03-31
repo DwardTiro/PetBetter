@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -102,8 +103,8 @@ public class MainActivity extends AppCompatActivity {
             editEmail.setText(sharedPreferences.getString(KEY_EMAIL,""));
             editPassword.setText(sharedPreferences.getString(KEY_PASS,""));
             userLogin(findViewById(R.id.main_content));
-        }
 
+        }
 
     }
 
@@ -277,11 +278,11 @@ public class MainActivity extends AppCompatActivity {
             });
         } else {
 
-            if (email.trim().length() == 0) {
+            if (email.trim().length() == 0 && password.trim().length() > 0) {
                 //System.out.println("Email Required");
                 textInfo.setText("Email Required");
                 textInfo.setVisibility(View.VISIBLE);
-            } else if (password.trim().length() == 0) {
+            } else if (password.trim().length() == 0 && email.trim().length() > 0) {
 
                 //System.out.println("Password Required");
                 textInfo.setText("Password Required");
