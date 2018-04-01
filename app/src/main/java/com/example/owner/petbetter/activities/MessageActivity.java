@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -71,6 +72,9 @@ public class MessageActivity extends AppCompatActivity {
     private int nId;
     private HerokuService service;
     private ImageView addTopic;
+    private ImageView attachedImage;
+    private ImageView removedAttachedImage;
+    private RelativeLayout attachedImageContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +83,7 @@ public class MessageActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.viewPostToolbar);
         final TextView activityTitle = (TextView) findViewById(R.id.activity_title);
-        activityTitle.setText("View Message");
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
@@ -92,13 +96,16 @@ public class MessageActivity extends AppCompatActivity {
 
 
 
-        fromText = (TextView) findViewById(R.id.fromTextView);
+        //fromText = (TextView) findViewById(R.id.fromTextView);
         container = (FrameLayout) findViewById(R.id.message_container);
         replyButton = (Button) findViewById(R.id.replyButton);
         messageText = (EditText) findViewById(R.id.messageText);
         addPhotoButton = (ImageButton) findViewById(R.id.addPhotoButton);
         addTopic = (ImageView) findViewById(R.id.topicNewPost);
         addTopic.setVisibility(View.GONE);
+        attachedImage = (ImageView) findViewById(R.id.attachedImage);
+        removedAttachedImage = (ImageView) findViewById(R.id.removeAttachedImage);
+        attachedImageContainer = (RelativeLayout) findViewById(R.id.attachedImageContainer);
 
         systemSessionManager = new SystemSessionManager(this);
         if(systemSessionManager.checkLogin())
@@ -109,9 +116,10 @@ public class MessageActivity extends AppCompatActivity {
 
         email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
         user = getUser(email);
-        fromText.setText("");
+        //fromText.setText("");
         if(messageItem.getFromId()==user.getUserId()){
-            fromText.setText(messageItem.getFromName());
+            //fromText.setText(messageItem.getFromName());
+            activityTitle.setText(messageItem.getFromName());
         }
         else{
             HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
@@ -131,7 +139,7 @@ public class MessageActivity extends AppCompatActivity {
                 }
             });
         }
-        ;
+
 /*
         Bundle bundle = new Bundle();
         System.out.println("POST ID BEFORE SEND "+postItem.getUserId());
@@ -153,6 +161,14 @@ public class MessageActivity extends AppCompatActivity {
             }
         });
 
+        removedAttachedImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                attachedImageContainer.setVisibility(View.GONE);
+                attachedImage.refreshDrawableState();
+
+            }
+        });
         replyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -390,6 +406,10 @@ public class MessageActivity extends AppCompatActivity {
                 if(bitmap.getHeight()>250||bitmap.getWidth()>250){
                     bitmap = Bitmap.createScaledBitmap(bitmap,250,250,false);
                 }
+                attachedImage.setImageBitmap(bitmap);
+                attachedImage.setAdjustViewBounds(true);
+
+                attachedImageContainer.setVisibility(View.VISIBLE);
 
 
             } catch (IOException e) {

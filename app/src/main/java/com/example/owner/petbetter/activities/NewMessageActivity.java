@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -24,6 +25,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -86,6 +88,9 @@ public class NewMessageActivity extends AppCompatActivity {
     private ImageView addTopic;
     private TextView messageRequestIndicator;
     private String image;
+    private ImageView attachedImage;
+    private ImageView removedAttachedImage;
+    private RelativeLayout attachedImageContainer;
     HerokuService service;
     HerokuService service2;
     HerokuService service3;
@@ -125,6 +130,10 @@ public class NewMessageActivity extends AppCompatActivity {
         newMsgContent = (EditText) findViewById(R.id.newMsgContent);
         newMsgSendButton = (Button) findViewById(R.id.newMsgSendBtn);
         newMsgAddPhoto = (ImageButton) findViewById(R.id.newMsgAddPhoto);
+        attachedImage = (ImageView) findViewById(R.id.attachedImage);
+        removedAttachedImage = (ImageView) findViewById(R.id.removeAttachedImage);
+        attachedImageContainer = (RelativeLayout) findViewById(R.id.attachedImageContainer);
+
 
         String vetEmail;
         Bundle extras = getIntent().getExtras();
@@ -140,6 +149,15 @@ public class NewMessageActivity extends AppCompatActivity {
             messageRequestIndicator.setVisibility(View.VISIBLE);
         }
         */
+
+        removedAttachedImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                attachedImageContainer.setVisibility(View.GONE);
+                attachedImage.refreshDrawableState();
+
+            }
+        });
 
         newMsgAddPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -605,6 +623,13 @@ public class NewMessageActivity extends AppCompatActivity {
                 if (bitmap.getHeight() > 250 || bitmap.getWidth() > 250) {
                     bitmap = Bitmap.createScaledBitmap(bitmap, 250, 250, false);
                 }
+                attachedImage.setImageBitmap(bitmap);
+                attachedImage.setAdjustViewBounds(true);
+
+                attachedImageContainer.setVisibility(View.VISIBLE);
+                //attachedImage.setVisibility(View.VISIBLE);
+                //attachedImageFrame.setVisibility(View.VISIBLE);
+                //removedAttachedImage.setVisibility(View.VISIBLE);
 
             } catch (IOException e) {
                 e.printStackTrace();
