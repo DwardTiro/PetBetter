@@ -168,6 +168,7 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
         }
         notifButton = (ImageView) findViewById(R.id.imageview_notifs);
         addTopicButton = (Button) findViewById(R.id.addTopicButton);
+        addTopicButton.setVisibility(View.GONE);
 
 
         if(!getUnsyncedNotifications().isEmpty())

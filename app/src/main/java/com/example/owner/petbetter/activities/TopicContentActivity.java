@@ -3,6 +3,7 @@ package com.example.owner.petbetter.activities;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -77,6 +78,7 @@ public class TopicContentActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private View toolbarItem;
     private ArrayList<Follower> topicFollowers;
+    private FloatingActionButton fab;
 
     HerokuService service;
 
@@ -98,6 +100,10 @@ public class TopicContentActivity extends AppCompatActivity {
         followersButton = (Button) findViewById(R.id.followersButton);
         postsButton = (Button) findViewById(R.id.postsButton);
         requestsTextView = (TextView) findViewById(R.id.requestsTextView);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        topicNewPost = (ImageButton) findViewById(R.id.topicNewPost);
+        topicNewPost.setVisibility(View.GONE);
+
 
         systemSessionManager = new SystemSessionManager(this);
         if(systemSessionManager.checkLogin())
@@ -117,6 +123,15 @@ public class TopicContentActivity extends AppCompatActivity {
         bundle = new Bundle();
         bundle.putLong("topicId", topicItem.getId());
         postsButton.callOnClick();
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(TopicContentActivity.this, com.example.owner.petbetter.activities.NewPostActivity.class);
+                intent.putExtra("thisTopicId", topicItem.getId());
+                startActivity(intent);
+            }
+        });
 
         postsButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,12 +153,13 @@ public class TopicContentActivity extends AppCompatActivity {
                 bundle = new Bundle();
                 bundle.putLong("topicId", topicItem.getId());
 
+
                 FragmentNoResults fragmentpar = new FragmentNoResults();
-                getSupportFragmentManager().beginTransaction().replace(R.id.topic_container,fragmentpar)
-                        .commitAllowingStateLoss();
+                if(topicItem.getCreatorId() != user.getUserId())
+                    getSupportFragmentManager().beginTransaction().replace(R.id.topic_container,fragmentpar).commitAllowingStateLoss();
 
                 if(check!=null){
-                    if(check.getIsAllowed()==1){
+                    if(check.getIsAllowed()==1 || topicItem.getCreatorId() == user.getUserId()){
 
                         Fragment postsFragment = new FragmentPosts();
                         postsFragment.setArguments(bundle);
@@ -218,6 +234,7 @@ public class TopicContentActivity extends AppCompatActivity {
             if(check.getIsAllowed()==1){
                 //followButton.setBackgroundResource(R.mipmap.ic_check_black_24dp);
                 followButton.setText("Approved");
+                fab.setVisibility(View.VISIBLE);
                 Fragment postsFragment = new FragmentPosts();
                 postsFragment.setArguments(bundle);
                 getSupportFragmentManager().beginTransaction().replace(R.id.topic_container, postsFragment).commitAllowingStateLoss();
@@ -386,7 +403,8 @@ public class TopicContentActivity extends AppCompatActivity {
         toolbarItem = toolbar.findViewById(R.id.topicNewPost);
 
         if(topicItem.getCreatorId() == user.getUserId()){
-            toolbarItem.setVisibility(View.VISIBLE);
+            toolbarItem.setVisibility(View.GONE);
+            fab.setVisibility(View.VISIBLE);
         }
         else{
             toolbarItem.setVisibility(View.GONE);

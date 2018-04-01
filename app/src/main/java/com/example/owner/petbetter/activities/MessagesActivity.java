@@ -94,6 +94,7 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
     private int refChecker = 0;
     private Button addTopicButton;
     private Spinner spinnerFilter;
+    private FloatingActionButton fab;
 
     HerokuService service;
 
@@ -161,6 +162,7 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
         messageReqButton = (Button) findViewById(R.id.messageReqButton);
         refreshMessages = (SwipeRefreshLayout) findViewById(R.id.refreshMessages);
         addTopicButton = (Button) findViewById(R.id.addTopicButton);
+        //fab = (FloatingActionButton) findViewById(R.id.fab);
 
         addTopicButton.setVisibility(View.GONE);
 
@@ -190,6 +192,7 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
         textNavUser = (TextView) headerView.findViewById(R.id.textNavUser);
         textNavUser.setText(user.getName());
 
+
         messagesButtonClicked(this.findViewById(android.R.id.content));
         /*
         messagesRecyclerView = (RecyclerView) findViewById(R.id.messagesRecyclerView);
@@ -209,6 +212,8 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
         messagesRecyclerView.setHasFixedSize(true);
         messagesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         */
+
+
         notifButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -476,6 +481,7 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
 
         //messageList = getMessages(user.getUserId());
         fragment1 = new FragmentMessages();
+
         getSupportFragmentManager().beginTransaction().replace(R.id.messages_container,fragment1).
                 addToBackStack(null).commitAllowingStateLoss();
         /*
@@ -506,7 +512,8 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
-        getMenuInflater().inflate(R.menu.options_menu,menu);
+        //getMenuInflater().inflate(R.menu.options_menu,menu);
+
         //hideItems();
         return true;
     }
@@ -522,12 +529,7 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
             startActivity(intent);
             return true;
         }*/
-        if(id == R.id.new_message_option){
-            //change appearance of toolbar
-            Intent intent = new Intent(this, com.example.owner.petbetter.activities.NewMessageActivity.class);
-            startActivity(intent);
-            return true;
-        }
+
 
 
         return super.onOptionsItemSelected(item);
@@ -540,6 +542,7 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
             menu.findItem(R.id.community2).setVisible(false);
         }
         menu.findItem(R.id.search_drawer).setVisible(false);
+        //menu.findItem(R.id.new_message_option).setVisible(false);
     }
 
     @Override

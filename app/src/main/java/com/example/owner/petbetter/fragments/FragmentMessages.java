@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.owner.petbetter.R;
+import com.example.owner.petbetter.activities.MessagesActivity;
 import com.example.owner.petbetter.adapters.FollowerAdapter;
 import com.example.owner.petbetter.adapters.MessageAdapter;
 import com.example.owner.petbetter.adapters.MessageRequestAdapter;
@@ -83,6 +84,7 @@ public class FragmentMessages extends Fragment implements CheckUpdates {
         user = getUser(email);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.messagesListing);
+        fab = (FloatingActionButton) view.findViewById(R.id.fab);
         //cause of error. change to where the recyclerview is.
 
         if(messageList==null){
@@ -120,6 +122,14 @@ public class FragmentMessages extends Fragment implements CheckUpdates {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         //getActivity().registerReceiver(this.notifReceiver, new IntentFilter(Intent.ACTION_ATTACH_DATA));
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.NewMessageActivity.class);
+                startActivity(intent);
+            }
+        });
+
 
         return view;
     }

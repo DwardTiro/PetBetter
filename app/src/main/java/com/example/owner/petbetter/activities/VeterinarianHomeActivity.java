@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -82,6 +83,7 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
     private Veterinarian thisVet;
     private Button addTopicButton;
     private Spinner filterSpinner;
+    private FloatingActionButton fab;
 
     AlarmManager alarmManager;
     PendingIntent pendingIntent;
@@ -136,6 +138,17 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
         user = getUser(email);
         imageViewDrawer = (ImageView) headerView.findViewById(R.id.imageViewDrawer);
         addTopicButton = (Button) findViewById(R.id.addTopicButton);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(
+                        VeterinarianHomeActivity.this,
+                        com.example.owner.petbetter.activities.AddFacilityActivity.class
+                );
+                startActivity(intent);
+            }
+        });
 
         addTopicButton.setVisibility(View.GONE);
         if(user.getUserPhoto()!=null){

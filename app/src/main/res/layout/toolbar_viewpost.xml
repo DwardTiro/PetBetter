@@ -48,6 +48,7 @@
             android:layout_gravity="end"
             android:background="@color/medTurquoise"
             android:onClick="topicNewPostClicked"
+            android:visibility="gone"
             />
     </android.support.v7.widget.Toolbar>
 

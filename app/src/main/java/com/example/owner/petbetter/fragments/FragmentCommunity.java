@@ -67,7 +67,7 @@ public class FragmentCommunity extends Fragment implements CheckUpdates, PlaceIn
     private SystemSessionManager systemSessionManager;
     private User user;
     private String email;
-    //private FloatingActionButton fab;
+    private FloatingActionButton fab;
     private boolean allowRefresh = false;
     private PopupWindow popUpConfirmationWindow;
     private ArrayList<Post> topicPosts;
@@ -108,6 +108,16 @@ public class FragmentCommunity extends Fragment implements CheckUpdates, PlaceIn
 
         email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
         user = getUser(email);
+        fab = (FloatingActionButton) view.findViewById(R.id.fab);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.NewTopicActivity.class);
+                startActivity(intent);
+
+            }
+        });
 
 
         recyclerView = (RecyclerView) view.findViewById(R.id.topicListing);
