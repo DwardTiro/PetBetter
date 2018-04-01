@@ -326,6 +326,7 @@ public class UserActivity extends AppCompatActivity implements NavigationView.On
         if(user.getUserType()==2){
             menu.findItem(R.id.community2).setVisible(false);
         }
+        menu.findItem(R.id.search_drawer).setVisible(false);
     }
 
     @Override

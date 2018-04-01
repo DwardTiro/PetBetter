@@ -12,6 +12,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -133,6 +134,7 @@ public class NotificationActivity extends AppCompatActivity implements Navigatio
         FragmentNotifs fragment = new FragmentNotifs();
         getSupportFragmentManager().beginTransaction().add(R.id.notification_container,fragment).commitAllowingStateLoss();
 
+        hideItems();
         notifButton.setOnClickListener(new View.OnClickListener(){
 
             @Override
@@ -141,6 +143,15 @@ public class NotificationActivity extends AppCompatActivity implements Navigatio
             }
         });
 
+    }
+
+    public void hideItems(){
+        Menu menu = navigationView.getMenu();
+
+        if(user.getUserType()==2){
+            menu.findItem(R.id.community2).setVisible(false);
+        }
+        menu.findItem(R.id.search_drawer).setVisible(false);
     }
 
 

@@ -239,6 +239,9 @@ public interface HerokuService {
     @POST("getTopics.php")
     Call<ArrayList<Topic>> getTopics();
 
+    @POST("getFilteredTopics.php")
+    Call<ArrayList<Topic>> getFilteredTopics();
+
     @POST("getAllTopics.php")
     Call<ArrayList<Topic>> getAllTopics();
 

@@ -184,18 +184,6 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
 
 
 
-        refreshCommunity.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refreshCommunity.setRefreshing(true);
-                if(currFragment == 2)
-                    syncTopicChanges();
-                else
-                    syncPostChanges();
-                refreshCommunity.setRefreshing(false);
-            }
-        });
-
         currFragment = 1;
         btnHome.setBackgroundResource(R.color.main_White);
         btnHome.setTextColor(getResources().getColor(R.color.myrtle_green));
@@ -212,6 +200,24 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
         String[] filterItems = new String[]{"Most recent", "Most upvotes"};
         ArrayAdapter<String> adapterSpinner = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, filterItems);
         spinnerFilter.setAdapter(adapterSpinner);
+
+        refreshCommunity.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshCommunity.setRefreshing(true);
+                if(currFragment == 2)
+                    syncTopicChanges();
+                else{
+                    if(spinnerFilter.getSelectedItem().toString()=="Most recent"){
+                        filterPosts(1);
+                    }
+                    if(spinnerFilter.getSelectedItem().toString()=="Most upvotes"){
+                        filterPosts(2);
+                    }
+                }
+                refreshCommunity.setRefreshing(false);
+            }
+        });
 
 
         btnHome.setOnClickListener(new View.OnClickListener() {
@@ -410,7 +416,7 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
         final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         System.out.println("WE HERE BOOIII");
 
-        final Call<ArrayList<Topic>> call = service.getTopics();
+        final Call<ArrayList<Topic>> call = service.getFilteredTopics();
         call.enqueue(new Callback<ArrayList<Topic>>() {
             @Override
             public void onResponse(Call<ArrayList<Topic>> call, Response<ArrayList<Topic>> response) {

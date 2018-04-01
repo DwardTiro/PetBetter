@@ -1765,6 +1765,32 @@ public class DataAdapter {
         return results;
     }
 
+    public ArrayList<Topic> getFilteredTopics(){
+        ArrayList<Topic> results = new ArrayList<>();
+
+        String sql = "SELECT t._id AS _id, t.creator_id AS creator_id, t.topic_name AS topic_name, " +
+                "t.topic_desc AS topic_desc, t.date_created AS date_created, t.is_deleted AS is_deleted, " +
+                "u.first_name AS first_name, u.last_name AS last_name FROM topics AS t LEFT JOIN users as u " +
+                "ON t.creator_id = u._id WHERE t.is_deleted != 1 ORDER BY date_created DESC";
+
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            Topic topic = new Topic(c.getInt(c.getColumnIndexOrThrow("_id")),
+                    c.getLong(c.getColumnIndexOrThrow("creator_id")),
+                    c.getString(c.getColumnIndexOrThrow("topic_name")),
+                    c.getString(c.getColumnIndexOrThrow("topic_desc")),
+                    c.getString(c.getColumnIndexOrThrow("date_created")),
+                    c.getInt(c.getColumnIndexOrThrow("is_deleted")),
+                    c.getString(c.getColumnIndexOrThrow("first_name")),
+                    c.getString(c.getColumnIndexOrThrow("last_name")));
+            results.add(topic);
+        }
+
+        c.close();
+        return results;
+    }
+
     public long createMessage(int messageId, long userId, long toId){
         long result;
 

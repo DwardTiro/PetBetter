@@ -26,6 +26,7 @@ import android.widget.TextView;
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
+import com.example.owner.petbetter.activities.CommActivity;
 import com.example.owner.petbetter.activities.MonitorVetsActivity;
 import com.example.owner.petbetter.activities.SearchActivity;
 import com.example.owner.petbetter.activities.UserActivity;
@@ -112,7 +113,10 @@ public class FragmentCommunity extends Fragment implements CheckUpdates, PlaceIn
         recyclerView = (RecyclerView) view.findViewById(R.id.topicListing);
 
         if(topicList==null){
-            topicList = getTopics();
+            if(getActivity() instanceof CommActivity)
+                topicList = getFilteredTopics();
+            else
+                topicList = getTopics();
         }
         if(getActivity() instanceof MonitorVetsActivity){
             getAllTopics();
@@ -322,6 +326,20 @@ public class FragmentCommunity extends Fragment implements CheckUpdates, PlaceIn
         }
 
         ArrayList<Topic> result = petBetterDb.getTopics();
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<Topic> getFilteredTopics(){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Topic> result = petBetterDb.getFilteredTopics();
         petBetterDb.closeDatabase();
 
         return result;
