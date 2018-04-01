@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/post_border"
 
-    android:background="@drawable/post_border">
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -59,48 +59,69 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
+                android:autoLink="web"
                 android:text="This is a text. This is a text. This is a text. This is a text."
                 android:textColor="@color/black"
-                android:textSize="15sp"
-                android:autoLink="web"
-                android:textIsSelectable="true"/>
+                android:textIsSelectable="true"
+                android:textSize="15sp" />
         </LinearLayout>
 
         <ImageButton
-            android:id="@+id/deletePostRepButton"
-            android:layout_width="20dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:layout_marginEnd="13dp"
-            android:background="@color/colorWhite"
-            android:src="@mipmap/ic_delete_black_24dp" />
+            android:id="@+id/topicOptionsButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="0dp"
+            android:layout_marginTop="0dp"
+            android:background="@null"
+            android:contentDescription="Topic options"
+            android:padding="12dp"
+            android:src="@drawable/ic_more_vert_black_24dp" />
     </LinearLayout>
 
 
-    <LinearLayout
-        android:orientation="horizontal"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="5dp"
-        android:paddingLeft="20dp"
-        android:paddingRight="5dp"
-        android:weightSum="1"
-        android:visibility="gone">
+        android:orientation="horizontal"
+        android:paddingEnd="5dp"
+        android:paddingStart="20dp"
+        android:weightSum="1">
+
+        <TextView
+            android:id="@+id/replySentenceStart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="3dp"
+            android:text="View"
+            android:textColor="@color/amazonite"
+            android:textSize="13sp"
+            android:textStyle="italic" />
 
         <TextView
             android:id="@+id/postRepCounter"
-            android:layout_width="50dp"
-            android:layout_height="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="3dp"
+            android:layout_toEndOf="@+id/replySentenceStart"
             android:text="1"
-            android:background="@color/colorWhite"
-            android:textAllCaps="false"
             android:textColor="@color/amazonite"
-            android:textSize="25sp"
-            >
+            android:textSize="13sp"
+            android:textStyle="italic" />
 
-        </TextView>
+        <TextView
+            android:id="@+id/replySentenceEnd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="3dp"
+            android:layout_toEndOf="@+id/postRepCounter"
+            android:text="replies"
+            android:textColor="@color/amazonite"
+            android:textSize="13sp"
+            android:textStyle="italic" />
 
 
-    </LinearLayout>
+    </RelativeLayout>
 </LinearLayout>

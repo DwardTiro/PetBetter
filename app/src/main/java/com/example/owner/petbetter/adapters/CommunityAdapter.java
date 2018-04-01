@@ -81,10 +81,17 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
     public void onBindViewHolder(final CommunityViewHolder holder, final int position) {
         final Topic thisTopic = topicList.get(position);
         initializeDatabase();
+        User topicUser = getUserWithId(thisTopic.getCreatorId());
+
         int topicPosts = getTopicPosts(thisTopic.getId()).size();
         holder.topicName.setText(thisTopic.getTopicName());
         holder.topicDescription.setText(thisTopic.getTopicDesc());
-        holder.topicUser.setText(thisTopic.getCreatorName());
+        if(topicUser.getUserType() == 1){
+            holder.topicUser.setText("Dr. "+thisTopic.getCreatorName()+", DVM.");
+            //holder.topicUser.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_check_circle_black_18dp,0);
+            //holder.topicUser.setCompoundDrawablePadding(5);
+        }else
+            holder.topicUser.setText(thisTopic.getCreatorName());
         holder.textviewFollowers.setText(Integer.toString(thisTopic.getFollowerCount()));
         holder.textViewPosts.setText(Integer.toString(topicPosts));
         holder.bind(thisTopic, listener);
@@ -234,6 +241,18 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
 
         return result;
     }
+    public User getUserWithId(long _id){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        User result = petBetterDb.getUserWithId((int)_id);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
 
 
     public void deletePosts(){

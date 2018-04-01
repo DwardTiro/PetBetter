@@ -7,11 +7,14 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.view.View.MeasureSpec;
@@ -24,6 +27,9 @@ import com.example.owner.petbetter.classes.MessageRep;
 import com.example.owner.petbetter.classes.PostRep;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.database.DataAdapter;
+import com.example.owner.petbetter.interfaces.PlaceInfoListener;
+
+import org.w3c.dom.Text;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -39,7 +45,9 @@ import static com.example.owner.petbetter.ServiceGenerator.BASE_URL;
  * Created by owner on 14/10/2017.
  */
 
-public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepViewHolder> {
+public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepViewHolder> implements PlaceInfoListener {
+
+
     public interface OnItemClickListener {
         void onItemClick(PostRep item);
     }
@@ -53,9 +61,11 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
     private PopupWindow popUpConfirmationWindow;
     private ArrayList<PostRep> postReps;
     private int type;
+    private PlaceInfoListener placeInfoListener;
     final private int VIEW_TYPE_EMPTYLIST_PLACEHOLDER = 0;
     final private int VIEW_TYPE_RECYCLERVIEW = 1;
     HerokuService service;
+
 
     public PostRepAdapter(Context context, ArrayList<PostRep> postRepList, User user, OnItemClickListener listener) {
         inflater = LayoutInflater.from(context);
@@ -64,6 +74,7 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
         this.listener = listener;
         this.user = user;
         this.type = type;
+        this.placeInfoListener = this;
     }
 /*
     @Override
@@ -96,18 +107,28 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
 
         initializeDatabase();
         User user = getUserWithId(thisComment.getUserId());
-        holder.postRepName.setText(thisComment.getUserName());
+        if(user.getUserType() == 1){
+            holder.postRepName.setText("Dr. "+thisComment.getUserName()+", DVM.");
+        }else
+            holder.postRepName.setText(thisComment.getUserName());
         holder.postRepTime.setText(thisComment.getDatePerformed());
         holder.postRepContent.setText(thisComment.getRepContent());
         holder.bind(thisComment, listener);
+        holder.postRepTime.setVisibility(View.GONE);
 
         postReps = getPostRepsFromParent(thisComment.getId());
 
-        if (postReps.size() > 0)
-            holder.postRepCounter.setText(Integer.toString(postReps.size()));
-        else {
-            holder.postRepCounter.setVisibility(View.INVISIBLE);
-            holder.postRepCounter.setEnabled(false);
+        if(postReps.size() == 0){
+            holder.sentenceEnd.setVisibility(View.GONE);
+            holder.postRepCounter.setVisibility(View.GONE);
+            holder.sentenceStart.setText("No replies yet");
+        }
+        else if(postRepList.size() == 1){
+            holder.sentenceEnd.setText("reply");
+            holder.postRepCounter.setText(postRepList.size());
+        }
+        else{
+            holder.postRepCounter.setText(postRepList.size());
         }
 
         if(user.getUserPhoto()!=null){
@@ -125,6 +146,13 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
         }
 
         if (user.getUserId() == thisComment.getUserId()) {
+            holder.postRepOptionsButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    placeInfoListener.onPopupMenuClicked(v, position);
+                }
+            });
+            /*
             holder.deletePostRepButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -187,10 +215,11 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
 
 
                 }
-            });
+            });*/
         } else {
-            holder.deletePostRepButton.setVisibility(View.INVISIBLE);
-            holder.deletePostRepButton.setEnabled(false);
+            //holder.deletePostRepButton.setVisibility(View.INVISIBLE);
+            //holder.deletePostRepButton.setEnabled(false);
+            holder.postRepOptionsButton.setVisibility(View.INVISIBLE);
         }
         /*
         Veterinarian thisVet = vetList.get(position);
@@ -277,11 +306,83 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
     }
 
 
+
     @Override
     public int getItemCount() {
 
         //return (postRepList.size() > 0 ? postRepList.size() : 1);
         return postRepList.size();
+    }
+
+    @Override
+    public void onPopupMenuClicked(final View view, final int pos) {
+        final PostRep thisComment = postRepList.get(pos);
+        PopupMenu options = new PopupMenu(view.getContext(), view);
+        MenuInflater inflater = options.getMenuInflater();
+        inflater.inflate(R.menu.post_topic_menu, options.getMenu());
+        System.out.println("Options menu clicked");
+
+        options.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.menu_delete_post_topic:
+                        LayoutInflater inflater = (LayoutInflater) view.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                        View popUpConfirmation = inflater.inflate(R.layout.popup_confirmation_delete_comment, null);
+
+                        popUpConfirmation.measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED), MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
+
+                        //int width = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
+
+                        popUpConfirmationWindow = new PopupWindow(popUpConfirmation, 750, 360, true);
+                        popUpConfirmationWindow.showAtLocation(popUpConfirmation, Gravity.CENTER, 0, 0);
+
+                        Button cancelButton = (Button) popUpConfirmationWindow.getContentView().findViewById(R.id.popUpCancelButton);
+
+                        Button deleteButton = (Button) popUpConfirmationWindow.getContentView().findViewById(R.id.popUpDeleteButton);
+                        cancelButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                popUpConfirmationWindow.dismiss();
+                            }
+                        });
+                        deleteButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                initializeDatabase();
+                                deletePostRep(thisComment.getId());
+                                service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+                                final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+                                final Call<Void> call = service.deletePostRep(thisComment.getUserId(), thisComment.getDatePerformed());
+                                call.enqueue(new Callback<Void>() {
+                                    @Override
+                                    public void onResponse(Call<Void> call, Response<Void> response) {
+                                        //User thisUser = response.body();
+                                        if(response.isSuccessful()){
+                                            dataSynced(10);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<Void> call, Throwable t) {
+                                        Log.d("onFailure", t.getLocalizedMessage());
+                                    }
+                                });
+
+                                popUpConfirmationWindow.dismiss();
+                                updateData(pos);
+                            }
+                        });
+
+//                    initializeDatabase();
+
+                }
+
+                return false;
+            }
+        });
+        options.show();
     }
 
     @Override
@@ -296,8 +397,10 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
         private TextView postRepName;
         private TextView postRepContent;
         private TextView postRepTime;
-        private ImageButton deletePostRepButton;
+        private ImageButton postRepOptionsButton;
         private TextView postRepCounter;
+        private TextView sentenceStart;
+        private TextView sentenceEnd;
 
         public PostRepViewHolder(View itemView) {
             super(itemView);
@@ -306,8 +409,10 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
             postRepName = (TextView) itemView.findViewById(R.id.commentUserProfileName);
             postRepContent = (TextView) itemView.findViewById(R.id.commentContent);
             postRepTime = (TextView) itemView.findViewById(R.id.commentTimeStamp);
-            deletePostRepButton = (ImageButton) itemView.findViewById(R.id.deletePostRepButton);
+            postRepOptionsButton = (ImageButton) itemView.findViewById(R.id.topicOptionsButton);
             postRepCounter = (TextView) itemView.findViewById(R.id.postRepCounter);
+            sentenceStart = (TextView) itemView.findViewById(R.id.replySentenceStart);
+            sentenceEnd = (TextView) itemView.findViewById(R.id.replySentenceEnd);
         }
 
         public void bind(final PostRep item, final OnItemClickListener listener) {

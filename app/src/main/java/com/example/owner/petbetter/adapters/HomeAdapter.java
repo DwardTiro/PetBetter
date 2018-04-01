@@ -75,9 +75,15 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
     public void onBindViewHolder(HomeViewHolder holder, final int position) {
         final Post thisPost = postList.get(position);
         initializeDatabase();
+        User topicUser = getUserWithId(thisPost.getUserId());
         holder.topicName.setText(thisPost.getTopicName());
         holder.topicDescription.setText(thisPost.getTopicContent());
-        holder.topicUser.setText(thisPost.getTopicUser());
+        if(topicUser.getUserType() == 1){
+            holder.topicUser.setText("Dr. "+thisPost.getTopicUser()+", DVM.");
+            //holder.topicUser.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_check_circle_black_18dp,0);
+            //holder.topicUser.setCompoundDrawablePadding(5);
+        }else
+            holder.topicUser.setText(thisPost.getTopicUser());
 
         if(getPostReps(thisPost.getId()).size() == 0){
             holder.replyCounter.setVisibility(View.GONE);
@@ -202,6 +208,19 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
 
         return result;
     }
+    public User getUserWithId(long _id){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        User result = petBetterDb.getUserWithId((int)_id);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+
     private long deletePost(long postId){
         try {
             petBetterDb.openDatabase();
