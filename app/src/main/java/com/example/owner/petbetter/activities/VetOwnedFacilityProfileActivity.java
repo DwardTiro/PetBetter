@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import com.bumptech.glide.Glide;
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
@@ -34,6 +35,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.example.owner.petbetter.ServiceGenerator.BASE_URL;
+
 /**
  * Created by Kristian on 3/28/2018.
  */
@@ -48,6 +51,7 @@ public class VetOwnedFacilityProfileActivity extends AppCompatActivity{
     private TextView facilityOpenTime;
     private TextView facilityCloseTime;
     private TextView noServicesTextView;
+    private ImageView facilityImage;
     private RecyclerView serviceRecyclerView;
     private Button editFacilityProfileButton;
     private Button editServicesButton;
@@ -87,6 +91,7 @@ public class VetOwnedFacilityProfileActivity extends AppCompatActivity{
         facilityLandline = (TextView) findViewById(R.id.phoneNumTextField);
         facilityOpenTime = (TextView) findViewById(R.id.openTimeTextField);
         facilityCloseTime = (TextView) findViewById(R.id.closeTimeTextField);
+        facilityImage = (ImageView) findViewById(R.id.clinicProfileImage);
 
         facilityAddress.setText(faciItem.getLocation());
         facilityLandline.setText(faciItem.getContactInfo());
@@ -100,6 +105,13 @@ public class VetOwnedFacilityProfileActivity extends AppCompatActivity{
         addServicesButton = (Button) findViewById(R.id.addServicesButton);
         verifiedServices = (ImageView) findViewById(R.id.verifiedServices);
         verifiedServices.setVisibility(View.VISIBLE);
+
+        if (faciItem.getFaciPhoto() != null) {
+            String newFileName = BASE_URL + faciItem.getFaciPhoto();
+            System.out.println("FACI PHOTO " + faciItem.getFaciPhoto());
+            //String newFileName = "http://192.168.0.19/petbetter/"+thisMessageRep.getMessagePhoto();
+            Glide.with(VetOwnedFacilityProfileActivity.this).load(newFileName).error(R.drawable.app_icon_yellow).into(facilityImage);
+        }
 
         editFacilityProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override

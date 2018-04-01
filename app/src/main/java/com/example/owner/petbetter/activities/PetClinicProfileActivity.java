@@ -110,6 +110,7 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         vetRecyclerView = (RecyclerView) findViewById(R.id.vetRecyclerView);
 
 
+
         petClinicRateButton = (Button) findViewById(R.id.rateClinicButton);
 
 

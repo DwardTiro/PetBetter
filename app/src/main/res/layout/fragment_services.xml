@@ -118,6 +118,7 @@
         android:paddingEnd="0dp"
         android:textSize="15sp"
         android:textStyle="bold"
+        android:visibility="gone"
         />
     <LinearLayout
         android:id="@+id/separator2"
@@ -135,7 +136,9 @@
         android:layout_below="@+id/separator2"
         android:orientation="vertical"
         android:paddingTop="3dp"
-        android:paddingBottom="8dp">
+        android:paddingBottom="8dp"
+        android:visibility="gone"
+        >
         <TextView
             android:id="@+id/ambulanceTextView"
             android:layout_width="match_parent"
