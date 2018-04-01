@@ -1200,6 +1200,7 @@ public class DataAdapter {
                     c.getString(c.getColumnIndexOrThrow("hours_close")),
                     c.getString(c.getColumnIndexOrThrow("contact_info")),
                     c.getFloat(c.getColumnIndexOrThrow("rating")),
+                    c.getString(c.getColumnIndexOrThrow("faci_photo")),
                     c.getInt(c.getColumnIndexOrThrow("is_disabled")));
             results.add(facility);
         }
@@ -2798,6 +2799,7 @@ public class DataAdapter {
                     c.getString(c.getColumnIndexOrThrow("hours_close")),
                     c.getString(c.getColumnIndexOrThrow("contact_info")),
                     c.getFloat(c.getColumnIndexOrThrow("rating")),
+                    c.getString(c.getColumnIndexOrThrow("faci_photo")),
                     c.getInt(c.getColumnIndexOrThrow("is_disabled")));
 
             c.close();

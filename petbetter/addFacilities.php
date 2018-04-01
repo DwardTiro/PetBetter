@@ -24,12 +24,12 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 		$upload_path = "uploads/facilities/$title.jpg";
 		
 		if(!($facilist[$i]['faci_photo']==null)){
-			file_put_contents($upload_path, base64_decode($facilist['faci_photo']));
+			file_put_contents($upload_path, base64_decode($facilist[$i]['faci_photo']));
 		}
 		else{
 			$upload_path = null;
 		}
-		
+		echo $upload_path;
 		if($stmt = $mysqli->prepare("INSERT INTO facilities (faci_name, location, hours_open, hours_close, contact_info, rating, faci_photo, is_disabled) VALUES (?,?,?,?,?,?,?,?)")){
 			$stmt->bind_param("ssssssss", $facilist[$i]['faci_name'], $facilist[$i]['location'], $facilist[$i]['hours_open'], $facilist[$i]['hours_close'], $facilist[$i]['contact_info'], $facilist[$i]['rating'], 
 				$upload_path, $facilist[$i]['is_disabled']);

@@ -94,14 +94,16 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
     protected void onResume() {
         super.onResume();
         VeterinarianHomeActivity.this.registerReceiver(this.notifReceiver, new IntentFilter("com.example.ACTION_LOGOUT"));
-        System.out.println("ONRESUME BOI");
+        getVetChanges();
+        getClinicChanges();
+        getMembershipChanges();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         VeterinarianHomeActivity.this.unregisterReceiver(notifReceiver);
-        System.out.println("ONPAUSE BOI");
+
     }
 
     @Override

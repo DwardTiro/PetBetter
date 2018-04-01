@@ -130,7 +130,6 @@ public class EditFacilityActivity extends AppCompatActivity {
             String image = imageToString();
 
 
-
             editFacility(faciItem.getId(), facilityName.getText().toString(), faciItem.getLocation(),
                     openTime.getSelectedItem().toString(), closeTime.getSelectedItem().toString(), phoneNum.getText().toString(),
                     faciItem.getRating(), image);
@@ -152,6 +151,7 @@ public class EditFacilityActivity extends AppCompatActivity {
         System.out.println("WE HERE BOOIII");
         Facility unsyncedFacility = getFacility((int) faciItem.getId());
 
+        System.out.println("IMAGE STRING BRO "+unsyncedFacility.getFaciPhoto());
         Gson gson = new GsonBuilder().serializeNulls().create();
         String jsonArray = gson.toJson(unsyncedFacility);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
