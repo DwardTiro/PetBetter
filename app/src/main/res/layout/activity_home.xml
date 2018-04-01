@@ -25,13 +25,15 @@
                 android:layout_height="wrap_content" />
 
 
+
             <LinearLayout
                 android:id="@+id/servicesButtonBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/homeToolbar"
                 android:orientation="horizontal"
-                tools:layout_constraintTop_creator="1">
+                tools:layout_constraintTop_creator="1"
+                android:visibility="gone">
 
                 <Button
                     android:id="@+id/vetButton"
@@ -63,6 +65,17 @@
 
             </LinearLayout>
 
+            <android.support.design.widget.TabLayout
+                android:id="@+id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:tabMode="fixed"
+                android:background="@color/colorWhite"
+                
+
+                android:layout_below="@+id/servicesButtonBar"
+                app:tabGravity="fill"/>
+
             <FrameLayout
                 android:id="@+id/frame_container"
                 android:layout_width="400dp"
@@ -70,8 +83,15 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentStart="true"
-                android:layout_below="@id/servicesButtonBar"
-                tools:layout_constraintTop_creator="1"/>
+                android:layout_below="@id/tabs"
+                tools:layout_constraintTop_creator="1"
+                android:visibility="gone"/>
+            <android.support.v4.view.ViewPager
+                android:id="@+id/viewpager"
+                android:layout_below="@+id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"  />
 
         </RelativeLayout>
 

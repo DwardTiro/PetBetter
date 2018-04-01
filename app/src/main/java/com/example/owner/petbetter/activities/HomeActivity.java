@@ -6,9 +6,13 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -51,6 +55,7 @@ import java.lang.reflect.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -84,6 +89,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private ImageView imageViewDrawer;
     private Button addTopicButton;
     private Spinner spinnerFilter;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
 
 
     /*
@@ -119,6 +126,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refreshHome);
         notifButton = (ImageView) findViewById(R.id.imageview_notifs);
         addTopicButton = (Button) findViewById(R.id.addTopicButton);
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        setUpViewPager(viewPager);
+        tabLayout.setupWithViewPager(viewPager);
+        tabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.myrtle_green));
+        //tabLayout.setSelectedTabIndicatorHeight((int) (3 * getResources().getDisplayMetrics().density));
+        tabLayout.setTabTextColors(getResources().getColor(R.color.myrtle_green), getResources().getColor(R.color.myrtle_green));
 
 
         addTopicButton.setVisibility(View.GONE);
@@ -211,6 +225,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
 
         //initializeDatabase();
+    }
+    private void setUpViewPager(ViewPager viewPager){
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        //vetList = getVeterinarians();
+        viewPagerAdapter.addFragment(new FragmentVetListing(), "Veterinarians");
+        viewPagerAdapter.addFragment(new FragmentPetClinicListing(), "Facilities");
+        viewPager.setAdapter(viewPagerAdapter);
     }
     /*
     @Override
@@ -569,6 +590,35 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         petBetterDb.closeDatabase();
 
         return result;
+    }
+
+    class ViewPagerAdapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
+
+        public ViewPagerAdapter(FragmentManager manager) {
+            super(manager);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
+
+        public void addFragment(Fragment fragment, String title) {
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitleList.get(position);
+        }
     }
 
 }
