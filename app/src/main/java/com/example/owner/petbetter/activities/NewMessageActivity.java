@@ -50,6 +50,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -80,15 +82,16 @@ public class NewMessageActivity extends AppCompatActivity {
     private int mId, mrId, nId;
     private String timeStamp;
     private ArrayList<Message> mList;
-    private boolean alreadyExist= false;
+    private boolean alreadyExist = false;
     private ImageView addTopic;
+    private TextView messageRequestIndicator;
     private String image;
     HerokuService service;
     HerokuService service2;
     HerokuService service3;
 
     @Override
-    public void onCreate(Bundle savedInstance){
+    public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_new_message);
 
@@ -99,12 +102,12 @@ public class NewMessageActivity extends AppCompatActivity {
         addTopic.setVisibility(View.GONE);
         activityTitle.setText("New Message");
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-
+        messageRequestIndicator = (TextView) findViewById(R.id.messageRequestIndicator);
 
 
         systemSessionManager = new SystemSessionManager(this);
 
-        if(systemSessionManager.checkLogin())
+        if (systemSessionManager.checkLogin())
             finish();
 
         HashMap<String, String> userIn = systemSessionManager.getUserDetails();
@@ -113,7 +116,6 @@ public class NewMessageActivity extends AppCompatActivity {
 
         String email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
         user = getUser(email);
-
 
 
         //String vetEmail = new Gson().fromJson(jsonMyObject, String);
@@ -126,15 +128,48 @@ public class NewMessageActivity extends AppCompatActivity {
 
         String vetEmail;
         Bundle extras = getIntent().getExtras();
-        if(extras!=null){
+        if (extras != null) {
             vetEmail = extras.getString("thisVet");
             newMsgSendTo.setText(vetEmail);
         }
 
-        newMsgAddPhoto.setOnClickListener(new View.OnClickListener(){
+        /*
+        if(checkIfNewMessage()){
+            messageRequestIndicator.setVisibility(View.GONE);
+        }else{
+            messageRequestIndicator.setVisibility(View.VISIBLE);
+        }
+        */
+
+        newMsgAddPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 selectImage();
+            }
+        });
+
+        newMsgSendTo.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (checkIfNewMessage()) {
+                    messageRequestIndicator.setVisibility(View.GONE);
+                } else {
+                    messageRequestIndicator.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (checkIfNewMessage()) {
+                    messageRequestIndicator.setVisibility(View.GONE);
+                } else {
+                    messageRequestIndicator.setVisibility(View.VISIBLE);
+                }
             }
         });
 
@@ -143,8 +178,8 @@ public class NewMessageActivity extends AppCompatActivity {
             public void onClick(View v) {
                 image = imageToString();
                 User check = getUser(newMsgSendTo.getText().toString());
-                if(newMsgContent.getText().toString()!=""&&newMsgSendTo.getText().toString()!=""&&
-                        check.getUserId()!=user.getUserId()){
+                if (newMsgContent.getText().toString() != "" && newMsgSendTo.getText().toString() != "" &&
+                        check.getUserId() != user.getUserId()) {
                     usertwo = getUser(newMsgSendTo.getText().toString());
 
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
@@ -157,27 +192,27 @@ public class NewMessageActivity extends AppCompatActivity {
                     call2.enqueue(new Callback<ArrayList<Message>>() {
                         @Override
                         public void onResponse(Call<ArrayList<Message>> call, Response<ArrayList<Message>> response) {
-                            if(response.isSuccessful()){
-                                System.out.println("response size messages "+response.body().size());
+                            if (response.isSuccessful()) {
+                                System.out.println("response size messages " + response.body().size());
                                 mList = response.body();
                                 setMessages(response.body());
 
-                                for(Message message : mList){
-                                    if(message.getUserId()==user.getUserId()&&message.getFromId()==usertwo.getUserId()||
-                                            message.getUserId()==usertwo.getUserId()&&message.getFromId()==user.getUserId()){
+                                for (Message message : mList) {
+                                    if (message.getUserId() == user.getUserId() && message.getFromId() == usertwo.getUserId() ||
+                                            message.getUserId() == usertwo.getUserId() && message.getFromId() == user.getUserId()) {
                                         alreadyExist = true;
                                         mId = (int) message.getId();
                                     }
                                 }
-                                if(alreadyExist==true){
+                                if (alreadyExist == true) {
                                     mrId = generateMessageRepId();
-                                    addMessageRep(mrId, (int) usertwo.getUserId(),(int) user.getUserId(), mId,
+                                    addMessageRep(mrId, (int) usertwo.getUserId(), (int) user.getUserId(), mId,
                                             newMsgContent.getText().toString(), 1, timeStamp, image, 0);
                                     //uploadMessageRep(getUnsyncedMessageReps());
                                     syncMessageRepChanges();
-                                    System.out.println("We go here wrong?"+mId);
+                                    System.out.println("We go here wrong?" + mId);
                                 }
-                                if(alreadyExist==false){
+                                if (alreadyExist == false) {
                                     createMessage(mId, user.getUserId(), usertwo.getUserId());
                                     //uploadMessage(getUnsyncedMessages());
                                     syncMessageChanges();
@@ -207,12 +242,10 @@ public class NewMessageActivity extends AppCompatActivity {
                             finish();
                         }
                     });
-                }
-                else{
-                    if(check==null){
+                } else {
+                    if (check == null) {
                         Toast.makeText(NewMessageActivity.this, "That user does not exist.", Toast.LENGTH_SHORT);
-                    }
-                    else{
+                    } else {
                         Toast.makeText(NewMessageActivity.this, "Make sure that all texts are filled.", Toast.LENGTH_SHORT);
                     }
                 }
@@ -248,7 +281,55 @@ public class NewMessageActivity extends AppCompatActivity {
         });
     }
 
-    public void syncUsers(){
+    private boolean checkEmailValidity(String email) {
+
+        String regEx = "^[\\w\\.-]+@([\\w\\-]+\\.)+[a-zA-Z]{2,4}$";
+
+        Pattern pattern = Pattern.compile(regEx, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(email);
+
+        return matcher.matches();
+
+
+    }
+
+    private boolean checkIfNewMessage() {
+            usertwo = getUser(newMsgSendTo.getText().toString());
+            if(usertwo != null)
+            {
+            service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+            final Call<ArrayList<Message>> call2 = service2.getMessages(user.getUserId());
+            call2.enqueue(new Callback<ArrayList<Message>>() {
+                @Override
+                public void onResponse(Call<ArrayList<Message>> call, Response<ArrayList<Message>> response) {
+                    if (response.isSuccessful()) {
+                        System.out.println("response size messages " + response.body().size());
+                        mList = response.body();
+                        setMessages(response.body());
+
+                        for (Message message : mList) {
+                            if (message.getUserId() == user.getUserId() && message.getFromId() == usertwo.getUserId() ||
+                                    message.getUserId() == usertwo.getUserId() && message.getFromId() == user.getUserId()) {
+                                alreadyExist = true;
+                                mId = (int) message.getId();
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ArrayList<Message>> call, Throwable t) {
+                    Log.d("onFailure", t.getLocalizedMessage());
+
+                }
+            });
+
+            return alreadyExist;
+        }else
+            return true;
+    }
+
+    public void syncUsers() {
 
         final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
@@ -256,7 +337,7 @@ public class NewMessageActivity extends AppCompatActivity {
         call.enqueue(new Callback<ArrayList<User>>() {
             @Override
             public void onResponse(Call<ArrayList<User>> call, Response<ArrayList<User>> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     setUsers(response.body());
                     dataSynced(9);
 
@@ -270,10 +351,10 @@ public class NewMessageActivity extends AppCompatActivity {
         });
     }
 
-    public long setUsers(ArrayList<User> userList){
+    public long setUsers(ArrayList<User> userList) {
         try {
             petBetterDb.openDatabase();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         long result = petBetterDb.setUsers(userList);
@@ -282,13 +363,13 @@ public class NewMessageActivity extends AppCompatActivity {
         return result;
     }
 
-    public void syncMessageChanges(){
+    public void syncMessageChanges() {
 
         final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
         ArrayList<Message> unsyncedMessages = getUnsyncedMessages();
-        System.out.println("UNSYNCED MESSAGES: "+unsyncedMessages.size());
+        System.out.println("UNSYNCED MESSAGES: " + unsyncedMessages.size());
         Gson gson = new GsonBuilder().serializeNulls().create();
         String jsonArray = gson.toJson(unsyncedMessages);
 
@@ -297,7 +378,7 @@ public class NewMessageActivity extends AppCompatActivity {
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     System.out.println("MESSAGES ADDED YEY");
                     dataSynced(5);
 
@@ -305,12 +386,12 @@ public class NewMessageActivity extends AppCompatActivity {
                     call2.enqueue(new Callback<Message>() {
                         @Override
                         public void onResponse(Call<Message> call, Response<Message> response) {
-                            if(response.isSuccessful()){
+                            if (response.isSuccessful()) {
                                 //setMessages(response.body());
                                 mId = (int) response.body().getId();
                                 mrId = generateMessageRepId();
-                                System.out.println("MESSAGE ID PAR "+mId);
-                                addMessageRep(mrId, (int) usertwo.getUserId(),(int) user.getUserId(), mId,
+                                System.out.println("MESSAGE ID PAR " + mId);
+                                addMessageRep(mrId, (int) usertwo.getUserId(), (int) user.getUserId(), mId,
                                         newMsgContent.getText().toString(), 1, timeStamp, image, 0);
                                 //uploadMessageRep(getUnsyncedMessageReps());
                                 syncMessageRepChanges();
@@ -338,10 +419,10 @@ public class NewMessageActivity extends AppCompatActivity {
         });
     }
 
-    public long setMessages(ArrayList<Message> messageList){
+    public long setMessages(ArrayList<Message> messageList) {
         try {
             petBetterDb.openDatabase();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         long result = petBetterDb.setMessages(messageList);
@@ -350,25 +431,25 @@ public class NewMessageActivity extends AppCompatActivity {
         return result;
     }
 
-    private String imageToString(){
-        try{
+    private String imageToString() {
+        try {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG,100,byteArrayOutputStream);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
             byte[] imgByte = byteArrayOutputStream.toByteArray();
-            return Base64.encodeToString(imgByte,Base64.DEFAULT);
-        }catch(NullPointerException npe){
+            return Base64.encodeToString(imgByte, Base64.DEFAULT);
+        } catch (NullPointerException npe) {
             return null;
         }
 
     }
 
-    public void syncMessageRepChanges(){
+    public void syncMessageRepChanges() {
 
         final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
         ArrayList<MessageRep> unsyncedMessages = getUnsyncedMessageReps();
-        System.out.println("UNSYNCED MESSAGEREPS: "+unsyncedMessages.size());
+        System.out.println("UNSYNCED MESSAGEREPS: " + unsyncedMessages.size());
         Gson gson = new GsonBuilder().serializeNulls().create();
         String jsonArray = gson.toJson(unsyncedMessages);
 
@@ -377,7 +458,7 @@ public class NewMessageActivity extends AppCompatActivity {
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     System.out.println("MESSAGEREPS ADDED YEY");
                     dataSynced(6);
 
@@ -385,11 +466,11 @@ public class NewMessageActivity extends AppCompatActivity {
                     call2.enqueue(new Callback<ArrayList<MessageRep>>() {
                         @Override
                         public void onResponse(Call<ArrayList<MessageRep>> call, Response<ArrayList<MessageRep>> response) {
-                            if(response.isSuccessful()){
-                                System.out.println("response size messagereps "+response.body().size());
+                            if (response.isSuccessful()) {
+                                System.out.println("response size messagereps " + response.body().size());
                                 setMessageReps(response.body());
-                                System.out.println("EYY REP: "+response.body().get(6).getRepContent()+" "
-                                        +response.body().get(6).getMessagePhoto());
+                                System.out.println("EYY REP: " + response.body().get(6).getRepContent() + " "
+                                        + response.body().get(6).getMessagePhoto());
                             }
                         }
 
@@ -410,10 +491,10 @@ public class NewMessageActivity extends AppCompatActivity {
         });
     }
 
-    public long setMessageReps(ArrayList<MessageRep> messageRepList){
+    public long setMessageReps(ArrayList<MessageRep> messageRepList) {
         try {
             petBetterDb.openDatabase();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         long result = petBetterDb.setMessageReps(messageRepList);
@@ -422,7 +503,7 @@ public class NewMessageActivity extends AppCompatActivity {
         return result;
     }
 
-    private void uploadNotifications(ArrayList<Notifications> notifications){
+    private void uploadNotifications(ArrayList<Notifications> notifications) {
         //herokuservice
         service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         Gson gson = new GsonBuilder().serializeNulls().create();
@@ -445,7 +526,7 @@ public class NewMessageActivity extends AppCompatActivity {
 
     }
 
-    private void uploadMessage(ArrayList<Message> messages){
+    private void uploadMessage(ArrayList<Message> messages) {
         //herokuservice
         service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         Gson gson = new Gson();
@@ -468,7 +549,7 @@ public class NewMessageActivity extends AppCompatActivity {
 
     }
 
-    private void uploadMessageRep(ArrayList<MessageRep> messageReps){
+    private void uploadMessageRep(ArrayList<MessageRep> messageReps) {
         service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
         Gson gson = new Gson();
@@ -490,20 +571,20 @@ public class NewMessageActivity extends AppCompatActivity {
         });
     }
 
-    private void selectImage(){
+    private void selectImage() {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(intent, IMG_REQUEST);
         ActivityCompat.requestPermissions(NewMessageActivity.this,
-                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},1);
+                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
     }
 
-    private void dataSynced(int n){
+    private void dataSynced(int n) {
 
         try {
             petBetterDb.openDatabase();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -515,14 +596,14 @@ public class NewMessageActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == IMG_REQUEST && resultCode == RESULT_OK && data!=null){
+        if (requestCode == IMG_REQUEST && resultCode == RESULT_OK && data != null) {
             Uri path = data.getData();
             try {
 
 
                 bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), path);
-                if(bitmap.getHeight()>250||bitmap.getWidth()>250){
-                    bitmap = Bitmap.createScaledBitmap(bitmap,250,250,false);
+                if (bitmap.getHeight() > 250 || bitmap.getWidth() > 250) {
+                    bitmap = Bitmap.createScaledBitmap(bitmap, 250, 250, false);
                 }
 
             } catch (IOException e) {
@@ -555,26 +636,27 @@ public class NewMessageActivity extends AppCompatActivity {
     }
     */
 
-    public void viewPostBackButtonClicked(View view){
+    public void viewPostBackButtonClicked(View view) {
         finish();
     }
+
     private void initializeDatabase() {
 
         petBetterDb = new DataAdapter(this);
 
         try {
             petBetterDb.createDatabase();
-        } catch(SQLException e ){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
     }
 
-    private User getUser(String email){
+    private User getUser(String email) {
 
         try {
             petBetterDb.openDatabase();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -584,12 +666,12 @@ public class NewMessageActivity extends AppCompatActivity {
         return result;
     }
 
-    private long createMessage(int messageId, long userId, long toId){
-        long  result;
+    private long createMessage(int messageId, long userId, long toId) {
+        long result;
 
         try {
             petBetterDb.openDatabase();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -601,12 +683,12 @@ public class NewMessageActivity extends AppCompatActivity {
     }
 
     //nId, usertwo.getUserId(), user.getUserId(), 0, 2, timeStamp
-    private long notifyMessage(int notifId, long toId, long userId, int isRead, int type, String timeStamp, int mId, int isSynced){
-        long  result;
+    private long notifyMessage(int notifId, long toId, long userId, int isRead, int type, String timeStamp, int mId, int isSynced) {
+        long result;
 
         try {
             petBetterDb.openDatabase();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -618,11 +700,11 @@ public class NewMessageActivity extends AppCompatActivity {
         return result;
     }
 
-    private ArrayList<MessageRep> getUnsyncedMessageReps(){
+    private ArrayList<MessageRep> getUnsyncedMessageReps() {
 
         try {
             petBetterDb.openDatabase();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -632,11 +714,11 @@ public class NewMessageActivity extends AppCompatActivity {
         return result;
     }
 
-    private ArrayList<Notifications> getUnsyncedNotifications(){
+    private ArrayList<Notifications> getUnsyncedNotifications() {
 
         try {
             petBetterDb.openDatabase();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -646,11 +728,11 @@ public class NewMessageActivity extends AppCompatActivity {
         return result;
     }
 
-    private ArrayList<Message> getUnsyncedMessages(){
+    private ArrayList<Message> getUnsyncedMessages() {
 
         try {
             petBetterDb.openDatabase();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -660,7 +742,7 @@ public class NewMessageActivity extends AppCompatActivity {
         return result;
     }
 
-    public int generateMessageId(){
+    public int generateMessageId() {
         ArrayList<Integer> storedIds;
         int markerId = 1;
 
@@ -674,10 +756,10 @@ public class NewMessageActivity extends AppCompatActivity {
         petBetterDb.closeDatabase();
 
 
-        if(storedIds.isEmpty()) {
+        if (storedIds.isEmpty()) {
             return markerId;
         } else {
-            while (storedIds.contains(markerId)){
+            while (storedIds.contains(markerId)) {
                 markerId += 1;
             }
 
@@ -685,7 +767,7 @@ public class NewMessageActivity extends AppCompatActivity {
         }
     }
 
-    public int generateMessageRepId(){
+    public int generateMessageRepId() {
         ArrayList<Integer> storedIds;
         int markerId = 1;
 
@@ -699,10 +781,10 @@ public class NewMessageActivity extends AppCompatActivity {
         petBetterDb.closeDatabase();
 
 
-        if(storedIds.isEmpty()) {
+        if (storedIds.isEmpty()) {
             return markerId;
         } else {
-            while (storedIds.contains(markerId)){
+            while (storedIds.contains(markerId)) {
                 markerId += 1;
             }
 
@@ -711,11 +793,11 @@ public class NewMessageActivity extends AppCompatActivity {
     }
 
     private long addMessageRep(int messageRepId, int userId, int senderId, int messageId, String repContent, int isSent, String datePerformed,
-                               String image, int isSynced){
+                               String image, int isSynced) {
 
         try {
             petBetterDb.openDatabase();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -725,7 +807,7 @@ public class NewMessageActivity extends AppCompatActivity {
         return result;
     }
 
-    public int generateNotifsId(){
+    public int generateNotifsId() {
         ArrayList<Integer> storedIds;
         int markerId = 1;
 
@@ -739,10 +821,10 @@ public class NewMessageActivity extends AppCompatActivity {
         petBetterDb.closeDatabase();
 
 
-        if(storedIds.isEmpty()) {
+        if (storedIds.isEmpty()) {
             return markerId;
         } else {
-            while (storedIds.contains(markerId)){
+            while (storedIds.contains(markerId)) {
                 markerId += 1;
             }
 
@@ -750,12 +832,12 @@ public class NewMessageActivity extends AppCompatActivity {
         }
     }
 
-    public ArrayList<Message> getMessages(long userId){
+    public ArrayList<Message> getMessages(long userId) {
 
         //modify this method in such a way that it only gets bookmarks tagged by user. Separate from facilities.
         try {
             petBetterDb.openDatabase();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -763,13 +845,12 @@ public class NewMessageActivity extends AppCompatActivity {
         petBetterDb.closeDatabase();
         User tempUser;
 
-        for(int i=0;i<result.size();i++){
+        for (int i = 0; i < result.size(); i++) {
             tempUser = getUserWithId(result.get(i).getUserId());
-            if(tempUser.getUserId()==user.getUserId()){
+            if (tempUser.getUserId() == user.getUserId()) {
                 tempUser = getUserWithId(result.get(i).getFromId());
                 result.get(i).setFromName(tempUser.getName());
-            }
-            else{
+            } else {
                 tempUser = getUserWithId(result.get(i).getUserId());
                 result.get(i).setFromName(tempUser.getName());
             }
@@ -778,11 +859,11 @@ public class NewMessageActivity extends AppCompatActivity {
         return result;
     }
 
-    private User getUserWithId(long id){
+    private User getUserWithId(long id) {
 
         try {
             petBetterDb.openDatabase();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
