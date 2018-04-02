@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
             call.enqueue(new Callback<User>() {
                 @Override
                 public void onResponse(Call<User> call, Response<User> response) {
-                    if(response.isSuccessful()&&response.body().getUserType()!=3){
+                    if(response.isSuccessful()&&response.body().getUserType()!=3&&response.body().getIsDisabled()==0){
 
                         final User user = response.body();
 
@@ -235,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                     }
-                    if(response.isSuccessful()&&response.body().getUserType()==3){
+                    if(response.isSuccessful()&&response.body().getUserType()==3&&response.body().getIsDisabled()==0){
                         User thisUser = response.body();
                         syncPendingChanges();
                         syncUsers();
@@ -262,6 +262,10 @@ public class MainActivity extends AppCompatActivity {
                         editor.apply();
                         startActivity(intent);
                         finish();
+                    }
+                    if(response.body().getIsDisabled()==1){
+                        textInfo.setText("This user is disabled.");
+                        textInfo.setVisibility(View.VISIBLE);
                     }
                     else{
                         textInfo.setText("Logging in....");
