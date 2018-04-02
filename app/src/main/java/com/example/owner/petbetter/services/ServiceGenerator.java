@@ -11,7 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ServiceGenerator {
 
-    public static final String BASE_URL = "http://192.168.0.19/petbetter/";
+    public static final String BASE_URL = "http://159.89.201.52/petbetter/";
     //public static final String BASE_URL = "http://172.20.10.4/petbetter/";
     //public static final String BASE_URL = "http://192.168.0.19/petbetter/";
     //public static final String BASE_URL = "http://172.16.4.44/petbetter/";
