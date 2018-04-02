@@ -1,8 +1,8 @@
 <?php
 
   define('DB_NAME', 'petbetter');
-  define('DB_USER', 'root');
-  define('DB_PASSWORD', '');
+  define('DB_USER', 'edward');
+  define('DB_PASSWORD', 'petbetter');
   define('DB_HOST', 'localhost');
 
   $con = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or die ('unable to connect');
