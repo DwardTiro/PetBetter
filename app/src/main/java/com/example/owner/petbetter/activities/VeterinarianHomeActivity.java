@@ -389,7 +389,7 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
             Intent intent = new Intent(this, com.example.owner.petbetter.activities.MessagesActivity.class);
             startActivity(intent);
         } else if (id == R.id.user_profile) {
-            Intent intent = new Intent(this, com.example.owner.petbetter.activities.VetUserProfileActivity.class);
+            Intent intent = new Intent(this, com.example.owner.petbetter.activities.UserProfileActivity.class);
             startActivity(intent);
         } else if (id == R.id.bookmarks) {
             Intent intent = new Intent(this, com.example.owner.petbetter.activities.BookmarksActivity.class);

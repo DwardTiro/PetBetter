@@ -182,6 +182,18 @@
                         android:textColor="@color/colorWhite"
                         android:textSize="18sp" />
 
+                    <Button
+                        android:id="@+id/goToUserProfileButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/myrtle_green"
+                        android:text="Go To User Profile"
+                        android:layout_marginTop="10dp"
+                        android:layout_below="@+id/editVetProfileButton"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="18sp" />
+
                 </RelativeLayout>
 
             </LinearLayout>

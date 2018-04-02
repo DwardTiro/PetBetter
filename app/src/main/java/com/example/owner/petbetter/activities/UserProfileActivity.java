@@ -69,6 +69,7 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
     private RelativeLayout postTopicInfoLayout;
     private ArrayList<Topic> userTopics;
     private ArrayList<Post> userPosts;
+    private Button goToVetButton;
 
     HerokuService service;
 
@@ -121,6 +122,7 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
 
         postTopicInfoLayout = (RelativeLayout) findViewById(R.id.postTopicInfoLayout);
         addTopicButton = (Button) findViewById(R.id.addTopicButton);
+        goToVetButton = (Button) findViewById(R.id.goToVetProfileButton);
 
 
         addTopicButton.setVisibility(View.GONE);
@@ -161,6 +163,19 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
         userTopicNum.setText(Integer.toString(getTopicsWithId(user.getUserId()).size()));
 
         userProfilePicture = (ImageView) findViewById(R.id.userProfilePicture);
+
+        if(user.getUserType()==2){
+            goToVetButton.setVisibility(View.GONE);
+        }
+        if(user.getUserType()==1){
+            goToVetButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(UserProfileActivity.this, com.example.owner.petbetter.activities.VetUserProfileActivity.class);
+                    startActivity(intent);
+                }
+            });
+        }
 
         if(user.getUserPhoto()!=null){
 

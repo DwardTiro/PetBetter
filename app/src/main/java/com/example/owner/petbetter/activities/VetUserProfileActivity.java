@@ -73,6 +73,7 @@ public class VetUserProfileActivity extends AppCompatActivity implements Navigat
     private int licenseCheck;
     private NotificationReceiver notifReceiver = new NotificationReceiver();
     private Spinner spinnerFilter;
+    private Button goToUserButton;
 
     HerokuService service;
 
@@ -110,6 +111,7 @@ public class VetUserProfileActivity extends AppCompatActivity implements Navigat
 
         notifButton = (ImageView) findViewById(R.id.imageview_notifs);
         addTopicButton = (Button) findViewById(R.id.addTopicButton);
+        goToUserButton = (Button) findViewById(R.id.goToUserProfileButton);
 
 
         addTopicButton.setVisibility(View.GONE);
@@ -178,6 +180,14 @@ public class VetUserProfileActivity extends AppCompatActivity implements Navigat
                 extras.putString("specialty", vet.getSpecialty());
                 */
                 Intent intent = new Intent(VetUserProfileActivity.this, com.example.owner.petbetter.activities.EditVetProfileActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        goToUserButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(VetUserProfileActivity.this, com.example.owner.petbetter.activities.UserProfileActivity.class);
                 startActivity(intent);
             }
         });
@@ -353,7 +363,7 @@ public class VetUserProfileActivity extends AppCompatActivity implements Navigat
             Intent intent = new Intent(this, com.example.owner.petbetter.activities.MessagesActivity.class);
             startActivity(intent);
         } else if (id == R.id.user_profile) {
-            Intent intent = new Intent(this, com.example.owner.petbetter.activities.VetUserProfileActivity.class);
+            Intent intent = new Intent(this, com.example.owner.petbetter.activities.UserProfileActivity.class);
             startActivity(intent);
         } else if (id == R.id.bookmarks) {
             Intent intent = new Intent(this, com.example.owner.petbetter.activities.BookmarksActivity.class);
