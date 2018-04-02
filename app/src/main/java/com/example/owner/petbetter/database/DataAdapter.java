@@ -280,22 +280,27 @@ public class DataAdapter {
 
         Log.e("cursor", c.getCount() + "");
 
-        c.moveToFirst();
+        try{
+            c.moveToFirst();
 
-        User result = new User(c.getLong(c.getColumnIndexOrThrow("_id")),
-                c.getString(c.getColumnIndexOrThrow("first_name")),
-                c.getString(c.getColumnIndexOrThrow("last_name")),
-                c.getString(c.getColumnIndexOrThrow("mobile_num")),
-                c.getString(c.getColumnIndexOrThrow("phone_num")),
-                c.getString(c.getColumnIndexOrThrow("email")),
-                c.getString(c.getColumnIndexOrThrow("password")),
-                c.getInt(c.getColumnIndexOrThrow("age")),
-                c.getInt(c.getColumnIndexOrThrow("user_type")),
-                c.getString(c.getColumnIndexOrThrow("user_photo")),
-                c.getInt(c.getColumnIndexOrThrow("is_disabled")));
+            User result = new User(c.getLong(c.getColumnIndexOrThrow("_id")),
+                    c.getString(c.getColumnIndexOrThrow("first_name")),
+                    c.getString(c.getColumnIndexOrThrow("last_name")),
+                    c.getString(c.getColumnIndexOrThrow("mobile_num")),
+                    c.getString(c.getColumnIndexOrThrow("phone_num")),
+                    c.getString(c.getColumnIndexOrThrow("email")),
+                    c.getString(c.getColumnIndexOrThrow("password")),
+                    c.getInt(c.getColumnIndexOrThrow("age")),
+                    c.getInt(c.getColumnIndexOrThrow("user_type")),
+                    c.getString(c.getColumnIndexOrThrow("user_photo")),
+                    c.getInt(c.getColumnIndexOrThrow("is_disabled")));
 
-        c.close();
-        return result;
+            c.close();
+            return result;
+        }catch(CursorIndexOutOfBoundsException cpe){
+            return null;
+        }
+
     }
 
     public Veterinarian getVeterinarianFromId(long id){

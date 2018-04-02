@@ -86,7 +86,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
         int topicPosts = getTopicPosts(thisTopic.getId()).size();
         holder.topicName.setText(thisTopic.getTopicName());
         holder.topicDescription.setText(thisTopic.getTopicDesc());
-        if(topicUser.getUserType() == 1){
+        if(topicUser!=null && topicUser.getUserType() == 1){
             holder.topicUser.setText("Dr. "+thisTopic.getCreatorName()+", DVM.");
             //holder.topicUser.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_check_circle_black_18dp,0);
             //holder.topicUser.setCompoundDrawablePadding(5);

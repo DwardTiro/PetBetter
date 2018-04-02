@@ -94,6 +94,9 @@ public class FollowerAdapter extends RecyclerView.Adapter<FollowerAdapter.Follow
 
         }
         else {
+            if(context instanceof TopicContentActivity){
+                holder.acceptButton.setVisibility(View.GONE);
+            }
             holder.acceptButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
