@@ -47,6 +47,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             app:fabSize="normal"
+            app:backgroundTint="@color/myrtle_green"
 
             android:layout_gravity="end|bottom"
             android:layout_marginEnd="16dp"
