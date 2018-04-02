@@ -28,7 +28,7 @@
                 android:id="@+id/editImage"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
-                android:background="@drawable/app_icon_yellow"
+                android:src="@drawable/userplacholder"
                 android:adjustViewBounds="true"/>
 
             <ImageView

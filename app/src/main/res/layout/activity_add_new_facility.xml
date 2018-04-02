@@ -41,7 +41,7 @@
                 android:layout_height="200dp"
                 android:adjustViewBounds="true"
                 android:scaleType="fitXY"
-                android:background="@drawable/sample_vet_clinic" />
+                />
 
             <ImageView
                 android:layout_width="50dp"
