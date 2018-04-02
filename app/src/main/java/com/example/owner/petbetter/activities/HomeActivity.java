@@ -126,6 +126,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refreshHome);
         notifButton = (ImageView) findViewById(R.id.imageview_notifs);
         addTopicButton = (Button) findViewById(R.id.addTopicButton);
+        /*
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setUpViewPager(viewPager);
@@ -133,7 +134,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         tabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.myrtle_green));
         //tabLayout.setSelectedTabIndicatorHeight((int) (3 * getResources().getDisplayMetrics().density));
         tabLayout.setTabTextColors(getResources().getColor(R.color.colorWhite), getResources().getColor(R.color.myrtle_green));
-
+*/
 
         addTopicButton.setVisibility(View.GONE);
 
