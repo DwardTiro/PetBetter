@@ -39,7 +39,7 @@
                         android:layout_marginStart="13dp"
                         android:layout_marginTop="13dp"
                         android:adjustViewBounds="true"
-                        android:src="@drawable/vet_sample_pic" />
+                        android:src="@drawable/userplacholder" />
 
                     <ImageView
                         android:layout_width="160dp"
