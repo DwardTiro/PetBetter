@@ -3,6 +3,7 @@ package com.example.owner.petbetter.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -51,6 +52,7 @@ public class EditVetServicesActivity extends AppCompatActivity {
     private Button saveChangesButton;
     private ArrayList<Long> serviceIds;
     private int targetIndex;
+    private FloatingActionButton fab;
 
     private LinearLayout currentServices;
 
@@ -60,7 +62,7 @@ public class EditVetServicesActivity extends AppCompatActivity {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_add_services);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.viewPostToolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.servicesToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         final TextView activityTitle = (TextView) findViewById(R.id.activity_title);
@@ -68,13 +70,15 @@ public class EditVetServicesActivity extends AppCompatActivity {
 
         currentServices = (LinearLayout) findViewById(R.id.serviceContainer);
         Button addField = (Button) findViewById(R.id.addFieldButton);
-        newTopic = (ImageButton) findViewById(R.id.topicNewPost);
+
         //editServicesTitle = (TextView) findViewById(R.id.labelActivity);
-        saveChangesButton = (Button) findViewById(R.id.addFacilityButton);
-        newTopic.setVisibility(View.GONE);
+        saveChangesButton = (Button) findViewById(R.id.saveButton);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setVisibility(View.GONE);
+
         addField.setVisibility(View.GONE);
 
-        saveChangesButton.setText("Save Changes");
+        //saveChangesButton.setText("Save Changes");
 
         //editServicesTitle.setVisibility(View.GONE);
 
@@ -131,6 +135,41 @@ public class EditVetServicesActivity extends AppCompatActivity {
 
 
     }
+    /*
+    public void addFacility(View view){
+        for(int i = 0; i < serviceIds.size(); i++){
+            //editService(serviceIds.get(i), );
+            EditText serviceField;
+            EditText priceField;
+            priceField = (EditText) (currentServices.getChildAt(i).findViewById(R.id.servicePriceField));
+            serviceField = (EditText) (currentServices.getChildAt(i).findViewById(R.id.serviceNameField));
+
+            editService(serviceIds.get(i), serviceField.getText().toString(), Float.parseFloat(priceField.getText().toString()));
+        }
+        serviceList = getServicesWithFaciId(faciItem.getId());
+        System.out.println("Services ID in list is "+ serviceList.get(0).getId() );
+
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String jsonArray = gson.toJson(serviceList);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray);
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final Call<Void> call = service.editFacilityService(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    finish();
+                    Toast.makeText(EditVetServicesActivity.this, "Facilities edited successfully", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+            }
+        });
+    }*/
 
     private void createNewEditText() {
         /*
@@ -195,6 +234,7 @@ public class EditVetServicesActivity extends AppCompatActivity {
         deleteService(serviceList.get(targetIndex).getId());
         currentServices.removeView((View) view.getParent());
 
+
         final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         final Call<Void> call = service.deleteService(serviceList.get(targetIndex).getId());
         call.enqueue(new Callback<Void>() {
@@ -202,7 +242,12 @@ public class EditVetServicesActivity extends AppCompatActivity {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()){
                     serviceList.remove(targetIndex);
-                    Toast.makeText(EditVetServicesActivity.this, "Service removed successfully.", Toast.LENGTH_SHORT).show();
+                    if(serviceList.size() == 0){
+                        finish();
+                        Toast.makeText(EditVetServicesActivity.this, "All services are removed.", Toast.LENGTH_SHORT).show();
+                    }
+                    else
+                        Toast.makeText(EditVetServicesActivity.this, "Service removed successfully.", Toast.LENGTH_SHORT).show();
                 }
             }
 

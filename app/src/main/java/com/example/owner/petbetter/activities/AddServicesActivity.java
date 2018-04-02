@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -67,7 +68,7 @@ public class AddServicesActivity extends AppCompatActivity {
     private boolean insideEditFacility = false;
 
     private LinearLayout newServices;
-    private Button addField;
+    private FloatingActionButton addField;
 
     HerokuService service;
 
@@ -76,16 +77,16 @@ public class AddServicesActivity extends AppCompatActivity {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_add_services);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.viewPostToolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.servicesToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         final TextView activityTitle = (TextView) findViewById(R.id.activity_title);
         activityTitle.setText("Add Facility Services");
 
         newServices = (LinearLayout) findViewById(R.id.serviceContainer);
-        addField = (Button) findViewById(R.id.addFieldButton);
-        topicNewPost = (ImageButton) findViewById(R.id.topicNewPost);
-        topicNewPost.setVisibility(View.GONE);
+        addField = (FloatingActionButton) findViewById(R.id.fab);
+        //topicNewPost = (ImageButton) findViewById(R.id.topicNewPost);
+        //topicNewPost.setVisibility(View.GONE);
 
         Bundle extras = getIntent().getExtras();
         if (extras.getString("thisClinic") == null) {

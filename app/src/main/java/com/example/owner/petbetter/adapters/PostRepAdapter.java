@@ -127,7 +127,7 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
             holder.sentenceEnd.setText("reply");
             holder.postRepCounter.setText(postRepList.size());
         }
-        else{
+        else if(postRepList.size() > 1){
             holder.postRepCounter.setText(postRepList.size());
         }
 

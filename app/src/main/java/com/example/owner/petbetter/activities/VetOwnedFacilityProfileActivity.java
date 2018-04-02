@@ -105,6 +105,7 @@ public class VetOwnedFacilityProfileActivity extends AppCompatActivity{
         addServicesButton = (Button) findViewById(R.id.addServicesButton);
         verifiedServices = (ImageView) findViewById(R.id.verifiedServices);
         verifiedServices.setVisibility(View.VISIBLE);
+        editServicesButton.setVisibility(View.GONE);
 
         if (faciItem.getFaciPhoto() != null) {
             String newFileName = BASE_URL + faciItem.getFaciPhoto();
@@ -240,6 +241,7 @@ public class VetOwnedFacilityProfileActivity extends AppCompatActivity{
                 if (response.isSuccessful()) {
                     if (response.body().size() > 0) {
                         serviceList = response.body();
+                        editServicesButton.setVisibility(View.VISIBLE);
                         serviceRecyclerView.setVisibility(View.VISIBLE);
                         noServicesTextView.setVisibility(View.GONE);
                         serviceRecyclerView.setAdapter(new ServiceAdapter(VetOwnedFacilityProfileActivity.this, getLayoutInflater(), response.body()));

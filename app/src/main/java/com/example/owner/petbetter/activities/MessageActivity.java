@@ -177,6 +177,7 @@ public class MessageActivity extends AppCompatActivity {
                     int messageRepId = generateMessageRepId();
 
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
+                    //SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss ", Locale.US);
                     sdf.setTimeZone(TimeZone.getTimeZone("GMT+8"));
                     timeStamp = sdf.format(new Date());
 

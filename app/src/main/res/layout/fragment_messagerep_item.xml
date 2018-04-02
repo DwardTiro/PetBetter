@@ -51,7 +51,8 @@
 
                     android:text="22 hrs"
                     android:textColor="@color/timestamp"
-                    android:textSize="13sp" />
+                    android:textSize="13sp"
+                    android:visibility="gone"/>
             </LinearLayout>
 
             <TextView
