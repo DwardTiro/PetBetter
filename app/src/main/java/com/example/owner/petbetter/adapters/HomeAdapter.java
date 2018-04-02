@@ -79,11 +79,11 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
         holder.topicName.setText(thisPost.getTopicName());
         holder.topicDescription.setText(thisPost.getTopicContent());
         if(topicUser.getUserType() == 1){
-            holder.topicUser.setText("Dr. "+thisPost.getTopicUser()+", DVM.");
+            holder.topicUser.setText("Dr. "+topicUser.getName()+", DVM.");
             //holder.topicUser.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_check_circle_black_18dp,0);
             //holder.topicUser.setCompoundDrawablePadding(5);
         }else
-            holder.topicUser.setText(thisPost.getTopicUser());
+            holder.topicUser.setText(topicUser.getName());
 
         if(getPostReps(thisPost.getId()).size() == 0){
             holder.replyCounter.setVisibility(View.GONE);

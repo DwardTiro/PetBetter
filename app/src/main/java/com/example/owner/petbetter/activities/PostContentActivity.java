@@ -202,7 +202,10 @@ public class PostContentActivity extends AppCompatActivity {
         fragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().add(R.id.postrep_container, fragment).commitAllowingStateLoss();
 
-        profileName.setText(postUser.getFirstName() + " " + postUser.getLastName());
+        if(postUser.getUserType() == 1){
+            profileName.setText("Dr. "+postUser.getName()+", DVM.");
+        }else
+            profileName.setText(postUser.getName());
         postTitle.setText(postItem.getTopicName());
         homeListContent.setText(postItem.getTopicContent());
 
