@@ -257,6 +257,20 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
         userTopicNum = (TextView) findViewById(R.id.profileTopicTextField);
         userTopicNum.setText(Integer.toString(getTopicsWithId(user.getUserId()).size()));
 
+        if(user.getUserPhoto()!=null){
+
+            String newFileName = BASE_URL + user.getUserPhoto();
+            System.out.println(newFileName);
+            //String newFileName = "http://192.168.0.19/petbetter/"+thisMessageRep.getMessagePhoto();
+            Glide.with(UserProfileActivity.this).load(newFileName).error(R.drawable.app_icon_yellow).into(imageViewDrawer);
+            /*
+            Picasso.with(inflater.getContext()).load("http://".concat(newFileName))
+                    .error(R.drawable.back_button).into(holder.messageRepImage);*/
+            //setImage(holder.messageRepImage, newFileName);
+
+            imageViewDrawer.setVisibility(View.VISIBLE);
+        }
+
     }
 
     @Override

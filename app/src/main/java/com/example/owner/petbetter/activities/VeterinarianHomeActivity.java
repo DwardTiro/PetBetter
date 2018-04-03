@@ -15,6 +15,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -84,6 +85,7 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
     private Button addTopicButton;
     private Spinner filterSpinner;
     private FloatingActionButton fab;
+    private SwipeRefreshLayout refreshVetHome;
 
     AlarmManager alarmManager;
     PendingIntent pendingIntent;
@@ -219,6 +221,20 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
                 getSupportFragmentManager().beginTransaction().replace(R.id.vethome_container,fragment).commitAllowingStateLoss();
             }
         }
+
+        refreshVetHome = (SwipeRefreshLayout) findViewById(R.id.refreshVetHome);
+
+        refreshVetHome.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshVetHome.setRefreshing(true);
+                getVetChanges();
+                getClinicChanges();
+                getMembershipChanges();
+                refreshVetHome.setRefreshing(false);
+            }
+        });
+
     }
 
     public void getMembershipChanges(){
@@ -253,6 +269,13 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
                 if(response.isSuccessful()){
                     setFacilities(response.body());
                     dataSynced(2);
+
+                    faciList = getFacilitiesByVetId(thisVet.getId());
+                    if(faciList.size()>0){
+                        FragmentPetClinicListing fragment = new FragmentPetClinicListing(faciList);
+                        getSupportFragmentManager().beginTransaction().replace(R.id.vethome_container,fragment).commitAllowingStateLoss();
+                    }
+
                 }
             }
 
