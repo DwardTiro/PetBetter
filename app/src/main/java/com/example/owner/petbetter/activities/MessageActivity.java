@@ -75,6 +75,7 @@ public class MessageActivity extends AppCompatActivity {
     private ImageView attachedImage;
     private ImageView removedAttachedImage;
     private RelativeLayout attachedImageContainer;
+    private TextView activityTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +83,7 @@ public class MessageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_message);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.viewPostToolbar);
-        final TextView activityTitle = (TextView) findViewById(R.id.activity_title);
+        activityTitle = (TextView) findViewById(R.id.activity_title);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -129,7 +130,9 @@ public class MessageActivity extends AppCompatActivity {
                 public void onResponse(Call<User> call, Response<User> response) {
                     if(response.isSuccessful()){
                         User temp = response.body();
-                        fromText.setText(temp.getName());
+                        //fromText.setText(temp.getName());
+                        activityTitle.setText(temp.getName());
+
                     }
                 }
 
