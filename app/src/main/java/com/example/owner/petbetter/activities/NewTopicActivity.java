@@ -251,7 +251,6 @@ public class NewTopicActivity extends AppCompatActivity {
     }
     public void createTopicBackClicked(View view){
         finish();
-        Intent intent = new Intent(view.getContext(),com.example.owner.petbetter.activities.CommActivity.class);
-        startActivity(intent);
+       
     }
 }
