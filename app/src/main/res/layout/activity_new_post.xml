@@ -108,7 +108,7 @@
                 android:layout_height="48dp"
                 android:layout_marginLeft="5dp"
                 android:background="@color/colorWhite"
-                android:src="@mipmap/ic_add_location_black_24dp" />
+                android:src="@mipmap/ic_link_black_24dp" />
 
             <TextView
                 android:id="@+id/newPostLocationName"

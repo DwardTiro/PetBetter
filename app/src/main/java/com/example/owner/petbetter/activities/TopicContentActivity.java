@@ -124,6 +124,7 @@ public class TopicContentActivity extends AppCompatActivity {
         bundle.putLong("topicId", topicItem.getId());
         postsButton.callOnClick();
 
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
