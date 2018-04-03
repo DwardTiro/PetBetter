@@ -235,6 +235,8 @@ public class TopicContentActivity extends AppCompatActivity {
             if(check.getIsAllowed()==1){
                 //followButton.setBackgroundResource(R.mipmap.ic_check_black_24dp);
                 followButton.setText("Approved");
+                followButton.setTextColor(getResources().getColor(R.color.colorWhite));
+                followButton.setBackgroundResource(R.color.myrtle_green);
                 fab.setVisibility(View.VISIBLE);
                 Fragment postsFragment = new FragmentPosts();
                 postsFragment.setArguments(bundle);
@@ -243,11 +245,13 @@ public class TopicContentActivity extends AppCompatActivity {
             else{
                //followButton.setBackgroundResource(R.mipmap.ic_access_time_black_24dp);
                 followButton.setText("Requested");
+                followButton.setTextColor(getResources().getColor(R.color.colorWhite));
             }
         }
         else{
             followButton.setBackgroundColor(getResources().getColor(R.color.colorWhite));
             followButton.setText("Follow");
+            followButton.setTextColor(getResources().getColor(R.color.black));
         }
 
 
@@ -265,6 +269,7 @@ public class TopicContentActivity extends AppCompatActivity {
                     if(checkIfFollower((int) topicItem.getId(),(int) user.getUserId())){
                         followButton.setBackgroundColor(getResources().getColor(R.color.colorWhite));
                         followButton.setText("Follow");
+                        followButton.setTextColor(getResources().getColor(R.color.black));
                         deleteFollower((int)topicItem.getId(), (int) user.getUserId());
 
                         service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
@@ -311,6 +316,7 @@ public class TopicContentActivity extends AppCompatActivity {
                     }
                     else{
                         addFollower(fId, (int) topicItem.getId(), (int) user.getUserId(), 0, 0);
+                        followButton.setTextColor(getResources().getColor(R.color.colorWhite));
                         followButton.setText("Requested");
                     }
                     uploadFollower(getUnsyncedFollowers());
