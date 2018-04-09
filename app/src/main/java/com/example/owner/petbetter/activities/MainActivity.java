@@ -161,6 +161,8 @@ public class MainActivity extends AppCompatActivity {
                         User thisUser = user;
 
 
+                        syncUsers();
+
                         syncVetChanges();
 
                         syncClinicChanges();
@@ -192,8 +194,6 @@ public class MainActivity extends AppCompatActivity {
                         syncRatingChanges();
 
                         syncUpvoteChanges();
-
-                        syncUsers();
 
 
 

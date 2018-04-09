@@ -208,19 +208,23 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
 
         hideItems();
 
+        if(user.getUserType()==1){
+            while(thisVet==null){
+                thisVet = getVeterinarianWithId(user.getUserId());
+            }
+
+            if(thisVet!=null){
+                faciList = getFacilitiesByVetId(thisVet.getId());
+                if(faciList.size()>0){
+                    FragmentPetClinicListing fragment = new FragmentPetClinicListing(faciList);
+                    getSupportFragmentManager().beginTransaction().replace(R.id.vethome_container,fragment).commitAllowingStateLoss();
+                }
+            }
+        }
+
         getVetChanges();
         getClinicChanges();
         getMembershipChanges();
-
-        if(user.getUserType()==1){
-            thisVet = getVeterinarianWithId(user.getUserId());
-
-            faciList = getFacilitiesByVetId(thisVet.getId());
-            if(faciList.size()>0){
-                FragmentPetClinicListing fragment = new FragmentPetClinicListing(faciList);
-                getSupportFragmentManager().beginTransaction().replace(R.id.vethome_container,fragment).commitAllowingStateLoss();
-            }
-        }
 
         refreshVetHome = (SwipeRefreshLayout) findViewById(R.id.refreshVetHome);
 
@@ -270,12 +274,13 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
                     setFacilities(response.body());
                     dataSynced(2);
 
-                    faciList = getFacilitiesByVetId(thisVet.getId());
-                    if(faciList.size()>0){
-                        FragmentPetClinicListing fragment = new FragmentPetClinicListing(faciList);
-                        getSupportFragmentManager().beginTransaction().replace(R.id.vethome_container,fragment).commitAllowingStateLoss();
+                    if(thisVet!=null){
+                        faciList = getFacilitiesByVetId(thisVet.getId());
+                        if(faciList.size()>0){
+                            FragmentPetClinicListing fragment = new FragmentPetClinicListing(faciList);
+                            getSupportFragmentManager().beginTransaction().replace(R.id.vethome_container,fragment).commitAllowingStateLoss();
+                        }
                     }
-
                 }
             }
 

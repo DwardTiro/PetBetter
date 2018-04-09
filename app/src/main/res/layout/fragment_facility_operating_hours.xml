@@ -4,13 +4,13 @@
     android:layout_height="wrap_content"
     android:layout_marginEnd="10dp"
     android:layout_marginStart="10dp"
-    android:background="@drawable/rounded_bg_corner">
+    android:background="@drawable/rounded_bg_corner_first_item">
 
     <RelativeLayout
         android:id="@+id/topContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/deep_turquoise"
+        android:background="@color/xanadu"
         android:paddingBottom="5dp">
 
         <ImageView
@@ -19,60 +19,76 @@
             android:layout_height="20dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="7dp"
-            android:background="@color/deep_turquoise"
+            android:background="@color/xanadu"
             android:src="@drawable/ic_access_time_white_24dp" />
 
         <TextView
-            android:id="@+id/addressTextId"
+            android:id="@+id/TextId"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
+            android:paddingStart="5dp"
+            android:paddingEnd="0dp"
             android:layout_marginTop="2dp"
             android:layout_toEndOf="@+id/locationLogo"
+
             android:text="Operating Hours"
-            android:textColor="@color/colorWhite"
+            android:textColor="@color/main_White"
             android:textSize="20sp"
             android:textStyle="bold" />
     </RelativeLayout>
 
-    <RelativeLayout
-        android:layout_below="@id/topContent"
+    <LinearLayout
+        android:id="@+id/workHoursContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        >
+        android:layout_below="@+id/topContent"
+        android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/openTimeTextField"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="7sp"
-            android:text="@string/sample_open_time"
-            android:textSize="14sp"
-            android:textColor="@color/black"/>
+            android:layout_weight="1"
+            android:background="@drawable/post_border"
+            android:gravity="center_horizontal"
+            android:paddingBottom="3dp"
+            android:paddingTop="3dp"
+            android:text="Day/s"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/dashTextField"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="7sp"
-            android:layout_toEndOf="@id/openTimeTextField"
-            android:text="-"
-            android:textSize="14sp"
-            android:textColor="@color/black"
-            />
+            android:layout_weight="1"
+            android:background="@drawable/post_border"
+            android:gravity="center_horizontal"
+            android:paddingBottom="3dp"
+            android:paddingTop="3dp"
+            android:text="Operating Hours"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/closeTimeTextField"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginStart="7sp"
-            android:layout_toEndOf="@id/dashTextField"
-            android:text="@string/sample_close_time"
-            android:textSize="14sp"
-            android:textColor="@color/black"/>
-    </RelativeLayout>
+    </LinearLayout>
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/hoursRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/workHoursContent"
+        />
+
+    <TextView
+        android:id="@+id/noHoursTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="No Operating Hours"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:gravity="center_horizontal"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:layout_below="@+id/workHoursContent"
+        android:visibility="gone"
+        />
 
 </RelativeLayout>

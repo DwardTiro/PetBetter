@@ -21,6 +21,7 @@ import com.example.owner.petbetter.classes.Topic;
 import com.example.owner.petbetter.classes.Upvote;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
+import com.example.owner.petbetter.classes.WorkHours;
 
 import java.util.ArrayList;
 
@@ -193,6 +194,11 @@ public interface HerokuService {
     @FormUrlEncoded
     @POST("getServicesWithFaciID.php")
     Call<ArrayList<Services>> getServicesWithFaciID(@Field("faci_id") long faci_id);
+
+    @FormUrlEncoded
+    @POST("getWorkhoursWithFaciId.php")
+    Call<ArrayList<WorkHours>> getWorkhoursWithFaciID(@Field("faci_id") long faci_id);
+
 
     @FormUrlEncoded
     @POST("touchMarker.php")

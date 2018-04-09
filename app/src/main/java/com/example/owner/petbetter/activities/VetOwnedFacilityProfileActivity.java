@@ -7,6 +7,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -18,6 +19,7 @@ import com.bumptech.glide.Glide;
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
+import com.example.owner.petbetter.adapters.HoursAdapter;
 import com.example.owner.petbetter.adapters.ServiceAdapter;
 import com.example.owner.petbetter.adapters.VetListingAdapter;
 import com.example.owner.petbetter.adapters.VetRowAdapter;
@@ -25,10 +27,12 @@ import com.example.owner.petbetter.classes.Facility;
 import com.example.owner.petbetter.classes.Pending;
 import com.example.owner.petbetter.classes.Services;
 import com.example.owner.petbetter.classes.Veterinarian;
+import com.example.owner.petbetter.classes.WorkHours;
 import com.google.gson.Gson;
 
 import org.w3c.dom.Text;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -48,8 +52,6 @@ public class VetOwnedFacilityProfileActivity extends AppCompatActivity{
     private TextView facilityRating;
     private TextView facilityAddress;
     private TextView facilityLandline;
-    private TextView facilityOpenTime;
-    private TextView facilityCloseTime;
     private TextView noServicesTextView;
     private ImageView facilityImage;
     private RecyclerView serviceRecyclerView;
@@ -62,6 +64,8 @@ public class VetOwnedFacilityProfileActivity extends AppCompatActivity{
     private ArrayList<Veterinarian> vetList;
     private RecyclerView vetRecyclerView;
     private VetListingAdapter vetListingAdapter;
+    private ArrayList<WorkHours> hoursList;
+    private RecyclerView hoursRecyclerView;
 
 
     @Override
@@ -89,21 +93,19 @@ public class VetOwnedFacilityProfileActivity extends AppCompatActivity{
         facilityRating = (TextView) findViewById(R.id.clinicRatingNumerator);
         facilityAddress = (TextView) findViewById(R.id.addressTextField);
         facilityLandline = (TextView) findViewById(R.id.phoneNumTextField);
-        facilityOpenTime = (TextView) findViewById(R.id.openTimeTextField);
-        facilityCloseTime = (TextView) findViewById(R.id.closeTimeTextField);
         facilityImage = (ImageView) findViewById(R.id.clinicProfileImage);
 
         facilityAddress.setText(faciItem.getLocation());
         facilityLandline.setText(faciItem.getContactInfo());
-        facilityOpenTime.setText(faciItem.getHoursOpen());
-        facilityCloseTime.setText(faciItem.getHoursClose());
         noServicesTextView = (TextView) findViewById(R.id.noServicesTextView);
         serviceRecyclerView = (RecyclerView) findViewById(R.id.servicesRecyclerView);
+        hoursRecyclerView = (RecyclerView) findViewById(R.id.hoursRecyclerView);
         vetRecyclerView = (RecyclerView) findViewById(R.id.vetRecyclerView);
         editFacilityProfileButton = (Button) findViewById(R.id.editFacilityButton);
         editServicesButton = (Button) findViewById(R.id.editServicesButton);
         addServicesButton = (Button) findViewById(R.id.addServicesButton);
         verifiedServices = (ImageView) findViewById(R.id.verifiedServices);
+
         verifiedServices.setVisibility(View.VISIBLE);
         editServicesButton.setVisibility(View.GONE);
 
@@ -143,6 +145,7 @@ public class VetOwnedFacilityProfileActivity extends AppCompatActivity{
         facilityName.setText(faciItem.getFaciName());
         facilityRating.setText(Float.toString(faciItem.getRating()));
 
+        getWorkhoursList();
         getServiceList();
         getVetList();
     }
@@ -150,7 +153,10 @@ public class VetOwnedFacilityProfileActivity extends AppCompatActivity{
     @Override
     public void onResume(){
         super.onResume();
-        serviceRecyclerView = (RecyclerView) findViewById(R.id.servicesRecyclerView);
+        //serviceRecyclerView = (RecyclerView) findViewById(R.id.servicesRecyclerView);
+        //hoursRecyclerView = (RecyclerView) findViewById(R.id.hoursRecyclerView);
+
+        getWorkhoursList();
         getServiceList();
         getVetList();
 
@@ -158,18 +164,57 @@ public class VetOwnedFacilityProfileActivity extends AppCompatActivity{
         facilityRating = (TextView) findViewById(R.id.clinicRatingNumerator);
         facilityAddress = (TextView) findViewById(R.id.addressTextField);
         facilityLandline = (TextView) findViewById(R.id.phoneNumTextField);
-        facilityOpenTime = (TextView) findViewById(R.id.openTimeTextField);
-        facilityCloseTime = (TextView) findViewById(R.id.closeTimeTextField);
 
 
         facilityAddress.setText(faciItem.getLocation());
         facilityLandline.setText(faciItem.getContactInfo());
-        facilityOpenTime.setText(faciItem.getHoursOpen());
-        facilityCloseTime.setText(faciItem.getHoursClose());
 
 
     }
 
+
+    public void getWorkhoursList() {
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final Call<ArrayList<WorkHours>> call = service.getWorkhoursWithFaciID(faciItem.getId());
+        //pendingCtr = 0;
+
+        call.enqueue(new Callback<ArrayList<WorkHours>>() {
+            @Override
+            public void onResponse(Call<ArrayList<WorkHours>> call, Response<ArrayList<WorkHours>> response) {
+                if (response.isSuccessful()) {
+                    if (response.body().size() > 0) {
+                        hoursList = response.body();
+                        System.out.println("NUMBER OF WORK HOURS: "+hoursList.size());
+                        hoursRecyclerView.setVisibility(View.VISIBLE);
+                        hoursRecyclerView.setAdapter(new HoursAdapter(VetOwnedFacilityProfileActivity.this,
+                                getLayoutInflater(), hoursList));
+                        hoursRecyclerView.setItemAnimator(new DefaultItemAnimator());
+                        hoursRecyclerView.setHasFixedSize(true);
+                        hoursRecyclerView.setLayoutManager(new LinearLayoutManager(VetOwnedFacilityProfileActivity.this));
+                        /*
+                        serviceList = response.body();
+                        serviceRecyclerView.setVisibility(View.VISIBLE);
+                        noServicesTextView.setVisibility(View.GONE);
+                        serviceRecyclerView.setAdapter(new ServiceAdapter(PetClinicProfileActivity.this, getLayoutInflater(), response.body()));
+                        if(serviceRecyclerView.getAdapter() == null){
+                            System.out.println("No adapter bruh");
+                        }
+                        serviceRecyclerView.setItemAnimator(new DefaultItemAnimator());
+                        serviceRecyclerView.setHasFixedSize(true);
+                        serviceRecyclerView.setLayoutManager(new LinearLayoutManager(PetClinicProfileActivity.this));
+                        */
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<WorkHours>> call, Throwable t) {
+                Log.d("onFailure HOURS ", t.getLocalizedMessage());
+            }
+        });
+
+    }
 
     public void getVetList() {
 

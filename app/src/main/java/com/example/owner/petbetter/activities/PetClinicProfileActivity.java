@@ -18,6 +18,7 @@ import com.bumptech.glide.Glide;
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
+import com.example.owner.petbetter.adapters.HoursAdapter;
 import com.example.owner.petbetter.adapters.ServiceAdapter;
 import com.example.owner.petbetter.adapters.VetListingAdapter;
 import com.example.owner.petbetter.adapters.VetRowAdapter;
@@ -29,6 +30,7 @@ import com.example.owner.petbetter.classes.Rating;
 import com.example.owner.petbetter.classes.Services;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
+import com.example.owner.petbetter.classes.WorkHours;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.google.gson.Gson;
@@ -54,8 +56,6 @@ public class PetClinicProfileActivity extends AppCompatActivity {
     private TextView petClinicName;
     private TextView petClinicAddress;
     private TextView petClinicLandline;
-    private TextView petClinicOpenTime;
-    private TextView petClinicCloseTime;
     private TextView petClinicRating;
     private ImageView clinicProfileImage;
 
@@ -85,6 +85,8 @@ public class PetClinicProfileActivity extends AppCompatActivity {
     private ArrayList<Veterinarian> vetList;
     private RecyclerView vetRecyclerView;
     private VetListingAdapter vetListingAdapter;
+    private ArrayList<WorkHours> hoursList;
+    private RecyclerView hoursRecyclerView;
 
     @Override
     public void onCreate(Bundle savedInstance) {
@@ -94,8 +96,6 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         petClinicName = (TextView) findViewById(R.id.clinicName);
         petClinicAddress = (TextView) findViewById(R.id.addressTextField);
         petClinicLandline = (TextView) findViewById(R.id.phoneNumTextField);
-        petClinicOpenTime = (TextView) findViewById(R.id.openTimeTextField);
-        petClinicCloseTime = (TextView) findViewById(R.id.closeTimeTextField);
         petClinicRating = (TextView) findViewById(R.id.clinicRatingNumerator);
         clinicProfileImage = (ImageView) findViewById(R.id.clinicProfileImage);
         bookMarkButton = (Button) findViewById(R.id.bookmarkClinicButton);
@@ -107,9 +107,10 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         serviceRecyclerView = (RecyclerView) findViewById(R.id.servicesRecyclerView);
         verifiedServices = (ImageView) findViewById(R.id.verifiedServices);
         verifiedServices.setVisibility(View.VISIBLE);
+
         vetRecyclerView = (RecyclerView) findViewById(R.id.vetRecyclerView);
 
-
+        hoursRecyclerView = (RecyclerView) findViewById(R.id.hoursRecyclerView);
 
         petClinicRateButton = (Button) findViewById(R.id.rateClinicButton);
 
@@ -144,8 +145,6 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         petClinicAddress.setText(faciItem.getLocation());
         petClinicRating.setText(String.valueOf(faciItem.getRating()));
         petClinicLandline.setText(faciItem.getContactInfo());
-        petClinicOpenTime.setText(faciItem.getHoursOpen());
-        petClinicCloseTime.setText(faciItem.getHoursClose());
 
         if (checkIfRated(user.getUserId(), faciItem.getId())) {
             petClinicRateButton.setBackgroundResource(R.color.myrtle_green);
@@ -223,7 +222,7 @@ public class PetClinicProfileActivity extends AppCompatActivity {
             Glide.with(PetClinicProfileActivity.this).load(newFileName).error(R.drawable.app_icon_yellow).into(clinicProfileImage);
         }
 
-
+        getWorkhoursList();
         getServiceList();
         getVetList();
         syncRatingChanges();
@@ -348,6 +347,49 @@ public class PetClinicProfileActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<ArrayList<Services>> call, Throwable t) {
 
+            }
+        });
+
+    }
+
+    public void getWorkhoursList() {
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final Call<ArrayList<WorkHours>> call = service.getWorkhoursWithFaciID(faciItem.getId());
+        //pendingCtr = 0;
+
+        call.enqueue(new Callback<ArrayList<WorkHours>>() {
+            @Override
+            public void onResponse(Call<ArrayList<WorkHours>> call, Response<ArrayList<WorkHours>> response) {
+                if (response.isSuccessful()) {
+                    if (response.body().size() > 0) {
+                        hoursList = response.body();
+                        System.out.println("NUMBER OF WORK HOURS: "+hoursList.size());
+                        hoursRecyclerView.setVisibility(View.VISIBLE);
+                        hoursRecyclerView.setAdapter(new HoursAdapter(PetClinicProfileActivity.this,
+                                getLayoutInflater(), hoursList));
+                        hoursRecyclerView.setItemAnimator(new DefaultItemAnimator());
+                        hoursRecyclerView.setHasFixedSize(true);
+                        hoursRecyclerView.setLayoutManager(new LinearLayoutManager(PetClinicProfileActivity.this));
+                        /*
+                        serviceList = response.body();
+                        serviceRecyclerView.setVisibility(View.VISIBLE);
+                        noServicesTextView.setVisibility(View.GONE);
+                        serviceRecyclerView.setAdapter(new ServiceAdapter(PetClinicProfileActivity.this, getLayoutInflater(), response.body()));
+                        if(serviceRecyclerView.getAdapter() == null){
+                            System.out.println("No adapter bruh");
+                        }
+                        serviceRecyclerView.setItemAnimator(new DefaultItemAnimator());
+                        serviceRecyclerView.setHasFixedSize(true);
+                        serviceRecyclerView.setLayoutManager(new LinearLayoutManager(PetClinicProfileActivity.this));
+                        */
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<WorkHours>> call, Throwable t) {
+                Log.d("onFailure HOURS ", t.getLocalizedMessage());
             }
         });
 
@@ -718,14 +760,6 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         return petClinicLandline;
     }
 
-    public TextView getPetClinicOpenTime() {
-        return petClinicOpenTime;
-    }
-
-    public TextView getPetClinicCloseTime() {
-        return petClinicCloseTime;
-    }
-
     public TextView getPetClinicRating() {
         return petClinicRating;
     }
@@ -744,11 +778,11 @@ public class PetClinicProfileActivity extends AppCompatActivity {
     }
 
     public void setPetClinicOpenTime(String str) {
-        petClinicOpenTime.setText(str);
+
     }
 
     public void setPetClinicCloseTime(String str) {
-        petClinicCloseTime.setText(str);
+
     }
 
     public void setPetClinicRating(String str) {
