@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@drawable/post_border"
+    android:padding="10dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginStart="6dp"
+        android:orientation="vertical">
+        <EditText
+            android:id="@+id/dayField"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:hint="Day/s"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
+            android:textSize="15sp"
+            android:background="@drawable/post_border"
+            android:maxLines="1"
+            android:textCursorDrawable="@null"
+            android:textColor="@color/black"
+            android:layout_centerVertical="true"
+
+            />
+
+        <LinearLayout
+            android:id="@+id/timeLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginStart="6dp"
+            android:orientation="horizontal">
+            <Spinner
+                android:id="@+id/addFacilityOpenTimeSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/dayField"
+                android:entries="@array/facilityOpenTimeSpinner" />
+
+            <TextView
+                android:id="@+id/tvDash"
+                android:layout_width="10dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_toRightOf="@+id/addFacilityOpenTimeSpinner"
+                android:text="-" />
+
+            <Spinner
+                android:id="@+id/addFacilityCloseTimeSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/tvDash"
+                android:entries="@array/facilityOpenTimeSpinner" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/removeFieldButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_clear_black_24dp"
+        android:onClick="deleteRow"
+
+        android:background="@color/colorWhite"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        />
+
+
+</RelativeLayout>

@@ -88,61 +88,8 @@
                     android:padding="5dp" />
 
                 <TextView
-                    android:id="@+id/addFacilityTime"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginEnd="5dp"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginTop="15dp"
-                    android:text="Operating Hours" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginStart="6dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Open Time:"
-                        android:textColor="@color/black"
-                        android:textSize="13sp" />
-
-                    <Spinner
-                        android:id="@+id/addFacilityOpenTimeSpinner"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:entries="@array/facilityOpenTimeSpinner" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginStart="5dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Close Time:"
-                        android:textColor="@color/black"
-                        android:textSize="13sp" />
-
-                    <Spinner
-                        android:id="@+id/addFacilityCloseTimeSpinner"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:entries="@array/facilityOpenTimeSpinner" />
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
                     android:layout_marginEnd="5dp"
                     android:layout_marginStart="5dp"
                     android:layout_marginTop="15dp"
@@ -152,13 +99,59 @@
                     android:id="@+id/addFacilityPhone"
                     android:layout_width="match_parent"
                     android:layout_height="35dp"
-                    android:layout_marginBottom="10dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
                     android:background="@drawable/rounded_bg_corner"
                     android:inputType="text"
                     android:maxLines="1"
                     android:padding="5dp" />
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginStart="6dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/addFacilityTime"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="15dp"
+                        android:text="Operating Hours" />
+                    <Button
+                        android:id="@+id/addTimeButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="15dp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
+                        android:textAllCaps="false"
+                        android:background="@color/medTurquoise"
+                        android:textColor="@color/colorWhite"
+                        android:text="Add another schedule" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/hoursContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="vertical">
+                </LinearLayout>
+
+
+
 
                 <TextView
                     android:id="@+id/textViewAddress"

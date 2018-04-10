@@ -1,6 +1,7 @@
 package com.example.owner.petbetter.activities;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -13,10 +14,12 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,6 +62,8 @@ public class EditFacilityActivity extends AppCompatActivity {
     private Facility faciItem;
     private DataAdapter petBetterDb;
     private ImageButton topicNewPost;
+    private LinearLayout hoursContainer;
+    private Button addHours;
 
     HerokuService service;
     @Override
@@ -88,6 +93,9 @@ public class EditFacilityActivity extends AppCompatActivity {
         topicNewPost = (ImageButton) findViewById(R.id.topicNewPost);
         topicNewPost.setVisibility(View.GONE);
 
+        hoursContainer = (LinearLayout) findViewById(R.id.hoursContainer);
+        addHours = (Button) findViewById(R.id.addTimeButton);
+
         initializeDatabase();
 
         editImage = (ImageButton) findViewById(R.id.clinicEditImage);
@@ -109,8 +117,6 @@ public class EditFacilityActivity extends AppCompatActivity {
         facilityName.setText(faciItem.getFaciName());
         phoneNum.setText(faciItem.getContactInfo());
 
-        openTime.setSelection(getIndex(openTime,faciItem.getHoursOpen()));
-        closeTime.setSelection(getIndex(closeTime,faciItem.getHoursClose()));
         editImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,10 +124,37 @@ public class EditFacilityActivity extends AppCompatActivity {
             }
         });
 
-
+        createNewEditText();
+        addHours.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                createNewEditText();
+            }
+        });
 
     }
 
+    private void createNewEditText() {
+        /*
+        final LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, CoordinatorLayout.LayoutParams.WRAP_CONTENT);
+        final EditText editText = new EditText(this);
+        editText.setLayoutParams(lparams);
+        return editText;
+        */
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final View serviceView = inflater.inflate(R.layout.fragment_new_hours_field, null);
+        if (hoursContainer.getChildCount() > 0)
+            hoursContainer.addView(serviceView, hoursContainer.getChildCount());
+        else if (hoursContainer.getChildCount() == 1) {
+            hoursContainer.addView(serviceView, 1);
+        } else
+            hoursContainer.addView(serviceView, 0);
+    }
+
+    public void deleteRow(View view) {
+        hoursContainer.removeView((View) view.getParent());
+
+    }
 
     //function to edit facility info
     public void addFacility(View view){
@@ -248,16 +281,6 @@ public class EditFacilityActivity extends AppCompatActivity {
         }
     }
 
-    private int getIndex(Spinner spinner, String value) {
-        int itemIndex = 0;
-        for (int i = 0; i < spinner.getCount(); i++) {
-            if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(value)) {
-                itemIndex = i;
-                break;
-            }
-        }
-        return itemIndex;
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

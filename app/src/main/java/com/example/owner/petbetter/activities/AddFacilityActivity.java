@@ -1,6 +1,7 @@
 package com.example.owner.petbetter.activities;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -14,10 +15,13 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,6 +60,8 @@ public class AddFacilityActivity extends AppCompatActivity {
     private static final int IMG_REQUEST = 777;
     private Bitmap bitmap;
     private ImageButton topicNewPost;
+    private LinearLayout hoursContainer;
+    private Button addHours;
 
     HerokuService service;
     @Override
@@ -78,6 +84,8 @@ public class AddFacilityActivity extends AppCompatActivity {
         editImage = (ImageButton) findViewById(R.id.clinicEditImage);
         textViewAddress = (TextView) findViewById(R.id.textViewAddress);
         topicNewPost = (ImageButton) findViewById(R.id.topicNewPost);
+        hoursContainer = (LinearLayout) findViewById(R.id.hoursContainer);
+        addHours = (Button) findViewById(R.id.addTimeButton);
         topicNewPost.setVisibility(View.GONE);
 
         textViewAddress.setVisibility(View.GONE);
@@ -93,7 +101,18 @@ public class AddFacilityActivity extends AppCompatActivity {
                 selectImage();
             }
         });
+        createNewEditText();
 
+        addHours.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                createNewEditText();
+            }
+        });
+    }
+
+    public void deleteRow(View view) {
+        hoursContainer.removeView((View) view.getParent());
 
     }
 
@@ -151,6 +170,23 @@ public class AddFacilityActivity extends AppCompatActivity {
         ActivityCompat.requestPermissions(AddFacilityActivity.this,
                 new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},1);
 
+    }
+
+    private void createNewEditText() {
+        /*
+        final LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, CoordinatorLayout.LayoutParams.WRAP_CONTENT);
+        final EditText editText = new EditText(this);
+        editText.setLayoutParams(lparams);
+        return editText;
+        */
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final View serviceView = inflater.inflate(R.layout.fragment_new_hours_field, null);
+        if (hoursContainer.getChildCount() > 0)
+            hoursContainer.addView(serviceView, hoursContainer.getChildCount());
+        else if (hoursContainer.getChildCount() == 1) {
+            hoursContainer.addView(serviceView, 1);
+        } else
+            hoursContainer.addView(serviceView, 0);
     }
 
     private String imageToString(){
