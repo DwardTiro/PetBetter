@@ -64,6 +64,7 @@ public class DataAdapter {
     private static final String BOOKMARK_TABLE = "bookmarks";
     private static final String PENDING_TABLE = "pending";
     private static final String FACI_MEMBER_TABLE = "facility_membership";
+    private static final String HOURS_MEMBER_TABLE = "workhours";
 
 
 
@@ -384,8 +385,8 @@ public class DataAdapter {
     }
 
     public Facility getNewFacilityWithId(int vet_id){
-        String sql = "SELECT f._id AS _id, f.faci_name AS faci_name, f.location AS location, f.hours_open AS hours_open, " +
-                "f.hours_close AS hour_close, f.contact_info AS contact_info, f.rating AS rating, f.faci_photo AS faci_photo, " +
+        String sql = "SELECT f._id AS _id, f.faci_name AS faci_name, f.location AS location, " +
+                "f.contact_info AS contact_info, f.rating AS rating, f.faci_photo AS faci_photo, " +
                 "f.is_disabled AS is_disabled FROM facilities AS f INNER JOIN facility_membership AS fm ON f._id = fm.faci_id"+
                 " INNER JOIN veterinarians AS v ON fm.vet_id = v._id WHERE v._id = '"+vet_id+"'";
 
@@ -396,8 +397,6 @@ public class DataAdapter {
                 c.getInt(c.getColumnIndexOrThrow("_id")),
                 c.getString(c.getColumnIndexOrThrow("faci_name")),
                 c.getString(c.getColumnIndexOrThrow("location")),
-                c.getString(c.getColumnIndexOrThrow("hours_open")),
-                c.getString(c.getColumnIndexOrThrow("hours_close")),
                 c.getString(c.getColumnIndexOrThrow("contact_info")),
                 c.getFloat(c.getColumnIndexOrThrow("rating")),
                 c.getString(c.getColumnIndexOrThrow("faci_photo")),
@@ -850,8 +849,6 @@ public class DataAdapter {
         while(id <= clinicList.size()){
             cv.put("faci_name", clinics.get(id-1).getFaciName());
             cv.put("location", clinics.get(id-1).getLocation());
-            cv.put("hours_open", clinics.get(id-1).getHoursOpen());
-            cv.put("hours_close", clinics.get(id-1).getHoursClose());
             cv.put("contact_info", clinics.get(id-1).getContactInfo());
             cv.put("rating", clinics.get(id-1).getRating());
 
@@ -1201,8 +1198,6 @@ public class DataAdapter {
             Facility facility = new Facility(c.getInt(c.getColumnIndexOrThrow("_id")),
                     c.getString(c.getColumnIndexOrThrow("faci_name")),
                     c.getString(c.getColumnIndexOrThrow("location")),
-                    c.getString(c.getColumnIndexOrThrow("hours_open")),
-                    c.getString(c.getColumnIndexOrThrow("hours_close")),
                     c.getString(c.getColumnIndexOrThrow("contact_info")),
                     c.getFloat(c.getColumnIndexOrThrow("rating")),
                     c.getString(c.getColumnIndexOrThrow("faci_photo")),
@@ -1276,6 +1271,9 @@ public class DataAdapter {
         if(n==18){
             petBetterDb.update(FACI_MEMBER_TABLE,cv,"is_synced=?", whereArgs);
         }
+        if(n==19){
+            petBetterDb.update(HOURS_MEMBER_TABLE,cv,"is_synced=?", whereArgs);
+        }
         petBetterDb.close();
     }
 
@@ -1292,8 +1290,6 @@ public class DataAdapter {
             Facility facility = new Facility(c.getInt(c.getColumnIndexOrThrow("_id")),
                     c.getString(c.getColumnIndexOrThrow("faci_name")),
                     c.getString(c.getColumnIndexOrThrow("location")),
-                    c.getString(c.getColumnIndexOrThrow("hours_open")),
-                    c.getString(c.getColumnIndexOrThrow("hours_close")),
                     c.getString(c.getColumnIndexOrThrow("contact_info")),
                     c.getFloat(c.getColumnIndexOrThrow("rating")),
                     c.getString(c.getColumnIndexOrThrow("faci_photo")),
@@ -1542,16 +1538,13 @@ public class DataAdapter {
         return ids;
     }
 
-    public long addFacility(int faci_id, String faci_name, String location, String hours_open, String hours_close,
-                            String contact_info, String faciPhoto){
+    public long addFacility(int faci_id, String faci_name, String location, String contact_info, String faciPhoto){
         long result;
 
         ContentValues cv = new ContentValues();
         cv.put("_id", faci_id);
         cv.put("faci_name", faci_name);
         cv.put("location", location);
-        cv.put("hours_open", hours_open);
-        cv.put("hours_close", hours_close);
         cv.put("contact_info", contact_info);
         cv.put("rating", 0);
         cv.put("faci_photo", faciPhoto);
@@ -2154,8 +2147,8 @@ public class DataAdapter {
     public ArrayList<Facility> getFacilitiesByVetId(long vetId){
         ArrayList<Facility> results = new ArrayList<>();
 
-        String sql = "SELECT f._id AS _id, f.faci_name AS faci_name, f.location AS location, f.hours_open AS hours_open, " +
-                "f.hours_close AS hours_close, f.contact_info AS contact_info, f.rating AS rating, f.faci_photo AS faci_photo, " +
+        String sql = "SELECT f._id AS _id, f.faci_name AS faci_name, f.location AS location, " +
+                "f.contact_info AS contact_info, f.rating AS rating, f.faci_photo AS faci_photo, " +
                 "f.is_disabled AS is_disabled FROM facilities AS f INNER JOIN facility_membership AS fm ON f._id = fm.faci_id"+
                 " INNER JOIN veterinarians AS v ON fm.vet_id = v._id WHERE v._id = '"+vetId+"'";
         //String sql = "SELECT * FROM " + FACI_TABLE;
@@ -2165,8 +2158,6 @@ public class DataAdapter {
             Facility facility = new Facility(c.getInt(c.getColumnIndexOrThrow("_id")),
                     c.getString(c.getColumnIndexOrThrow("faci_name")),
                     c.getString(c.getColumnIndexOrThrow("location")),
-                    c.getString(c.getColumnIndexOrThrow("hours_open")),
-                    c.getString(c.getColumnIndexOrThrow("hours_close")),
                     c.getString(c.getColumnIndexOrThrow("contact_info")),
                     c.getFloat(c.getColumnIndexOrThrow("rating")),
                     c.getString(c.getColumnIndexOrThrow("faci_photo")),
@@ -2641,16 +2632,13 @@ public class DataAdapter {
     }
 
 
-    public void editFacility(long _id, String faciName, String location, String hoursOpen,String hoursClose,
-                            String contactInfo, float rating, String faciPhoto){
+    public void editFacility(long _id, String faciName, String location, String contactInfo, float rating, String faciPhoto){
 
 
         ContentValues cv = new ContentValues();
         cv.put("_id",_id);
         cv.put("faci_name",faciName);
         cv.put("location", location);
-        cv.put("hours_open", hoursOpen);
-        cv.put("hours_close",hoursClose);
         cv.put("contact_info", contactInfo);
         cv.put("rating", rating);
         cv.put("faci_photo", faciPhoto);
@@ -2800,8 +2788,6 @@ public class DataAdapter {
             Facility result = new Facility(c.getInt(c.getColumnIndexOrThrow("_id")),
                     c.getString(c.getColumnIndexOrThrow("faci_name")),
                     c.getString(c.getColumnIndexOrThrow("location")),
-                    c.getString(c.getColumnIndexOrThrow("hours_open")),
-                    c.getString(c.getColumnIndexOrThrow("hours_close")),
                     c.getString(c.getColumnIndexOrThrow("contact_info")),
                     c.getFloat(c.getColumnIndexOrThrow("rating")),
                     c.getString(c.getColumnIndexOrThrow("faci_photo")),
@@ -3320,8 +3306,6 @@ public class DataAdapter {
             cv.put("_id", facility.getId());
             cv.put("faci_name", facility.getFaciName());
             cv.put("location", facility.getLocation());
-            cv.put("hours_open", facility.getHoursOpen());
-            cv.put("hours_close", facility.getHoursClose());
             cv.put("contact_info", facility.getContactInfo());
             cv.put("rating", facility.getRating());
             cv.put("faci_photo", facility.getFaciPhoto());

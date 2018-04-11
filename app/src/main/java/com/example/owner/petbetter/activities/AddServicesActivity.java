@@ -28,11 +28,14 @@ import com.example.owner.petbetter.classes.LocationMarker;
 import com.example.owner.petbetter.classes.Services;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
+import com.example.owner.petbetter.classes.WorkHours;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,8 +54,6 @@ public class AddServicesActivity extends AppCompatActivity {
 
 
     private String faciName;
-    private String openTime;
-    private String closeTime;
     private String phoneNum;
     private String address;
     private String image;
@@ -64,6 +65,7 @@ public class AddServicesActivity extends AppCompatActivity {
     private User user;
     private int vetId;
     private ImageButton topicNewPost;
+    private ArrayList<WorkHours> hoursList;
 
     private boolean insideEditFacility = false;
 
@@ -92,13 +94,18 @@ public class AddServicesActivity extends AppCompatActivity {
         if (extras.getString("thisClinic") == null) {
             insideEditFacility = false;
             faciName = extras.getString("bldg_name");
-            openTime = extras.getString("hours_open");
-            closeTime = extras.getString("hours_close");
+
             phoneNum = extras.getString("phone_num");
             address = extras.getString("address");
             image = extras.getString("image");
             longitude = extras.getDouble("longitude");
             latitude = extras.getDouble("latitude");
+
+            String jsonMyObject;
+            jsonMyObject = extras.getString("workhours");
+
+            Type type = new TypeToken<ArrayList<WorkHours>>(){}.getType();
+            hoursList = new Gson().fromJson(jsonMyObject, type);
         } else {
             System.out.println("Here in add services");
             String jsonMyObject = extras.getString("thisClinic");
@@ -223,7 +230,7 @@ public class AddServicesActivity extends AppCompatActivity {
 
         if (!insideEditFacility) {
             faciId = generateNewFacilityID();
-            addFacilitytoDB((int) faciId, faciName, address, openTime, closeTime, phoneNum, image);
+            addFacilitytoDB((int) faciId, faciName, address, phoneNum, image);
             syncFacilityChanges();
         }
 
@@ -240,7 +247,11 @@ public class AddServicesActivity extends AppCompatActivity {
                     0));
             */
         }
+        for(WorkHours workHours:hoursList){
+            workHours.setFaciId((int)faciId);
+        }
         syncServicesChanges();
+        addWorkHours();
 
 
     }
@@ -327,15 +338,7 @@ public class AddServicesActivity extends AppCompatActivity {
         return result;
     }
 
-    private long addFacilitytoDB(
-            int faci_id,
-            String faci_name,
-            String location,
-            String hours_open,
-            String hours_close,
-            String contact_info,
-            String faciPhoto
-    ) {
+    private long addFacilitytoDB(int faci_id, String faci_name, String location, String contact_info, String faciPhoto) {
 
         try {
             petBetterDb.openDatabase();
@@ -343,7 +346,7 @@ public class AddServicesActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        long result = petBetterDb.addFacility(faci_id, faci_name, location, hours_open, hours_close, contact_info, faciPhoto);
+        long result = petBetterDb.addFacility(faci_id, faci_name, location, contact_info, faciPhoto);
         petBetterDb.closeDatabase();
 
         return result;
@@ -537,6 +540,30 @@ public class AddServicesActivity extends AppCompatActivity {
                         }
                     });
 
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
+    public void addWorkHours() {
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String jsonArray = gson.toJson(hoursList);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.addWorkhours(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    dataSynced(18);
                 }
             }
 

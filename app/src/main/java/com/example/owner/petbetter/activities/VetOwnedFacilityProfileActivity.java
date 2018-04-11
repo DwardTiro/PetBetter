@@ -1,6 +1,7 @@
 package com.example.owner.petbetter.activities;
 
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -24,8 +25,10 @@ import com.example.owner.petbetter.adapters.ServiceAdapter;
 import com.example.owner.petbetter.adapters.VetListingAdapter;
 import com.example.owner.petbetter.adapters.VetRowAdapter;
 import com.example.owner.petbetter.classes.Facility;
+import com.example.owner.petbetter.classes.LocationMarker;
 import com.example.owner.petbetter.classes.Pending;
 import com.example.owner.petbetter.classes.Services;
+import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
 import com.example.owner.petbetter.classes.WorkHours;
 import com.google.gson.Gson;
@@ -214,6 +217,33 @@ public class VetOwnedFacilityProfileActivity extends AppCompatActivity{
             }
         });
 
+    }
+
+    public void onFacilityLocationClicked(View view) {
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+        final Call<LocationMarker> call = service.getMarkerWithFaciId(faciItem.getId());
+        call.enqueue(new Callback<LocationMarker>() {
+            @Override
+            public void onResponse(Call<LocationMarker> call, Response<LocationMarker> response) {
+                if(response.isSuccessful()){
+                    LocationMarker location = response.body();
+                    Bundle extras = new Bundle();
+                    extras.putString("bldg_name", location.getBldgName());
+                    extras.putDouble("latitude", location.getLatitude());
+                    extras.putDouble("longitude", location.getLongitude());
+
+                    Intent intent = new Intent(VetOwnedFacilityProfileActivity.this, com.example.owner.petbetter.activities.ShowLocationActivity.class);
+                    intent.putExtras(extras);
+                    startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LocationMarker> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
     }
 
     public void getVetList() {

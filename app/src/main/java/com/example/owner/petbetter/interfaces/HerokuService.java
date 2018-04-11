@@ -546,6 +546,9 @@ public interface HerokuService {
     @POST("addServices.php")
     Call<Void> addServices(@Body RequestBody serviceList);
 
+    @POST("addWorkhours.php")
+    Call<Void> addWorkhours(@Body RequestBody hoursList);
+
     @POST("addLocations.php")
     Call<Void> addLocations(@Body RequestBody locationList);
 
@@ -591,6 +594,10 @@ public interface HerokuService {
     @FormUrlEncoded
     @POST("getMarker.php")
     Call<LocationMarker> getMarker(@Field("bldg_name") String bldgName);
+
+    @FormUrlEncoded
+    @POST("getMarkerWithFaciId.php")
+    Call<LocationMarker> getMarkerWithFaciId(@Field("faci_id") long faciId);
 
     @FormUrlEncoded
     @POST("removeVote.php")

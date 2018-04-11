@@ -22,12 +22,6 @@ public class Facility {
     @SerializedName("location")
     private String location;
 
-    @SerializedName("hours_open")
-    private String hoursOpen;
-
-    @SerializedName("hours_close")
-    private String hoursClose;
-
     @SerializedName("contact_info")
     private String contactInfo;
 
@@ -38,24 +32,20 @@ public class Facility {
     private int isDisabled;
 
 
-    public Facility(int id, String faciName, String location, String hoursOpen, String hoursClose, String contactInfo, float rating, int isDisabled) {
+    public Facility(int id, String faciName, String location, String contactInfo, float rating, int isDisabled) {
         this.id = id;
         this.faciName = faciName;
         this.location = location;
-        this.hoursOpen = hoursOpen;
-        this.hoursClose = hoursClose;
         this.contactInfo = contactInfo;
         this.rating = rating;
         this.isDisabled = isDisabled;
     }
 
-    public Facility(int id, String faciName, String location, String hoursOpen, String hoursClose, String contactInfo,
+    public Facility(int id, String faciName, String location, String contactInfo,
                     float rating, String faciPhoto, int isDisabled) {
         this.id = id;
         this.faciName = faciName;
         this.location = location;
-        this.hoursOpen = hoursOpen;
-        this.hoursClose = hoursClose;
         this.contactInfo = contactInfo;
         this.rating = rating;
         this.faciPhoto = faciPhoto;
@@ -107,22 +97,6 @@ public class Facility {
 
     public void setLocation(String location) {
         this.location = location;
-    }
-
-    public String getHoursOpen() {
-        return hoursOpen;
-    }
-
-    public void setHoursOpen(String hoursOpen) {
-        this.hoursOpen = hoursOpen;
-    }
-
-    public String getHoursClose() {
-        return hoursClose;
-    }
-
-    public void setHoursClose(String hoursClose) {
-        this.hoursClose = hoursClose;
     }
 
     public String getContactInfo() {

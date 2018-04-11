@@ -139,8 +139,9 @@ public class SearchListingAdapter extends RecyclerView.Adapter<RecyclerView.View
             ((ClinicViewHolder) holder).clinicListAddress.setText(((Facility) searchResult).getLocation());
             ((ClinicViewHolder) holder).clinicListRating.setText(String.format(Locale.getDefault(),"%.1f",
                     ((Facility) searchResult).getRating()));
+            /*
             ((ClinicViewHolder) holder).clinicOpenTime.setText(((Facility) searchResult).getHoursOpen());
-            ((ClinicViewHolder) holder).clinicClosetime.setText(((Facility) searchResult).getHoursClose());
+            ((ClinicViewHolder) holder).clinicClosetime.setText(((Facility) searchResult).getHoursClose());*/
             if(((Facility) searchResult).getRating() == 0.0){
                 ((ClinicViewHolder) holder).clinicListRating.setBackgroundResource(R.color.teal_blue);
             }

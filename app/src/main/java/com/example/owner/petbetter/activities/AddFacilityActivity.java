@@ -30,12 +30,14 @@ import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.classes.Facility;
+import com.example.owner.petbetter.classes.WorkHours;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -52,8 +54,6 @@ public class AddFacilityActivity extends AppCompatActivity {
     private EditText facilityName;
     private EditText facilityAddress;
     private EditText phoneNum;
-    private Spinner openTime;
-    private Spinner closeTime;
     private ImageButton editImage;
     private TextView textViewAddress;
     private SystemSessionManager systemSessionManager;
@@ -78,8 +78,6 @@ public class AddFacilityActivity extends AppCompatActivity {
         addFacilityButton = (Button) findViewById(R.id.addFacilityButton);
         facilityName = (EditText) findViewById(R.id.addFacilityName);
         phoneNum = (EditText) findViewById(R.id.addFacilityPhone);
-        openTime = (Spinner) findViewById(R.id.addFacilityOpenTimeSpinner);
-        closeTime = (Spinner) findViewById(R.id.addFacilityCloseTimeSpinner);
         facilityAddress = (EditText) findViewById(R.id.addFacilityAddress);
         editImage = (ImageButton) findViewById(R.id.clinicEditImage);
         textViewAddress = (TextView) findViewById(R.id.textViewAddress);
@@ -143,14 +141,27 @@ public class AddFacilityActivity extends AppCompatActivity {
     };
     public void addFacility(View view){
 
+        ArrayList<WorkHours> hoursList = new ArrayList<>();
+        for(int i=0;i<hoursContainer.getChildCount();i++){
+            EditText editText = (EditText) hoursContainer.getChildAt(i).findViewById(R.id.dayField);
+            Spinner openSpinner = (Spinner) hoursContainer.getChildAt(i).findViewById(R.id.addFacilityOpenTimeSpinner);
+            Spinner closeSpinner = (Spinner) hoursContainer.getChildAt(i).findViewById(R.id.addFacilityCloseTimeSpinner);
+
+            WorkHours workHours = new WorkHours(0, 0, editText.getText().toString(), openSpinner.getSelectedItem().toString(),
+                    closeSpinner.getSelectedItem().toString(), 0);
+            hoursList.add(workHours);
+        }
+
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String jsonHours = gson.toJson(hoursList);
+
         service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         String image = imageToString();
 
         Bundle extras = new Bundle();
         extras.putString("bldg_name", facilityName.getText().toString());
-        extras.putString("hours_open", openTime.getSelectedItem().toString());
-        extras.putString("hours_close", closeTime.getSelectedItem().toString());
         extras.putString("phone_num", phoneNum.getText().toString());
+        extras.putString("workhours", jsonHours);
         extras.putString("location", facilityAddress.getText().toString());
         extras.putString("image", image);
 

@@ -98,8 +98,8 @@ public class ClinicListingAdapter extends RecyclerView.Adapter<ClinicListingAdap
         else{
             holder.clinicListRating.setBackgroundResource(R.color.dark_candy_red);
         }
-        holder.clinicOpenTime.setText(thisClinic.getHoursOpen());
-        holder.clinicClosetime.setText(thisClinic.getHoursClose());
+        //holder.clinicOpenTime.setText(thisClinic.getHoursOpen());
+        //holder.clinicClosetime.setText(thisClinic.getHoursClose());
         holder.bind(thisClinic, listener);
 
     }

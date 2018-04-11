@@ -29,6 +29,8 @@ import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.classes.Facility;
+import com.example.owner.petbetter.classes.Services;
+import com.example.owner.petbetter.classes.WorkHours;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.google.gson.Gson;
@@ -36,6 +38,7 @@ import com.google.gson.GsonBuilder;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -52,8 +55,6 @@ public class EditFacilityActivity extends AppCompatActivity {
     private EditText facilityName;
     private EditText facilityAddress;
     private EditText phoneNum;
-    private Spinner openTime;
-    private Spinner closeTime;
     private ImageButton editImage;
     private SystemSessionManager systemSessionManager;
     private static final int IMG_REQUEST = 777;
@@ -64,6 +65,7 @@ public class EditFacilityActivity extends AppCompatActivity {
     private ImageButton topicNewPost;
     private LinearLayout hoursContainer;
     private Button addHours;
+    private ArrayList<WorkHours> hoursList;
 
     HerokuService service;
     @Override
@@ -83,8 +85,6 @@ public class EditFacilityActivity extends AppCompatActivity {
         addFacilityButton.setEnabled(true);
         facilityName = (EditText) findViewById(R.id.addFacilityName);
         phoneNum = (EditText) findViewById(R.id.addFacilityPhone);
-        openTime = (Spinner) findViewById(R.id.addFacilityOpenTimeSpinner);
-        closeTime = (Spinner) findViewById(R.id.addFacilityCloseTimeSpinner);
         facilityAddress = (EditText) findViewById(R.id.addFacilityAddress);
         facilityAddress.setEnabled(false);
         facilityAddress.setVisibility(View.GONE);
@@ -159,15 +159,31 @@ public class EditFacilityActivity extends AppCompatActivity {
     //function to edit facility info
     public void addFacility(View view){
         if(facilityAddress.getText().toString()!=""){
+
+
+            ArrayList<WorkHours> hoursList = new ArrayList<>();
+            for(int i=0;i<hoursContainer.getChildCount();i++){
+                EditText editText = (EditText) (hoursContainer.getChildAt(i).findViewById(R.id.dayField));
+                Spinner openSpinner = (Spinner) (hoursContainer.getChildAt(i).findViewById(R.id.addFacilityOpenTimeSpinner));
+                Spinner closeSpinner = (Spinner) (hoursContainer.getChildAt(i).findViewById(R.id.addFacilityCloseTimeSpinner));
+
+                WorkHours workHours = new WorkHours(0, (int) faciItem.getId(), editText.getText().toString(),
+                        openSpinner.getSelectedItem().toString(), closeSpinner.getSelectedItem().toString(), 0);
+                hoursList.add(workHours);
+            }
+
+            Gson gson = new GsonBuilder().serializeNulls().create();
+            String jsonHours = gson.toJson(hoursList);
+
             service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
             String image = imageToString();
 
 
-            editFacility(faciItem.getId(), facilityName.getText().toString(), faciItem.getLocation(),
-                    openTime.getSelectedItem().toString(), closeTime.getSelectedItem().toString(), phoneNum.getText().toString(),
+            editFacility(faciItem.getId(), facilityName.getText().toString(), faciItem.getLocation(), phoneNum.getText().toString(),
                     faciItem.getRating(), image);
 
             uploadFacilityChanges();
+            addWorkHours(jsonHours);
             Intent intent = new Intent(EditFacilityActivity.this, com.example.owner.petbetter.activities.VeterinarianHomeActivity.class);
 
             startActivity(intent);
@@ -196,6 +212,29 @@ public class EditFacilityActivity extends AppCompatActivity {
                     System.out.println("FACILITIES ADDED YEY");
                     dataSynced(2);
 
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
+    public void addWorkHours(String hoursList) {
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        /*
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String jsonArray = gson.toJson(hoursList);*/
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), hoursList.toString());
+        final Call<Void> call = service.addWorkhours(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    dataSynced(18);
                 }
             }
 
@@ -245,8 +284,7 @@ public class EditFacilityActivity extends AppCompatActivity {
 
     }
 
-    private void editFacility(long _id, String faciName, String location, String hoursOpen,String hoursClose,
-                              String contactInfo, float rating, String faciPhoto) {
+    private void editFacility(long _id, String faciName, String location, String contactInfo, float rating, String faciPhoto) {
 
         try {
             petBetterDb.openDatabase();
@@ -254,7 +292,7 @@ public class EditFacilityActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        petBetterDb.editFacility(_id, faciName, location, hoursOpen, hoursClose, contactInfo, rating, faciPhoto);
+        petBetterDb.editFacility(_id, faciName, location, contactInfo, rating, faciPhoto);
         petBetterDb.closeDatabase();
 
     }

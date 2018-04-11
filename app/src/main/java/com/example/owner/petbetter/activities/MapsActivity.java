@@ -36,6 +36,7 @@ import com.example.owner.petbetter.classes.FacilityMembership;
 import com.example.owner.petbetter.classes.LocationMarker;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
+import com.example.owner.petbetter.classes.WorkHours;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.google.android.gms.common.ConnectionResult;
@@ -55,12 +56,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.location.LocationListener;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -105,8 +108,6 @@ public class MapsActivity extends FragmentActivity
     private int vetId;
 
     private String faciName;
-    private String openTime;
-    private String closeTime;
     private String phoneNum;
     private String address;
     private String image;
@@ -116,9 +117,11 @@ public class MapsActivity extends FragmentActivity
     private ImageButton topicNewPost;
 
     private Button addLocationButton;
+    private ArrayList<WorkHours> hoursList;
 
 
     HerokuService service;
+    private String jsonHours;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,14 +137,15 @@ public class MapsActivity extends FragmentActivity
         requestQueue = Volley.newRequestQueue(this);
         //topicNewPost = (ImageButton) findViewById(R.id.topicNewPost);
         //topicNewPost.setVisibility(View.GONE);
-
         Bundle extras = getIntent().getExtras();
         faciName = extras.getString("bldg_name");
-        openTime = extras.getString("hours_open");
-        closeTime = extras.getString("hours_close");
         phoneNum = extras.getString("phone_num");
         //address = extras.getString("location");
-        image = extras.getString("image");
+        jsonHours = extras.getString("workhours");
+        /*
+        Type type = new TypeToken<ArrayList<WorkHours>>(){}.getType();
+        hoursList = new Gson().fromJson(jsonMyObject, type);
+        image = extras.getString("image");*/
 
         service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         systemSessionManager = new SystemSessionManager(this);
@@ -316,15 +320,7 @@ public class MapsActivity extends FragmentActivity
 
     }
 
-    private long addFacilitytoDB(
-            int faci_id,
-            String faci_name,
-            String location,
-            String hours_open,
-            String hours_close,
-            String contact_info,
-            String faciPhoto
-    ) {
+    private long addFacilitytoDB(int faci_id, String faci_name, String location, String contact_info, String faciPhoto) {
 
         try{
             petBetterDb.openDatabase();
@@ -332,7 +328,7 @@ public class MapsActivity extends FragmentActivity
             e.printStackTrace();
         }
 
-        long result = petBetterDb.addFacility(faci_id,faci_name,location,hours_open,hours_close,contact_info, faciPhoto);
+        long result = petBetterDb.addFacility(faci_id,faci_name,location,contact_info, faciPhoto);
         petBetterDb.closeDatabase();
 
         return result;
@@ -672,12 +668,15 @@ public class MapsActivity extends FragmentActivity
         System.out.println(newMarker.getPosition().latitude + " " + newMarker.getPosition().longitude);
 
         //addFacility();
+
+        //Gson gson = new GsonBuilder().serializeNulls().create();
+        //String jsonHours = gson.toJson(hoursList);
+
         Intent intent = new Intent(MapsActivity.this, com.example.owner.petbetter.activities.AddServicesActivity.class);
         Bundle extras = new Bundle();
         extras.putString("bldg_name", faciName);
-        extras.putString("hours_open", openTime);
-        extras.putString("hours_close", closeTime);
         extras.putString("phone_num", phoneNum);
+        extras.putString("workhours", jsonHours);
         //address = extras.getString("location");
         extras.putString("image", image);
         extras.putDouble("longitude", longitude);
@@ -750,7 +749,7 @@ public class MapsActivity extends FragmentActivity
                 0
         );*/
 
-        addFacilitytoDB((int)faciId,faciName,address,openTime,closeTime,phoneNum, image);
+        addFacilitytoDB((int)faciId,faciName,address,phoneNum, image);
         syncFacilityChanges();
 
     }
