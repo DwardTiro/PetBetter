@@ -4,40 +4,29 @@ require 'init.php';
 
 //$vetlist = $_POST['vetlist'];;
 
-
-$facilist = json_decode(file_get_contents('php://input'),true);
+$hourslist = json_decode(file_get_contents('php://input'),true);
 //$sql = "SELECT * FROM users WHERE email = ? AND password = ?";
 //$sql = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
+$pending = array(); 
 
 //$result = mysqli_query($con, $sql);
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
 	
-	$n = count($facilist);
+	$n = count($hourslist);
 	//echo $n;
 	$i = 0;
-	//echo $vetlist[$i]['_id'];
+	//echo $notiflist[$i]['_id'];
 	
 	while($i<$n){
-		
-		$title = substr(md5(rand()), 0, 7);
-		$upload_path = "uploads/facilities/$title.jpg";
-		
-		if(!($facilist[$i]['faci_photo']==null)){
-			file_put_contents($upload_path, base64_decode($facilist[$i]['faci_photo']));
-		}
-		else{
-			$upload_path = null;
-		}
-		echo $upload_path;
-		if($stmt = $mysqli->prepare("INSERT INTO facilities (faci_name, location, contact_info, rating, faci_photo, is_disabled) VALUES (?,?,?,?,?,?)")){
-			$stmt->bind_param("ssssss", $facilist[$i]['faci_name'], $facilist[$i]['location'], $facilist[$i]['contact_info'], $facilist[$i]['rating'], $upload_path, $facilist[$i]['is_disabled']);
+		if($stmt = $mysqli->prepare("INSERT INTO workhours (faci_id, days, hours_open, hours_close, is_deleted) VALUES (?,?,?,?,?)")){
+			$stmt->bind_param("sssss", $hourslist[$i]['faci_id'], $hourslist[$i]['days'], $hourslist[$i]['hours_open'], $hourslist[$i]['hours_close'], $hourslist[$i]['is_deleted']);
 			$stmt->execute();
 			$stmt->close();
 			$i = $i + 1;
 		}
 		else{
-			echo 'Failed to add to db';
+			//echo 'and here?';
 			break;
 		}
 		

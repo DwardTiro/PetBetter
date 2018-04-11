@@ -15,7 +15,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 		if($stmt = $mysqli->prepare("SELECT * FROM facilities")){
 		
 			$stmt->execute();
-			$stmt->bind_result($_id, $faci_name, $location, $hours_open, $hours_close, $contact_info, $rating, $faci_photo, $is_disabled);
+			$stmt->bind_result($_id, $faci_name, $location, $contact_info, $rating, $faci_photo, $is_disabled);
 			$stmt->store_result();
 		
 			if($stmt->fetch()){
@@ -24,8 +24,6 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 					array_push($response, array('faci_id'=>$_id,
 					'faci_name'=>$faci_name,
 					'location'=>$location,
-					'hours_open'=>$hours_open,
-					'hours_close'=>$hours_close,
 					'contact_info'=>$contact_info,
 					'rating'=>$rating,
 					'faci_photo'=>$faci_photo,
@@ -59,7 +57,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 		if($stmt = $mysqli->prepare("SELECT * FROM facilities WHERE is_disabled = 0")){
 			
 			$stmt->execute();
-			$stmt->bind_result($_id, $faci_name, $location, $hours_open, $hours_close, $contact_info, $rating, $faci_photo, $is_disabled);
+			$stmt->bind_result($_id, $faci_name, $location, $contact_info, $rating, $faci_photo, $is_disabled);
 			$stmt->store_result();
 		
 			if($stmt->fetch()){
@@ -68,8 +66,6 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 					array_push($response, array('faci_id'=>$_id,
 					'faci_name'=>$faci_name,
 					'location'=>$location,
-					'hours_open'=>$hours_open,
-					'hours_close'=>$hours_close,
 					'contact_info'=>$contact_info,
 					'rating'=>$rating,
 					'faci_photo'=>$faci_photo,

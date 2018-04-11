@@ -2,51 +2,34 @@
 
 require 'init.php';
 
-$queryjson = json_decode(file_get_contents('php://input'),true);
+$faci_id = $_POST['faci_id'];
 
 $response = array(); 
-//$sql = "SELECT * FROM users WHERE email = ? AND password = ?";
-//$sql = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
+//$sql = "SELECT * FROM users WHERE faci_id = ? AND password = ?";
+//$sql = "SELECT * FROM users WHERE faci_id = '$faci_id' AND password = '$password'";
 
 //$result = mysqli_query($con, $sql);
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
-	
-	//echo $queryjson;
-	
-	//$query = "%{$_POST['query']}%";
-	$query = "%{$queryjson}%";
 
-	if($stmt = $mysqli->prepare("SELECT * FROM facilities AS f WHERE f.is_disabled = 0 AND (f.faci_name LIKE ? OR f.location LIKE ?)")){
-		$stmt->bind_param("ss", $query, $query);
+	if($stmt = $mysqli->prepare("SELECT * FROM markers WHERE faci_id = ?")){
+		$stmt->bind_param("s", $faci_id);
 		$stmt->execute();
-		$stmt->bind_result($_id, $faci_name, $location, $contact_info, $rating, $faci_photo, $is_disabled);
+		$stmt->bind_result($_id, $bldg_name, $longitude, $latitude, $location, $user_id, $type, $faci_id);
 		$stmt->store_result();
 	
 		if($stmt->fetch()){
-			do{
-				array_push($response, array('_id'=>$_id,
-				'faci_name'=>$faci_name,
-				'location'=>$location,
-				'contact_info'=>$contact_info,
-				'rating'=>$rating,
-				'faci_photo'=>$faci_photo,
-				'is_disabled'=>$is_disabled,));
-			}while($stmt->fetch());
-			
 			
 			$stmt->close();
-			
-			echo json_encode($response);
-			/*
+			//echo json_encode($response);
 			echo json_encode(array('_id'=>$_id,
+			'bldg_name'=>$bldg_name,
+			'longitude'=>$longitude,
+			'latitude'=>$latitude,
+			'location'=>$location,
 			'user_id'=>$user_id,
-			'topic_name'=>$topic_name,
-			'topic_content'=>$topic_content,
-			'date_created'=>$date_created,
-			'first_name'=>$first_name,
-			'is_deleted'=>$is_deleted));
-			*/
+			'type'=>$type,
+			'faci_id'=>$faci_id));
 		}
 		else{
 			
@@ -68,36 +51,36 @@ if(mysqli_fetch_array($result)){
 	$response['last_name'] = $user['last_name'];
 	$response['mobile_num'] = $user['mobile_num'];
 	$response['phone_num'] = $user['phone_num'];
-	$response['email'] = $user['email'];
+	$response['faci_id'] = $user['faci_id'];
 	$response['password'] = $user['password'];
 	$response['age'] = $user['age'];
 	$response['user_type'] = $user['user_type'];
 }
 else{
 	$response['error'] = true; 
-	$response['message'] = "Invalid email or password";
+	$response['message'] = "Invalid faci_id or password";
 }
 */
 /*
 if($_SERVER['REQUEST_METHOD']=='POST'){
-	if(isset($_POST['email']) and isset($_POST['password'])){
+	if(isset($_POST['faci_id']) and isset($_POST['password'])){
 		$db = new DbOperations(); 
 
-		if($db->userLogin($_POST['email'], $_POST['password'])){
-			$user = $db->getUserByUsername($_POST['email']);
+		if($db->userLogin($_POST['faci_id'], $_POST['password'])){
+			$user = $db->getUserByUsername($_POST['faci_id']);
 			$response['error'] = false;
 			$response['_id'] = $user['_id'];
 			$response['first_name'] = $user['first_name'];
 			$response['last_name'] = $user['last_name'];
 			$response['mobile_num'] = $user['mobile_num'];
 			$response['phone_num'] = $user['phone_num'];
-			$response['email'] = $user['email'];
+			$response['faci_id'] = $user['faci_id'];
 			$response['password'] = $user['password'];
 			$response['age'] = $user['age'];
 			$response['user_type'] = $user['user_type'];
 		}else{
 			$response['error'] = true; 
-			$response['message'] = "Invalid email or password";			
+			$response['message'] = "Invalid faci_id or password";			
 		}
 
 	}else{

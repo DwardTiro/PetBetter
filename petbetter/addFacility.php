@@ -19,9 +19,8 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 	else{
 		$upload_path = null;
 	}
-	if($stmt = $mysqli->prepare("INSERT INTO facilities (faci_name, location, hours_open, hours_close, contact_info, vet_id, rating, faci_photo) VALUES (?,?,?,?,?,?,?,?)")){
-		$stmt->bind_param("ssssssss", $facility['faci_name'], $facility['location'], $facility['hours_open'], $facility['hours_close'], $facility['contact_info'], $facility['vet_id'], $facility['rating'], 
-			$upload_path);
+	if($stmt = $mysqli->prepare("INSERT INTO facilities (faci_name, location, contact_info, vet_id, rating, faci_photo) VALUES (?,?,?,?,?,?)")){
+		$stmt->bind_param("ssssss", $facility['faci_name'], $facility['location'], $facility['contact_info'], $facility['vet_id'], $facility['rating'], $upload_path);
 		$stmt->execute();
 		$stmt->close();
 		echo 'Facility added';

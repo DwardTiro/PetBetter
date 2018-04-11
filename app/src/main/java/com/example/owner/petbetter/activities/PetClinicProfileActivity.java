@@ -795,15 +795,29 @@ public class PetClinicProfileActivity extends AppCompatActivity {
     }
 
     public void onFacilityLocationClicked(View view) {
-        System.out.println("This faciId in pet profile: " + faciItem.getId());
-        LocationMarker location = getLocationMarker((int) faciItem.getId());
-        Bundle extras = new Bundle();
-        extras.putString("bldg_name", location.getBldgName());
-        extras.putDouble("latitude", location.getLatitude());
-        extras.putDouble("longitude", location.getLongitude());
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
-        Intent intent = new Intent(this, com.example.owner.petbetter.activities.ShowLocationActivity.class);
-        intent.putExtras(extras);
-        startActivity(intent);
+        final Call<LocationMarker> call = service.getMarkerWithFaciId(faciItem.getId());
+        call.enqueue(new Callback<LocationMarker>() {
+            @Override
+            public void onResponse(Call<LocationMarker> call, Response<LocationMarker> response) {
+                if(response.isSuccessful()){
+                    LocationMarker location = response.body();
+                    Bundle extras = new Bundle();
+                    extras.putString("bldg_name", location.getBldgName());
+                    extras.putDouble("latitude", location.getLatitude());
+                    extras.putDouble("longitude", location.getLongitude());
+
+                    Intent intent = new Intent(PetClinicProfileActivity.this, com.example.owner.petbetter.activities.ShowLocationActivity.class);
+                    intent.putExtras(extras);
+                    startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LocationMarker> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
     }
 }
