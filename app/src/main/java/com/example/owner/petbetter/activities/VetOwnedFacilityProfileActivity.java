@@ -106,7 +106,6 @@ public class VetOwnedFacilityProfileActivity extends AppCompatActivity{
         facilityImage = (ImageView) findViewById(R.id.clinicProfileImage);
 
         facilityAddress.setText(faciItem.getLocation());
-        facilityLandline.setText(faciItem.getContactInfo());
         noServicesTextView = (TextView) findViewById(R.id.noServicesTextView);
         serviceRecyclerView = (RecyclerView) findViewById(R.id.servicesRecyclerView);
         hoursRecyclerView = (RecyclerView) findViewById(R.id.hoursRecyclerView);
@@ -173,7 +172,6 @@ public class VetOwnedFacilityProfileActivity extends AppCompatActivity{
         facilityName = (TextView) findViewById(R.id.clinicName);
         facilityRating = (TextView) findViewById(R.id.clinicRatingNumerator);
         facilityAddress = (TextView) findViewById(R.id.addressTextField);
-        facilityLandline = (TextView) findViewById(R.id.phoneNumTextField);
 
 
         String[] contactArray = faciItem.getContactInfo().split(",", -1);
