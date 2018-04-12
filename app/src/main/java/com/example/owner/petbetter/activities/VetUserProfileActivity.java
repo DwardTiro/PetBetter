@@ -52,9 +52,11 @@ public class VetUserProfileActivity extends AppCompatActivity implements Navigat
 
     private TextView vetName;
     private TextView vetDetails;
-    private TextView vetEducation;
     private TextView vetSpecialization;
     private TextView vetContactInformation;
+    private TextView vetPage;
+    private TextView vetWebsite;
+    private TextView vetEmail;
     private TextView vetRating;
     private TextView textNavEmail, textNavUser;
     private ImageView vetProfileImage;
@@ -99,9 +101,11 @@ public class VetUserProfileActivity extends AppCompatActivity implements Navigat
         vetName = (TextView) findViewById(R.id.profileName);
         vetRating = (TextView) findViewById(R.id.vetListRating);
         vetDetails = (TextView) findViewById(R.id.vetDescriptionTextField);
-        vetEducation = (TextView) findViewById(R.id.bachelorEducationTextField);
         vetSpecialization = (TextView) findViewById(R.id.specialtyTextField);
         vetContactInformation = (TextView) findViewById(R.id.phoneNumTextField);
+        vetPage = (TextView) findViewById(R.id.faciPageTextField);
+        vetWebsite = (TextView) findViewById(R.id.faciWebsiteTextField);
+        vetEmail = (TextView) findViewById(R.id.faciEmailTextField);
         editProfileButton = (Button) findViewById(R.id.editVetProfileButton);
         verifyLicense = (ImageView) findViewById(R.id.vetVerified);
         verifySpecialty = (ImageView) findViewById(R.id.verifiedSpecialtyIndicator);
@@ -147,11 +151,14 @@ public class VetUserProfileActivity extends AppCompatActivity implements Navigat
         }
 
         vetName.setText(user.getName() + ",");
-        vetEducation.setText(vet.getEducation());
         vetSpecialization.setText(vet.getSpecialty());
         vetRating.setText(String.valueOf(vet.getRating()));
         vetDetails.setText(vet.getProfileDesc());
-        vetContactInformation.setText(user.getMobileNumber());
+
+        vetContactInformation.setText("Phone number: "+user.getMobileNumber());
+        vetPage.setVisibility(View.GONE);
+        vetWebsite.setVisibility(View.GONE);
+        vetEmail.setText("Email: "+user.getEmail());
         if (user.getUserPhoto() != null) {
 
             String newFileName = BASE_URL + user.getUserPhoto();
@@ -257,17 +264,14 @@ public class VetUserProfileActivity extends AppCompatActivity implements Navigat
         vetName = (TextView) findViewById(R.id.profileName);
         vetRating = (TextView) findViewById(R.id.vetListRating);
         vetDetails = (TextView) findViewById(R.id.vetDescriptionTextField);
-        vetEducation = (TextView) findViewById(R.id.bachelorEducationTextField);
         vetSpecialization = (TextView) findViewById(R.id.specialtyTextField);
         vetContactInformation = (TextView) findViewById(R.id.phoneNumTextField);
 
         vetName.setText(user.getName() + ",");
-        vetEducation.setText(vet.getEducation());
         vetSpecialization.setText(vet.getSpecialty());
         vetRating.setText(String.valueOf(vet.getRating()));
         vetDetails.setText(vet.getProfileDesc());
 
-        vetContactInformation.setText(user.getMobileNumber());
         if (user.getUserPhoto() != null) {
 
             String newFileName = BASE_URL + user.getUserPhoto();

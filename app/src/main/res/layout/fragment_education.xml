@@ -36,43 +36,10 @@
     </RelativeLayout>
 
     <TextView
-        android:id="@+id/bachelorText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/topContent"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="7sp"
-        android:text="Bachelor Degree:"
-        android:textStyle="bold"
-        android:textColor="@color/midnight_green"
-        android:textSize="15sp" />
-
-    <TextView
-        android:id="@+id/bachelorEducationTextField"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/bachelorText"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginStart="7sp"
-        android:text="Bachelor of Science in Biology"
-        android:textColor="@color/midnight_green"
-        android:textSize="15sp" />
-
-    <LinearLayout
-        android:id="@+id/separator"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/myrtle_green"
-        android:orientation="horizontal"
-        android:layout_below="@+id/bachelorEducationTextField"
-        />
-
-    <TextView
         android:id="@+id/doctorateText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/separator"
+        android:layout_below="@+id/topContent"
         android:layout_marginTop="10dp"
         android:layout_marginStart="7sp"
         android:text="Doctorate Degree:"

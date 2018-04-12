@@ -3031,6 +3031,28 @@ public class DataAdapter {
         return result;
     }
 
+    public long setBookmarks(ArrayList<Bookmark> bookmarkList){
+        long result = 0;
+
+        petBetterDb.delete(BOOKMARK_TABLE, null, null);
+
+
+
+        for(Bookmark bookmark:bookmarkList){
+            ContentValues cv = new ContentValues();
+            cv.put("_id", bookmark.getBookmarkId());
+            cv.put("item_id", bookmark.getItemId());
+            cv.put("bookmark_type", bookmark.getBookmarkType());
+            cv.put("user_id", bookmark.getUserId());
+            cv.put("is_synced", 1);
+
+            result = petBetterDb.insert(BOOKMARK_TABLE, null, cv);
+        }
+        //System.out.println("2ND REAL NUM OF POSTS: "+getPosts().size());
+
+        return result;
+    }
+
     public long setUpvotes(ArrayList<Upvote> upvoteList){
         long result = 0;
 

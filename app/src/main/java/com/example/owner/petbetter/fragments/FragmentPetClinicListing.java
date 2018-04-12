@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.activities.BookmarksActivity;
+import com.example.owner.petbetter.activities.HomeActivity;
 import com.example.owner.petbetter.activities.MonitorVetsActivity;
 import com.example.owner.petbetter.activities.SearchActivity;
 import com.example.owner.petbetter.activities.VeterinarianHomeActivity;
@@ -90,7 +92,6 @@ public class FragmentPetClinicListing extends Fragment {
         if(faciList==null){
             faciList = getClinics();
         }
-
         if(getActivity() instanceof MonitorVetsActivity){
             MonitorAdapter monitorAdapter = new MonitorAdapter(getActivity(), faciList, 2, new MonitorAdapter.OnItemClickListener() {
                 @Override
@@ -143,6 +144,7 @@ public class FragmentPetClinicListing extends Fragment {
             recyclerView.setAdapter(clinicListingAdapter);
         }
         else if(getActivity() instanceof BookmarksActivity){
+            getBookmarks(user.getUserId());
             final HerokuService bookmarkService = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
             Call<ArrayList<Facility>> call = bookmarkService.getFacilityBookmarks(user.getUserId());
             call.enqueue(new Callback<ArrayList<Facility>>() {
@@ -173,9 +175,10 @@ public class FragmentPetClinicListing extends Fragment {
 
         }
         else if(isLinked==false){
+            getBookmarks(user.getUserId());
             clinicListingAdapter = new ClinicListingAdapter(getActivity(), faciList, new ClinicListingAdapter.OnItemClickListener() {
                 @Override public void onItemClick(Facility item) {
-
+                    System.out.println("FACI CHECK 2: "+item.getId());
                     Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.PetClinicProfileActivity.class);
                     intent.putExtra("thisClinic", new Gson().toJson(item));
                     startActivity(intent);
@@ -190,6 +193,55 @@ public class FragmentPetClinicListing extends Fragment {
 
 
         return view;
+    }
+
+
+    public void getBookmarks(long userId){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+        final Call<ArrayList<Bookmark>> call = service.getUserBookmarks(userId);
+        call.enqueue(new Callback<ArrayList<Bookmark>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Bookmark>> call, Response<ArrayList<Bookmark>> response) {
+                if(response.isSuccessful()){
+                    setBookmarks(response.body());
+                    dataSynced(16);
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Bookmark>> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }
+
+    public long setBookmarks(ArrayList<Bookmark> bookmarkList){
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        long result = petBetterDb.setBookmarks(bookmarkList);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+
+    private void dataSynced(int n){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        petBetterDb.dataSynced(n);
+        petBetterDb.closeDatabase();
+
     }
 
     private void initializeDatabase() {

@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -63,7 +64,7 @@ public class PetClinicProfileActivity extends AppCompatActivity {
     private ImageView clinicProfileImage;
 
     private Button petClinicRateButton;
-    private Button bookMarkButton;
+    private ImageButton bookMarkButton;
 
     private DataAdapter petBetterDb;
     private SystemSessionManager systemSessionManager;
@@ -105,7 +106,7 @@ public class PetClinicProfileActivity extends AppCompatActivity {
 
         petClinicRating = (TextView) findViewById(R.id.clinicRatingNumerator);
         clinicProfileImage = (ImageView) findViewById(R.id.clinicProfileImage);
-        bookMarkButton = (Button) findViewById(R.id.bookmarkClinicButton);
+        bookMarkButton = (ImageButton) findViewById(R.id.bookmarkClinicButton);
         ambulanceTextView = (TextView) findViewById(R.id.ambulanceTextView);
         confinementTextView = (TextView) findViewById(R.id.confinementTextView);
         homeServiceTextView = (TextView) findViewById(R.id.homeServiceTextView);
@@ -184,12 +185,10 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         });
 
         if (checkIfBookmark((int) faciItem.getId(), (int) user.getUserId())) {
-            bookMarkButton.setBackgroundResource(R.color.myrtle_green);
-            bookMarkButton.setText("Bookmarked");
+            bookMarkButton.setImageResource(R.drawable.ic_bookmark_white_24dp);
             isBookmarked = true;
         } else {
-            bookMarkButton.setBackgroundResource(R.color.amazonite);
-            bookMarkButton.setText("Bookmark");
+            bookMarkButton.setImageResource(R.drawable.ic_bookmark_border_white_24dp);
         }
 
         bookMarkButton.setOnClickListener(new View.OnClickListener() {
@@ -213,8 +212,7 @@ public class PetClinicProfileActivity extends AppCompatActivity {
                         public void onResponse(Call<Void> call, Response<Void> response) {
                             System.out.println("New bookmark added");
                             if (response.isSuccessful()) {
-                                bookMarkButton.setText("Bookmarked");
-                                bookMarkButton.setBackgroundResource(R.color.myrtle_green);
+                                bookMarkButton.setImageResource(R.drawable.ic_bookmark_white_24dp);
                                 dataSync(16);
                                 isBookmarked = true;
                                 syncBookmarkChanges();
@@ -228,8 +226,7 @@ public class PetClinicProfileActivity extends AppCompatActivity {
                     });
 
                 } else {
-                    bookMarkButton.setBackgroundResource(R.color.amazonite);
-                    bookMarkButton.setText("Bookmark");
+                    bookMarkButton.setImageResource(R.drawable.ic_bookmark_border_white_24dp);
                     deleteFacilityBookmark(faciItem.getId(), user.getUserId());
                     removeBookmark(faciItem.getId(), user.getUserId());
                 }

@@ -12,6 +12,7 @@ import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.classes.Services;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 
 /**
@@ -41,8 +42,13 @@ public class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.ServiceL
     public void onBindViewHolder(ServiceListingHolder holder, int position) {
         final Services thisService = serviceList.get(position);
 
+        NumberFormat formatter = NumberFormat.getNumberInstance();
+        formatter.setMinimumFractionDigits(2);
+        formatter.setMaximumFractionDigits(2);
+        String output = formatter.format(thisService.getServicePrice());
+
         holder.serviceNameText.setText(thisService.getServiceName());
-        holder.priceText.setText(Float.toString(thisService.getServicePrice()));
+        holder.priceText.setText(output);
 
 
     }

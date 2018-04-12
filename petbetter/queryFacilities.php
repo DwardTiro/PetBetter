@@ -25,13 +25,13 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 	
 		if($stmt->fetch()){
 			do{
-				array_push($response, array('_id'=>$_id,
+				array_push($response, array('faci_id'=>$_id,
 				'faci_name'=>$faci_name,
 				'location'=>$location,
 				'contact_info'=>$contact_info,
 				'rating'=>$rating,
 				'faci_photo'=>$faci_photo,
-				'is_disabled'=>$is_disabled,));
+				'is_disabled'=>$is_disabled));
 			}while($stmt->fetch());
 			
 			

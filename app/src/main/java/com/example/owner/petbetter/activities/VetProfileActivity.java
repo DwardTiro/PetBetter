@@ -45,6 +45,9 @@ public class VetProfileActivity extends AppCompatActivity {
     private ImageView profileBG;
     private TextView vetName;
     private TextView vetLandline;
+    private TextView vetPage;
+    private TextView vetWebsite;
+    private TextView vetEmail;
     private TextView vetSpecialty;
     private TextView vetRating;
     private Button rateVetButton;
@@ -79,6 +82,9 @@ public class VetProfileActivity extends AppCompatActivity {
         profileBG = (ImageView) findViewById(R.id.profileImage);
         vetName = (TextView) findViewById(R.id.profileName);
         vetLandline = (TextView) findViewById(R.id.phoneNumTextField);
+        vetPage = (TextView) findViewById(R.id.faciPageTextField);
+        vetWebsite = (TextView) findViewById(R.id.faciWebsiteTextField);
+        vetEmail = (TextView) findViewById(R.id.faciEmailTextField);
         vetSpecialty = (TextView) findViewById(R.id.specialtyTextField);
         vetRating = (TextView) findViewById(R.id.vetListRating);
         rateVetButton = (Button) findViewById(R.id.rateVetButton);
@@ -114,7 +120,11 @@ public class VetProfileActivity extends AppCompatActivity {
 
         profileName.setText(vetItem.getFirstName()+" " +vetItem.getLastName());
         vetName.setText(vetItem.getFirstName()+" "+vetItem.getLastName());
-        vetLandline.setText(vetItem.getMobileNumber());
+        vetLandline.setText("Phone number: "+vetItem.getMobileNumber());
+        vetPage.setVisibility(View.GONE);
+        vetWebsite.setVisibility(View.GONE);
+        vetEmail.setText("Email: "+vetItem.getEmail());
+
         //vetSpecialty.setText(vetItem.getSpecialty());
 
         if(vetItem.getUserPhoto()!=null){
