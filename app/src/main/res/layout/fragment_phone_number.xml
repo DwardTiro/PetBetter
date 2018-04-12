@@ -43,9 +43,45 @@
         android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginStart="7sp"
-        android:text="@string/sample_landline"
+        android:text="Phone Number:"
         android:textColor="@color/midnight_green"
         android:textSize="15sp" />
 
+    <TextView
+
+        android:id="@+id/faciPageTextField"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/phoneNumTextField"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="7sp"
+        android:textColor="@color/midnight_green"
+        android:text="Facebook Page:"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/faciWebsiteTextField"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/faciPageTextField"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="7sp"
+        android:text="Website:"
+        android:textColor="@color/midnight_green"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/faciEmailTextField"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/faciWebsiteTextField"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="7sp"
+        android:text="Email:"
+        android:textColor="@color/midnight_green"
+        android:textSize="15sp" />
 
 </RelativeLayout>

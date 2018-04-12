@@ -54,6 +54,9 @@ public class AddFacilityActivity extends AppCompatActivity {
     private EditText facilityName;
     private EditText facilityAddress;
     private EditText phoneNum;
+    private EditText faciPage;
+    private EditText faciWebsite;
+    private EditText faciEmail;
     private ImageButton editImage;
     private TextView textViewAddress;
     private SystemSessionManager systemSessionManager;
@@ -78,6 +81,9 @@ public class AddFacilityActivity extends AppCompatActivity {
         addFacilityButton = (Button) findViewById(R.id.addFacilityButton);
         facilityName = (EditText) findViewById(R.id.addFacilityName);
         phoneNum = (EditText) findViewById(R.id.addFacilityPhone);
+        faciPage = (EditText) findViewById(R.id.addFaciPage);
+        faciWebsite = (EditText) findViewById(R.id.addFaciWebsite);
+        faciEmail = (EditText) findViewById(R.id.addFaciEmail);
         facilityAddress = (EditText) findViewById(R.id.addFacilityAddress);
         editImage = (ImageButton) findViewById(R.id.clinicEditImage);
         textViewAddress = (TextView) findViewById(R.id.textViewAddress);
@@ -128,8 +134,7 @@ public class AddFacilityActivity extends AppCompatActivity {
 
         @Override
         public void afterTextChanged(Editable editable) {
-            if(facilityName.getText().toString().length() == 0 ||
-                    phoneNum.getText().toString().length() == 0){
+            if(facilityName.getText().toString().length() == 0){
                 addFacilityButton.setBackgroundColor(getResources().getColor(R.color.medTurquoise));
                 addFacilityButton.setEnabled(false);
             }
@@ -158,9 +163,13 @@ public class AddFacilityActivity extends AppCompatActivity {
         service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         String image = imageToString();
 
+        String contactInfo = phoneNum.getText().toString()+","+faciPage.getText().toString()+","+
+                faciWebsite.getText().toString()+","+faciEmail.getText().toString();
+
+
         Bundle extras = new Bundle();
         extras.putString("bldg_name", facilityName.getText().toString());
-        extras.putString("phone_num", phoneNum.getText().toString());
+        extras.putString("phone_num", contactInfo);
         extras.putString("workhours", jsonHours);
         extras.putString("location", facilityAddress.getText().toString());
         extras.putString("image", image);

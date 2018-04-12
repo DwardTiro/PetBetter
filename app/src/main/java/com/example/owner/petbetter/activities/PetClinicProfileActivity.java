@@ -56,6 +56,9 @@ public class PetClinicProfileActivity extends AppCompatActivity {
     private TextView petClinicName;
     private TextView petClinicAddress;
     private TextView petClinicLandline;
+    private TextView faciPage;
+    private TextView faciWebsite;
+    private TextView faciEmail;
     private TextView petClinicRating;
     private ImageView clinicProfileImage;
 
@@ -96,6 +99,10 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         petClinicName = (TextView) findViewById(R.id.clinicName);
         petClinicAddress = (TextView) findViewById(R.id.addressTextField);
         petClinicLandline = (TextView) findViewById(R.id.phoneNumTextField);
+        faciPage = (TextView) findViewById(R.id.faciPageTextField);
+        faciWebsite = (TextView) findViewById(R.id.faciWebsiteTextField);
+        faciEmail = (TextView) findViewById(R.id.faciEmailTextField);
+
         petClinicRating = (TextView) findViewById(R.id.clinicRatingNumerator);
         clinicProfileImage = (ImageView) findViewById(R.id.clinicProfileImage);
         bookMarkButton = (Button) findViewById(R.id.bookmarkClinicButton);
@@ -144,7 +151,21 @@ public class PetClinicProfileActivity extends AppCompatActivity {
         petClinicName.setText(faciItem.getFaciName());
         petClinicAddress.setText(faciItem.getLocation());
         petClinicRating.setText(String.valueOf(faciItem.getRating()));
-        petClinicLandline.setText(faciItem.getContactInfo());
+
+        String[] contactArray = faciItem.getContactInfo().split(",", -1);
+
+        if(contactArray.length>0&&contactArray[0].length()>0){
+            petClinicLandline.setText("Phone Number: "+contactArray[0]);
+        }
+        if(contactArray.length>1&&contactArray[1].length()>0){
+            faciPage.setText("Facebook Page: "+contactArray[1]);
+        }
+        if(contactArray.length>2&&contactArray[2].length()>0){
+            faciWebsite.setText("Website: "+contactArray[2]);
+        }
+        if(contactArray.length>3&&contactArray[3].length()>0){
+            faciEmail.setText("Email: "+contactArray[3]);
+        }
 
         if (checkIfRated(user.getUserId(), faciItem.getId())) {
             petClinicRateButton.setBackgroundResource(R.color.myrtle_green);

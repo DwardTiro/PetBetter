@@ -106,6 +106,63 @@
                     android:maxLines="1"
                     android:padding="5dp" />
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="15dp"
+                    android:text="Facebook Page:" />
+
+                <EditText
+                    android:id="@+id/addFaciPage"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/rounded_bg_corner"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:padding="5dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="15dp"
+                    android:text="Website" />
+
+                <EditText
+                    android:id="@+id/addFaciWebsite"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/rounded_bg_corner"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:padding="5dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="15dp"
+                    android:text="Email" />
+
+                <EditText
+                    android:id="@+id/addFaciEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/rounded_bg_corner"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:padding="5dp" />
+
 
                 <LinearLayout
                     android:layout_width="wrap_content"

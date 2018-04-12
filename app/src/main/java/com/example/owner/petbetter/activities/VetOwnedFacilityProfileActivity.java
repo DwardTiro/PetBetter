@@ -55,6 +55,9 @@ public class VetOwnedFacilityProfileActivity extends AppCompatActivity{
     private TextView facilityRating;
     private TextView facilityAddress;
     private TextView facilityLandline;
+    private TextView faciPage;
+    private TextView faciWebsite;
+    private TextView faciEmail;
     private TextView noServicesTextView;
     private ImageView facilityImage;
     private RecyclerView serviceRecyclerView;
@@ -96,6 +99,10 @@ public class VetOwnedFacilityProfileActivity extends AppCompatActivity{
         facilityRating = (TextView) findViewById(R.id.clinicRatingNumerator);
         facilityAddress = (TextView) findViewById(R.id.addressTextField);
         facilityLandline = (TextView) findViewById(R.id.phoneNumTextField);
+        faciPage = (TextView) findViewById(R.id.faciPageTextField);
+        faciWebsite = (TextView) findViewById(R.id.faciWebsiteTextField);
+        faciEmail = (TextView) findViewById(R.id.faciEmailTextField);
+
         facilityImage = (ImageView) findViewById(R.id.clinicProfileImage);
 
         facilityAddress.setText(faciItem.getLocation());
@@ -169,9 +176,22 @@ public class VetOwnedFacilityProfileActivity extends AppCompatActivity{
         facilityLandline = (TextView) findViewById(R.id.phoneNumTextField);
 
 
-        facilityAddress.setText(faciItem.getLocation());
-        facilityLandline.setText(faciItem.getContactInfo());
+        String[] contactArray = faciItem.getContactInfo().split(",", -1);
 
+
+        facilityAddress.setText(faciItem.getLocation());
+        if(contactArray.length>0&&contactArray[0].length()>0){
+            facilityLandline.setText("Phone Number: "+contactArray[0]);
+        }
+        if(contactArray.length>1&&contactArray[1].length()>0){
+            faciPage.setText("Facebook Page: "+contactArray[1]);
+        }
+        if(contactArray.length>2&&contactArray[2].length()>0){
+            faciWebsite.setText("Website: "+contactArray[2]);
+        }
+        if(contactArray.length>3&&contactArray[3].length()>0){
+            faciEmail.setText("Email: "+contactArray[3]);
+        }
 
     }
 

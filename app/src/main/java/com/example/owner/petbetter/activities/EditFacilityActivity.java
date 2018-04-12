@@ -55,6 +55,9 @@ public class EditFacilityActivity extends AppCompatActivity {
     private EditText facilityName;
     private EditText facilityAddress;
     private EditText phoneNum;
+    private EditText faciPage;
+    private EditText faciWebsite;
+    private EditText faciEmail;
     private ImageButton editImage;
     private SystemSessionManager systemSessionManager;
     private static final int IMG_REQUEST = 777;
@@ -85,6 +88,9 @@ public class EditFacilityActivity extends AppCompatActivity {
         addFacilityButton.setEnabled(true);
         facilityName = (EditText) findViewById(R.id.addFacilityName);
         phoneNum = (EditText) findViewById(R.id.addFacilityPhone);
+        faciPage = (EditText) findViewById(R.id.addFaciPage);
+        faciWebsite = (EditText) findViewById(R.id.addFaciWebsite);
+        faciEmail = (EditText) findViewById(R.id.addFaciEmail);
         facilityAddress = (EditText) findViewById(R.id.addFacilityAddress);
         facilityAddress.setEnabled(false);
         facilityAddress.setVisibility(View.GONE);
@@ -115,7 +121,12 @@ public class EditFacilityActivity extends AppCompatActivity {
         }
 
         facilityName.setText(faciItem.getFaciName());
-        phoneNum.setText(faciItem.getContactInfo());
+        String[] contactArray = faciItem.getContactInfo().split(",", -1);
+        phoneNum.setText(contactArray[0]);
+        faciPage.setText(contactArray[1]);
+        faciWebsite.setText(contactArray[2]);
+        faciEmail.setText(contactArray[3]);
+
 
         editImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -179,7 +190,10 @@ public class EditFacilityActivity extends AppCompatActivity {
             String image = imageToString();
 
 
-            editFacility(faciItem.getId(), facilityName.getText().toString(), faciItem.getLocation(), phoneNum.getText().toString(),
+            String contactInfo = phoneNum.getText().toString()+","+faciPage.getText().toString()+","+
+                    faciWebsite.getText().toString()+","+faciEmail.getText().toString();
+
+            editFacility(faciItem.getId(), facilityName.getText().toString(), faciItem.getLocation(), contactInfo,
                     faciItem.getRating(), image);
 
             uploadFacilityChanges();
