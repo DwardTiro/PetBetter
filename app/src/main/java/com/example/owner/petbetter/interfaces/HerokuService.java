@@ -331,8 +331,9 @@ public interface HerokuService {
     @POST("getVeterinarianRatings.php")
     Call<ArrayList<Float>> getVeterinarianRatings(@Field("rated_id") int vet_id);
 
+    @FormUrlEncoded
     @POST("queryFacilities.php")
-    Call<ArrayList<Facility>> queryFacilities(@Body RequestBody query);
+    Call<ArrayList<Facility>> queryFacilities(@Field("query_id") long userId, @Field("queryjson") String queryjson);
 
     @POST("queryUsers.php")
     Call<ArrayList<User>> queryUsers(@Body RequestBody query);
@@ -348,14 +349,17 @@ public interface HerokuService {
     @POST("queryEmail.php")
     Call<ArrayList<String>> queryEmail();
 
+    @FormUrlEncoded
     @POST("queryTopics.php")
-    Call<ArrayList<Topic>> queryTopics(@Body RequestBody query);
+    Call<ArrayList<Topic>> queryTopics(@Field("query_id") long userId, @Field("queryjson") String queryjson);
 
+    @FormUrlEncoded
     @POST("queryPosts.php")
-    Call<ArrayList<Post>> queryPosts(@Body RequestBody query);
+    Call<ArrayList<Post>> queryPosts(@Field("query_id") long userId, @Field("queryjson") String queryjson);
 
+    @FormUrlEncoded
     @POST("queryVeterinarians.php")
-    Call<ArrayList<Veterinarian>> queryVeterinarians(@Body RequestBody query);
+    Call<ArrayList<Veterinarian>> queryVeterinarians(@Field("query_id") long userId, @Field("queryjson") String queryjson);
 
     @FormUrlEncoded
     @POST("getFacilityRatings.php")

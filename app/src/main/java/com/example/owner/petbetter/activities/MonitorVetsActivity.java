@@ -19,15 +19,19 @@ import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.Topic;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
+import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.fragments.FragmentCommunity;
 import com.example.owner.petbetter.fragments.FragmentHome;
 import com.example.owner.petbetter.fragments.FragmentPetClinicListing;
 import com.example.owner.petbetter.fragments.FragmentUser;
 import com.example.owner.petbetter.fragments.FragmentVetListing;
+import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -49,6 +53,10 @@ public class MonitorVetsActivity extends AppCompatActivity {
     private FragmentUser fragment1;
     private FragmentPetClinicListing fragment2;
 
+    private DataAdapter petBetterDb;
+    private User user;
+    private SystemSessionManager systemSessionManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,7 +71,42 @@ public class MonitorVetsActivity extends AppCompatActivity {
         monitorTopicsButton.setVisibility(View.GONE);
         monitorPostsButton.setVisibility(View.GONE);
 
+        systemSessionManager = new SystemSessionManager(this);
+        if (systemSessionManager.checkLogin())
+            finish();
+        HashMap<String, String> userIn = systemSessionManager.getUserDetails();
+
+        initializeDatabase();
+        String email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
+        user = getUser(email);
+
         monitorVetsClicked(this.findViewById(android.R.id.content));
+    }
+
+    private void initializeDatabase() {
+
+        petBetterDb = new DataAdapter(this);
+
+        try {
+            petBetterDb.createDatabase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private User getUser(String email) {
+
+        try {
+            petBetterDb.openDatabase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        User result = petBetterDb.getUser(email);
+        petBetterDb.closeDatabase();
+
+        return result;
     }
 
     public void searchBackButtonClicked(View view) {
@@ -221,7 +264,7 @@ public class MonitorVetsActivity extends AppCompatActivity {
 
                     RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
 
-                    final Call<ArrayList<Facility>> call = service2.queryFacilities(body);
+                    final Call<ArrayList<Facility>> call = service2.queryFacilities(user.getUserId(), actvMonitor.getText().toString());
                     call.enqueue(new Callback<ArrayList<Facility>>() {
                         @Override
                         public void onResponse(Call<ArrayList<Facility>> call, Response<ArrayList<Facility>> response) {
@@ -312,7 +355,7 @@ public class MonitorVetsActivity extends AppCompatActivity {
 
                     RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
 
-                    final Call<ArrayList<Topic>> call = service3.queryTopics(body);
+                    final Call<ArrayList<Topic>> call = service3.queryTopics(user.getUserId(), actvMonitor.getText().toString());
                     call.enqueue(new Callback<ArrayList<Topic>>() {
                         @Override
                         public void onResponse(Call<ArrayList<Topic>> call, Response<ArrayList<Topic>> response) {
@@ -403,7 +446,7 @@ public class MonitorVetsActivity extends AppCompatActivity {
 
                     RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
 
-                    final Call<ArrayList<Post>> call = service4.queryPosts(body);
+                    final Call<ArrayList<Post>> call = service4.queryPosts(user.getUserId(), actvMonitor.getText().toString());
                     call.enqueue(new Callback<ArrayList<Post>>() {
                         @Override
                         public void onResponse(Call<ArrayList<Post>> call, Response<ArrayList<Post>> response) {

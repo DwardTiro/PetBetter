@@ -2,7 +2,8 @@
 
 require 'init.php';
 
-$queryjson = json_decode(file_get_contents('php://input'),true);
+$query_id = $_POST['query_id'];
+$queryjson = $_POST['queryjson'];
 
 $response = array(); 
 //$sql = "SELECT * FROM users WHERE email = ? AND password = ?";
@@ -16,10 +17,12 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 	
 	//$query = "%{$_POST['query']}%";
 	$query = "%{$queryjson}%";
-
-	if($stmt = $mysqli->prepare("SELECT * FROM topics WHERE is_deleted = 0 AND (topic_name LIKE ? OR topic_desc LIKE ?)")){
+	
+	if($stmt = $mysqli->prepare("SELECT t._id AS _id, t.creator_id AS creator_id, t.topic_name AS topic_name, t.topic_desc AS topic_desc, t.date_created AS date_created, 
+		t.is_deleted AS is_deleted FROM topics AS t INNER JOIN followers AS f ON t._id = f.topic_id WHERE is_deleted = 0 AND f.user_id = ? 
+		AND (topic_name LIKE ? OR topic_desc LIKE ?)")){
 		//query might cause error
-		$stmt->bind_param("ss", $query, $query);
+		$stmt->bind_param("sss", $query_id, $query, $query);
 		$stmt->execute();
 		$stmt->bind_result($_id, $creator_id, $topic_name, $topic_desc, $date_created, $is_deleted);
 		$stmt->store_result();
@@ -33,6 +36,52 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 				'topic_desc'=>$topic_desc,
 				'date_created'=>$date_created,
 				'is_deleted'=>$is_deleted));
+			}while($stmt->fetch());
+			
+			
+			$stmt->close();
+			
+			//echo json_encode($response);
+			/*
+			echo json_encode(array('_id'=>$_id,
+			'user_id'=>$user_id,
+			'topic_name'=>$topic_name,
+			'topic_content'=>$topic_content,
+			'date_created'=>$date_created,
+			'first_name'=>$first_name,
+			'is_deleted'=>$is_deleted));
+			*/
+		}
+		else{
+			
+			$stmt->close();
+			//echo 'SQL Query Error';
+		}
+		//echo json_encode($stmt);
+		//echo json_encode(array('user'=>$response));
+	}
+
+	if($stmt = $mysqli->prepare("SELECT * FROM topics WHERE is_deleted = 0 AND (topic_name LIKE ? OR topic_desc LIKE ?)")){
+		//query might cause error
+		$stmt->bind_param("ss", $query, $query);
+		$stmt->execute();
+		$stmt->bind_result($_id, $creator_id, $topic_name, $topic_desc, $date_created, $is_deleted);
+		$stmt->store_result();
+	
+		if($stmt->fetch()){
+			
+			do{
+				if(!in_array(array('_id'=>$_id, 'creator_id'=>$creator_id, 'topic_name'=>$topic_name, 'topic_desc'=>$topic_desc, 'date_created'=>$date_created, 'is_deleted'=>$is_deleted), $response)){
+					
+					array_push($response, array('_id'=>$_id,
+					'creator_id'=>$creator_id,
+					'topic_name'=>$topic_name,
+					'topic_desc'=>$topic_desc,
+					'date_created'=>$date_created,
+					'is_deleted'=>$is_deleted));
+					
+				}
+				
 			}while($stmt->fetch());
 			
 			
@@ -52,7 +101,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 		else{
 			
 			$stmt->close();
-			echo 'SQL Query Error';
+			//echo 'SQL Query Error';
 		}
 		//echo json_encode($stmt);
 		//echo json_encode(array('user'=>$response));

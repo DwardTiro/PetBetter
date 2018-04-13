@@ -191,12 +191,7 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
 
             //query the substring to server data
 
-            Gson gson = new GsonBuilder().serializeNulls().create();
-            String jsonArray = gson.toJson(actvSearch.getText().toString());
-
-            RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
-
-            final Call<ArrayList<Veterinarian>> call = service.queryVeterinarians(body);
+            final Call<ArrayList<Veterinarian>> call = service.queryVeterinarians(user.getUserId(), actvSearch.getText().toString());
             call.enqueue(new Callback<ArrayList<Veterinarian>>() {
                 @Override
                 public void onResponse(Call<ArrayList<Veterinarian>> call, Response<ArrayList<Veterinarian>> response) {
@@ -245,12 +240,7 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
                     getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragmentpar).
                             addToBackStack(null).commitAllowingStateLoss();
 
-                    Gson gson = new GsonBuilder().serializeNulls().create();
-                    String jsonArray = gson.toJson(actvSearch.getText().toString());
-
-                    RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
-
-                    final Call<ArrayList<Veterinarian>> call = service.queryVeterinarians(body);
+                    final Call<ArrayList<Veterinarian>> call = service.queryVeterinarians(user.getUserId(), actvSearch.getText().toString());
                     call.enqueue(new Callback<ArrayList<Veterinarian>>() {
 
                         @Override
@@ -361,7 +351,7 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
 
             RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
 
-            final Call<ArrayList<Facility>> call = service2.queryFacilities(body);
+            final Call<ArrayList<Facility>> call = service2.queryFacilities(user.getUserId(), actvSearch.getText().toString());
             call.enqueue(new Callback<ArrayList<Facility>>() {
                 @Override
                 public void onResponse(Call<ArrayList<Facility>> call, Response<ArrayList<Facility>> response) {
@@ -411,7 +401,7 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
 
                     RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
 
-                    final Call<ArrayList<Facility>> call = service2.queryFacilities(body);
+                    final Call<ArrayList<Facility>> call = service2.queryFacilities(user.getUserId(), actvSearch.getText().toString());
                     call.enqueue(new Callback<ArrayList<Facility>>() {
                         @Override
                         public void onResponse(Call<ArrayList<Facility>> call, Response<ArrayList<Facility>> response) {
@@ -508,7 +498,7 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
 
             RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
 
-            final Call<ArrayList<Topic>> call = service3.queryTopics(body);
+            final Call<ArrayList<Topic>> call = service3.queryTopics(user.getUserId(), actvSearch.getText().toString());
             call.enqueue(new Callback<ArrayList<Topic>>() {
                 @Override
                 public void onResponse(Call<ArrayList<Topic>> call, Response<ArrayList<Topic>> response) {
@@ -560,7 +550,7 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
 
                     RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
 
-                    final Call<ArrayList<Topic>> call = service3.queryTopics(body);
+                    final Call<ArrayList<Topic>> call = service3.queryTopics(user.getUserId(), actvSearch.getText().toString());
                     call.enqueue(new Callback<ArrayList<Topic>>() {
                         @Override
                         public void onResponse(Call<ArrayList<Topic>> call, Response<ArrayList<Topic>> response) {
@@ -659,7 +649,7 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
 
             RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
 
-            final Call<ArrayList<Post>> call = service4.queryPosts(body);
+            final Call<ArrayList<Post>> call = service4.queryPosts(user.getUserId(), actvSearch.getText().toString());
             call.enqueue(new Callback<ArrayList<Post>>() {
                 @Override
                 public void onResponse(Call<ArrayList<Post>> call, Response<ArrayList<Post>> response) {
@@ -709,7 +699,7 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
 
                     RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
 
-                    final Call<ArrayList<Post>> call = service4.queryPosts(body);
+                    final Call<ArrayList<Post>> call = service4.queryPosts(user.getUserId(), actvSearch.getText().toString());
                     call.enqueue(new Callback<ArrayList<Post>>() {
                         @Override
                         public void onResponse(Call<ArrayList<Post>> call, Response<ArrayList<Post>> response) {
