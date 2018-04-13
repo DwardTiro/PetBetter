@@ -40,22 +40,6 @@
         android:textStyle="bold" />
 
     <Button
-        android:id="@+id/unbanButton"
-        android:layout_width="60dp"
-        android:layout_height="36dp"
-        android:layout_toStartOf="@+id/banButton"
-        android:background="@drawable/rounded_button_green"
-        android:gravity="start|center_vertical"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="17dp"
-        android:padding="8dp"
-        android:textAllCaps="false"
-        android:textColor="@color/colorWhite"
-        android:text="Enable"
-        android:textSize="12sp"
-        android:textAlignment="center"/>
-
-    <Button
         android:id="@+id/banButton"
         android:layout_width="60dp"
         android:layout_height="36dp"

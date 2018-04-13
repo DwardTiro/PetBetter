@@ -10,7 +10,7 @@ $response = array();
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
 
-	if($stmt = $mysqli->prepare("SELECT * FROM services WHERE is_deleted = 0")){
+	if($stmt = $mysqli->prepare("SELECT * FROM services")){
 		
 		$stmt->execute();
 		$stmt->bind_result($_id, $faci_id, $service_name, $service_price, $is_deleted);

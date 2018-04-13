@@ -165,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
 
                         syncVetChanges();
 
-                        syncClinicChanges();
+                        syncClinicChanges(thisUser.getUserType());
 
                         syncFollowerChanges();
 
@@ -239,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
                         User thisUser = response.body();
                         syncPendingChanges();
                         syncUsers();
-                        syncClinicChanges();
+                        syncClinicChanges(thisUser.getUserType());
                         syncVetChanges();
                         syncTopicChanges();
                         syncRatingChanges();
@@ -1011,7 +1011,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void syncClinicChanges(){
+    public void syncClinicChanges(final int typeCheck){
 
         final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
@@ -1028,7 +1028,13 @@ public class MainActivity extends AppCompatActivity {
                     System.out.println("FACILITIES ADDED YEY");
                     dataSynced(2);
 
-                    final Call<ArrayList<Facility>> call2 = service2.getClinics(1);
+                    final Call<ArrayList<Facility>> call2;
+                    if(typeCheck==3){
+                        call2 = service2.getClinics(0);
+                    }
+                    else{
+                        call2 = service2.getClinics(1);
+                    }
                     call2.enqueue(new Callback<ArrayList<Facility>>() {
                         @Override
                         public void onResponse(Call<ArrayList<Facility>> call, Response<ArrayList<Facility>> response) {

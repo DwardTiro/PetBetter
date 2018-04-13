@@ -81,7 +81,7 @@ public class MonitorAdapter extends RecyclerView.Adapter<MonitorAdapter.MonitorV
     }
 
     @Override
-    public void onBindViewHolder(MonitorViewHolder holder, int position) {
+    public void onBindViewHolder(final MonitorViewHolder holder, int position) {
         initializeDatabase();
         if(type==1){
             //change to user
@@ -95,27 +95,22 @@ public class MonitorAdapter extends RecyclerView.Adapter<MonitorAdapter.MonitorV
                 holder.monitorProfilePic.setVisibility(View.VISIBLE);
             }
             if(thisUser.getIsDisabled()!=1){
-                holder.unbanButton.setEnabled(false);
-                holder.unbanButton.setVisibility(View.INVISIBLE);
-                holder.banButton.setEnabled(true);
-                holder.banButton.setVisibility(View.VISIBLE);
+                holder.banButton.setText("Disable");
+                holder.banButton.setBackgroundResource(R.drawable.rounded_button_red);
             }
             else{
-                holder.unbanButton.setEnabled(true);
-                holder.unbanButton.setVisibility(View.VISIBLE);
-                holder.banButton.setVisibility(View.INVISIBLE);
-                holder.banButton.setEnabled(false);
+                holder.banButton.setText("Enable");
+                holder.banButton.setBackgroundResource(R.drawable.rounded_button_green);
             }
-            holder.unbanButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    setDisableUser(0, thisUser);
-                }
-            });
             holder.banButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    setDisableUser(1, thisUser);
+                    if(holder.banButton.getText().toString()=="Disable"){
+                        setDisableUser(1, thisUser);
+                    }
+                    else{
+                        setDisableUser(0, thisUser);
+                    }
                 }
             });
             holder.bind(thisUser, listener);
@@ -132,33 +127,31 @@ public class MonitorAdapter extends RecyclerView.Adapter<MonitorAdapter.MonitorV
             }
 
             if(thisFaci.getIsDisabled()!=1){
-                holder.unbanButton.setEnabled(false);
-                holder.unbanButton.setVisibility(View.INVISIBLE);
-                holder.banButton.setEnabled(true);
-                holder.banButton.setVisibility(View.VISIBLE);
+                holder.banButton.setText("Disable");
+                holder.banButton.setBackgroundResource(R.drawable.rounded_button_red);
             }
             else{
-                holder.unbanButton.setEnabled(true);
-                holder.unbanButton.setVisibility(View.VISIBLE);
-                holder.banButton.setVisibility(View.INVISIBLE);
-                holder.banButton.setEnabled(false);
+                holder.banButton.setText("Enable");
+                holder.banButton.setBackgroundResource(R.drawable.rounded_button_green);
             }
 
-            holder.unbanButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    setDisableFacility(0, thisFaci);
-                }
-            });
+
             holder.banButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
-                    setDisableFacility(1, thisFaci);
+                    if(holder.banButton.getText().toString()=="Disable"){
+                        setDisableFacility(1, thisFaci);
+
+                    }
+                    else{
+                        setDisableFacility(0, thisFaci);
+                    }
                 }
             });
             holder.bind(thisFaci, listener);
         }
+        /*
         if(type==3){
             final Topic thisTopic = topicList.get(position);
             holder.monitorName.setText(thisTopic.getTopicName());
@@ -221,7 +214,7 @@ public class MonitorAdapter extends RecyclerView.Adapter<MonitorAdapter.MonitorV
                 }
             });
             holder.bind(thisPost, listener);
-        }
+        }*/
     }
 
     public void updateList(ArrayList newList){
@@ -509,7 +502,6 @@ public class MonitorAdapter extends RecyclerView.Adapter<MonitorAdapter.MonitorV
 
         private TextView monitorName;
         private ImageView monitorProfilePic;
-        private Button unbanButton;
         private Button banButton;
 
         public MonitorViewHolder(View itemView){
@@ -518,7 +510,6 @@ public class MonitorAdapter extends RecyclerView.Adapter<MonitorAdapter.MonitorV
             monitorName = (TextView) itemView.findViewById(R.id.monitorName);
             monitorProfilePic = (ImageView) itemView.findViewById(R.id.monitorProfilePic);
             banButton = (Button) itemView.findViewById(R.id.banButton);
-            unbanButton = (Button) itemView.findViewById(R.id.unbanButton);
 
         }
         public void bind(final User item, final MonitorAdapter.OnItemClickListener listener) {
