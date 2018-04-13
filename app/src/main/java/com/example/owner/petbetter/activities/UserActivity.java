@@ -236,6 +236,7 @@ public class UserActivity extends AppCompatActivity implements NavigationView.On
         btnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                spinnerFilter.setVisibility(View.VISIBLE);
                 System.out.println("Fragment 1");
                 btnCommunity.setBackgroundResource(R.color.medTurquoise);
                 btnCommunity.setTextColor(getResources().getColor(R.color.colorWhite));
@@ -256,6 +257,7 @@ public class UserActivity extends AppCompatActivity implements NavigationView.On
         btnCommunity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                spinnerFilter.setVisibility(View.GONE);
                 System.out.println("Fragment 2");
                 btnCommunity.setBackgroundResource(R.color.main_White);
                 btnCommunity.setTextColor(getResources().getColor(R.color.myrtle_green));
