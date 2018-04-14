@@ -110,8 +110,8 @@ public class PendingAdapter extends RecyclerView.Adapter<PendingAdapter.PendingV
             @Override
             public void onClick(View v) {
                 setIsApproved(1, thisPending);
-                pendingList.remove(position);
-                updateList(pendingList);
+                //pendingList.remove(position);
+                //updateList(pendingList);
             }
         });
 
@@ -119,8 +119,8 @@ public class PendingAdapter extends RecyclerView.Adapter<PendingAdapter.PendingV
             @Override
             public void onClick(View v) {
                 setIsApproved(0, thisPending);
-                pendingList.remove(position);
-                updateList(pendingList);
+                //pendingList.remove(position);
+                //updateList(pendingList);
             }
         });
         /*
@@ -174,7 +174,7 @@ public class PendingAdapter extends RecyclerView.Adapter<PendingAdapter.PendingV
         final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
-
+        final int type = thisPending.getType();
         final Call<Void> call = service.setIsApproved(isApproved, thisPending.getId());
         call.enqueue(new Callback<Void>() {
             @Override
@@ -189,8 +189,11 @@ public class PendingAdapter extends RecyclerView.Adapter<PendingAdapter.PendingV
                             if(response.isSuccessful()){
                                 setPending(response.body());
                                 dataSynced(17);
+                                ArrayList<Pending> newPendingList = getPending(type);
+
                                 //find a way to refresh this and do search after.
 
+                                updateList(newPendingList);
                             }
                         }
 
@@ -283,6 +286,20 @@ public class PendingAdapter extends RecyclerView.Adapter<PendingAdapter.PendingV
         }
 
         Facility result = petBetterDb.getFacility((int) faciId);
+        petBetterDb.closeDatabase();
+
+        return result;
+    }
+
+    private ArrayList<Pending> getPending(int type){
+
+        try {
+            petBetterDb.openDatabase();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Pending> result = petBetterDb.getPending(type);
         petBetterDb.closeDatabase();
 
         return result;

@@ -556,6 +556,31 @@ public class DataAdapter {
         return results;
     }
 
+    public ArrayList<Pending> getPending(int type){
+        //probably needs userid as parameter
+
+        ArrayList<Pending> results = new ArrayList<>();
+
+        //String sql = "SELECT * FROM "+MESSAGE_TABLE+" INNER JOIN "+USER_TABLE+" ON messages.from_id = users._id WHERE user_id = '" + userId + "'";
+
+        String sql = "SELECT * FROM pending WHERE type = '"+type+"'";
+
+
+        //SELECT * FROM messages INNER JOIN users ON messages.from_id = users._id WHERE messages.user_id = messageId
+        Cursor c = petBetterDb.rawQuery(sql, null);
+
+        while(c.moveToNext()) {
+            Pending pending = new Pending(c.getLong(c.getColumnIndexOrThrow("_id")),
+                    c.getLong(c.getColumnIndexOrThrow("foreign_id")),
+                    c.getInt(c.getColumnIndexOrThrow("type")),
+                    c.getInt(c.getColumnIndexOrThrow("is_approved")));
+            results.add(pending);
+        }
+
+        c.close();
+        return results;
+    }
+
     public ArrayList<Message> getPendingMessages(long userId){
         //probably needs userid as parameter
 

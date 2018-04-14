@@ -355,6 +355,9 @@ public class VeterinarianAddInfoActivity extends AppCompatActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                     Toast.makeText(VeterinarianAddInfoActivity.this, "Email is already taken", Toast.LENGTH_SHORT ).show();
+                } catch(NullPointerException npe){
+                    System.out.println("User added to server successfully");
+                    getUserFromDB();
                 }
 
 
