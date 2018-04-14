@@ -52,7 +52,7 @@ public class VeterinarianAddInfoActivity extends AppCompatActivity {
     private int userType;
     private int userId;
     private String education;
-    private int isLicensed = 0;
+    private int isLicensed = 1;
     private String profileDesc;
 
     private EditText editEducation;
@@ -80,20 +80,10 @@ public class VeterinarianAddInfoActivity extends AppCompatActivity {
         editEducation = (EditText) findViewById(R.id.signUpVetTextEducation);
         switchLicense = (SwitchCompat) findViewById(R.id.switchLicense);
         editProfileDesc = (EditText) findViewById(R.id.editProfileDesc);
-
+        switchLicense.setVisibility(View.GONE);
         initializeDatabase();
 
-        switchLicense.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    isLicensed = 1;
-                }
-                else{
-                    isLicensed = 0;
-                }
-            }
-        });
+
 
         Bundle extras = getIntent().getExtras();
         firstName = extras.getString("first_name");

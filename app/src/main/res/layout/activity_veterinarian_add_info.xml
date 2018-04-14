@@ -118,7 +118,8 @@
                 android:paddingEnd="5dp"
                 android:paddingStart="5dp"
                 android:text="ARE YOU A LICENSED SERVICE PROVIDER?"
-                android:textSize="14sp"/>
+                android:textSize="14sp"
+                android:visibility="gone"/>
 
             <android.support.v7.widget.SwitchCompat
                 android:id="@+id/switchLicense"
