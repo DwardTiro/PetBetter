@@ -12,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,6 +26,7 @@ import com.bumptech.glide.Glide;
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
+import com.example.owner.petbetter.classes.Message;
 import com.example.owner.petbetter.classes.Notifications;
 import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.Topic;
@@ -33,12 +35,17 @@ import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.services.MyService;
 import com.example.owner.petbetter.services.NotificationReceiver;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
+import com.google.gson.Gson;
 
 import org.w3c.dom.Text;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.example.owner.petbetter.ServiceGenerator.BASE_URL;
 
@@ -70,6 +77,8 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
     private ArrayList<Topic> userTopics;
     private ArrayList<Post> userPosts;
     private Button goToVetButton;
+    private long idIntent = 0;
+    private User user2;
 
     HerokuService service;
 
@@ -113,9 +122,23 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
         HashMap<String, String> userIn = systemSessionManager.getUserDetails();
 
         initializeDatabase();
+
         service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
         String email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
+
+        user = getUser(email);
+
+        try{
+            Bundle extras = getIntent().getExtras();
+            idIntent = extras.getLong("UserProfile");
+            if(idIntent!=0){
+                getUserWithId();
+            }
+        }catch(NullPointerException npe){
+            idIntent = 0;
+        }
+
         textNavEmail = (TextView) headerView.findViewById(R.id.textNavEmail);
         textNavEmail.setText(email);
         notifButton = (ImageView) findViewById(R.id.imageview_notifs);
@@ -130,7 +153,7 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
         if(!getUnsyncedNotifications().isEmpty())
             notifButton.setImageResource(R.mipmap.ic_notifications_active_black_24dp);
 
-        user = getUser(email);
+
         imageViewDrawer = (ImageView) headerView.findViewById(R.id.imageViewDrawer);
         if(user.getUserPhoto()!=null){
 
@@ -204,6 +227,9 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(UserProfileActivity.this, com.example.owner.petbetter.activities.UserActivity.class);
+                if(idIntent!=0){
+                    intent.putExtra("UserInvolvement", user2.getUserId());
+                }
                 startActivity(intent);
             }
         });
@@ -271,6 +297,41 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
             imageViewDrawer.setVisibility(View.VISIBLE);
         }
 
+    }
+
+    public void getUserWithId(){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+        final Call<User> call = service.getUserWithId(idIntent);
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if(response.isSuccessful()){
+                    user2 = response.body();
+                    if(user2.getUserPhoto()!=null){
+
+                        String newFileName = BASE_URL + user2.getUserPhoto();
+                        System.out.println(newFileName);
+                        Glide.with(UserProfileActivity.this).load(newFileName).error(R.drawable.app_icon_yellow).into(userProfilePicture);
+
+                        userProfilePicture.setVisibility(View.VISIBLE);
+                        userProfilePicture.setAdjustViewBounds(true);
+                    }
+                    userProfileName.setText(user2.getName());
+                    userTopicNum.setText(Integer.toString(getTopicsWithId(user2.getUserId()).size()));
+                    userPostNum.setText(Integer.toString(getPostsWithId(user2.getUserId()).size()));
+                    userEmailAddress.setText(user2.getEmail());
+                    editProfileButton.setVisibility(View.GONE);
+                    goToVetButton.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
     }
 
     @Override

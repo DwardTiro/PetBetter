@@ -36,7 +36,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="All Posts"
+                    android:text="Dashboard"
                     android:textAllCaps="false"
                     android:background="@color/medTurquoise"
                     android:textColor="@color/colorWhite"

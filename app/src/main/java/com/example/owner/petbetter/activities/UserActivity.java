@@ -82,6 +82,8 @@ public class UserActivity extends AppCompatActivity implements NavigationView.On
     private Button addTopicButton;
     private Spinner spinnerFilter;
     private ArrayList<Topic> userTopics;
+    private User user2;
+    private long idIntent = 0;
 
 
     private NotificationReceiver notifReceiver = new NotificationReceiver(this);
@@ -161,6 +163,14 @@ public class UserActivity extends AppCompatActivity implements NavigationView.On
 
         user = getUser(email);
 
+        try{
+            Bundle extras = getIntent().getExtras();
+            idIntent = extras.getLong("UserInvolvement");
+        }catch(NullPointerException npe){
+            idIntent = 0;
+        }
+
+
         if(user.getUserPhoto()!=null){
 
             String newFileName = BASE_URL + user.getUserPhoto();
@@ -186,6 +196,7 @@ public class UserActivity extends AppCompatActivity implements NavigationView.On
         textNavUser.setText(user.getName());
 
         btnHome = (Button) findViewById(R.id.allPostsButton);
+        btnHome.setText("Posts");
         btnCommunity = (Button) findViewById(R.id.allTopicsButton);
         container = (FrameLayout) findViewById(R.id.comm_container);
         refreshCommunity = (SwipeRefreshLayout) findViewById(R.id.refreshCommunity);
@@ -322,6 +333,28 @@ public class UserActivity extends AppCompatActivity implements NavigationView.On
         hideItems();
     }
 
+    /*
+    public void getUserWithId(){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+        final Call<User> call = service.getUserWithId(idIntent);
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if(response.isSuccessful()){
+                    user2 = response.body();
+                    //get back
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
+    }*/
+
     public void hideItems(){
         Menu menu = navigationView.getMenu();
 
@@ -404,7 +437,15 @@ public class UserActivity extends AppCompatActivity implements NavigationView.On
     public void filterPosts(int order){
 
         final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
-        final Call<ArrayList<Post>> call = service.getFilteredUserPosts(order, user.getUserId());
+        final Call<ArrayList<Post>> call;
+
+        if(idIntent==0){
+            call = service.getFilteredUserPosts(order, user.getUserId());
+        }
+        else{
+            call = service.getFilteredUserPosts(order, idIntent);
+        }
+
         call.enqueue(new Callback<ArrayList<Post>>() {
             @Override
             public void onResponse(Call<ArrayList<Post>> call, Response<ArrayList<Post>> response) {
@@ -438,7 +479,14 @@ public class UserActivity extends AppCompatActivity implements NavigationView.On
         final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         System.out.println("WE HERE BOOIII");
 
-        final Call<ArrayList<Topic>> call = service.getUserTopics(user.getUserId());
+        final Call<ArrayList<Topic>> call;
+        if(idIntent==0){
+            call = service.getUserTopics(user.getUserId());
+        }
+        else{
+            call = service.getUserTopics(idIntent);
+        }
+
         call.enqueue(new Callback<ArrayList<Topic>>() {
             @Override
             public void onResponse(Call<ArrayList<Topic>> call, Response<ArrayList<Topic>> response) {

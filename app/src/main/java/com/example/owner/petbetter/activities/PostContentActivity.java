@@ -454,6 +454,14 @@ public class PostContentActivity extends AppCompatActivity {
             //setImage(holder.messageRepImage, newFileName);
 
             profilePic.setVisibility(View.VISIBLE);
+            profilePic.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(PostContentActivity.this, com.example.owner.petbetter.activities.UserProfileActivity.class);
+                    intent.putExtra("UserProfile", postUser.getUserId());
+                    startActivity(intent);
+                }
+            });
         }
     }
 
