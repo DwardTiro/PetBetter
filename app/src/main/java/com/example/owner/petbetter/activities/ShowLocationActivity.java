@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.LocationListener;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
@@ -15,6 +16,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
@@ -23,17 +25,14 @@ import com.google.gson.Gson;
  * Created by Kristian on 3/3/2018.
  */
 
-public class ShowLocationActivity extends FragmentActivity
-        implements OnMapReadyCallback,
-        LocationListener,
-        GoogleMap.OnMyLocationButtonClickListener {
+public class ShowLocationActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener, GoogleMap.OnMyLocationButtonClickListener{
     private GoogleMap mMap;
     private LocationMarker locationMarker;
 
     String bldgName;
     Double latitude;
     Double longitude;
-
+    CameraPosition cameraPosition;
 
 
     @Override
@@ -44,6 +43,7 @@ public class ShowLocationActivity extends FragmentActivity
         SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.showLocationMap);
         supportMapFragment.getMapAsync(this);
+
 
 
     }
@@ -69,19 +69,6 @@ public class ShowLocationActivity extends FragmentActivity
 
     }
 
-    @Override
-    public boolean onMyLocationButtonClick() {
-
-        LatLng position = new LatLng(latitude, longitude);
-        mMap.addMarker(new MarkerOptions()
-                .position(position)
-                .title(bldgName)
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(position));
-        mMap.animateCamera(CameraUpdateFactory.zoomBy(10));
-        return false;
-    }
-
     public void viewPostBackButtonClicked(View view){
         finish();
     }
@@ -96,27 +83,39 @@ public class ShowLocationActivity extends FragmentActivity
         longitude = extras.getDouble("longitude");
 
 
-
-        if (ContextCompat.checkSelfPermission(
-                this.getApplicationContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
-            mMap.setOnMyLocationButtonClickListener(this);
+            //mMap.setOnMyLocationButtonClickListener(this);
 
         } else {
-            System.out.println("Error in permission bruh");
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 200);
         }
 
-        mMap.clear();
         LatLng position = new LatLng(latitude,longitude);
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(position));
-        mMap.animateCamera(CameraUpdateFactory.zoomBy(15));
+        //mMap.moveCamera(CameraUpdateFactory.newLatLng(position));
+        //mMap.animateCamera(CameraUpdateFactory.zoomBy(10));
 
-        System.out.println("In show location bldg_name: "+bldgName);
-        System.out.println("In show location latitude: "+latitude);
-        System.out.println("In show location longitude: "+longitude);
+
+        //LatLng position = new LatLng(latitude, longitude);
+        System.out.println("location latitude: "+latitude);
+        System.out.println("location longitude: "+longitude);
+        mMap.addMarker(new MarkerOptions()
+                .position(position)
+                .title(bldgName)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+        final CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(position)      // Sets the center of the map to Mountain View
+                .zoom(10)                   // Sets the zoom
+                .build();
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 10));
+        mMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+            @Override
+            public boolean onMyLocationButtonClick() {
+                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                return true;
+            }
+        });
         /*
 
         mMap.addMarker(new MarkerOptions()
@@ -126,5 +125,51 @@ public class ShowLocationActivity extends FragmentActivity
         mMap.moveCamera(CameraUpdateFactory.newLatLng(position));
         mMap.animateCamera(CameraUpdateFactory.zoomBy(15));
         */
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        LatLng position = new LatLng(latitude,longitude);
+
+        //mMap.moveCamera(CameraUpdateFactory.newLatLng(position));
+        //mMap.animateCamera(CameraUpdateFactory.zoomBy(10));
+
+
+        //LatLng position = new LatLng(latitude, longitude);
+        System.out.println("location latitude: "+latitude);
+        System.out.println("location longitude: "+longitude);
+        mMap.addMarker(new MarkerOptions()
+                .position(position)
+                .title(bldgName)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+        cameraPosition = new CameraPosition.Builder()
+                .target(position)      // Sets the center of the map to Mountain View
+                .zoom(10)                   // Sets the zoom
+                .build();
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 10));
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        /*
+        switch (requestCode) {
+            case 200: {
+                if(grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    LatLng position = new LatLng(latitude,longitude);
+
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(position));
+                    mMap.animateCamera(CameraUpdateFactory.zoomBy(15));
+
+                    System.out.println("In show location bldg_name: "+bldgName);
+                    System.out.println("In show location latitude: "+latitude);
+                    System.out.println("In show location longitude: "+longitude);
+                }
+            }
+        }*/
+    }
+
+    @Override
+    public boolean onMyLocationButtonClick() {
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+        return false;
     }
 }
