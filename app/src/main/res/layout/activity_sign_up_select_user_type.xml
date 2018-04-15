@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar_signup"
-        android:background="@color/medTurquoise"
+        android:background="@color/colorWhite"
         android:orientation="vertical">
 
         <ImageView
@@ -26,7 +26,7 @@
             android:layout_marginBottom="20dp"
             android:layout_marginTop="50dp"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/app_icon_yellow" />
+            android:src="@drawable/petbetter_logo_final_final" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -36,7 +36,7 @@
             android:layout_marginTop="20dp"
             android:text="Sign Up for PetBetter"
 
-            android:textColor="@color/colorWhite"
+            android:textColor="@color/midnight_green"
             android:textSize="30dp"
             android:textStyle="bold"
             android:typeface="sans" />

@@ -122,7 +122,7 @@ public class VetOwnedFacilityProfileActivity extends AppCompatActivity{
             String newFileName = BASE_URL + faciItem.getFaciPhoto();
             System.out.println("FACI PHOTO " + faciItem.getFaciPhoto());
             //String newFileName = "http://192.168.0.19/petbetter/"+thisMessageRep.getMessagePhoto();
-            Glide.with(VetOwnedFacilityProfileActivity.this).load(newFileName).error(R.drawable.app_icon_yellow).into(facilityImage);
+            Glide.with(VetOwnedFacilityProfileActivity.this).load(newFileName).error(R.drawable.petbetter_logo_final_final).into(facilityImage);
         }
 
         editFacilityProfileButton.setOnClickListener(new View.OnClickListener() {

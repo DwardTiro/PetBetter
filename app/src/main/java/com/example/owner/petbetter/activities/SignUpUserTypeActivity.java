@@ -25,6 +25,7 @@ public class SignUpUserTypeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up_select_user_type);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.signUpToolbar);
+        toolbar.setBackgroundColor(getResources().getColor((R.color.colorWhite)));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         final TextView activityTitle = (TextView) findViewById(R.id.activity_title);

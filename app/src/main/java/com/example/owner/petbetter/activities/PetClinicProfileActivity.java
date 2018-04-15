@@ -157,15 +157,21 @@ public class PetClinicProfileActivity extends AppCompatActivity {
 
         if(contactArray.length>0&&contactArray[0].length()>0){
             petClinicLandline.setText("Phone Number: "+contactArray[0]);
-        }
+            faciWebsite.setVisibility(View.GONE);
+            faciEmail.setVisibility(View.GONE);
+            faciPage.setVisibility(View.GONE);
+            }
         if(contactArray.length>1&&contactArray[1].length()>0){
             faciPage.setText("Facebook Page: "+contactArray[1]);
+            faciPage.setVisibility(View.VISIBLE);
         }
         if(contactArray.length>2&&contactArray[2].length()>0){
             faciWebsite.setText("Website: "+contactArray[2]);
+            faciWebsite.setVisibility(View.VISIBLE);
         }
         if(contactArray.length>3&&contactArray[3].length()>0){
             faciEmail.setText("Email: "+contactArray[3]);
+            faciEmail.setVisibility(View.VISIBLE);
         }
 
         if (checkIfRated(user.getUserId(), faciItem.getId())) {

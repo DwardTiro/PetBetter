@@ -131,7 +131,7 @@ public class VetProfileActivity extends AppCompatActivity {
             String newFileName = BASE_URL + vetItem.getUserPhoto();
             //String newFileName = "http://192.168.0.19/petbetter/"+vetItem.getUserPhoto();
             System.out.println("USER PHOTO "+user.getUserPhoto());
-            Glide.with(VetProfileActivity.this).load(newFileName).error(R.drawable.app_icon_yellow).into(profileBG);
+            Glide.with(VetProfileActivity.this).load(newFileName).error(R.drawable.petbetter_logo_final_final).into(profileBG);
         }
         syncRatingChanges();
         syncPendingChanges();

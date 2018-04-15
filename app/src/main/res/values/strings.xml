@@ -75,4 +75,6 @@
         <item>Nutrition</item>
     </string-array>
     <string name="veterinarySpecialtyPrompt">Select a Specialization</string>
+    <string name="email_address_hint"><font size="14">Email Address</font></string>
+    <string name="password_hint"><font size="14">Password</font></string>
 </resources>

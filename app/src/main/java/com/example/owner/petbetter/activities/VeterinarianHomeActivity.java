@@ -162,7 +162,7 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
             String newFileName = BASE_URL + user.getUserPhoto();
             System.out.println(newFileName);
             //String newFileName = "http://192.168.0.19/petbetter/"+thisMessageRep.getMessagePhoto();
-            Glide.with(VeterinarianHomeActivity.this).load(newFileName).error(R.drawable.app_icon_yellow).into(imageViewDrawer);
+            Glide.with(VeterinarianHomeActivity.this).load(newFileName).error(R.drawable.petbetter_logo_final_final).into(imageViewDrawer);
             /*
             Picasso.with(inflater.getContext()).load("http://".concat(newFileName))
                     .error(R.drawable.back_button).into(holder.messageRepImage);*/

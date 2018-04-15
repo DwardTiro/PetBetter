@@ -26,7 +26,7 @@
     <application
         android:name=".Multi_Dex"
         android:allowBackup="true"
-        android:icon="@drawable/app_icon"
+        android:icon="@drawable/petbetter_logo_final_final"
         android:label="PetBetter"
         android:roundIcon="@drawable/app_icon"
         android:supportsRtl="true"

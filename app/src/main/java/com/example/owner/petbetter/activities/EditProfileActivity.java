@@ -101,7 +101,7 @@ public class EditProfileActivity extends AppCompatActivity {
             String newFileName = BASE_URL + user.getUserPhoto();
             //String newFileName = "http://192.168.0.19/petbetter/"+user.getUserPhoto();
             System.out.println("USER PHOTO "+user.getUserPhoto());
-            Glide.with(EditProfileActivity.this).load(newFileName).error(R.drawable.app_icon_yellow).into(editImage);
+            Glide.with(EditProfileActivity.this).load(newFileName).error(R.drawable.petbetter_logo_final_final).into(editImage);
         }
 
 
