@@ -15,7 +15,7 @@
         android:layout_marginTop="50dp"
 
         android:layout_centerHorizontal="true"
-        android:src="@drawable/app_icon_yellow"
+        android:src="@drawable/petbetter_logo_final"
         android:contentDescription="@string/app_name" />
 
     <TextView
