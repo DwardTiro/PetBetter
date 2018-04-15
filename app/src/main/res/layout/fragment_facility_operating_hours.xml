@@ -37,44 +37,15 @@
             android:textStyle="bold" />
     </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/workHoursContent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/topContent"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/post_border"
-            android:gravity="center_horizontal"
-            android:paddingBottom="3dp"
-            android:paddingTop="3dp"
-            android:text="Day/s"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/post_border"
-            android:gravity="center_horizontal"
-            android:paddingBottom="3dp"
-            android:paddingTop="3dp"
-            android:text="Operating Hours"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-    </LinearLayout>
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/hoursRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/workHoursContent"
+        android:layout_below="@+id/topContent"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
         />
 
     <TextView
@@ -87,7 +58,7 @@
         android:gravity="center_horizontal"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
-        android:layout_below="@+id/workHoursContent"
+        android:layout_below="@+id/topContent"
         android:visibility="gone"
         />
 
