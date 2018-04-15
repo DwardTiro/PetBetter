@@ -34,7 +34,7 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="5dp"
 
-                android:src="@drawable/app_icon_yellow" />
+                android:src="@drawable/petbetter_logo_final" />
 
             <TextView
                 android:id="@+id/clinicListRating"

@@ -117,7 +117,7 @@ public class MessageRepAdapter extends RecyclerView.Adapter<MessageRepAdapter.Me
             holder.messageRepProfile.setVisibility(View.VISIBLE);
         }
         else{
-            Glide.with(inflater.getContext()).load(R.drawable.app_icon).error(R.drawable.back_button).into(holder.messageRepProfile);
+            Glide.with(inflater.getContext()).load(R.drawable.userplacholder).error(R.drawable.petbetter_logo_final).into(holder.messageRepProfile);
             holder.messageRepProfile.setVisibility(View.VISIBLE);
         }
 
