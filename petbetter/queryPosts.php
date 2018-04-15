@@ -20,7 +20,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 
 	if($stmt = $mysqli->prepare("SELECT p._id AS _id, p.user_id AS user_id, p.topic_name AS topic_name, p.topic_content AS topic_content, p.topic_id AS topic_id, p.date_created AS date_created, 
 		p.post_photo AS post_photo, p.id_link AS id_link, p.id_type AS id_type, p.is_deleted AS is_deleted FROM posts AS p INNER JOIN bookmarks AS b ON p._id = b.item_id 
-		WHERE is_deleted = 0 AND b.bookmark_type = 2 AND b.user_id = ? AND (topic_name LIKE ? OR topic_content LIKE ?)")){
+		WHERE is_deleted = 0 AND b.bookmark_type = 2 AND b.user_id = ? AND (topic_name LIKE ? OR topic_content LIKE ?) ORDER BY p.date_created")){
 		//query might cause error
 		$stmt->bind_param("sss", $query_id, $query, $query);
 		$stmt->execute();
@@ -65,7 +65,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 		//echo json_encode(array('user'=>$response));
 	}
 
-	if($stmt = $mysqli->prepare("SELECT * FROM posts WHERE is_deleted = 0 AND (topic_name LIKE ? OR topic_content LIKE ?)")){
+	if($stmt = $mysqli->prepare("SELECT * FROM posts WHERE is_deleted = 0 AND (topic_name LIKE ? OR topic_content LIKE ?) ORDER BY date_created")){
 		//query might cause error
 		$stmt->bind_param("ss", $query, $query);
 		$stmt->execute();

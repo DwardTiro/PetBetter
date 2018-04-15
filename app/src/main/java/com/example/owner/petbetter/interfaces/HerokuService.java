@@ -66,7 +66,7 @@ public interface HerokuService {
 
     @FormUrlEncoded
     @POST("getFilteredPosts.php")
-    Call<ArrayList<Post>> getFilteredPosts(@Field("order") int order);
+    Call<ArrayList<Post>> getFilteredPosts(@Field("order") int order, @Field("user_id") long userId);
 
     @FormUrlEncoded
     @POST("getFilteredUserPosts.php")

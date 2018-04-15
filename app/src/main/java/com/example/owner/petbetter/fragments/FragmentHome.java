@@ -66,6 +66,7 @@ public class FragmentHome extends Fragment implements CheckUpdates {
     private long topicId;
     private int type = 1;
     private boolean isLinked = false;
+    private int checkType = 0;
 
     HerokuService service;
 
@@ -81,6 +82,12 @@ public class FragmentHome extends Fragment implements CheckUpdates {
     public FragmentHome(ArrayList<Post> postList, boolean isLinked) {
         this.postList = postList;
         this.isLinked = isLinked;
+    }
+
+    @SuppressLint("ValidFragment")
+    public FragmentHome(ArrayList<Post> postList, int checkType) {
+        this.postList = postList;
+        this.checkType = checkType;
     }
 
     @Override
@@ -190,6 +197,7 @@ public class FragmentHome extends Fragment implements CheckUpdates {
             recyclerView.setAdapter(monitorAdapter);
         }
         else{
+            System.out.println("MAH NIGGA "+postList.size());
             homeAdapter = new HomeAdapter(getActivity(), postList, user, new HomeAdapter.OnItemClickListener() {
                 @Override public void onItemClick(Post item) {
                     //Execute command here
@@ -199,6 +207,7 @@ public class FragmentHome extends Fragment implements CheckUpdates {
                     startActivity(intent);
                 }
             });
+            System.out.println("MAH NIGGA HOMIE "+homeAdapter.getItemCount());
             homeAdapter.notifyItemRangeChanged(0, homeAdapter.getItemCount());
             recyclerView.setAdapter(homeAdapter);
         }
@@ -289,7 +298,7 @@ public class FragmentHome extends Fragment implements CheckUpdates {
     @Override
     public void onResult() {
         if(postList.size()!=getPosts().size()&&(!(getActivity() instanceof SearchActivity||getActivity() instanceof MonitorVetsActivity||
-                getActivity() instanceof UserActivity))){
+                getActivity() instanceof UserActivity))&&(checkType==3||checkType==4)){
             postList = getPosts();
             homeAdapter.updateList(postList);
         }

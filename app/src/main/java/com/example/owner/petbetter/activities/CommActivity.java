@@ -198,7 +198,7 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
         getSupportFragmentManager().beginTransaction().replace(R.id.comm_container,fragment3).commitAllowingStateLoss();
 
         spinnerFilter = (Spinner) findViewById(R.id.spinnerFilter);
-        String[] filterItems = new String[]{"Most recent", "Most upvotes"};
+        String[] filterItems = new String[]{"Topics you follow: Recent", "Topics you follow: Most Upvoted", "Community: Recent", "Community: Most Upvoted"};
         ArrayAdapter<String> adapterSpinner = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, filterItems);
         spinnerFilter.setAdapter(adapterSpinner);
 
@@ -209,11 +209,17 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
                 if(currFragment == 2)
                     syncTopicChanges();
                 else{
-                    if(spinnerFilter.getSelectedItem().toString()=="Most recent"){
+                    if(spinnerFilter.getSelectedItem().toString()=="Topics you follow: Recent"){
                         filterPosts(1);
                     }
-                    if(spinnerFilter.getSelectedItem().toString()=="Most upvotes"){
+                    if(spinnerFilter.getSelectedItem().toString()=="Topics you follow: Most Upvoted"){
                         filterPosts(2);
+                    }
+                    if(spinnerFilter.getSelectedItem().toString()=="Community: Recent"){
+                        filterPosts(3);
+                    }
+                    if(spinnerFilter.getSelectedItem().toString()=="Community: Most Upvoted"){
+                        filterPosts(4);
                     }
                 }
                 refreshCommunity.setRefreshing(false);
@@ -233,11 +239,17 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
                 btnCommunity.setPaintFlags(btnCommunity.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
                 spinnerFilter.setVisibility(View.VISIBLE);
                 container.removeAllViews();
-                if(spinnerFilter.getSelectedItem().toString()=="Most recent"){
+                if(spinnerFilter.getSelectedItem().toString()=="Topics you follow: Recent"){
                     filterPosts(1);
                 }
-                if(spinnerFilter.getSelectedItem().toString()=="Most upvotes"){
+                if(spinnerFilter.getSelectedItem().toString()=="Topics you follow: Most Upvoted"){
                     filterPosts(2);
+                }
+                if(spinnerFilter.getSelectedItem().toString()=="Community: Recent"){
+                    filterPosts(3);
+                }
+                if(spinnerFilter.getSelectedItem().toString()=="Community: Most Upvoted"){
+                    filterPosts(4);
                 }
                 currFragment = 1;
             }
@@ -282,12 +294,18 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(currFragment==1){
-                    if(spinnerFilter.getSelectedItem().toString()=="Most recent"){
+                    if(spinnerFilter.getSelectedItem().toString()=="Topics you follow: Recent"){
                         filterPosts(1);
                     }
-                    if(spinnerFilter.getSelectedItem().toString()=="Most upvotes"){
+                    if(spinnerFilter.getSelectedItem().toString()=="Topics you follow: Most Upvoted"){
                         filterPosts(2);
 
+                    }
+                    if(spinnerFilter.getSelectedItem().toString()=="Community: Recent"){
+                        filterPosts(3);
+                    }
+                    if(spinnerFilter.getSelectedItem().toString()=="Community: Most Upvoted"){
+                        filterPosts(4);
                     }
                 }
                 else{
@@ -384,16 +402,15 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    public void filterPosts(int order){
-
+    public void filterPosts(final int order){
         final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
-        final Call<ArrayList<Post>> call = service.getFilteredPosts(order);
+        final Call<ArrayList<Post>> call = service.getFilteredPosts(order, user.getUserId());
         call.enqueue(new Callback<ArrayList<Post>>() {
             @Override
             public void onResponse(Call<ArrayList<Post>> call, Response<ArrayList<Post>> response) {
                 if(response.isSuccessful()){
-
-                    FragmentHome fragment3 = new FragmentHome(response.body());
+                    System.out.println("RESPONSE SIZE CHECK: "+response.body().size());
+                    FragmentHome fragment3 = new FragmentHome(response.body(), order);
                     getSupportFragmentManager().beginTransaction().replace(R.id.comm_container,fragment3).commitAllowingStateLoss();
                 }
             }

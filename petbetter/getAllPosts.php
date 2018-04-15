@@ -10,7 +10,7 @@ $response = array();
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
 
-	if($stmt = $mysqli->prepare("SELECT * FROM posts")){
+	if($stmt = $mysqli->prepare("SELECT * FROM posts ORDER BY date_created DESC")){
 		
 		$stmt->execute();
 		$stmt->bind_result($_id, $user_id, $topic_name, $topic_content, $topic_id, $date_created, $post_photo, $id_link, $id_type, $is_deleted);

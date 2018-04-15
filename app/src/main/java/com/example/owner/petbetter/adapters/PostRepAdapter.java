@@ -106,7 +106,7 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
         final PostRep thisComment = postRepList.get(position);
 
         initializeDatabase();
-        User user = getUserWithId(thisComment.getUserId());
+        final User user = getUserWithId(thisComment.getUserId());
         if(user.getUserType() == 1){
             holder.postRepName.setText("Dr. "+thisComment.getUserName()+", DVM.");
         }else
@@ -143,6 +143,14 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
             //setImage(holder.messageRepImage, newFileName);
 
             holder.postRepImage.setVisibility(View.VISIBLE);
+            holder.postRepImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(inflater.getContext(), com.example.owner.petbetter.activities.UserProfileActivity.class);
+                    intent.putExtra("UserProfile", user.getUserId());
+                    inflater.getContext().startActivity(intent);
+                }
+            });
         }
 
         if (user.getUserId() == thisComment.getUserId()) {
