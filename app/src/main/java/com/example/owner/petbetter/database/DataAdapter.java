@@ -340,28 +340,33 @@ public class DataAdapter {
 
         Cursor c = petBetterDb.rawQuery(sql, null);
 
-        c.moveToFirst();
+        try{
+            c.moveToFirst();
 
-        Veterinarian result = new Veterinarian(
-                c.getInt(c.getColumnIndexOrThrow("_id")),
-                c.getLong(c.getColumnIndexOrThrow("user_id")),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getMobileNumber(),
-                user.getPhoneNumber(),
-                user.getEmail(),
-                user.getPassword(),
-                user.getAge(),
-                user.getUserType(),
-                user.getUserPhoto(),
-                user.getIsDisabled(),
-                c.getString(c.getColumnIndexOrThrow("specialty")),
-                c.getFloat(c.getColumnIndexOrThrow("rating")),
-                c.getString(c.getColumnIndexOrThrow("education")),
-                c.getInt(c.getColumnIndexOrThrow("is_licensed")),
-                c.getString(c.getColumnIndexOrThrow("profile_desc"))
-        );
-        return result;
+            Veterinarian result = new Veterinarian(
+                    c.getInt(c.getColumnIndexOrThrow("_id")),
+                    c.getLong(c.getColumnIndexOrThrow("user_id")),
+                    user.getFirstName(),
+                    user.getLastName(),
+                    user.getMobileNumber(),
+                    user.getPhoneNumber(),
+                    user.getEmail(),
+                    user.getPassword(),
+                    user.getAge(),
+                    user.getUserType(),
+                    user.getUserPhoto(),
+                    user.getIsDisabled(),
+                    c.getString(c.getColumnIndexOrThrow("specialty")),
+                    c.getFloat(c.getColumnIndexOrThrow("rating")),
+                    c.getString(c.getColumnIndexOrThrow("education")),
+                    c.getInt(c.getColumnIndexOrThrow("is_licensed")),
+                    c.getString(c.getColumnIndexOrThrow("profile_desc"))
+            );
+            return result;
+        }catch(CursorIndexOutOfBoundsException cpe){
+            return null;
+        }
+
     }
 
     public LocationMarker getMarkerWithId(int faci_id){

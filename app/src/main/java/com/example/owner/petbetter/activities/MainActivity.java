@@ -163,8 +163,6 @@ public class MainActivity extends AppCompatActivity {
 
                         syncUsers();
 
-                        syncVetChanges();
-
                         syncClinicChanges(thisUser.getUserType());
 
                         syncFollowerChanges();
@@ -240,7 +238,7 @@ public class MainActivity extends AppCompatActivity {
                         syncPendingChanges();
                         syncUsers();
                         syncClinicChanges(thisUser.getUserType());
-                        syncVetChanges();
+                        //syncVetChanges();
                         syncTopicChanges();
                         syncRatingChanges();
                         syncPostChanges();
@@ -298,54 +296,49 @@ public class MainActivity extends AppCompatActivity {
 
     public void syncVetChanges(){
 
-        futureTask = (FutureTask<Boolean>) executorService.submit(new Callable<Boolean>(){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        System.out.println("WE HERE BOOIII");
+        ArrayList<Veterinarian> unsyncedVets = getUnsyncedVets();
+        System.out.println("UNSYNCED VETS "+unsyncedVets.size());
+
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String jsonArray = gson.toJson(unsyncedVets);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.addVets(body);
+        call.enqueue(new Callback<Void>() {
             @Override
-            public Boolean call() throws Exception{
-                final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
-                final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
-                System.out.println("WE HERE BOOIII");
-                ArrayList<Veterinarian> unsyncedVets = getUnsyncedVets();
-                System.out.println("UNSYNCED VETS "+unsyncedVets.size());
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    System.out.println("VETS ADDED YEY");
+                    dataSynced(1);
 
-                Gson gson = new GsonBuilder().serializeNulls().create();
-                String jsonArray = gson.toJson(unsyncedVets);
-                RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
-                final Call<Void> call = service.addVets(body);
-                call.enqueue(new Callback<Void>() {
-                    @Override
-                    public void onResponse(Call<Void> call, Response<Void> response) {
-                        if(response.isSuccessful()){
-                            System.out.println("VETS ADDED YEY");
-                            dataSynced(1);
+                    final Call<ArrayList<Veterinarian>> call2 = service2.getVeterinarians(1);
+                    call2.enqueue(new Callback<ArrayList<Veterinarian>>() {
+                        @Override
+                        public void onResponse(Call<ArrayList<Veterinarian>> call, Response<ArrayList<Veterinarian>> response) {
+                            if(response.isSuccessful()){
+                                setVeterinarians(response.body());
+                            }
+                        }
 
-                            final Call<ArrayList<Veterinarian>> call2 = service2.getVeterinarians(1);
-                            call2.enqueue(new Callback<ArrayList<Veterinarian>>() {
-                                @Override
-                                public void onResponse(Call<ArrayList<Veterinarian>> call, Response<ArrayList<Veterinarian>> response) {
-                                    if(response.isSuccessful()){
-                                        setVeterinarians(response.body());
-
-                                    }
-                                }
-
-                                @Override
-                                public void onFailure(Call<ArrayList<Veterinarian>> call, Throwable t) {
-                                    Log.d("onFailure", t.getLocalizedMessage());
-
-                                }
-                            });
+                        @Override
+                        public void onFailure(Call<ArrayList<Veterinarian>> call, Throwable t) {
+                            Log.d("onFailure", t.getLocalizedMessage());
 
                         }
-                    }
+                    });
 
-                    @Override
-                    public void onFailure(Call<Void> call, Throwable t) {
-                        Log.d("onFailure", t.getLocalizedMessage());
-                    }
-                });
-                return true;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
             }
         });
+
     }
 
     public void syncPostChanges(){
@@ -395,22 +388,28 @@ public class MainActivity extends AppCompatActivity {
 
     public void syncUsers(){
 
-        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
-
-        final Call<ArrayList<User>> call = service.getUsers();
-        call.enqueue(new Callback<ArrayList<User>>() {
+        futureTask = (FutureTask<Boolean>) executorService.submit(new Callable<Boolean>(){
             @Override
-            public void onResponse(Call<ArrayList<User>> call, Response<ArrayList<User>> response) {
-                if(response.isSuccessful()){
-                    setUsers(response.body());
-                    dataSynced(12);
+            public Boolean call() throws Exception{
+                final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
-                }
-            }
+                final Call<ArrayList<User>> call = service.getUsers();
+                call.enqueue(new Callback<ArrayList<User>>() {
+                    @Override
+                    public void onResponse(Call<ArrayList<User>> call, Response<ArrayList<User>> response) {
+                        if(response.isSuccessful()){
+                            setUsers(response.body());
+                            dataSynced(12);
+                            syncVetChanges();
+                        }
+                    }
 
-            @Override
-            public void onFailure(Call<ArrayList<User>> call, Throwable t) {
-                Log.d("onFailure", t.getLocalizedMessage());
+                    @Override
+                    public void onFailure(Call<ArrayList<User>> call, Throwable t) {
+                        Log.d("onFailure", t.getLocalizedMessage());
+                    }
+                });
+                return true;
             }
         });
     }

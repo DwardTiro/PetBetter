@@ -211,17 +211,18 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
         hideItems();
 
         if(user.getUserType()==1){
-            while(thisVet==null){
-                thisVet = getVeterinarianWithId(user.getUserId());
-            }
 
+            thisVet = getVeterinarianWithId(user.getUserId());
+
+
+            /*
             if(thisVet!=null){
                 faciList = getFacilitiesByVetId(thisVet.getId());
                 if(faciList.size()>0){
                     FragmentPetClinicListing fragment = new FragmentPetClinicListing(faciList);
                     getSupportFragmentManager().beginTransaction().replace(R.id.vethome_container,fragment).commitAllowingStateLoss();
                 }
-            }
+            }*/
         }
 
         getVetChanges();
@@ -322,6 +323,9 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
                 if(response.isSuccessful()){
                     setVeterinarians(response.body());
                     dataSynced(1);
+                    if(thisVet==null){
+                        thisVet = getVeterinarianWithId(user.getUserId());
+                    }
                 }
             }
 
