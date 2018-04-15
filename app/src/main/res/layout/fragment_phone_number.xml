@@ -20,7 +20,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="7dp"
             android:background="@color/sea_green"
-            android:src="@drawable/ic_call_white_24dp" />
+            android:src="@drawable/ic_account_box_white_24dp" />
 
         <TextView
             android:id="@+id/TextId"
@@ -41,8 +41,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/topContent"
         android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
         android:layout_marginStart="7sp"
+        android:layout_marginTop="10dp"
+        android:drawablePadding="5dp"
+        android:drawableStart="@drawable/ic_phone_black_18dp"
         android:text="Phone Number:"
         android:textColor="@color/midnight_green"
         android:textSize="15sp" />
@@ -54,11 +56,15 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/phoneNumTextField"
         android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
         android:layout_marginStart="7sp"
-        android:textColor="@color/midnight_green"
+        android:layout_marginTop="10dp"
+        android:drawablePadding="5dp"
+        android:drawableStart="@drawable/facebook_logo_18dp"
         android:text="Facebook Page:"
-        android:textSize="15sp" />
+        android:textColor="@color/midnight_green"
+        android:textSize="15sp"
+
+        />
 
     <TextView
         android:id="@+id/faciWebsiteTextField"
@@ -66,11 +72,15 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/faciPageTextField"
         android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
         android:layout_marginStart="7sp"
+        android:layout_marginTop="10dp"
+        android:drawablePadding="5dp"
+        android:drawableStart="@drawable/ic_web_black_18dp"
         android:text="Website:"
         android:textColor="@color/midnight_green"
-        android:textSize="15sp" />
+        android:textSize="15sp"
+
+        />
 
     <TextView
         android:id="@+id/faciEmailTextField"
@@ -78,8 +88,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/faciWebsiteTextField"
         android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
         android:layout_marginStart="7sp"
+        android:layout_marginTop="10dp"
+        android:drawablePadding="5dp"
+        android:drawableStart="@drawable/ic_email_black_18dp"
         android:text="Email:"
         android:textColor="@color/midnight_green"
         android:textSize="15sp" />
