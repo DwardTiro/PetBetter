@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.TextView;
 
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.classes.LocationMarker;
@@ -20,6 +22,8 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
+
+import org.w3c.dom.Text;
 
 /**
  * Created by Kristian on 3/3/2018.
@@ -39,6 +43,9 @@ public class ShowLocationActivity extends FragmentActivity implements OnMapReady
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_show_location);
+        TextView toolbarTitle = (TextView) findViewById(R.id.activity_title);
+        toolbarTitle.setVisibility(View.GONE);
+
 
         SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.showLocationMap);
