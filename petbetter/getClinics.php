@@ -18,8 +18,8 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 			$stmt->bind_result($_id, $faci_name, $location, $contact_info, $rating, $faci_photo, $is_disabled);
 			$stmt->store_result();
 		
+			echo 'hi boi';
 			if($stmt->fetch()){
-				
 				do{
 					array_push($response, array('faci_id'=>$_id,
 					'faci_name'=>$faci_name,
@@ -63,6 +63,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 			if($stmt->fetch()){
 				
 				do{
+					$location = utf8_encode($location);
 					array_push($response, array('faci_id'=>$_id,
 					'faci_name'=>$faci_name,
 					'location'=>$location,

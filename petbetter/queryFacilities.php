@@ -28,6 +28,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 	
 		if($stmt->fetch()){
 			do{
+				$location = utf8_encode($location);
 				array_push($response, array('faci_id'=>$_id,
 				'faci_name'=>$faci_name,
 				'location'=>$location,
@@ -70,6 +71,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 				if(!in_array(array('faci_id'=>$_id, 'faci_name'=>$faci_name, 'location'=>$location, 'contact_info'=>$contact_info, 'rating'=>$rating, 'faci_photo'=>$faci_photo,
 					'is_disabled'=>$is_disabled), $response)){
 					
+					$location = utf8_encode($location);
 					array_push($response, array('faci_id'=>$_id,
 					'faci_name'=>$faci_name,
 					'location'=>$location,

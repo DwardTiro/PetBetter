@@ -17,6 +17,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 		if($stmt->fetch()){
 			
 			do{
+				$location = utf8_encode($location);
 				array_push($response, array('faci_id'=>$faci_id,
 				'faci_name'=>$faci_name,
 				'location'=>$location,

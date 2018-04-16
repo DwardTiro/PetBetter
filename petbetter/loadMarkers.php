@@ -20,6 +20,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 		if($stmt->fetch()){
 			
 			do{
+				$location = utf8_encode($location);
 				array_push($response, array('_id'=>$_id,
 				'bldg_name'=>$bldg_name,
 				'longitude'=>$longitude,
