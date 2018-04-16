@@ -122,10 +122,22 @@ public class EditFacilityActivity extends AppCompatActivity {
 
         facilityName.setText(faciItem.getFaciName());
         String[] contactArray = faciItem.getContactInfo().split(",", -1);
-        phoneNum.setText(contactArray[0]);
-        faciPage.setText(contactArray[1]);
-        faciWebsite.setText(contactArray[2]);
-        faciEmail.setText(contactArray[3]);
+        if(contactArray.length>0&&contactArray[0].length()>0){
+            phoneNum.setText(contactArray[0]);
+        }
+        if(contactArray.length>1&&contactArray[1].length()>0){
+            faciPage.setText(contactArray[1]);
+        }
+        if(contactArray.length>2&&contactArray[2].length()>0){
+            faciWebsite.setText(contactArray[2]);
+        }
+        if(contactArray.length>3&&contactArray[3].length()>0){
+            faciEmail.setText(contactArray[3]);
+        }
+
+
+
+
 
 
         editImage.setOnClickListener(new View.OnClickListener() {
@@ -214,7 +226,7 @@ public class EditFacilityActivity extends AppCompatActivity {
         System.out.println("WE HERE BOOIII");
         Facility unsyncedFacility = getFacility((int) faciItem.getId());
 
-        System.out.println("IMAGE STRING BRO "+unsyncedFacility.getFaciPhoto());
+        //System.out.println("IMAGE STRING BRO "+unsyncedFacility.getFaciPhoto());
         Gson gson = new GsonBuilder().serializeNulls().create();
         String jsonArray = gson.toJson(unsyncedFacility);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
