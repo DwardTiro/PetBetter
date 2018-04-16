@@ -144,8 +144,8 @@ public class MapsActivity extends FragmentActivity
         jsonHours = extras.getString("workhours");
         /*
         Type type = new TypeToken<ArrayList<WorkHours>>(){}.getType();
-        hoursList = new Gson().fromJson(jsonMyObject, type);
-        image = extras.getString("image");*/
+        hoursList = new Gson().fromJson(jsonMyObject, type);*/
+        image = extras.getString("image");
 
         service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         systemSessionManager = new SystemSessionManager(this);

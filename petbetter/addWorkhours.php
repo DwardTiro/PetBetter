@@ -17,6 +17,13 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 	//echo $n;
 	$i = 0;
 	//echo $notiflist[$i]['_id'];
+	if($stmt = $mysqli->prepare("DELETE FROM workhours WHERE faci_id = ?")){
+		$stmt->bind_param("s", $hourslist[$i]['faci_id']);
+		$stmt->execute();
+		$stmt->close();
+		//echo 'Workhours removed';
+		
+	}
 	
 	while($i<$n){
 		if($stmt = $mysqli->prepare("INSERT INTO workhours (faci_id, days, hours_open, hours_close, is_deleted) VALUES (?,?,?,?,?)")){

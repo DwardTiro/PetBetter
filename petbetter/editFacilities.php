@@ -25,8 +25,8 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 		$upload_path = null;
 	}
 	echo $upload_path;
-	if($stmt = $mysqli->prepare("UPDATE facilities SET faci_name = ?, location = ?, hours_open = ?,  hours_close = ?, contact_info = ?, rating = ?, faci_photo = ? WHERE faci_id = ?")){
-		$stmt->bind_param("ssssssss", $facilist['faci_name'], $facilist['location'], $facilist['hours_open'], $facilist['hours_close'], $facilist['contact_info'], $facilist['rating'], $upload_path, $facilist['faci_id']);
+	if($stmt = $mysqli->prepare("UPDATE facilities SET faci_name = ?, location = ?, contact_info = ?, rating = ?, faci_photo = ? WHERE faci_id = ?")){
+		$stmt->bind_param("ssssss", $facilist['faci_name'], $facilist['location'], $facilist['contact_info'], $facilist['rating'], $upload_path, $facilist['faci_id']);
 		$stmt->execute();
 		$stmt->close();
 	}

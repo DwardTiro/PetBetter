@@ -107,11 +107,13 @@ public class EditFacilityActivity extends AppCompatActivity {
         editImage = (ImageButton) findViewById(R.id.clinicEditImage);
 
 
+
         String jsonMyObject;
         Bundle extras = getIntent().getExtras();
         jsonMyObject = extras.getString("thisClinic");
         faciItem = new Gson().fromJson(jsonMyObject, Facility.class);
 
+        getWorkhoursList();
         if(faciItem.getFaciPhoto()!=null){
             String newFileName = BASE_URL + faciItem.getFaciPhoto();
             //String newFileName = "http://192.168.0.19/petbetter/"+user.getUserPhoto();
@@ -147,7 +149,7 @@ public class EditFacilityActivity extends AppCompatActivity {
             }
         });
 
-        createNewEditText();
+        //createNewEditText();
         addHours.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -246,6 +248,63 @@ public class EditFacilityActivity extends AppCompatActivity {
                 Log.d("onFailure", t.getLocalizedMessage());
             }
         });
+    }
+
+
+    public void getWorkhoursList() {
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final Call<ArrayList<WorkHours>> call = service.getWorkhoursWithFaciID(faciItem.getId());
+        //pendingCtr = 0;
+
+        call.enqueue(new Callback<ArrayList<WorkHours>>() {
+            @Override
+            public void onResponse(Call<ArrayList<WorkHours>> call, Response<ArrayList<WorkHours>> response) {
+                if (response.isSuccessful()) {
+                    if (response.body().size() > 0) {
+                        hoursList = response.body();
+                        initializeWorkhours();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<WorkHours>> call, Throwable t) {
+                Log.d("onFailure HOURS ", t.getLocalizedMessage());
+            }
+        });
+
+    }
+
+    private void initializeWorkhours() {
+        /*
+        final LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, CoordinatorLayout.LayoutParams.WRAP_CONTENT);
+        final EditText editText = new EditText(this);
+        editText.setLayoutParams(lparams);
+        return editText;
+        */
+
+
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        System.out.println("Service List size: "+ hoursList.size());
+        for(int i =0; i<hoursList.size();i++){
+            final View serviceView = inflater.inflate(R.layout.fragment_new_hours_field, null);
+
+            hoursContainer.addView(serviceView, hoursContainer.getChildCount());
+
+            EditText dayField = (EditText) (hoursContainer.getChildAt(i).findViewById(R.id.dayField));
+            Spinner openSpinner = (Spinner) (hoursContainer.getChildAt(i).findViewById(R.id.addFacilityOpenTimeSpinner));
+            Spinner closeSpinner = (Spinner) (hoursContainer.getChildAt(i).findViewById(R.id.addFacilityCloseTimeSpinner));
+
+            dayField.setText(hoursList.get(i).getDays());
+
+            String[] separated = hoursList.get(i).getHoursOpen().split(":");
+            openSpinner.setSelection(Integer.parseInt(separated[0]));
+
+            separated = hoursList.get(i).getHoursClose().split(":");
+            closeSpinner.setSelection(Integer.parseInt(separated[0]));
+
+        }
     }
 
     public void addWorkHours(String hoursList) {
