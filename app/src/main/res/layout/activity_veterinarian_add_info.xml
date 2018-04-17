@@ -82,7 +82,8 @@
             android:paddingStart="5dp"
             android:text="EDUCATION"
             android:textSize="14sp"
-            android:layout_below="@+id/signUpVetTextPhoneNum"/>
+            android:layout_below="@+id/signUpVetTextPhoneNum"
+            android:visibility="gone"/>
 
         <EditText
             android:id="@+id/signUpVetTextEducation"

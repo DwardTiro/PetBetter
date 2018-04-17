@@ -78,6 +78,7 @@ public class VeterinarianAddInfoActivity extends AppCompatActivity {
         vetSpecialtySpinner = (Spinner) findViewById(R.id.vetSpecialtySpinner);
         phoneNumTextView = (EditText) findViewById(R.id.signUpVetTextPhoneNum);
         editEducation = (EditText) findViewById(R.id.signUpVetTextEducation);
+        editEducation.setVisibility(View.GONE);
         switchLicense = (SwitchCompat) findViewById(R.id.switchLicense);
         editProfileDesc = (EditText) findViewById(R.id.editProfileDesc);
         switchLicense.setVisibility(View.GONE);
@@ -415,6 +416,7 @@ public class VeterinarianAddInfoActivity extends AppCompatActivity {
 
         //id, foreignid, type, isapproved
         int id;
+        education = "BS Animal Science";
         if(education!=""){
             id = generateNewPendingId();
             addPending(id, userId, 1, 0);
