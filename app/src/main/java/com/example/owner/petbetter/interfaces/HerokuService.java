@@ -158,6 +158,10 @@ public interface HerokuService {
     @POST("getVeterinarianWithId.php")
     Call<Veterinarian> getVeterinarianWithId(@Field("user_id") long userId);
 
+    @FormUrlEncoded
+    @POST("getRatingWithId.php")
+    Call<Float> getRatingWithId(@Field("vet_id") long vetId, @Field("rating_type") int ratingType);
+
     @POST("getRatings.php")
     Call<ArrayList<Rating>> getRatings();
 

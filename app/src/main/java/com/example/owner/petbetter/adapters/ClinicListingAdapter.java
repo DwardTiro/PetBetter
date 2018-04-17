@@ -2,6 +2,7 @@ package com.example.owner.petbetter.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,13 +11,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
+import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.classes.Facility;
 
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Locale;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.example.owner.petbetter.ServiceGenerator.BASE_URL;
 
@@ -55,7 +62,6 @@ public class ClinicListingAdapter extends RecyclerView.Adapter<ClinicListingAdap
         Facility thisClinic = faciList.get(position);
         holder.clinicListName.setText(thisClinic.getFaciName());
         holder.clinicListAddress.setText(thisClinic.getLocation());
-        holder.clinicListRating.setText(String.format(Locale.getDefault(),"%.1f",thisClinic.getRating()));
 
         if(thisClinic.getFaciPhoto()!=null){
 
@@ -70,38 +76,61 @@ public class ClinicListingAdapter extends RecyclerView.Adapter<ClinicListingAdap
             //setImage(holder.messageRepImage, newFileName);
             holder.clinicListImage.setVisibility(View.VISIBLE);
         }
-        if(thisClinic.getRating() == 0.0){
-            holder.clinicListRating.setBackgroundResource(R.color.teal_blue);
-        }
-        else if (thisClinic.getRating() <= 5.0 && thisClinic.getRating() >=4.5){
-            holder.clinicListRating.setBackgroundResource(R.color.colorYellow);
 
-        }
-        else if (thisClinic.getRating() < 4.5 && thisClinic.getRating() >=4.0){
-            holder.clinicListRating.setBackgroundResource(R.color.peridot);
-        }
-        else if (thisClinic.getRating() < 4.0 && thisClinic.getRating() >=3.5){
-            holder.clinicListRating.setBackgroundResource(R.color.main_Color);
-        }
-        else if (thisClinic.getRating() < 3.5 && thisClinic.getRating() >=3.0){
-            holder.clinicListRating.setBackgroundResource(R.color.orange);
-        }
-        else if (thisClinic.getRating() < 3.0 && thisClinic.getRating() >=2.5){
-            holder.clinicListRating.setBackgroundResource(R.color.dark_orange);
-        }
-        else if (thisClinic.getRating() < 2.5 && thisClinic.getRating() >=2.0){
-            holder.clinicListRating.setBackgroundResource(R.color.fiery_red);
-        }
-        else if (thisClinic.getRating() < 2.0 && thisClinic.getRating() >=1.5){
-            holder.clinicListRating.setBackgroundResource(R.color.flame_red);
-        }
-        else{
-            holder.clinicListRating.setBackgroundResource(R.color.dark_candy_red);
-        }
+        getRatingWithFaciId(holder, thisClinic.getId());
+
         //holder.clinicOpenTime.setText(thisClinic.getHoursOpen());
         //holder.clinicClosetime.setText(thisClinic.getHoursClose());
         holder.bind(thisClinic, listener);
 
+    }
+
+    public void getRatingWithFaciId(final ClinicListingViewHolder holder, long faciId){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final Call<Float> call = service.getRatingWithId(faciId,2);
+        call.enqueue(new Callback<Float>() {
+            @Override
+            public void onResponse(Call<Float> call, Response<Float> response) {
+                if(response.isSuccessful()){
+                    float rating = response.body();
+                    holder.clinicListRating.setText(String.format(Locale.getDefault(),"%.1f",rating));
+                    if(rating == 0.0){
+                        holder.clinicListRating.setBackgroundResource(R.color.teal_blue);
+                    }
+                    else if (rating <= 5.0 && rating >=4.5){
+                        holder.clinicListRating.setBackgroundResource(R.color.colorYellow);
+
+                    }
+                    else if (rating < 4.5 && rating >=4.0){
+                        holder.clinicListRating.setBackgroundResource(R.color.peridot);
+                    }
+                    else if (rating < 4.0 && rating >=3.5){
+                        holder.clinicListRating.setBackgroundResource(R.color.main_Color);
+                    }
+                    else if (rating < 3.5 && rating >=3.0){
+                        holder.clinicListRating.setBackgroundResource(R.color.orange);
+                    }
+                    else if (rating < 3.0 && rating >=2.5){
+                        holder.clinicListRating.setBackgroundResource(R.color.dark_orange);
+                    }
+                    else if (rating < 2.5 && rating >=2.0){
+                        holder.clinicListRating.setBackgroundResource(R.color.fiery_red);
+                    }
+                    else if (rating < 2.0 && rating >=1.5){
+                        holder.clinicListRating.setBackgroundResource(R.color.flame_red);
+                    }
+                    else{
+                        holder.clinicListRating.setBackgroundResource(R.color.dark_candy_red);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Float> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
     }
 
     @Override

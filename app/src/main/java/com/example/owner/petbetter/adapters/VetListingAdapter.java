@@ -2,6 +2,7 @@ package com.example.owner.petbetter.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +11,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
+import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.classes.Veterinarian;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.Locale;
+
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.example.owner.petbetter.ServiceGenerator.BASE_URL;
 
@@ -54,7 +64,6 @@ public class VetListingAdapter extends RecyclerView.Adapter<VetListingAdapter.Ve
 
         System.out.println("The vet's name is "+holder.vetListName.getText());
         holder.vetListSpecialty.setText(thisVet.getSpecialty());
-        holder.vetListRating.setText(String.format(Locale.getDefault(),"%.1f",thisVet.getRating()));
 
         if(thisVet.getUserPhoto()!=null){
 
@@ -70,36 +79,57 @@ public class VetListingAdapter extends RecyclerView.Adapter<VetListingAdapter.Ve
             holder.vetListImage.setAdjustViewBounds(true);
         }
 
-        if(thisVet.getRating() == 0.0){
-            holder.vetListRating.setBackgroundResource(R.color.teal_blue);
-        }
-        else if (thisVet.getRating() <= 5.0 && thisVet.getRating() >=4.5){
-            holder.vetListRating.setBackgroundResource(R.color.colorYellow);
-
-        }
-        else if (thisVet.getRating() < 4.5 && thisVet.getRating() >=4.0){
-            holder.vetListRating.setBackgroundResource(R.color.peridot);
-        }
-        else if (thisVet.getRating() < 4.0 && thisVet.getRating() >=3.5){
-            holder.vetListRating.setBackgroundResource(R.color.main_Color);
-        }
-        else if (thisVet.getRating() < 3.5 && thisVet.getRating() >=3.0){
-            holder.vetListRating.setBackgroundResource(R.color.orange);
-        }
-        else if (thisVet.getRating() < 3.0 && thisVet.getRating() >=2.5){
-            holder.vetListRating.setBackgroundResource(R.color.dark_orange);
-        }
-        else if (thisVet.getRating() < 2.5 && thisVet.getRating() >=2.0){
-            holder.vetListRating.setBackgroundResource(R.color.fiery_red);
-        }
-        else if (thisVet.getRating() < 2.0 && thisVet.getRating() >=1.5){
-            holder.vetListRating.setBackgroundResource(R.color.flame_red);
-        }
-        else{
-            holder.vetListRating.setBackgroundResource(R.color.dark_candy_red);
-        }
+        getRatingWithVetId(holder, thisVet.getId());
 
         holder.bind(thisVet, listener);
+    }
+
+    public void getRatingWithVetId(final VetListingViewHolder holder, long vetId){
+
+        final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+        final Call<Float> call = service.getRatingWithId(vetId,1);
+        call.enqueue(new Callback<Float>() {
+            @Override
+            public void onResponse(Call<Float> call, Response<Float> response) {
+                if(response.isSuccessful()){
+                    float rating = response.body();
+                    holder.vetListRating.setText(String.format(Locale.getDefault(),"%.1f",rating));
+                    if(rating == 0.0){
+                        holder.vetListRating.setBackgroundResource(R.color.teal_blue);
+                    }
+                    else if (rating <= 5.0 && rating >=4.5){
+                        holder.vetListRating.setBackgroundResource(R.color.colorYellow);
+
+                    }
+                    else if (rating < 4.5 && rating >=4.0){
+                        holder.vetListRating.setBackgroundResource(R.color.peridot);
+                    }
+                    else if (rating < 4.0 && rating >=3.5){
+                        holder.vetListRating.setBackgroundResource(R.color.main_Color);
+                    }
+                    else if (rating < 3.5 && rating >=3.0){
+                        holder.vetListRating.setBackgroundResource(R.color.orange);
+                    }
+                    else if (rating < 3.0 && rating >=2.5){
+                        holder.vetListRating.setBackgroundResource(R.color.dark_orange);
+                    }
+                    else if (rating < 2.5 && rating >=2.0){
+                        holder.vetListRating.setBackgroundResource(R.color.fiery_red);
+                    }
+                    else if (rating < 2.0 && rating >=1.5){
+                        holder.vetListRating.setBackgroundResource(R.color.flame_red);
+                    }
+                    else{
+                        holder.vetListRating.setBackgroundResource(R.color.dark_candy_red);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Float> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+            }
+        });
     }
 
     @Override
