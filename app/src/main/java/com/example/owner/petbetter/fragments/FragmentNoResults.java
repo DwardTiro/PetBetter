@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.example.owner.petbetter.HerokuService;
 import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
+import com.example.owner.petbetter.activities.CommActivity;
 import com.example.owner.petbetter.activities.MessagesActivity;
 import com.example.owner.petbetter.activities.TopicContentActivity;
 import com.example.owner.petbetter.activities.UserActivity;
@@ -102,6 +103,14 @@ public class FragmentNoResults extends Fragment  {
                 tvNoResult.setText("This user hasn't created a topic");
             }
 
+        }
+
+        if(getActivity() instanceof CommActivity){
+            tvNoResult.setText("Follow topics to view posts");
+        }
+
+        if(getActivity() instanceof MessagesActivity){
+            tvNoResult.setText("You haven't exchanged messages with that user");
         }
 
         return view;

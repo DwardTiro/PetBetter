@@ -45,6 +45,7 @@ import com.example.owner.petbetter.fragments.FragmentCommunity;
 import com.example.owner.petbetter.fragments.FragmentHome;
 import com.example.owner.petbetter.fragments.FragmentMessages;
 import com.example.owner.petbetter.fragments.FragmentMessagesHome;
+import com.example.owner.petbetter.fragments.FragmentNoResults;
 import com.example.owner.petbetter.fragments.FragmentUserProfile;
 import com.example.owner.petbetter.interfaces.CheckUpdates;
 import com.example.owner.petbetter.services.MyService;
@@ -410,14 +411,23 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
             public void onResponse(Call<ArrayList<Post>> call, Response<ArrayList<Post>> response) {
                 if(response.isSuccessful()){
                     System.out.println("RESPONSE SIZE CHECK: "+response.body().size());
-                    FragmentHome fragment3 = new FragmentHome(response.body(), order);
-                    getSupportFragmentManager().beginTransaction().replace(R.id.comm_container,fragment3).commitAllowingStateLoss();
+                    if(response.body().size()>0){
+                        FragmentHome fragment3 = new FragmentHome(response.body(), order);
+                        getSupportFragmentManager().beginTransaction().replace(R.id.comm_container,fragment3).commitAllowingStateLoss();
+                    }
+                    else{
+                        FragmentNoResults fragment3 = new FragmentNoResults();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.comm_container,fragment3).commitAllowingStateLoss();
+                    }
+
                 }
             }
 
             @Override
             public void onFailure(Call<ArrayList<Post>> call, Throwable t) {
                 Log.d("onFailure", t.getLocalizedMessage());
+                FragmentNoResults fragment3 = new FragmentNoResults();
+                getSupportFragmentManager().beginTransaction().replace(R.id.comm_container,fragment3).commitAllowingStateLoss();
 
             }
         });

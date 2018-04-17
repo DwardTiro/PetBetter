@@ -43,6 +43,7 @@ import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.fragments.FragmentMessages;
+import com.example.owner.petbetter.fragments.FragmentNoResults;
 import com.example.owner.petbetter.fragments.FragmentVetListing;
 import com.example.owner.petbetter.interfaces.CheckUpdates;
 import com.example.owner.petbetter.services.MyService;
@@ -272,7 +273,8 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
                             @Override
                             public void onFailure(Call<ArrayList<Message>> call, Throwable t) {
                                 Log.d("onFailure", t.getLocalizedMessage());
-                                Toast.makeText(MessagesActivity.this, "Unable to get vets from server", Toast.LENGTH_LONG);
+                                FragmentNoResults fragment3 = new FragmentNoResults();
+                                getSupportFragmentManager().beginTransaction().replace(R.id.messages_container,fragment3).commitAllowingStateLoss();
                             }
                         });
                     }

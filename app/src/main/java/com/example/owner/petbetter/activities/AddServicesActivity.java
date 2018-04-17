@@ -247,11 +247,15 @@ public class AddServicesActivity extends AppCompatActivity {
                     0));
             */
         }
-        for(WorkHours workHours:hoursList){
-            workHours.setFaciId((int)faciId);
+        if(hoursList!=null){
+            for(WorkHours workHours:hoursList){
+                workHours.setFaciId((int)faciId);
+            }
+            addWorkHours();
         }
+
         syncServicesChanges();
-        addWorkHours();
+
 
 
     }
@@ -692,7 +696,8 @@ public class AddServicesActivity extends AppCompatActivity {
                         public void onResponse(Call<ArrayList<LocationMarker>> call, Response<ArrayList<LocationMarker>> response) {
                             if (response.isSuccessful()) {
                                 setLocationMarkers(response.body());
-
+                                Toast.makeText(AddServicesActivity.this, "Thank you for adding a facility. Please check your email." +
+                                        "We've sent you some verification instructions for your new facility.", Toast.LENGTH_LONG).show();
                             }
                         }
 

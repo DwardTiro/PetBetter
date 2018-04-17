@@ -96,14 +96,14 @@ public class EditVetServicesActivity extends AppCompatActivity {
         saveChangesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                for(int i = 0; i < serviceIds.size(); i++){
+                for(int i = 0; i < currentServices.getChildCount(); i++){
                     //editService(serviceIds.get(i), );
                     EditText serviceField;
                     EditText priceField;
                     priceField = (EditText) (currentServices.getChildAt(i).findViewById(R.id.servicePriceField));
                     serviceField = (EditText) (currentServices.getChildAt(i).findViewById(R.id.serviceNameField));
 
-                    editService(serviceIds.get(i), serviceField.getText().toString(), Float.parseFloat(priceField.getText().toString()));
+                    editService(0, serviceField.getText().toString(), Float.parseFloat(priceField.getText().toString()));
                 }
                 serviceList = getServicesWithFaciId(faciItem.getId());
                 System.out.println("Services ID in list is "+ serviceList.get(0).getId() );

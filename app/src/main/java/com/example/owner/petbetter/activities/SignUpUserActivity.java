@@ -140,6 +140,7 @@ public class SignUpUserActivity extends AppCompatActivity {
                                         SignUpUserActivity.this,
                                         com.example.owner.petbetter.activities.MainActivity.class);
                                 startActivity(intent);
+                                Toast.makeText(SignUpUserActivity.this, "Thank you for registering. Welcome to PetBetter", Toast.LENGTH_SHORT).show();
                             }
 
                         }

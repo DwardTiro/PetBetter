@@ -441,6 +441,8 @@ public class VeterinarianAddInfoActivity extends AppCompatActivity {
                 syncPendingChanges();
                 Intent intent = new Intent(VeterinarianAddInfoActivity.this, com.example.owner.petbetter.activities.MainActivity.class);
                 startActivity(intent);
+                Toast.makeText(VeterinarianAddInfoActivity.this, "Thank you for registering as a veterinarian. Please check your email." +
+                        "We've sent you some verification instructions for your new facility.", Toast.LENGTH_LONG).show();
             }
 
             @Override

@@ -16,7 +16,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 	if($order==1){
 		if($stmt = $mysqli->prepare("SELECT p._id AS _id, p.user_id AS user_id, p.topic_name AS topic_name, p.topic_content AS topic_content, 
 			p.topic_id AS topic_id, p.date_created AS date_created, p.post_photo AS post_photo, p.id_link AS id_link, p.id_type AS id_type, p.is_deleted AS is_deleted 
-			FROM posts AS p INNER JOIN topics AS t ON p.topic_id = t._id INNER JOIN followers AS f ON t._id = f.topic_id WHERE p.is_deleted = 0 AND f.user_id = ? ORDER BY date_created DESC")){
+			FROM posts AS p INNER JOIN topics AS t ON p.topic_id = t._id INNER JOIN followers AS f ON t._id = f.topic_id WHERE p.is_deleted = 0 AND f.user_id = ? AND f.is_allowed = 1 ORDER BY date_created DESC")){
 			$stmt->bind_param("s", $user_id);
 			$stmt->execute();
 			$stmt->bind_result($_id, $user_id, $topic_name, $topic_content, $topic_id, $date_created, $post_photo, $id_link, $id_type, $is_deleted);
@@ -66,7 +66,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 		if($stmt = $mysqli->prepare("SELECT p._id AS _id, p.user_id AS user_id, p.topic_name AS topic_name, p.topic_content AS topic_content, p.topic_id AS topic_id, 
 			p.date_created AS date_created, p.post_photo AS post_photo, p.id_link AS id_link, p.id_type AS id_type, p.is_deleted AS is_deleted, SUM(u.value) AS sumvalue FROM posts AS p 
 			LEFT JOIN upvotes AS u ON p._id = u.feed_id INNER JOIN topics AS t ON p.topic_id = t._id INNER JOIN followers AS f ON t._id = f.topic_id WHERE p.is_deleted = 0 AND f.user_id = ? 
-			GROUP BY p._id ORDER BY SUM(u.value) DESC")){
+			f.is_allowed = 1 GROUP BY p._id ORDER BY SUM(u.value) DESC")){
 			$stmt->bind_param("s", $user_id);
 			$stmt->execute();
 			$stmt->bind_result($_id, $user_id, $topic_name, $topic_content, $topic_id, $date_created, $post_photo, $id_link, $id_type, $is_deleted, $sumvalue);
