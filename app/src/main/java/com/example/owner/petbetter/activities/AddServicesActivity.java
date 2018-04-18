@@ -77,6 +77,7 @@ public class AddServicesActivity extends AppCompatActivity {
     private LinearLayout newServices;
     private FloatingActionButton addField;
     private boolean isNew = false;
+    private boolean fromMain = false;
 
     HerokuService service;
 
@@ -108,9 +109,11 @@ public class AddServicesActivity extends AppCompatActivity {
             latitude = extras.getDouble("latitude");
             try{
                 isNew = extras.getBoolean("isNew");
+                fromMain = extras.getBoolean("fromMain");
             }catch(NullPointerException npe){
                 isNew = false;
             }
+            System.out.println("Is this from main? "+fromMain);
             String jsonMyObject;
             jsonMyObject = extras.getString("workhours");
 
@@ -556,8 +559,14 @@ public class AddServicesActivity extends AppCompatActivity {
                         public void onResponse(Call<ArrayList<Services>> call, Response<ArrayList<Services>> response) {
                             if (response.isSuccessful()) {
                                 setServices(response.body());
-                                if (!insideEditFacility) {
+                                if (!insideEditFacility&&fromMain==false) {
                                     Intent intent = new Intent(AddServicesActivity.this, com.example.owner.petbetter.activities.VeterinarianHomeActivity.class);
+                                    startActivity(intent);
+                                    Toast.makeText(AddServicesActivity.this, "Facility Successfully added.", Toast.LENGTH_LONG).show();
+                                    finish();
+                                }
+                                if (!insideEditFacility&&fromMain==true) {
+                                    Intent intent = new Intent(AddServicesActivity.this, com.example.owner.petbetter.activities.MainActivity.class);
                                     startActivity(intent);
                                     Toast.makeText(AddServicesActivity.this, "Facility Successfully added.", Toast.LENGTH_LONG).show();
                                     finish();
@@ -681,7 +690,9 @@ public class AddServicesActivity extends AppCompatActivity {
                                 System.out.println("Number of clinics from server: " + response.body().size());
                                 setFacilities(response.body());
                                 int id = generateNewMemberID();
-                                addFacilityMember(id, faciId, (long) vetId);
+                                if(!fromMain){
+                                    addFacilityMember(id, faciId, (long) vetId);
+                                }
                                 syncFacilityMemberChanges();
                                 addFacilityLocation();
                                 if(isNew){
@@ -738,8 +749,10 @@ public class AddServicesActivity extends AppCompatActivity {
                         public void onResponse(Call<ArrayList<LocationMarker>> call, Response<ArrayList<LocationMarker>> response) {
                             if (response.isSuccessful()) {
                                 setLocationMarkers(response.body());
-                                Toast.makeText(AddServicesActivity.this, "Thank you for adding a facility. Please check your email." +
-                                        "We've sent you some verification instructions for your new facility.", Toast.LENGTH_LONG).show();
+                                if(fromMain==false){
+                                    Toast.makeText(AddServicesActivity.this, "Thank you for adding a facility. Please check your email." +
+                                            "We've sent you some verification instructions for your new facility.", Toast.LENGTH_LONG).show();
+                                }
                             }
                         }
 

@@ -1818,6 +1818,16 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
 
     }
+
+    public void addNewFacility(View view){
+        Intent intent = new Intent(this, AddFacilityActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Bundle extras = new Bundle();
+        extras.putBoolean("fromMain", true);
+        intent.putExtras(extras);
+        startActivity(intent);
+    }
     private boolean checkEmailValidity(String email){
 
         String regEx = "^[\\w\\.-]+@([\\w\\-]+\\.)+[a-zA-Z]{2,4}$";

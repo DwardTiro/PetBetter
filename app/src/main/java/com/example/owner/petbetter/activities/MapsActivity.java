@@ -122,6 +122,7 @@ public class MapsActivity extends FragmentActivity
 
     HerokuService service;
     private String jsonHours;
+    private boolean fromMain = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,6 +147,7 @@ public class MapsActivity extends FragmentActivity
         Type type = new TypeToken<ArrayList<WorkHours>>(){}.getType();
         hoursList = new Gson().fromJson(jsonMyObject, type);*/
         image = extras.getString("image");
+        fromMain = extras.getBoolean("fromMain");
 
         service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         systemSessionManager = new SystemSessionManager(this);
@@ -683,6 +685,7 @@ public class MapsActivity extends FragmentActivity
         extras.putDouble("latitude", latitude);
         extras.putString("address", address);
         extras.putBoolean("isNew", true);
+        extras.putBoolean("fromMain", fromMain);
         intent.putExtras(extras);
         startActivity(intent);
 

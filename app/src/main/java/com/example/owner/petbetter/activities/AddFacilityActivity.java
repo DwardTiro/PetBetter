@@ -65,6 +65,7 @@ public class AddFacilityActivity extends AppCompatActivity {
     private ImageButton topicNewPost;
     private LinearLayout hoursContainer;
     private Button addHours;
+    private boolean fromMain = false;
 
     HerokuService service;
     @Override
@@ -105,6 +106,12 @@ public class AddFacilityActivity extends AppCompatActivity {
                 selectImage();
             }
         });
+        Bundle extras = getIntent().getExtras();
+        try{
+            fromMain = extras.getBoolean("fromMain");
+        }catch(NullPointerException npe){
+            fromMain = false;
+        }
         createNewEditText();
 
         addHours.setOnClickListener(new View.OnClickListener() {
@@ -173,6 +180,7 @@ public class AddFacilityActivity extends AppCompatActivity {
         extras.putString("workhours", jsonHours);
         extras.putString("location", facilityAddress.getText().toString());
         extras.putString("image", image);
+        extras.putBoolean("fromMain", fromMain);
 
         Intent intent = new Intent(
                 AddFacilityActivity.this,
@@ -244,10 +252,20 @@ public class AddFacilityActivity extends AppCompatActivity {
     }
 
     public void viewPostBackButtonClicked(View view){
-        Intent intent = new Intent(
-                AddFacilityActivity.this,
-                com.example.owner.petbetter.activities.VeterinarianHomeActivity.class
-        );
-        startActivity(intent);
+        if(fromMain){
+            Intent intent = new Intent(
+                    AddFacilityActivity.this,
+                    com.example.owner.petbetter.activities.MainActivity.class
+            );
+            startActivity(intent);
+        }
+        else{
+            Intent intent = new Intent(
+                    AddFacilityActivity.this,
+                    com.example.owner.petbetter.activities.VeterinarianHomeActivity.class
+            );
+            startActivity(intent);
+        }
+
     }
 }

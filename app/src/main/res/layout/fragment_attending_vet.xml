@@ -20,7 +20,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="7dp"
             android:background="@color/quicksilver"
-            android:src="@drawable/ic_pets_white_24dp" />
+            android:src="@mipmap/ic_account_circle_white_24dp" />
 
         <TextView
             android:id="@+id/TextId"
@@ -30,7 +30,7 @@
             android:paddingEnd="0dp"
             android:layout_marginTop="2dp"
             android:layout_toEndOf="@+id/logo"
-            android:text="Veterinarian In Charge"
+            android:text="Person In Charge"
             android:textColor="@color/main_White"
             android:textSize="20sp"
             android:textStyle="bold" />
