@@ -25,6 +25,7 @@ import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.classes.Facility;
 import com.example.owner.petbetter.classes.FacilityMembership;
 import com.example.owner.petbetter.classes.LocationMarker;
+import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.Services;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
@@ -37,9 +38,13 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -71,6 +76,7 @@ public class AddServicesActivity extends AppCompatActivity {
 
     private LinearLayout newServices;
     private FloatingActionButton addField;
+    private boolean isNew = false;
 
     HerokuService service;
 
@@ -100,7 +106,11 @@ public class AddServicesActivity extends AppCompatActivity {
             image = extras.getString("image");
             longitude = extras.getDouble("longitude");
             latitude = extras.getDouble("latitude");
-
+            try{
+                isNew = extras.getBoolean("isNew");
+            }catch(NullPointerException npe){
+                isNew = false;
+            }
             String jsonMyObject;
             jsonMyObject = extras.getString("workhours");
 
@@ -253,11 +263,34 @@ public class AddServicesActivity extends AppCompatActivity {
             }
             addWorkHours();
         }
-
         syncServicesChanges();
 
 
 
+    }
+
+    private void uploadPost(ArrayList<Post> posts){
+        service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+        System.out.println("HOW MANY POSTS? "+posts.size());
+
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String jsonArray = gson.toJson(posts);
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.addPosts(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                dataSynced(9);
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+                Toast.makeText(AddServicesActivity.this, "Unable to upload posts on server", Toast.LENGTH_LONG);
+            }
+        });
     }
 
     private long addService(long _id, String service_name, String service_price, long faci_id) {
@@ -651,6 +684,15 @@ public class AddServicesActivity extends AppCompatActivity {
                                 addFacilityMember(id, faciId, (long) vetId);
                                 syncFacilityMemberChanges();
                                 addFacilityLocation();
+                                if(isNew){
+                                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
+                                    sdf.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+                                    String timeStamp = sdf.format(new Date());
+                                    ArrayList<Post> posts = new ArrayList<Post>();
+                                    Post thisPost = new Post(0, 20, faciName, "",1,timeStamp, image, (int) faciId, 2, 0);
+                                    posts.add(thisPost);
+                                    uploadPost(posts);
+                                }
 
                             }
                         }

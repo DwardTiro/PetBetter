@@ -682,6 +682,7 @@ public class MapsActivity extends FragmentActivity
         extras.putDouble("longitude", longitude);
         extras.putDouble("latitude", latitude);
         extras.putString("address", address);
+        extras.putBoolean("isNew", true);
         intent.putExtras(extras);
         startActivity(intent);
 
