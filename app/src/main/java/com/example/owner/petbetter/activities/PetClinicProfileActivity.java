@@ -39,6 +39,7 @@ import com.google.gson.GsonBuilder;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -499,7 +500,7 @@ public class PetClinicProfileActivity extends AppCompatActivity {
                                             n = n + faciRatings.get(i);
                                         }
                                         n = n / (float) faciRatings.size();
-                                        petClinicRating.setText(String.valueOf(n));
+                                        petClinicRating.setText(String.format(Locale.getDefault(),"%.1f",n));
                                     } else {
                                         petClinicRating.setText("0.0");
                                     }

@@ -57,6 +57,7 @@ public class RateVetActivity extends AppCompatActivity {
 
     private int pId, uId, rId;
     private String timeStamp;
+    private TextView tvRating;
     @Override
     public void onCreate(Bundle savedInstance){
         super.onCreate(savedInstance);
@@ -72,6 +73,7 @@ public class RateVetActivity extends AppCompatActivity {
         reviewText = (EditText) findViewById(R.id.reviewEditText);
         rateTitle = (TextView) findViewById(R.id.rate_title);
         rateButton = (Button) findViewById(R.id.rateButton);
+        tvRating = (TextView) findViewById(R.id.tvRating);
 
 
         systemSessionManager = new SystemSessionManager(this);
@@ -95,7 +97,7 @@ public class RateVetActivity extends AppCompatActivity {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
                 rateButton.setEnabled(true);
-
+                tvRating.setText(Float.toString(v));
             }
         });
         rateButton.setOnClickListener(new View.OnClickListener() {
