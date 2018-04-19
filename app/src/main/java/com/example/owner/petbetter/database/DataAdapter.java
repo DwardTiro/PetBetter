@@ -261,17 +261,22 @@ public class DataAdapter {
         String sql = "SELECT * FROM "+FOLLOWER_TABLE+" WHERE user_id = '" + userId + "' AND topic_id = '"+topicId+"'";
         Cursor c = petBetterDb.rawQuery(sql, null);
 
-        Log.e("cursor", c.getCount() + "");
+        try{
+            Log.e("cursor", c.getCount() + "");
 
-        c.moveToFirst();
+            c.moveToFirst();
 
-        Follower result = new Follower(c.getLong(c.getColumnIndexOrThrow("_id")),
-                c.getLong(c.getColumnIndexOrThrow("topic_id")),
-                c.getLong(c.getColumnIndexOrThrow("user_id")),
-                c.getInt(c.getColumnIndexOrThrow("is_allowed")));
+            Follower result = new Follower(c.getLong(c.getColumnIndexOrThrow("_id")),
+                    c.getLong(c.getColumnIndexOrThrow("topic_id")),
+                    c.getLong(c.getColumnIndexOrThrow("user_id")),
+                    c.getInt(c.getColumnIndexOrThrow("is_allowed")));
 
-        c.close();
-        return result;
+            c.close();
+            return result;
+        }catch (CursorIndexOutOfBoundsException cpe){
+            return null;
+        }
+
     }
 
     public User getUserWithId(int id){

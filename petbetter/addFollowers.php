@@ -13,16 +13,18 @@ $followerlist = json_decode(file_get_contents('php://input'),true);
 if($_SERVER['REQUEST_METHOD']=='POST'){
 	
 	$n = count($followerlist);
-	//echo $n;
+	echo $n;
 	$i = 0;
 	//echo $vetlist[$i]['_id'];
 	
 	while($i<$n){
-		if($stmt = $mysqli->prepare("INSERT INTO followers (topic_id, user_id) VALUES (?,?)")){
-			$stmt->bind_param("ss", $followerlist[$i]['topic_id'], $followerlist[$i]['user_id']);
+		
+		if($stmt = $mysqli->prepare("INSERT INTO followers (topic_id, user_id, is_allowed) VALUES (?,?,?)")){
+			$stmt->bind_param("sss", $followerlist[$i]['topic_id'], $followerlist[$i]['user_id'], $followerlist[$i]['is_allowed']);
 			$stmt->execute();
 			$stmt->close();
 			$i = $i + 1;
+			
 		}
 		else{
 			echo 'Failed to add to db';

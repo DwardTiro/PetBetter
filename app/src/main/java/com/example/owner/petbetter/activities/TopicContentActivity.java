@@ -156,23 +156,13 @@ public class TopicContentActivity extends AppCompatActivity {
 
 
                 FragmentNoResults fragmentpar = new FragmentNoResults();
-                if(topicItem.getCreatorId() != user.getUserId())
-                    getSupportFragmentManager().beginTransaction().replace(R.id.topic_container,fragmentpar).commitAllowingStateLoss();
+                getSupportFragmentManager().beginTransaction().replace(R.id.topic_container,fragmentpar)
+                        .commitAllowingStateLoss();
 
-                if(check!=null){
-                    if(check.getIsAllowed()==1 || topicItem.getCreatorId() == user.getUserId()){
-
-                        Fragment postsFragment = new FragmentPosts();
-                        postsFragment.setArguments(bundle);
-                        getSupportFragmentManager().beginTransaction().replace(R.id.topic_container, postsFragment)
-                                .commitAllowingStateLoss();
-                    }
-                    else{
-                        fragmentpar = new FragmentNoResults();
-                        getSupportFragmentManager().beginTransaction().replace(R.id.topic_container,fragmentpar)
-                                .commitAllowingStateLoss();
-                    }
-                }
+                Fragment postsFragment = new FragmentPosts();
+                postsFragment.setArguments(bundle);
+                getSupportFragmentManager().beginTransaction().replace(R.id.topic_container, postsFragment)
+                        .commitAllowingStateLoss();
 
 
             }
@@ -206,18 +196,16 @@ public class TopicContentActivity extends AppCompatActivity {
             @Override
             public void onRefresh() {
                 refreshTopicContent.setRefreshing(true);
-                if(currFragment==1&&check!=null){
-                    if (check.getIsAllowed()==1){
-                        syncPostChanges();
-                        String jsonMyObject;
-                        Bundle extras = getIntent().getExtras();
-                        jsonMyObject = extras.getString("thisTopic");
-                        topicItem = new Gson().fromJson(jsonMyObject, Topic.class);
+                if(currFragment==1){
+                    syncPostChanges();
+                    String jsonMyObject;
+                    Bundle extras = getIntent().getExtras();
+                    jsonMyObject = extras.getString("thisTopic");
+                    topicItem = new Gson().fromJson(jsonMyObject, Topic.class);
 
-                        topicContentName.setText(topicItem.getTopicName());
-                        bundle = new Bundle();
-                        bundle.putLong("topicId", topicItem.getId());
-                    }
+                    topicContentName.setText(topicItem.getTopicName());
+                    bundle = new Bundle();
+                    bundle.putLong("topicId", topicItem.getId());
                 }
                 else if(currFragment == 2){
                     getTopicFollowers(topicItem.getId());
@@ -234,7 +222,7 @@ public class TopicContentActivity extends AppCompatActivity {
             check = getFollowerWithTopicUser(topicItem.getId(), user.getUserId());
             if(check.getIsAllowed()==1){
                 //followButton.setBackgroundResource(R.mipmap.ic_check_black_24dp);
-                followButton.setText("Approved");
+                followButton.setText("Following");
                 followButton.setTextColor(getResources().getColor(R.color.colorWhite));
                 followButton.setBackgroundResource(R.color.myrtle_green);
                 fab.setVisibility(View.VISIBLE);
@@ -244,7 +232,7 @@ public class TopicContentActivity extends AppCompatActivity {
             }
             else{
                //followButton.setBackgroundResource(R.mipmap.ic_access_time_black_24dp);
-                followButton.setText("Requested");
+                followButton.setText("Following");
                 followButton.setTextColor(getResources().getColor(R.color.colorWhite));
             }
         }
@@ -312,12 +300,12 @@ public class TopicContentActivity extends AppCompatActivity {
                     int fId = generateFollowerId();
                     if(topicItem.getCreatorId()==user.getUserId()){
                         addFollower(fId, (int) topicItem.getId(), (int) user.getUserId(), 1, 0);
-                        followButton.setText("Approved");
+                        followButton.setText("Following");
                     }
                     else{
-                        addFollower(fId, (int) topicItem.getId(), (int) user.getUserId(), 0, 0);
+                        addFollower(fId, (int) topicItem.getId(), (int) user.getUserId(), 1, 0);
                         followButton.setTextColor(getResources().getColor(R.color.colorWhite));
-                        followButton.setText("Requested");
+                        followButton.setText("Following");
                     }
                     uploadFollower(getUnsyncedFollowers());
 
@@ -358,18 +346,16 @@ public class TopicContentActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(currFragment==1&&check!=null){
-            if (check.getIsAllowed()==1){
-                syncPostChanges();
-                String jsonMyObject;
-                Bundle extras = getIntent().getExtras();
-                jsonMyObject = extras.getString("thisTopic");
-                topicItem = new Gson().fromJson(jsonMyObject, Topic.class);
+        if(currFragment==1){
+            syncPostChanges();
+            String jsonMyObject;
+            Bundle extras = getIntent().getExtras();
+            jsonMyObject = extras.getString("thisTopic");
+            topicItem = new Gson().fromJson(jsonMyObject, Topic.class);
 
-                topicContentName.setText(topicItem.getTopicName());
-                bundle = new Bundle();
-                bundle.putLong("topicId", topicItem.getId());
-            }
+            topicContentName.setText(topicItem.getTopicName());
+            bundle = new Bundle();
+            bundle.putLong("topicId", topicItem.getId());
         }
         else if(currFragment == 2){
             getTopicFollowers(topicItem.getId());
@@ -521,19 +507,18 @@ public class TopicContentActivity extends AppCompatActivity {
         call2.enqueue(new Callback<ArrayList<Post>>() {
             @Override
             public void onResponse(Call<ArrayList<Post>> call, Response<ArrayList<Post>> response) {
-                if(response.isSuccessful()&&check!=null&&currFragment==1){
-                    if(check.getIsAllowed()==1){
-                        FragmentNoResults fragmentpar = new FragmentNoResults();
-                        getSupportFragmentManager().beginTransaction().replace(R.id.topic_container,fragmentpar)
-                                .commitAllowingStateLoss();
+                //if(response.isSuccessful()&&check!=null&&currFragment==1
+                if(response.isSuccessful()&&currFragment==1){
+                    FragmentNoResults fragmentpar = new FragmentNoResults();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.topic_container,fragmentpar)
+                            .commitAllowingStateLoss();
 
-                        setPosts(response.body());
-                        fragment3 = new FragmentPosts();
-                        fragment3.setArguments(bundle);
-                        getSupportFragmentManager().beginTransaction().replace(R.id.topic_container,fragment3)
-                                .commitAllowingStateLoss();
-                        System.out.println("DO WE REPLACE FRAGMENT AT LEAST??");
-                    }
+                    setPosts(response.body());
+                    fragment3 = new FragmentPosts();
+                    fragment3.setArguments(bundle);
+                    getSupportFragmentManager().beginTransaction().replace(R.id.topic_container,fragment3)
+                            .commitAllowingStateLoss();
+                    System.out.println("DO WE REPLACE FRAGMENT AT LEAST??");
                 }
             }
 

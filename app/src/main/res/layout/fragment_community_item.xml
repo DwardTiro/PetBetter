@@ -116,14 +116,16 @@
                 android:textColor="@color/amazonite"
                 android:textSize="15sp"
                 android:textStyle="italic|bold"
-                android:visibility="gone" />
+                android:visibility="gone"
+                android:layout_alignParentBottom="true"/>
 
             <ImageView
                 android:id="@+id/iconFollowers"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toEndOf="@+id/topicLabel"
-                android:src="@drawable/ic_people_outline_black_24dp" />
+                android:src="@drawable/ic_people_outline_black_24dp"
+                android:layout_alignParentBottom="true"/>
 
             <TextView
                 android:id="@+id/textViewFollowers"
@@ -132,7 +134,8 @@
                 android:layout_marginStart="5dp"
                 android:layout_toEndOf="@+id/iconFollowers"
                 android:text="99"
-                android:textSize="17sp" />
+                android:textSize="17sp"
+                android:layout_alignParentBottom="true"/>
 
 
             <ImageView
@@ -141,7 +144,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_toEndOf="@id/textViewFollowers"
-                android:src="@drawable/ic_import_contacts_black_24dp" />
+                android:src="@drawable/ic_import_contacts_black_24dp"
+                android:layout_alignParentBottom="true"/>
 
             <TextView
                 android:id="@+id/textViewPosts"
@@ -150,8 +154,20 @@
                 android:layout_marginStart="5dp"
                 android:layout_toEndOf="@id/iconPosts"
                 android:text="99"
-                android:textSize="17sp" />
-
+                android:textSize="17sp"
+                android:layout_alignParentBottom="true"/>
+            <Button
+                android:id="@+id/followAdapterButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="5dp"
+                android:background="@drawable/rounded_button"
+                android:text="Follow"
+                android:layout_toEndOf="@id/textViewPosts"
+                android:textAllCaps="false"
+                android:textColor="@color/black"
+                android:textSize="15sp"/>
         </RelativeLayout>
     </RelativeLayout>
 </android.support.v7.widget.CardView>

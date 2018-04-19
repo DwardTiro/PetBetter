@@ -92,7 +92,7 @@ public class FragmentNoResults extends Fragment  {
         tvNoResult = (TextView) view.findViewById(R.id.tvNoResult);
 
         if(getActivity() instanceof TopicContentActivity){
-            tvNoResult.setText("Follow this topic to view posts");
+            tvNoResult.setText("This topic doesn't have a post yet.");
         }
 
         if(getActivity() instanceof UserActivity){
