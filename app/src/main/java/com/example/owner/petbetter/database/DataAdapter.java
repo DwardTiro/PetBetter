@@ -389,11 +389,11 @@ public class DataAdapter {
         return result;
     }
 
-    public Facility getNewFacilityWithId(int vet_id){
+    public Facility getNewFacilityWithId(int user_id){
         String sql = "SELECT f._id AS _id, f.faci_name AS faci_name, f.location AS location, " +
                 "f.contact_info AS contact_info, f.rating AS rating, f.faci_photo AS faci_photo, " +
                 "f.is_disabled AS is_disabled FROM facilities AS f INNER JOIN facility_membership AS fm ON f._id = fm.faci_id"+
-                " INNER JOIN veterinarians AS v ON fm.vet_id = v._id WHERE v._id = '"+vet_id+"'";
+                " INNER JOIN users AS u ON fm.user_id = u._id WHERE u._id = '"+user_id+"'";
 
         Cursor c = petBetterDb.rawQuery(sql, null);
         c.moveToLast();
@@ -535,7 +535,7 @@ public class DataAdapter {
         while(c.moveToNext()) {
             FacilityMembership facilityMembership = new FacilityMembership(c.getInt(c.getColumnIndexOrThrow("_id")),
                     c.getInt(c.getColumnIndexOrThrow("faci_id")),
-                    c.getInt(c.getColumnIndexOrThrow("vet_id")));
+                    c.getInt(c.getColumnIndexOrThrow("user_id")));
             results.add(facilityMembership);
         }
 
@@ -2174,13 +2174,13 @@ public class DataAdapter {
 
 
     //rewrite this
-    public ArrayList<Facility> getFacilitiesByVetId(long vetId){
+    public ArrayList<Facility> getFacilitiesByVetId(long userId){
         ArrayList<Facility> results = new ArrayList<>();
 
         String sql = "SELECT f._id AS _id, f.faci_name AS faci_name, f.location AS location, " +
                 "f.contact_info AS contact_info, f.rating AS rating, f.faci_photo AS faci_photo, " +
                 "f.is_disabled AS is_disabled FROM facilities AS f INNER JOIN facility_membership AS fm ON f._id = fm.faci_id"+
-                " INNER JOIN veterinarians AS v ON fm.vet_id = v._id WHERE v._id = '"+vetId+"'";
+                " INNER JOIN users AS u ON fm.user_id = u._id WHERE u._id = '"+userId+"'";
         //String sql = "SELECT * FROM " + FACI_TABLE;
         Cursor c = petBetterDb.rawQuery(sql, null);
 
@@ -3295,7 +3295,7 @@ public class DataAdapter {
             ContentValues cv = new ContentValues();
             cv.put("_id", facilityMembership.getId());
             cv.put("faci_id", facilityMembership.getFaciId());
-            cv.put("vet_id", facilityMembership.getVetId());
+            cv.put("user_id", facilityMembership.getUserId());
 
             result = petBetterDb.insert(FACI_MEMBER_TABLE, null, cv);
         }

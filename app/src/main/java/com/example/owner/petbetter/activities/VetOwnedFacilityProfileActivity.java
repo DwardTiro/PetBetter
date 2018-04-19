@@ -22,6 +22,7 @@ import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.adapters.HoursAdapter;
 import com.example.owner.petbetter.adapters.ServiceAdapter;
+import com.example.owner.petbetter.adapters.UserAdapter;
 import com.example.owner.petbetter.adapters.VetListingAdapter;
 import com.example.owner.petbetter.adapters.VetRowAdapter;
 import com.example.owner.petbetter.classes.Facility;
@@ -67,9 +68,9 @@ public class VetOwnedFacilityProfileActivity extends AppCompatActivity{
     private Facility faciItem;
     private ArrayList<Services> serviceList;
     private ImageView verifiedServices;
-    private ArrayList<Veterinarian> vetList;
+    private ArrayList<User> userList;
     private RecyclerView vetRecyclerView;
-    private VetListingAdapter vetListingAdapter;
+    private UserAdapter userAdapter;
     private ArrayList<WorkHours> hoursList;
     private RecyclerView hoursRecyclerView;
 
@@ -267,26 +268,26 @@ public class VetOwnedFacilityProfileActivity extends AppCompatActivity{
     public void getVetList() {
 
         final HerokuService service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
-        final Call<ArrayList<Veterinarian>> call = service.getVetsByFacility(faciItem.getId());
+        final Call<ArrayList<User>> call = service.getUsersByFacility(faciItem.getId());
 
-        call.enqueue(new Callback<ArrayList<Veterinarian>>() {
+        call.enqueue(new Callback<ArrayList<User>>() {
             @Override
-            public void onResponse(Call<ArrayList<Veterinarian>> call, Response<ArrayList<Veterinarian>> response) {
+            public void onResponse(Call<ArrayList<User>> call, Response<ArrayList<User>> response) {
                 if (response.isSuccessful()) {
                     if (response.body().size() > 0) {
                         System.out.println("hi");
-                        vetList = response.body();
+                        userList = response.body();
                         vetRecyclerView.setVisibility(View.VISIBLE);
 
-                        vetListingAdapter = new VetListingAdapter(VetOwnedFacilityProfileActivity.this, vetList, new VetListingAdapter.OnItemClickListener() {
-                            @Override public void onItemClick(Veterinarian item) {
+                        userAdapter = new UserAdapter(VetOwnedFacilityProfileActivity.this, userList, new UserAdapter.OnItemClickListener() {
+                            @Override public void onItemClick(User item) {
 
                                 Intent intent = new Intent(VetOwnedFacilityProfileActivity.this, com.example.owner.petbetter.activities.VetProfileActivity.class);
                                 intent.putExtra("thisVet", new Gson().toJson(item));
                                 startActivity(intent);
                             }
                         });
-                        vetRecyclerView.setAdapter(vetListingAdapter);
+                        vetRecyclerView.setAdapter(userAdapter);
                         /*
                         vetRecyclerView.setAdapter(new VetRowAdapter(VetOwnedFacilityProfileActivity.this,
                                 getLayoutInflater(), vetList, new VetRowAdapter.OnItemClickListener() {
@@ -315,7 +316,7 @@ public class VetOwnedFacilityProfileActivity extends AppCompatActivity{
             }
 
             @Override
-            public void onFailure(Call<ArrayList<Veterinarian>> call, Throwable t) {
+            public void onFailure(Call<ArrayList<User>> call, Throwable t) {
 
             }
         });

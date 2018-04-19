@@ -20,8 +20,8 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 	
 	while($i<$n){
 		
-		if($stmt = $mysqli->prepare("INSERT INTO facility_membership (faci_id, vet_id) VALUES (?,?)")){
-			$stmt->bind_param("ss", $fmlist[$i]['faci_id'], $fmlist[$i]['vet_id']);
+		if($stmt = $mysqli->prepare("INSERT INTO facility_membership (faci_id, user_id) VALUES (?,?)")){
+			$stmt->bind_param("ss", $fmlist[$i]['faci_id'], $fmlist[$i]['user_id']);
 			$stmt->execute();
 			$stmt->close();
 			$i = $i + 1;

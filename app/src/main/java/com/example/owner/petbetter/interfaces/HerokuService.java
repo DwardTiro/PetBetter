@@ -146,8 +146,8 @@ public interface HerokuService {
     Call<ArrayList<LocationMarker>> loadLocations();
 
     @FormUrlEncoded
-    @POST("getVetsByFacility.php")
-    Call<ArrayList<Veterinarian>> getVetsByFacility(@Field("faci_id") long faci_id);
+    @POST("getUsersByFacility.php")
+    Call<ArrayList<User>> getUsersByFacility(@Field("faci_id") long faci_id);
 
     @FormUrlEncoded
     @POST("getVeterinarians.php")

@@ -691,7 +691,7 @@ public class AddServicesActivity extends AppCompatActivity {
                                 setFacilities(response.body());
                                 int id = generateNewMemberID();
                                 if(!fromMain){
-                                    addFacilityMember(id, faciId, (long) vetId);
+                                    addFacilityMember(id, faciId, user.getUserId());
                                 }
                                 syncFacilityMemberChanges();
                                 addFacilityLocation();

@@ -278,7 +278,7 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
                     dataSynced(2);
 
                     if(thisVet!=null){
-                        faciList = getFacilitiesByVetId(thisVet.getId());
+                        faciList = getFacilitiesByVetId(user.getUserId());
                         if(faciList.size()>0){
                             FragmentPetClinicListing fragment = new FragmentPetClinicListing(faciList);
                             getSupportFragmentManager().beginTransaction().replace(R.id.vethome_container,fragment).commitAllowingStateLoss();

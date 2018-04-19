@@ -13,13 +13,21 @@ public class FacilityMembership {
     @SerializedName("faci_id")
     long faciId;
 
-    @SerializedName("vet_id")
-    long vetId;
+    @SerializedName("user_id")
+    long userId;
 
-    public FacilityMembership(long id, long faciId, long vetId) {
+    public FacilityMembership(long id, long faciId, long userId) {
         this.id = id;
         this.faciId = faciId;
-        this.vetId = vetId;
+        this.userId = userId;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
     public long getId() {
@@ -38,11 +46,4 @@ public class FacilityMembership {
         this.faciId = faciId;
     }
 
-    public long getVetId() {
-        return vetId;
-    }
-
-    public void setVetId(long vetId) {
-        this.vetId = vetId;
-    }
 }
