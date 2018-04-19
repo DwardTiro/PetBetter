@@ -34,6 +34,9 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/listing_font_size"
                 android:textStyle="bold"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
             <TextView
                 android:id="@+id/topicUser"
                 android:layout_width="match_parent"
@@ -43,6 +46,14 @@
                 android:textColor="@color/black"
 
                 android:text="@string/sample_address" />
+            <ImageView
+                android:id="@+id/iconIdentifier"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingEnd="5dp"
+                android:paddingStart="5dp"
+                android:src="@drawable/ic_local_hospital_black_18dp" />
+        </LinearLayout>
 
             <TextView
                 android:id="@+id/topicDescription"

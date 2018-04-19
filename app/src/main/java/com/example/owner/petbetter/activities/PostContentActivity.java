@@ -98,6 +98,7 @@ public class PostContentActivity extends AppCompatActivity {
     private Veterinarian veterinarian;
     private Topic topic;
     private Post post;
+    private ImageView userIdentifier;
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -142,6 +143,7 @@ public class PostContentActivity extends AppCompatActivity {
         postImageFrame = (ImageView) findViewById(R.id.postImageFrame);
         locButton = (Button) findViewById(R.id.locationButton);
         locationImage = (ImageView) findViewById(R.id.locationImage);
+        userIdentifier = (ImageView) findViewById(R.id.iconIdentifier);
 
 
 
@@ -195,6 +197,8 @@ public class PostContentActivity extends AppCompatActivity {
         upCounter.setText(String.valueOf(voteCount));
 
 
+
+
         Bundle bundle = new Bundle();
         System.out.println("POST ID BEFORE SEND " + postItem.getUserId());
         bundle.putLong("postId", postItem.getId());
@@ -204,7 +208,15 @@ public class PostContentActivity extends AppCompatActivity {
 
         if(postUser.getUserType() == 1){
             profileName.setText("Dr. "+postUser.getName()+", DVM.");
-        }else
+            userIdentifier.setImageResource(R.drawable.ic_local_hospital_black_18dp);
+        }else if(postUser.getUserType() ==4){
+            userIdentifier.setImageResource(R.drawable.ic_business_center_black_18dp);
+            profileName.setText(postUser.getName());
+        }
+        else if(postUser.getUserType() == 3){
+            profileName.setText("Anonymous User");
+        }
+        else
             profileName.setText(postUser.getName());
         postTitle.setText(postItem.getTopicName());
         homeListContent.setText(postItem.getTopicContent());
@@ -219,6 +231,8 @@ public class PostContentActivity extends AppCompatActivity {
             postImageFrame.setVisibility(View.VISIBLE);
             //postImage.setImageResource();
         }
+
+
 
 
         if (checkIfBookmark((int) postItem.getId(), (int) user.getUserId())) {

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -78,24 +79,50 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
         User topicUser = getUserWithId(thisPost.getUserId());
         holder.topicName.setText(thisPost.getTopicName());
         holder.topicDescription.setText(thisPost.getTopicContent());
-        if(topicUser.getUserType() == 1){
-            holder.topicUser.setText("Dr. "+topicUser.getName()+", DVM.");
-            //holder.topicUser.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_check_circle_black_18dp,0);
-            //holder.topicUser.setCompoundDrawablePadding(5);
-        }else
-            holder.topicUser.setText(topicUser.getName());
 
         if(getPostReps(thisPost.getId()).size() == 0){
             holder.replyCounter.setVisibility(View.GONE);
             holder.sentenceEnd.setVisibility(View.GONE);
             holder.sentenceStart.setText("No replies yet");
         }else if(getPostReps(thisPost.getId()).size() == 1){
+            holder.sentenceStart.setText("View");
             holder.sentenceEnd.setText("reply");
+            holder.replyCounter.setVisibility(View.VISIBLE);
+            holder.sentenceEnd.setVisibility(View.VISIBLE);
             holder.replyCounter.setText(Integer.toString(getPostReps(thisPost.getId()).size()));
         }
         else{
+            holder.sentenceStart.setText("View");
+            holder.sentenceEnd.setText("replies");
+            holder.replyCounter.setVisibility(View.VISIBLE);
+            holder.sentenceEnd.setVisibility(View.VISIBLE);
             holder.replyCounter.setText(Integer.toString(getPostReps(thisPost.getId()).size()));
         }
+
+        if(topicUser.getUserType() == 1){
+            holder.topicUser.setText("Dr. "+topicUser.getName()+", DVM.");
+            holder.userIdentifier.setImageResource(R.drawable.ic_local_hospital_black_18dp);
+            holder.userIdentifier.setVisibility(View.VISIBLE);
+            holder.topicUser.setVisibility(View.VISIBLE);
+
+            //holder.topicUser.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_check_circle_black_18dp,0);
+            //holder.topicUser.setCompoundDrawablePadding(5);
+        }else if(topicUser.getUserType() == 4){
+            holder.topicUser.setText(topicUser.getName());
+            holder.topicUser.setVisibility(View.VISIBLE);
+            holder.userIdentifier.setImageResource(R.drawable.ic_business_center_black_18dp);
+            holder.userIdentifier.setVisibility(View.VISIBLE);
+        }else if(topicUser.getUserType() == 3){
+            holder.topicUser.setVisibility(View.GONE);
+            holder.userIdentifier.setVisibility(View.GONE);
+        }
+        else {
+            holder.topicUser.setText(topicUser.getName());
+            holder.topicUser.setVisibility(View.VISIBLE);
+            holder.userIdentifier.setVisibility(View.GONE);
+        }
+
+
 
 
         int result = getVoteCount(thisPost.getId(), 1);
@@ -363,6 +390,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
         private TextView replyCounter;
         private TextView sentenceStart;
         private TextView sentenceEnd;
+        private ImageView userIdentifier;
 
         public HomeViewHolder(View itemView) {
             super(itemView);
@@ -378,6 +406,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
             replyCounter = (TextView) itemView.findViewById(R.id.textViewReplies);
             sentenceStart = (TextView) itemView.findViewById(R.id.topicSentenceStart);
             sentenceEnd = (TextView) itemView.findViewById(R.id.topicLabel);
+            userIdentifier = (ImageView) itemView.findViewById(R.id.iconIdentifier);
         }
 
         public void bind(final Post item, final OnItemClickListener listener) {

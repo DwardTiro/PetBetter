@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -88,12 +89,24 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
         holder.topicDescription.setText(thisTopic.getTopicDesc());
         if(topicUser!=null && topicUser.getUserType() == 1){
             holder.topicUser.setText("Dr. "+thisTopic.getCreatorName()+", DVM.");
+            holder.userIdentifier.setImageResource(R.drawable.ic_local_hospital_black_18dp);
             //holder.topicUser.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_check_circle_black_18dp,0);
             //holder.topicUser.setCompoundDrawablePadding(5);
-        }else
+        }else if(topicUser != null && topicUser.getUserType() == 4){
             holder.topicUser.setText(thisTopic.getCreatorName());
+            holder.userIdentifier.setImageResource(R.drawable.ic_business_center_black_18dp);
+        }
+        else if(topicUser !=null){
+            holder.topicUser.setText(thisTopic.getCreatorName());
+            holder.userIdentifier.setVisibility(View.GONE);
+        }
+        else {
+            holder.topicUser.setVisibility(View.GONE);
+            holder.userIdentifier.setVisibility(View.GONE);
+        }
         holder.textviewFollowers.setText(Integer.toString(thisTopic.getFollowerCount()));
         holder.textViewPosts.setText(Integer.toString(topicPosts));
+
         holder.bind(thisTopic, listener);
 
         if (user.getUserId() == thisTopic.getCreatorId()) {
@@ -466,6 +479,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
         private TextView textViewPosts;
         private ImageButton deleteTopicButton;
         private ImageButton optionsButton;
+        private ImageView userIdentifier;
 
         public CommunityViewHolder(View itemView) {
             super(itemView);
@@ -477,6 +491,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
             //deleteTopicButton = (ImageButton) itemView.findViewById(R.id.deleteTopicButton);
             optionsButton = (ImageButton) itemView.findViewById(R.id.topicOptionsButton);
             textViewPosts = (TextView) itemView.findViewById(R.id.textViewPosts);
+            userIdentifier = (ImageView) itemView.findViewById(R.id.iconIdentifier);
         }
 
         public void bind(final Topic item, final OnItemClickListener listener) {

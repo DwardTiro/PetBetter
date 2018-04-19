@@ -124,11 +124,44 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
             holder.sentenceStart.setText("No replies yet");
         }
         else if(postRepList.size() == 1){
+            holder.sentenceStart.setText("View");
             holder.sentenceEnd.setText("reply");
+            holder.postRepCounter.setVisibility(View.VISIBLE);
+            holder.sentenceEnd.setVisibility(View.VISIBLE);
             holder.postRepCounter.setText(postRepList.size());
         }
         else if(postRepList.size() > 1){
+            holder.sentenceStart.setText("View");
+            holder.sentenceEnd.setText("replies");
+            holder.postRepCounter.setVisibility(View.VISIBLE);
+            holder.sentenceEnd.setVisibility(View.VISIBLE);
             holder.postRepCounter.setText(postRepList.size());
+        }
+
+        if(user.getUserType() == 1){
+            holder.postRepName.setText("Dr. "+user.getName()+", DVM.");
+            holder.userIdentifier.setImageResource(R.drawable.ic_local_hospital_black_18dp);
+            holder.userIdentifier.setVisibility(View.VISIBLE);
+            holder.postRepName.setVisibility(View.VISIBLE);
+            holder.postRepImage.setVisibility(View.VISIBLE);
+            //holder.topicUser.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_check_circle_black_18dp,0);
+            //holder.topicUser.setCompoundDrawablePadding(5);
+        }else if(user.getUserType() == 4){
+            holder.postRepName.setText(user.getName());
+            holder.postRepName.setVisibility(View.VISIBLE);
+            holder.userIdentifier.setImageResource(R.drawable.ic_business_center_black_18dp);
+            holder.userIdentifier.setVisibility(View.VISIBLE);
+            holder.postRepImage.setVisibility(View.VISIBLE);
+        }else if(user.getUserType() == 3){
+            holder.postRepName.setVisibility(View.GONE);
+            holder.userIdentifier.setVisibility(View.GONE);
+            holder.postRepImage.setVisibility(View.GONE);
+        }
+        else {
+            holder.postRepName.setText(user.getName());
+            holder.postRepName.setVisibility(View.VISIBLE);
+            holder.userIdentifier.setVisibility(View.GONE);
+            holder.postRepImage.setVisibility(View.VISIBLE);
         }
 
         if(user.getUserPhoto()!=null){
@@ -409,6 +442,7 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
         private TextView postRepCounter;
         private TextView sentenceStart;
         private TextView sentenceEnd;
+        private ImageView userIdentifier;
 
         public PostRepViewHolder(View itemView) {
             super(itemView);
@@ -421,6 +455,7 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
             postRepCounter = (TextView) itemView.findViewById(R.id.postRepCounter);
             sentenceStart = (TextView) itemView.findViewById(R.id.replySentenceStart);
             sentenceEnd = (TextView) itemView.findViewById(R.id.replySentenceEnd);
+            userIdentifier = (ImageView) itemView.findViewById(R.id.iconIdentifier);
         }
 
         public void bind(final PostRep item, final OnItemClickListener listener) {

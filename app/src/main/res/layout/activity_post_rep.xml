@@ -68,7 +68,8 @@
                         android:layout_height="wrap_content"
                         android:text="20 hrs"
                         android:textColor="@color/timestamp"
-                        android:textSize="13sp" />
+                        android:textSize="13sp"
+                        android:visibility="gone"/>
 
                 </LinearLayout>
 
