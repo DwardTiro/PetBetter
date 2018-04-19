@@ -38,6 +38,7 @@ import org.w3c.dom.Text;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -153,7 +154,7 @@ public class VetOwnedFacilityProfileActivity extends AppCompatActivity{
         });
 
         facilityName.setText(faciItem.getFaciName());
-        facilityRating.setText(Float.toString(faciItem.getRating()));
+        facilityRating.setText(String.format(Locale.getDefault(),"%.1f",faciItem.getRating()));
 
         getWorkhoursList();
         getServiceList();
