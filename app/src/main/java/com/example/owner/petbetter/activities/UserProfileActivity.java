@@ -187,7 +187,7 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
 
         userProfilePicture = (ImageView) findViewById(R.id.userProfilePicture);
 
-        if(user.getUserType()==2){
+        if(user.getUserType()==2||user.getUserType()==4){
             goToVetButton.setVisibility(View.GONE);
         }
         if(user.getUserType()==1){
@@ -344,7 +344,7 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
         }
 
         else if(id == R.id.home){
-            if(user.getUserType()==1){
+            if(user.getUserType()==1||user.getUserType()==4){
                 Intent intent = new Intent(this, com.example.owner.petbetter.activities.VeterinarianHomeActivity.class);
                 startActivity(intent);
             }

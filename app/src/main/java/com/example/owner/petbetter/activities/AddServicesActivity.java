@@ -137,7 +137,7 @@ public class AddServicesActivity extends AppCompatActivity {
 
         String email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
         user = getUser(email);
-        vetId = getVeterinarian((int) user.getUserId()).getId();
+        //vetId = getVeterinarian((int) user.getUserId()).getId();
 
 
         createNewEditText();
@@ -404,13 +404,13 @@ public class AddServicesActivity extends AppCompatActivity {
         return result;
     }
 
-    public long addFacilityMember(int id, long faciId, long vetId) {
+    public long addFacilityMember(int id, long faciId, long userId) {
         try {
             petBetterDb.openDatabase();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        long result = petBetterDb.addFacilityMember(id, faciId, vetId);
+        long result = petBetterDb.addFacilityMember(id, faciId, userId);
         petBetterDb.closeDatabase();
 
         return result;
@@ -628,6 +628,7 @@ public class AddServicesActivity extends AppCompatActivity {
 
         ArrayList<FacilityMembership> unsyncedMembers = getUnsyncedMembers();
 
+        System.out.println("USER ID MEMBER "+unsyncedMembers.get(0).getUserId());
         Gson gson = new GsonBuilder().serializeNulls().create();
         String jsonArray = gson.toJson(unsyncedMembers);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());

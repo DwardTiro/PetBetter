@@ -60,6 +60,16 @@ public class SignUpUserTypeActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void businessTypeButtonClicked(View view) {
+        Bundle extras = new Bundle();
+        extras.putInt("USERTYPE", 4);
+        Intent intent = new Intent(
+                this, SignUpUserActivity.class
+        );
+        intent.putExtras(extras);
+        startActivity(intent);
+    }
+
     //code if pet owner is selected
 
     //code if veterinarian is selected

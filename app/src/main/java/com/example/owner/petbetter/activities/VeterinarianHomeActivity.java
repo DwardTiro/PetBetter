@@ -277,7 +277,7 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
                     setFacilities(response.body());
                     dataSynced(2);
 
-                    if(thisVet!=null){
+                    if(user!=null){
                         faciList = getFacilitiesByVetId(user.getUserId());
                         if(faciList.size()>0){
                             FragmentPetClinicListing fragment = new FragmentPetClinicListing(faciList);
@@ -403,7 +403,7 @@ public class VeterinarianHomeActivity extends AppCompatActivity implements Navig
             startActivity(intent);
         }
         else if (id == R.id.home) {
-            if(user.getUserType()==1){
+            if(user.getUserType()==1||user.getUserType()==4){
                 Intent intent = new Intent(this, com.example.owner.petbetter.activities.VeterinarianHomeActivity.class);
                 startActivity(intent);
             }

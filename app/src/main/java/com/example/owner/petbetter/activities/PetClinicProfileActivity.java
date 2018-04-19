@@ -275,9 +275,16 @@ public class PetClinicProfileActivity extends AppCompatActivity {
                         userAdapter = new UserAdapter(PetClinicProfileActivity.this, userList, new UserAdapter.OnItemClickListener() {
                             @Override public void onItemClick(User item) {
 
-                                Intent intent = new Intent(PetClinicProfileActivity.this, com.example.owner.petbetter.activities.VetProfileActivity.class);
-                                intent.putExtra("thisVet", new Gson().toJson(item));
-                                startActivity(intent);
+                                if(item.getUserType()==1){
+                                    Intent intent = new Intent(PetClinicProfileActivity.this, com.example.owner.petbetter.activities.VetProfileActivity.class);
+                                    intent.putExtra("thisVet", new Gson().toJson(item));
+                                    startActivity(intent);
+                                }
+                                else{
+                                    Intent intent = new Intent(PetClinicProfileActivity.this, com.example.owner.petbetter.activities.UserProfileActivity.class);
+                                    intent.putExtra("UserProfile", item.getUserId());
+                                    startActivity(intent);
+                                }
                             }
                         });
                         vetRecyclerView.setAdapter(userAdapter);

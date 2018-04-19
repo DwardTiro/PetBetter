@@ -46,6 +46,7 @@ public class PendingActivity extends AppCompatActivity {
         pendingServicesButton = (Button) findViewById(R.id.pendingServicesButton);
         pendingSpecialtyButton = (Button) findViewById(R.id.pendingSpecialtyButton);
         actvPending = (AutoCompleteTextView) findViewById(R.id.actvSearch);
+        actvPending.setThreshold(3);
 
         pendingEducClicked(this.findViewById(android.R.id.content));
     }
@@ -103,7 +104,7 @@ public class PendingActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(currFragment==1){
+                if(currFragment==1&&actvPending.getText().length()>2){
                     service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
                     //query the substring to server data
@@ -195,7 +196,7 @@ public class PendingActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(currFragment==2){
+                if(currFragment==2&&actvPending.getText().length()>2){
                     service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
                     //query the substring to server data
@@ -288,7 +289,7 @@ public class PendingActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(currFragment==3){
+                if(currFragment==3&&actvPending.getText().length()>2){
                     service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
                     //query the substring to server data
@@ -381,7 +382,7 @@ public class PendingActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(currFragment==4){
+                if(currFragment==4&&actvPending.getText().length()>2){
                     service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
                     //query the substring to server data

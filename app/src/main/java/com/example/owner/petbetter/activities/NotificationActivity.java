@@ -160,7 +160,7 @@ public class NotificationActivity extends AppCompatActivity implements Navigatio
         int id = item.getItemId();
 
         if(id == R.id.home){
-            if(user.getUserType()==1){
+            if(user.getUserType()==1||user.getUserType()==4){
                 Intent intent = new Intent(this, com.example.owner.petbetter.activities.VeterinarianHomeActivity.class);
                 startActivity(intent);
             }

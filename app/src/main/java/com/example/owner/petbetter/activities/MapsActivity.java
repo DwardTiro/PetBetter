@@ -159,7 +159,7 @@ public class MapsActivity extends FragmentActivity
 
         String email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
         user = getUser(email);
-        vetId = getVeterinarian((int) user.getUserId()).getId();
+        //vetId = getVeterinarian((int) user.getUserId()).getId();
         getLocationPermissions();
     }
 
@@ -399,7 +399,7 @@ public class MapsActivity extends FragmentActivity
                                 setFacilities(response.body());
                                 faciId = response.body().get(response.body().size()-1).getId();
                                 int id = generateNewMemberID();
-                                addFacilityMember(id, faciId, (long) vetId);
+                                addFacilityMember(id, faciId, user.getUserId());
                                 syncFacilityMemberChanges();
                                 addFacilityLocation();
 
@@ -497,13 +497,13 @@ public class MapsActivity extends FragmentActivity
         return result;
     }
 
-    public long addFacilityMember(int id, long faciId, long vetId){
+    public long addFacilityMember(int id, long faciId, long userId){
         try {
             petBetterDb.openDatabase();
         }catch (SQLException e) {
             e.printStackTrace();
         }
-        long result = petBetterDb.addFacilityMember(id, faciId, vetId);
+        long result = petBetterDb.addFacilityMember(id, faciId, userId);
         petBetterDb.closeDatabase();
 
         return result;

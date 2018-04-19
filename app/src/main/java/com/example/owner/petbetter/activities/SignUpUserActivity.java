@@ -135,7 +135,7 @@ public class SignUpUserActivity extends AppCompatActivity {
                                 intent.putExtras(vetExtras);
                                 startActivity(intent);
                             }
-                            if(userType==2){
+                            if(userType==2||userType==4){
                                 Intent intent = new Intent(
                                         SignUpUserActivity.this,
                                         com.example.owner.petbetter.activities.MainActivity.class);

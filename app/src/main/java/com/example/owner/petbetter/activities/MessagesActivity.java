@@ -159,6 +159,7 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
         service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
         notifButton = (ImageView) findViewById(R.id.imageview_notifs);
         actvMessage = (AutoCompleteTextView) findViewById(R.id.actvMesaage);
+        actvMessage.setThreshold(3);
         messagesButton = (Button) findViewById(R.id.messagesButton);
         messageReqButton = (Button) findViewById(R.id.messageReqButton);
         refreshMessages = (SwipeRefreshLayout) findViewById(R.id.refreshMessages);
@@ -239,7 +240,7 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
                     startActivity(intent);
                 }
                 else{
-                    if(currFragment == 1){
+                    if(currFragment == 1&&actvMessage.getText().length()>2){
                         service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
                         //query the substring to server data
@@ -557,7 +558,7 @@ public class MessagesActivity extends AppCompatActivity implements NavigationVie
         }
 
         else if (id == R.id.home) {
-            if(user.getUserType()==1){
+            if(user.getUserType()==1||user.getUserType()==4){
                 Intent intent = new Intent(this, com.example.owner.petbetter.activities.VeterinarianHomeActivity.class);
                 startActivity(intent);
             }

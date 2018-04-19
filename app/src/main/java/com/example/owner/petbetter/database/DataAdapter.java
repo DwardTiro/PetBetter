@@ -1592,7 +1592,7 @@ public class DataAdapter {
         ContentValues cv = new ContentValues();
         cv.put("_id", id);
         cv.put("faci_id", faciId);
-        cv.put("vet_id", vetId);
+        cv.put("user_id", vetId);
         cv.put("is_synced", 0);
 
         result = petBetterDb.insert(FACI_MEMBER_TABLE, null, cv);

@@ -357,7 +357,7 @@ public class CommActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
         }
         else if(id == R.id.home){
-            if(user.getUserType()==1){
+            if(user.getUserType()==1||user.getUserType()==4){
                 Intent intent = new Intent(this, com.example.owner.petbetter.activities.VeterinarianHomeActivity.class);
                 startActivity(intent);
             }

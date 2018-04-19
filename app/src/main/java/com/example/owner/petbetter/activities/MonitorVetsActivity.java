@@ -67,6 +67,7 @@ public class MonitorVetsActivity extends AppCompatActivity {
         monitorTopicsButton = (Button) findViewById(R.id.monitorTopicsButton);
         monitorPostsButton = (Button) findViewById(R.id.monitorPostsButton);
         actvMonitor = (AutoCompleteTextView) findViewById(R.id.actvSearch);
+        actvMonitor.setThreshold(3);
 
         monitorTopicsButton.setVisibility(View.GONE);
         monitorPostsButton.setVisibility(View.GONE);
@@ -162,7 +163,7 @@ public class MonitorVetsActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(currFragment==1){
+                if(currFragment==1&&actvMonitor.getText().length()>2){
                     service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
                     //query the substring to server data
@@ -254,7 +255,7 @@ public class MonitorVetsActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(currFragment==2){
+                if(currFragment==2&&actvMonitor.getText().length()>2){
                     service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
                     //query the substring to server data
@@ -345,7 +346,7 @@ public class MonitorVetsActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(currFragment==3){
+                if(currFragment==3&&actvMonitor.getText().length()>2){
                     service3 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
                     //query the substring to server data
@@ -436,7 +437,7 @@ public class MonitorVetsActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(currFragment==4){
+                if(currFragment==4&&actvMonitor.getText().length()>2){
                     service4 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
                     //query the substring to server data

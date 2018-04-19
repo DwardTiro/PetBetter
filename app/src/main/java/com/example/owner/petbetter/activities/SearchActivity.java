@@ -120,6 +120,7 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
         topicSearchButton = (Button) findViewById(R.id.topicSearchButton);
         postSearchButton = (Button) findViewById(R.id.postSearchButton);
         actvSearch = (AutoCompleteTextView) findViewById(R.id.actvSearch);
+        actvSearch.setThreshold(3);
         relativeLayout = (RelativeLayout) findViewById(R.id.relativeSearch);
         relativeLayout.setClickable(true);
 
@@ -230,7 +231,7 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(currFragment==1){
+                if(currFragment==1&&actvSearch.getText().length()>2){
                     service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
                     //query the substring to server data
@@ -391,7 +392,7 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
 
                 getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragmentpar).
                         addToBackStack(null).commitAllowingStateLoss();
-                if(currFragment==2){
+                if(currFragment==2&&actvSearch.getText().length()>2){
                     service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
                     //query the substring to server data
@@ -540,7 +541,7 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
 
                 getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragmentpar).
                         addToBackStack(null).commitAllowingStateLoss();
-                if(currFragment==3){
+                if(currFragment==3&&actvSearch.getText().length()>2){
                     service3 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
                     //query the substring to server data
@@ -685,7 +686,7 @@ public class SearchActivity extends AppCompatActivity implements AdapterView.OnI
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(currFragment==4){
+                if(currFragment==4&&actvSearch.getText().length()>2){
                     FragmentNoResults fragmentpar = new FragmentNoResults();
 
                     getSupportFragmentManager().beginTransaction().replace(R.id.frame_search,fragmentpar).
