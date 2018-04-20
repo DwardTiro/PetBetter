@@ -128,14 +128,14 @@ public class PostRepAdapter extends RecyclerView.Adapter<PostRepAdapter.PostRepV
             holder.sentenceEnd.setText("reply");
             holder.postRepCounter.setVisibility(View.VISIBLE);
             holder.sentenceEnd.setVisibility(View.VISIBLE);
-            holder.postRepCounter.setText(postRepList.size());
+            holder.postRepCounter.setText(String.valueOf(postRepList.size()));
         }
         else if(postRepList.size() > 1){
             holder.sentenceStart.setText("View");
             holder.sentenceEnd.setText("replies");
             holder.postRepCounter.setVisibility(View.VISIBLE);
             holder.sentenceEnd.setVisibility(View.VISIBLE);
-            holder.postRepCounter.setText(postRepList.size());
+            holder.postRepCounter.setText(String.valueOf(postRepList.size()));
         }
 
         if(user.getUserType() == 1){

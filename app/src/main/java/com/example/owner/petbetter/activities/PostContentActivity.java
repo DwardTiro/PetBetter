@@ -299,7 +299,8 @@ public class PostContentActivity extends AppCompatActivity {
                     timeStamp = sdf.format(new Date());
 
                     addPostRep(postrepid, (int) user.getUserId(), (int) postItem.getId(), 0, commentText.getText().toString(), timeStamp);
-                    uploadPostReps(getUnsyncedPostReps());
+                    //uploadPostReps(getUnsyncedPostReps());
+                    syncPostRepChanges();
 
                     nId = generateNotifsId();
                     notifyPostRep(nId, postItem.getUserId(), user.getUserId(), 0, 1, timeStamp, (int) postItem.getId(), 0);
