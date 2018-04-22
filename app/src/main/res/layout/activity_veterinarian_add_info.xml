@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/main_White"
@@ -17,7 +17,7 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="One last step!"
+        android:text="Few more steps!"
         android:textColor="@color/black"
         android:textSize="28sp"
         android:textStyle="bold"
@@ -33,7 +33,8 @@
         android:textColor="@color/black"
         android:textSize="18sp"
         android:layout_above="@+id/formContainer"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:visibility="gone"/>
 
     <RelativeLayout
         android:id="@+id/formContainer"
@@ -80,10 +81,9 @@
             android:layout_marginStart="10dp"
             android:paddingEnd="5dp"
             android:paddingStart="5dp"
-            android:text="EDUCATION"
+            android:text="Undergraduate University (Optional)"
             android:textSize="14sp"
-            android:layout_below="@+id/signUpVetTextPhoneNum"
-            android:visibility="gone"/>
+            android:layout_below="@+id/signUpVetTextPhoneNum"/>
 
         <EditText
             android:id="@+id/signUpVetTextEducation"
@@ -102,13 +102,42 @@
             android:paddingLeft="10dp"
             android:paddingStart="10dp"
             android:paddingTop="5dp" />
+        <TextView
+            android:id="@+id/vetTextEducation2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:text="Graduate University (Optional)"
+            android:textSize="14sp"
+            android:layout_below="@+id/signUpVetTextEducation"/>
+
+        <EditText
+            android:id="@+id/signUpVetTextEducation2"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_below="@+id/vetTextEducation2"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+
+            android:background="#FFFFFF"
+            android:paddingBottom="5dp"
+            android:paddingEnd="10dp"
+            android:paddingLeft="10dp"
+            android:paddingStart="10dp"
+            android:paddingTop="5dp" />
 
         <RelativeLayout
             android:id="@+id/linearLicensed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_below="@id/signUpVetTextEducation">
+            android:layout_below="@id/signUpVetTextEducation2">
 
             <TextView
                 android:id="@+id/vetTextLicensed"

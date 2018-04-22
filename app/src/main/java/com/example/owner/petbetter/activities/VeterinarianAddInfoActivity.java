@@ -70,6 +70,7 @@ public class VeterinarianAddInfoActivity extends AppCompatActivity {
     HerokuService service;
     HerokuService service2;
     private ImageButton exitButton;
+    private EditText editEducation2;
 
     @Override
     public void onCreate(Bundle savedInstance) {
@@ -89,7 +90,8 @@ public class VeterinarianAddInfoActivity extends AppCompatActivity {
         vetSpecialtySpinner = (Spinner) findViewById(R.id.vetSpecialtySpinner);
         phoneNumTextView = (EditText) findViewById(R.id.signUpVetTextPhoneNum);
         editEducation = (EditText) findViewById(R.id.signUpVetTextEducation);
-        editEducation.setVisibility(View.GONE);
+        editEducation2 = (EditText) findViewById(R.id.signUpVetTextEducation2);
+
         switchLicense = (SwitchCompat) findViewById(R.id.switchLicense);
         editProfileDesc = (EditText) findViewById(R.id.editProfileDesc);
         switchLicense.setVisibility(View.GONE);
@@ -315,7 +317,7 @@ public class VeterinarianAddInfoActivity extends AppCompatActivity {
 
         specialty = vetSpecialtySpinner.getSelectedItem().toString();
         phoneNum = phoneNumTextView.getText().toString();
-        education = editEducation.getText().toString();
+        education = editEducation.getText().toString()+","+editEducation2.getText().toString();
         profileDesc = editProfileDesc.getText().toString();
         uploadUsertoDB();
     }
@@ -427,7 +429,6 @@ public class VeterinarianAddInfoActivity extends AppCompatActivity {
 
         //id, foreignid, type, isapproved
         int id;
-        education = "BS Animal Science";
         if(education!=""){
             id = generateNewPendingId();
             addPending(id, userId, 1, 0);

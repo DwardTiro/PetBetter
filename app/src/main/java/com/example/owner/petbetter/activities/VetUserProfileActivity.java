@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -76,6 +77,9 @@ public class VetUserProfileActivity extends AppCompatActivity implements Navigat
     private NotificationReceiver notifReceiver = new NotificationReceiver();
     private Spinner spinnerFilter;
     private Button goToUserButton;
+    private TextView education;
+    private TextView education2;
+    private RelativeLayout educationLayout;
 
     HerokuService service;
 
@@ -109,6 +113,9 @@ public class VetUserProfileActivity extends AppCompatActivity implements Navigat
         editProfileButton = (Button) findViewById(R.id.editVetProfileButton);
         verifyLicense = (ImageView) findViewById(R.id.vetVerified);
         verifySpecialty = (ImageView) findViewById(R.id.verifiedSpecialtyIndicator);
+        education = (TextView) findViewById(R.id.vetEducationTextField);
+        education2 = (TextView) findViewById(R.id.vetEducation2TextField);
+        educationLayout = (RelativeLayout) findViewById(R.id.educationLayout);
 
         verifyLicense.setVisibility(View.INVISIBLE);
         verifySpecialty.setVisibility(View.INVISIBLE);
@@ -150,10 +157,24 @@ public class VetUserProfileActivity extends AppCompatActivity implements Navigat
             imageViewDrawer.setVisibility(View.VISIBLE);
         }
 
+
         vetName.setText(user.getName() + ",");
         vetSpecialization.setText(vet.getSpecialty());
         vetRating.setText(String.valueOf(vet.getRating()));
         vetDetails.setText(vet.getProfileDesc());
+
+        if(!vet.getEducation().equals(",")){
+            String[] educationArray = vet.getEducation().split(",", -1);
+            if(educationArray.length>0&&educationArray[0].length()>0){
+                education.setText("Undergraduate University: "+educationArray[0]);
+            }
+            if(educationArray.length>1&&educationArray[1].length()>0){
+                education2.setText("Graduate University: "+educationArray[1]);
+            }
+        }
+        else{
+            educationLayout.setVisibility(View.GONE);
+        }
 
         vetContactInformation.setText("Phone number: "+user.getMobileNumber());
         vetPage.setVisibility(View.GONE);
@@ -186,7 +207,7 @@ public class VetUserProfileActivity extends AppCompatActivity implements Navigat
                 extras.putString("description", vet.getProfileDesc());
                 extras.putString("specialty", vet.getSpecialty());
                 */
-                Intent intent = new Intent(VetUserProfileActivity.this, com.example.owner.petbetter.activities.EditVetProfileActivity.class);
+                Intent intent = new Intent(VetUserProfileActivity.this, EditVetProfileActivity.class);
                 startActivity(intent);
             }
         });
@@ -194,7 +215,7 @@ public class VetUserProfileActivity extends AppCompatActivity implements Navigat
         goToUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(VetUserProfileActivity.this, com.example.owner.petbetter.activities.UserProfileActivity.class);
+                Intent intent = new Intent(VetUserProfileActivity.this, UserProfileActivity.class);
                 startActivity(intent);
             }
         });

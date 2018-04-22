@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -22,6 +23,7 @@ import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
 import com.example.owner.petbetter.database.DataAdapter;
 import com.example.owner.petbetter.sessionmanagers.SystemSessionManager;
+import com.google.android.gms.vision.text.Text;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -66,6 +68,9 @@ public class VetProfileActivity extends AppCompatActivity {
     private ImageView verifyLicense;
     private ImageView verifySpecialty;
     private int licenseCheck = 0;
+    private TextView education;
+    private TextView education2;
+    private RelativeLayout educationLayout;
 
     @Override
     protected void onCreate(Bundle savedInstance){
@@ -91,6 +96,9 @@ public class VetProfileActivity extends AppCompatActivity {
         messageVetButton = (Button) findViewById(R.id.messageVetButton);
         verifyLicense = (ImageView) findViewById(R.id.verifiedLicenseIndicator);
         verifySpecialty = (ImageView) findViewById(R.id.verifiedSpecialtyIndicator);
+        education = (TextView) findViewById(R.id.vetEducationTextField);
+        education2 = (TextView) findViewById(R.id.vetEducation2TextField);
+        educationLayout = (RelativeLayout) findViewById(R.id.educationLayout);
 
         verifyLicense.setVisibility(View.GONE);
         verifySpecialty.setVisibility(View.INVISIBLE);
@@ -124,6 +132,19 @@ public class VetProfileActivity extends AppCompatActivity {
         vetPage.setVisibility(View.GONE);
         vetWebsite.setVisibility(View.GONE);
         vetEmail.setText("Email: "+vetItem.getEmail());
+
+        if(!vetItem.getEducation().equals(",")){
+            String[] educationArray = vetItem.getEducation().split(",", -1);
+            if(educationArray.length>0&&educationArray[0].length()>0){
+                education.setText("Undergraduate University: "+educationArray[0]);
+            }
+            if(educationArray.length>1&&educationArray[1].length()>0){
+                education2.setText("Graduate University: "+educationArray[1]);
+            }
+        }
+        else{
+            educationLayout.setVisibility(View.GONE);
+        }
 
         //vetSpecialty.setText(vetItem.getSpecialty());
 

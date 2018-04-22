@@ -4,13 +4,14 @@
     android:layout_height="wrap_content"
     android:layout_marginEnd="10dp"
     android:layout_marginStart="10dp"
-    android:background="@drawable/rounded_bg_corner_first_item">
+    android:background="@drawable/rounded_bg_corner_first_item"
+    android:id="@+id/educationLayout">
 
     <RelativeLayout
         android:id="@+id/topContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/deep_turquoise"
+        android:background="@color/xanadu"
         android:paddingBottom="5dp">
 
         <ImageView
@@ -19,7 +20,7 @@
             android:layout_height="20dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="7dp"
-            android:background="@color/deep_turquoise"
+            android:background="@color/xanadu"
             android:src="@drawable/ic_school_white_24dp" />
 
         <TextView
@@ -36,25 +37,24 @@
     </RelativeLayout>
 
     <TextView
-        android:id="@+id/doctorateText"
+        android:id="@+id/vetEducationTextField"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/topContent"
         android:layout_marginTop="10dp"
         android:layout_marginStart="7sp"
-        android:text="Doctorate Degree:"
-        android:textStyle="bold"
+        android:text="Undergraduate University:"
         android:textColor="@color/midnight_green"
         android:textSize="15sp" />
     <TextView
-        android:id="@+id/vetEducationTextField"
+        android:id="@+id/vetEducation2TextField"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/doctorateText"
+        android:layout_below="@+id/vetEducationTextField"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="5dp"
         android:layout_marginStart="7sp"
-        android:text="Doctor of Veterinary Medicine"
+        android:text="Graduate University:"
         android:textColor="@color/midnight_green"
         android:textSize="15sp" />
 
