@@ -518,7 +518,7 @@ public interface HerokuService {
 
     @FormUrlEncoded
     @POST("addVet.php")
-    Call<Void> addVet(@Field("user_id") long user_id,
+    Call<Integer> addVet(@Field("user_id") long user_id,
                       @Field("specialty") String specialty,
                       @Field("rating") float rating,
                       @Field("education") String education,

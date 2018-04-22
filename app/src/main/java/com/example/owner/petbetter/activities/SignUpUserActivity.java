@@ -10,6 +10,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +41,7 @@ public class SignUpUserActivity extends AppCompatActivity {
     private EditText signupLastName;
     private EditText signupEmail;
     private TextInputLayout signupPassword;
+    private ImageButton exitButton;
 
     HerokuService service;
 
@@ -50,10 +52,14 @@ public class SignUpUserActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up_user);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.signUpToolbar);
+        toolbar.setBackgroundColor(getResources().getColor((R.color.main_White)));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         final TextView activityTitle = (TextView) findViewById(R.id.activity_title);
         activityTitle.setText("Sign Up");
+        activityTitle.setTextColor(getResources().getColor(R.color.myrtle_green));
+        exitButton = (ImageButton) findViewById(R.id.viewPostToolbarBack);
+        exitButton.setBackgroundColor(getResources().getColor(R.color.main_White));
         //backButton = (ImageButton) findViewById(R.id.signUpPetOwnerBackButton);
 
         //jsonMyObject = extras.getString("thisSignUp");

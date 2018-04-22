@@ -95,7 +95,7 @@ public class VetListingAdapter extends RecyclerView.Adapter<VetListingAdapter.Ve
                     float rating = response.body();
                     holder.vetListRating.setText(String.format(Locale.getDefault(),"%.1f",rating));
                     if(rating == 0.0){
-                        holder.vetListRating.setBackgroundResource(R.color.teal_blue);
+                        holder.vetListRating.setBackgroundResource(R.color.dark_candy_red);
                     }
                     else if (rating <= 5.0 && rating >=4.5){
                         holder.vetListRating.setBackgroundResource(R.color.colorYellow);

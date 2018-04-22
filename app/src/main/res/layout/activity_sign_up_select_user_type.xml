@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/medTurquoise">
+    android:background="@color/colorWhite">
 
 
     <include
@@ -11,43 +11,40 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar_signup"
-        android:background="@color/colorWhite"
-        android:orientation="vertical">
 
-        <ImageView
+    <ImageView
             android:id="@+id/logo"
             android:layout_width="200dp"
             android:layout_height="200dp"
-            android:layout_gravity="center"
+            android:layout_centerHorizontal="true"
             android:layout_marginBottom="20dp"
             android:layout_marginTop="50dp"
+            android:layout_below="@+id/toolbarSignUp"
             android:contentDescription="@string/app_name"
             android:src="@drawable/petbetter_logo_final_final" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="28dp"
-            android:layout_marginTop="20dp"
-            android:text="Sign Up for PetBetter"
 
-            android:textColor="@color/timestamp"
-            android:textSize="30dp"
-            android:textStyle="bold"
-            android:typeface="sans" />
+    <TextView
+        android:layout_below="@+id/logo"
+        android:id="@+id/textSignUp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="28dp"
 
+        android:layout_centerHorizontal="true"
+        android:text="Sign Up for PetBetter"
 
-    </LinearLayout>
+        android:textColor="@color/timestamp"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:typeface="sans" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+
         android:orientation="vertical">
 
         <Button

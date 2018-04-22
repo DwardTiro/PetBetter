@@ -214,7 +214,7 @@ public class PostContentActivity extends AppCompatActivity {
             profileName.setText(postUser.getName());
         }
         else if(postUser.getUserType() == 3){
-            profileName.setText("Anonymous User");
+            profileName.setText("Administrator");
         }
         else
             profileName.setText(postUser.getName());

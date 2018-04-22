@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.support.v7.widget.Toolbar;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,6 +22,7 @@ import com.example.owner.petbetter.R;
 import com.example.owner.petbetter.ServiceGenerator;
 import com.example.owner.petbetter.classes.Facility;
 import com.example.owner.petbetter.classes.Pending;
+import com.example.owner.petbetter.classes.Post;
 import com.example.owner.petbetter.classes.User;
 import com.example.owner.petbetter.classes.Veterinarian;
 import com.example.owner.petbetter.database.DataAdapter;
@@ -29,7 +31,11 @@ import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -63,6 +69,7 @@ public class VeterinarianAddInfoActivity extends AppCompatActivity {
     private DataAdapter petBetterDb;
     HerokuService service;
     HerokuService service2;
+    private ImageButton exitButton;
 
     @Override
     public void onCreate(Bundle savedInstance) {
@@ -70,10 +77,14 @@ public class VeterinarianAddInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_veterinarian_add_info);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.signUpToolbar);
+        toolbar.setBackgroundColor(getResources().getColor((R.color.main_White)));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         final TextView activityTitle = (TextView) findViewById(R.id.activity_title);
         activityTitle.setText("Sign Up");
+        activityTitle.setTextColor(getResources().getColor(R.color.myrtle_green));
+        exitButton = (ImageButton) findViewById(R.id.viewPostToolbarBack);
+        exitButton.setBackgroundColor(getResources().getColor(R.color.main_White));
 
         vetSpecialtySpinner = (Spinner) findViewById(R.id.vetSpecialtySpinner);
         phoneNumTextView = (EditText) findViewById(R.id.signUpVetTextPhoneNum);
@@ -434,13 +445,21 @@ public class VeterinarianAddInfoActivity extends AppCompatActivity {
 
 
 
-        Call<Void> call = service.addVet(userId, specialty, 0, education, isLicensed, profileDesc);
-        call.enqueue(new Callback<Void>() {
+        Call<Integer> call = service.addVet(userId, specialty, 0, education, isLicensed, profileDesc);
+        call.enqueue(new Callback<Integer>() {
             @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
+            public void onResponse(Call<Integer> call, Response<Integer> response) {
                 System.out.println("User added to server successfully");
 
                 syncPendingChanges();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
+                sdf.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+                String timeStamp = sdf.format(new Date());
+                ArrayList<Post> posts = new ArrayList<Post>();
+                Post thisPost = new Post(0, 20, "Dr. "+firstName+" "+lastName+", DVM review", "",49,timeStamp, null, response.body(), 1, 0);
+                //back here
+                posts.add(thisPost);
+                uploadPost(posts);
                 Intent intent = new Intent(VeterinarianAddInfoActivity.this, com.example.owner.petbetter.activities.MainActivity.class);
                 startActivity(intent);
                 Toast.makeText(VeterinarianAddInfoActivity.this, "Thank you for registering as a veterinarian. Please check your email." +
@@ -448,8 +467,32 @@ public class VeterinarianAddInfoActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<Void> call, Throwable t) {
+            public void onFailure(Call<Integer> call, Throwable t) {
                 System.out.println("FAILED TO ADD USER TO SERVER");
+            }
+        });
+    }
+
+    private void uploadPost(ArrayList<Post> posts){
+        service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
+
+        System.out.println("HOW MANY POSTS? "+posts.size());
+
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String jsonArray = gson.toJson(posts);
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonArray.toString());
+        final Call<Void> call = service.addPosts(body);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                dataSynced(9);
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("onFailure", t.getLocalizedMessage());
+                Toast.makeText(VeterinarianAddInfoActivity.this, "Unable to upload posts on server", Toast.LENGTH_LONG);
             }
         });
     }

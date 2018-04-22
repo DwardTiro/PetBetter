@@ -96,17 +96,17 @@ public class ClinicListingAdapter extends RecyclerView.Adapter<ClinicListingAdap
                     float rating = response.body();
                     holder.clinicListRating.setText(String.format(Locale.getDefault(),"%.1f",rating));
                     if(rating == 0.0){
-                        holder.clinicListRating.setBackgroundResource(R.color.teal_blue);
+                        holder.clinicListRating.setBackgroundResource(R.color.dark_candy_red);
                     }
                     else if (rating <= 5.0 && rating >=4.5){
                         holder.clinicListRating.setBackgroundResource(R.color.colorYellow);
 
                     }
                     else if (rating < 4.5 && rating >=4.0){
-                        holder.clinicListRating.setBackgroundResource(R.color.peridot);
+                        holder.clinicListRating.setBackgroundResource(R.color.main_Color);
                     }
                     else if (rating < 4.0 && rating >=3.5){
-                        holder.clinicListRating.setBackgroundResource(R.color.main_Color);
+                        holder.clinicListRating.setBackgroundResource(R.color.peridot);
                     }
                     else if (rating < 3.5 && rating >=3.0){
                         holder.clinicListRating.setBackgroundResource(R.color.orange);
