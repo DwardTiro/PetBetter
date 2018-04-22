@@ -701,7 +701,7 @@ public class AddServicesActivity extends AppCompatActivity {
                                     sdf.setTimeZone(TimeZone.getTimeZone("GMT+8"));
                                     String timeStamp = sdf.format(new Date());
                                     ArrayList<Post> posts = new ArrayList<Post>();
-                                    Post thisPost = new Post(0, 20, faciName, "",1,timeStamp, image, (int) faciId, 2, 0);
+                                    Post thisPost = new Post(0, 20, faciName+" review", "",1,timeStamp, image, (int) faciId, 2, 0);
                                     posts.add(thisPost);
                                     uploadPost(posts);
                                 }
