@@ -22,8 +22,18 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 		$stmt->bind_param("ssssss", $user_id, $specialty, $rating, $education, $is_licensed, $profile_desc);
 		$stmt->execute();
 		$stmt->close();
-		echo 'Veterinarian added';
 		
+		if($stmt = $mysqli->prepare("SELECT _id FROM veterinarians WHERE user_id = ?")){
+			$stmt->bind_param("s", $user_id);
+			$stmt->execute();
+			$stmt->bind_result($_id);
+			$stmt->store_result();
+			
+			if($stmt->fetch()){
+				echo $_id;
+			}
+		}
+			
 		//$stmt->bind_result($_id, $first_name, $last_name, $mobile_num, $phone_num, $email,  $password, $age, $user_type);
 		//$stmt->store_result();
 	

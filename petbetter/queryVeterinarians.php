@@ -25,13 +25,14 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 		$query = "%{$pieces[0]}%";
 		$query2 = "%{$pieces[0]}%";
 		if($stmt = $mysqli->prepare("SELECT v._id AS _id, v.user_id, u.first_name AS first_name, u.last_name AS last_name, u.mobile_num AS mobile_num, u.phone_num AS phone_num, 
-			u.email AS email, u.password AS password, u.age AS age, u.user_type AS user_type, u.user_photo AS user_photo, v.specialty AS specialty, 
-			v.rating AS rating, COUNT(mr.sender_id) AS ctr FROM veterinarians AS v INNER JOIN users u ON v.user_id = u.user_id LEFT JOIN messagereps mr ON v.user_id = mr.user_id 
-			WHERE u.is_disabled = 0 AND mr.sender_id = ? AND (u.first_name LIKE ? OR u.last_name LIKE ? OR v.specialty LIKE ? OR v.education LIKE ?) 
-			GROUP BY mr.user_id ORDER BY ctr DESC")){
-			$stmt->bind_param("sssss", $query_id, $query, $query2, $query, $query);
+			u.email AS email, u.password AS password, u.age AS age, u.user_type AS user_type, u.user_photo AS user_photo, v.specialty AS specialty, v.rating AS rating, v.education AS education, 
+			COUNT(mr.sender_id) AS ctr FROM veterinarians AS v INNER JOIN users AS u ON v.user_id = u.user_id LEFT JOIN messagereps AS mr ON v.user_id = mr.user_id 
+			LEFT JOIN facility_membership AS fm ON fm.user_id = u.user_id LEFT JOIN facilities AS f ON f.faci_id = fm.faci_id WHERE u.is_disabled = 0 AND mr.sender_id = ? AND 
+			(u.first_name LIKE ? OR u.last_name LIKE ? OR v.specialty LIKE ? OR v.education LIKE ? OR f.location LIKE ?) 
+			GROUP BY mr.user_id, v._id ORDER BY ctr DESC")){
+			$stmt->bind_param("ssssss", $query_id, $query, $query2, $query, $query, $query);
 			$stmt->execute();
-			$stmt->bind_result($_id, $user_id, $first_name, $last_name, $mobile_num, $phone_num, $email, $password, $age, $user_type, $user_photo, $specialty, $rating, $ctr);
+			$stmt->bind_result($_id, $user_id, $first_name, $last_name, $mobile_num, $phone_num, $email, $password, $age, $user_type, $user_photo, $specialty, $rating, $education, $ctr);
 			$stmt->store_result();
 		
 			if($stmt->fetch()){
@@ -49,7 +50,8 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 					'user_type'=>$user_type,
 					'user_photo'=>$user_photo,
 					'specialty'=>$specialty,
-					'rating'=>$rating));
+					'rating'=>$rating,
+					'education'=>$education));
 				}while($stmt->fetch());
 				
 				
@@ -77,20 +79,20 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 			//echo json_encode(array('user'=>$response));
 		}
 		
-		if($stmt = $mysqli->prepare("SELECT v._id AS _id, v.user_id, u.first_name AS first_name, u.last_name AS last_name, 
-			u.mobile_num AS mobile_num, u.phone_num AS phone_num, u.email AS email, u.password AS password, u.age AS age, u.user_type AS user_type, u.user_photo AS user_photo, 
-			v.specialty AS specialty, v.rating AS rating FROM veterinarians AS v INNER JOIN users u ON v.user_id = u.user_id WHERE u.is_disabled = 0 AND (u.first_name LIKE ? OR u.last_name LIKE ? 
-			OR v.specialty LIKE ? OR v.education LIKE ?)")){
-			$stmt->bind_param("ssss", $query, $query2, $query, $query);
+		if($stmt = $mysqli->prepare("SELECT v._id AS _id, v.user_id, u.first_name AS first_name, u.last_name AS last_name, u.mobile_num AS mobile_num, u.phone_num AS phone_num, 
+			u.email AS email, u.password AS password, u.age AS age, u.user_type AS user_type, u.user_photo AS user_photo, v.specialty AS specialty, v.rating AS rating, v.education AS education 
+			FROM veterinarians AS v INNER JOIN users u ON v.user_id = u.user_id LEFT JOIN facility_membership AS fm ON fm.user_id = u.user_id LEFT JOIN facilities AS f ON f.faci_id = fm.faci_id 
+			WHERE u.is_disabled = 0 AND (u.first_name LIKE ? OR u.last_name LIKE ? OR v.specialty LIKE ? OR v.education LIKE ? OR f.location LIKE ?)")){
+			$stmt->bind_param("sssss", $query, $query2, $query, $query, $query);
 			$stmt->execute();
-			$stmt->bind_result($_id, $user_id, $first_name, $last_name, $mobile_num, $phone_num, $email, $password, $age, $user_type, $user_photo, $specialty, $rating);
+			$stmt->bind_result($_id, $user_id, $first_name, $last_name, $mobile_num, $phone_num, $email, $password, $age, $user_type, $user_photo, $specialty, $rating, $education);
 			$stmt->store_result();
 		
 			if($stmt->fetch()){
 				
 				do{
 					if(!in_array(array('_id'=>$_id,'user_id'=>$user_id, 'first_name'=>$first_name, 'last_name'=>$last_name, 'mobile_num'=>$mobile_num, 'phone_num'=>$phone_num, 'email'=>$email,
-						'password'=>$password, 'age'=>$age, 'user_type'=>$user_type, 'user_photo'=>$user_photo, 'specialty'=>$specialty, 'rating'=>$rating), $response)){
+						'password'=>$password, 'age'=>$age, 'user_type'=>$user_type, 'user_photo'=>$user_photo, 'specialty'=>$specialty, 'rating'=>$rating, 'education'=>$education), $response)){
 							
 						array_push($response, array('_id'=>$_id,
 						'user_id'=>$user_id,
@@ -104,7 +106,8 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 						'user_type'=>$user_type,
 						'user_photo'=>$user_photo,
 						'specialty'=>$specialty,
-						'rating'=>$rating));
+						'rating'=>$rating,
+						'education'=>$education));
 					}	
 				}while($stmt->fetch());
 				
@@ -139,13 +142,14 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 		$query2 = "%{$pieces[1]}%";
 		$query3 = "%{$queryjson}%";
 		if($stmt = $mysqli->prepare("SELECT v._id AS _id, v.user_id, u.first_name AS first_name, u.last_name AS last_name, u.mobile_num AS mobile_num, u.phone_num AS phone_num, 
-			u.email AS email, u.password AS password, u.age AS age, u.user_type AS user_type, u.user_photo AS user_photo, v.specialty AS specialty, 
-			v.rating AS rating, COUNT(mr.sender_id) AS ctr FROM veterinarians AS v INNER JOIN users u ON v.user_id = u.user_id LEFT JOIN messagereps mr ON v.user_id = mr.user_id 
-			WHERE u.is_disabled = 0 AND mr.sender_id = ? AND (u.first_name LIKE ? OR u.last_name LIKE ? OR v.specialty LIKE ? OR v.education LIKE ?) 
-			GROUP BY mr.user_id ORDER BY ctr DESC")){
-			$stmt->bind_param("sssss", $query_id, $query, $query2, $query3, $query3);
+			u.email AS email, u.password AS password, u.age AS age, u.user_type AS user_type, u.user_photo AS user_photo, v.specialty AS specialty, v.rating AS rating, 
+			v.education AS education, COUNT(mr.sender_id) AS ctr FROM veterinarians AS v INNER JOIN users AS u ON v.user_id = u.user_id LEFT JOIN messagereps AS mr ON v.user_id = mr.user_id 
+			LEFT JOIN facility_membership AS fm ON fm.user_id = u.user_id LEFT JOIN facilities AS f ON f.faci_id = fm.faci_id WHERE u.is_disabled = 0 AND mr.sender_id = ? AND 
+			(u.first_name LIKE ? OR u.last_name LIKE ? OR v.specialty LIKE ? OR v.education LIKE ? OR f.location LIKE ?) 
+			GROUP BY mr.user_id, v._id ORDER BY ctr DESC")){
+			$stmt->bind_param("sssss", $query_id, $query, $query2, $query3, $query3, $query3);
 			$stmt->execute();
-			$stmt->bind_result($_id, $user_id, $first_name, $last_name, $mobile_num, $phone_num, $email, $password, $age, $user_type, $user_photo, $specialty, $rating, $ctr);
+			$stmt->bind_result($_id, $user_id, $first_name, $last_name, $mobile_num, $phone_num, $email, $password, $age, $user_type, $user_photo, $specialty, $rating, $education, $ctr);
 			$stmt->store_result();
 		
 			if($stmt->fetch()){
@@ -163,7 +167,8 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 					'user_type'=>$user_type,
 					'user_photo'=>$user_photo,
 					'specialty'=>$specialty,
-					'rating'=>$rating));
+					'rating'=>$rating,
+					'education'=>$education));
 				}while($stmt->fetch());
 				
 				
@@ -191,20 +196,20 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 			//echo json_encode(array('user'=>$response));
 		}
 		
-		if($stmt = $mysqli->prepare("SELECT v._id AS _id, v.user_id, u.first_name AS first_name, u.last_name AS last_name, 
-			u.mobile_num AS mobile_num, u.phone_num AS phone_num, u.email AS email, u.password AS password, u.age AS age, u.user_type AS user_type, u.user_photo AS user_photo, 
-			v.specialty AS specialty, v.rating AS rating FROM veterinarians AS v INNER JOIN users u ON v.user_id = u.user_id WHERE u.is_disabled = 0 AND (u.first_name LIKE ? OR u.last_name LIKE ? 
-			OR v.specialty LIKE ? OR v.education LIKE ?)")){
-			$stmt->bind_param("ssss", $query, $query2, $query3, $query3);
+		if($stmt = $mysqli->prepare("SELECT v._id AS _id, v.user_id, u.first_name AS first_name, u.last_name AS last_name, u.mobile_num AS mobile_num, u.phone_num AS phone_num, 
+			u.email AS email, u.password AS password, u.age AS age, u.user_type AS user_type, u.user_photo AS user_photo, v.specialty AS specialty, v.rating AS rating, v.education AS education 
+			FROM veterinarians AS v INNER JOIN users u ON v.user_id = u.user_id LEFT JOIN facility_membership AS fm ON fm.user_id = u.user_id LEFT JOIN facilities AS f ON f.faci_id = fm.faci_id 
+			WHERE u.is_disabled = 0 AND (u.first_name LIKE ? OR u.last_name LIKE ? OR v.specialty LIKE ? OR v.education LIKE ? OR f.location LIKE ?)")){
+			$stmt->bind_param("sssss", $query, $query2, $query3, $query3, $query3);
 			$stmt->execute();
-			$stmt->bind_result($_id, $user_id, $first_name, $last_name, $mobile_num, $phone_num, $email, $password, $age, $user_type, $user_photo, $specialty, $rating);
+			$stmt->bind_result($_id, $user_id, $first_name, $last_name, $mobile_num, $phone_num, $email, $password, $age, $user_type, $user_photo, $specialty, $rating, $education);
 			$stmt->store_result();
 		
 			if($stmt->fetch()){
 				
 				do{
 					if(!in_array(array('_id'=>$_id,'user_id'=>$user_id, 'first_name'=>$first_name, 'last_name'=>$last_name, 'mobile_num'=>$mobile_num, 'phone_num'=>$phone_num, 'email'=>$email,
-						'password'=>$password, 'age'=>$age, 'user_type'=>$user_type, 'user_photo'=>$user_photo, 'specialty'=>$specialty, 'rating'=>$rating), $response)){
+						'password'=>$password, 'age'=>$age, 'user_type'=>$user_type, 'user_photo'=>$user_photo, 'specialty'=>$specialty, 'rating'=>$rating, 'education'=>$education), $response)){
 							
 						array_push($response, array('_id'=>$_id,
 						'user_id'=>$user_id,
@@ -218,7 +223,8 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 						'user_type'=>$user_type,
 						'user_photo'=>$user_photo,
 						'specialty'=>$specialty,
-						'rating'=>$rating));
+						'rating'=>$rating,
+						'education'=>$education));
 					}	
 				}while($stmt->fetch());
 				

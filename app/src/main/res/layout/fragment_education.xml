@@ -11,7 +11,7 @@
         android:id="@+id/topContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/xanadu"
+        android:background="@color/quicksilver"
         android:paddingBottom="5dp">
 
         <ImageView
@@ -20,7 +20,7 @@
             android:layout_height="20dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="7dp"
-            android:background="@color/xanadu"
+            android:background="@color/quicksilver"
             android:src="@drawable/ic_school_white_24dp" />
 
         <TextView
