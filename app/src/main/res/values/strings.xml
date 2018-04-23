@@ -7,7 +7,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="no_account"><u>Don\'t have an account yet?</u></string>
-    <string name="add_new_facility"><u>Anonymously Add a New Facility</u></string>
+    <string name="forgot_password"><u>Forgot Password?</u></string>
     <string name="sample_address">Solenad 1 Nuvali, Sta. Rosa Laguna</string>
     <string name="sample_name">John Ivanhoe</string>
     <string name="sample_clinic">Ivanhoe Veterinary Clinic</string>

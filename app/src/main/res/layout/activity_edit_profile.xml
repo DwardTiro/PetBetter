@@ -200,6 +200,28 @@
                         android:paddingEnd="8dp"
                         android:paddingStart="8dp"
                         android:text="8712245" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="0dp"
+                        android:layout_marginStart="13dp"
+                        android:layout_marginTop="8dp"
+                        android:text="Password:"
+                        android:textColor="@color/black"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/editUserPassword"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="8dp"
+                        android:maxLength="7"
+                        android:paddingEnd="8dp"
+                        android:paddingStart="8dp"
+                        android:inputType="textPassword" />
 
                 </LinearLayout>
             </LinearLayout>

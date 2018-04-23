@@ -52,6 +52,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private EditText emailEdit;
     private EditText mobileEdit;
     private EditText phoneEdit;
+    private EditText editPassword;
     private Button saveButton;
     private ImageButton editImage;
     private static final int IMG_REQUEST = 777;
@@ -76,6 +77,7 @@ public class EditProfileActivity extends AppCompatActivity {
         phoneEdit = (EditText) findViewById(R.id.editUserLandline);
         saveButton = (Button) findViewById(R.id.saveButton);
         editImage = (ImageButton) findViewById(R.id.editImage);
+        editPassword = (EditText) findViewById(R.id.editUserPassword);
 
         systemSessionManager = new SystemSessionManager(this);
         if (systemSessionManager.checkLogin())
@@ -88,14 +90,25 @@ public class EditProfileActivity extends AppCompatActivity {
 
 
         String email = userIn.get(SystemSessionManager.LOGIN_USER_NAME);
-        System.out.println(email);
         user = getUser(email);
+
+        if(user.getUserType()==3){
+            String jsonMyObject;
+            Bundle extras = getIntent().getExtras();
+            jsonMyObject = extras.getString("thisUser");
+            user = new Gson().fromJson(jsonMyObject, User.class);
+        }
+
+
+
+
 
         firstNameEdit.setText(user.getFirstName());
         lastNameEdit.setText(user.getLastName());
         emailEdit.setText(user.getEmail());
         mobileEdit.setText(user.getMobileNumber());
         phoneEdit.setText(user.getPhoneNumber());
+        editPassword.setText(user.getPassword());
 
         if(user.getUserPhoto()!=null){
             String newFileName = BASE_URL + user.getUserPhoto();
@@ -114,7 +127,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 //user.setUserPhoto(image);
                 editProfile(user.getUserId(), firstNameEdit.getText().toString(), lastNameEdit.getText().toString(),
                         emailEdit.getText().toString(), mobileEdit.getText().toString(), phoneEdit.getText().toString(),
-                        image);
+                        image, editPassword.getText().toString());
                 service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
                 final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
 
@@ -144,7 +157,7 @@ public class EditProfileActivity extends AppCompatActivity {
                                             editProfile(response.body().getUserId(), response.body().getFirstName(),
                                                     response.body().getLastName(), response.body().getEmail(),
                                                     response.body().getMobileNumber(), response.body().getPhoneNumber(),
-                                                    response.body().getUserPhoto());
+                                                    response.body().getUserPhoto(), response.body().getPassword());
                                         }
 
                                         @Override
@@ -271,14 +284,14 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void editProfile(long _id, String firstName, String lastName, String emailAddress, String mobileNum,
-                             String landline, String image) {
+                             String landline, String image, String password) {
 
         try {
             petBetterDb.openDatabase();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        petBetterDb.editProfile(_id, firstName, lastName, emailAddress, mobileNum, landline, image);
+        petBetterDb.editProfile(_id, firstName, lastName, emailAddress, mobileNum, landline, image, password);
         petBetterDb.closeDatabase();
     }
 

@@ -97,23 +97,22 @@
 
 
     <TextView
-        android:id="@+id/addFacilityLink"
+        android:id="@+id/forgotPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/loginButton"
         android:layout_centerHorizontal="true"
 
         android:layout_gravity="center"
-        android:onClick="addNewFacility"
+        android:onClick="forgotPassword"
         android:padding="0dp"
-        android:visibility="gone"
-        android:text="@string/add_new_facility" />
+        android:text="@string/forgot_password" />
 
     <TextView
         android:id="@+id/noAccountLink"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/addFacilityLink"
+        android:layout_below="@+id/forgotPassword"
         android:layout_centerHorizontal="true"
 
         android:layout_gravity="center"

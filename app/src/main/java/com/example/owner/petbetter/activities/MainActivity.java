@@ -1819,13 +1819,8 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void addNewFacility(View view){
-        Intent intent = new Intent(this, AddFacilityActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        Bundle extras = new Bundle();
-        extras.putBoolean("fromMain", true);
-        intent.putExtras(extras);
+    public void forgotPassword(View view){
+        Intent intent = new Intent(this, ForgotPasswordActivity.class);
         startActivity(intent);
     }
     private boolean checkEmailValidity(String email){

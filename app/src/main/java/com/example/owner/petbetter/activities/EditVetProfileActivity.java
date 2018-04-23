@@ -129,7 +129,8 @@ public class EditVetProfileActivity extends AppCompatActivity {
                         vetEmailAddress.getText().toString(),
                         vetContactInfo.getText().toString(),
                         vetContactInfo.getText().toString(),
-                        image);
+                        image,
+                        user.getPassword());
 
                 service = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
                 final HerokuService service2 = ServiceGenerator.getServiceGenerator().create(HerokuService.class);
@@ -164,7 +165,7 @@ public class EditVetProfileActivity extends AppCompatActivity {
                                                 editProfile(response.body().getUserId(), response.body().getFirstName(),
                                                         response.body().getLastName(), response.body().getEmail(),
                                                         response.body().getMobileNumber(), response.body().getPhoneNumber(),
-                                                        response.body().getUserPhoto());
+                                                        response.body().getUserPhoto(), response.body().getPassword());
                                                 editVeterinarian(response.body().getUserId(),
                                                         vetSpecialization.getSelectedItem().toString(),
                                                         vetEducation.getText().toString(), vetDescription.getText().toString());
@@ -239,14 +240,14 @@ public class EditVetProfileActivity extends AppCompatActivity {
     }
 
     private void editProfile(long _id, String firstName, String lastName, String emailAddress, String mobileNum,
-                             String landline, String image) {
+                             String landline, String image, String password) {
 
         try {
             petBetterDb.openDatabase();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        petBetterDb.editProfile(_id, firstName, lastName, emailAddress, mobileNum, landline, image);
+        petBetterDb.editProfile(_id, firstName, lastName, emailAddress, mobileNum, landline, image, password);
         petBetterDb.closeDatabase();
     }
 

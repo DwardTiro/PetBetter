@@ -2619,7 +2619,7 @@ public class DataAdapter {
     }
 
     public void editProfile(long _id, String firstName, String lastName, String emailAddress,String mobileNum,
-                            String landline, String image){
+                            String landline, String image, String password){
 
 
         ContentValues cv = new ContentValues();
@@ -2629,6 +2629,7 @@ public class DataAdapter {
         cv.put("phone_num", landline);
         cv.put("email",emailAddress);
         cv.put("user_photo",image);
+        cv.put("password", password);
 
         String[] whereArgs= new String[]{String.valueOf(_id)};
         petBetterDb.update(USER_TABLE,cv,"_id=?", whereArgs);

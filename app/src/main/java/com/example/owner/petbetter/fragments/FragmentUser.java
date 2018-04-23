@@ -76,7 +76,9 @@ public class FragmentUser extends android.support.v4.app.Fragment{
 
             @Override
             public void onItemClick(User item) {
-
+                Intent intent = new Intent(getActivity(), com.example.owner.petbetter.activities.EditProfileActivity.class);
+                intent.putExtra("thisUser", new Gson().toJson(item));
+                startActivity(intent);
             }
 
             @Override
